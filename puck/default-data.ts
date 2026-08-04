@@ -42,7 +42,12 @@ export const defaultPageData: NECYPAAData = {
         location: "Online via Zoom",
         actionLabel: "Join on Zoom",
         actionUrl: "https://www.necypaact.com/service",
-        importantDates: "Aug 16 — Host committee business meeting\nAug 22 — Three Frogs on a Log workshop\nDec 31 — Convention opens at 5:00 PM\nJan 3 — Convention closes",
+        importantDates: [
+          { date: "Aug 16", label: "Host committee business meeting" },
+          { date: "Aug 22", label: "Three Frogs on a Log workshop" },
+          { date: "Dec 31", label: "Convention opens at 5:00 PM" },
+          { date: "Jan 3", label: "Convention closes" },
+        ],
       },
     },
     {
@@ -56,7 +61,12 @@ export const defaultPageData: NECYPAAData = {
         upcomingBody: "A Step Two and Three workshop with four mini-speakers and a live Q&A.",
         upcomingDate: "Saturday, August 22, 2026",
         upcomingLocation: "Online via Zoom",
-        pastEvents: "The Ultimate Cool Down — April 25, 2026\nZombie Prom — February 13, 2026\nNew Year’s Eve Bonfire — December 31, 2025\nCardboard Masquerade — May 30, 2025",
+        pastEvents: [
+          { title: "The Ultimate Cool Down", date: "April 25, 2026" },
+          { title: "Zombie Prom", date: "February 13, 2026" },
+          { title: "New Year’s Eve Bonfire", date: "December 31, 2025" },
+          { title: "Cardboard Masquerade", date: "May 30, 2025" },
+        ],
       },
     },
     {
@@ -66,7 +76,17 @@ export const defaultPageData: NECYPAAData = {
         eyebrow: "Across the Northeast",
         heading: "YPAA meetings near you",
         body: "Find young people’s meetings and committees throughout the region.",
-        meetings: "Connecticut YPAA — Connecticut\nMaine YPAA — Maine\nMassachusetts YPAA — Massachusetts\nNew Hampshire YPAA — New Hampshire\nNew Jersey YPAA — New Jersey\nNew York YPAA — New York\nPennsylvania YPAA — Pennsylvania\nRhode Island YPAA — Rhode Island\nVermont YPAA — Vermont",
+        meetings: [
+          { name: "Connecticut YPAA", location: "Connecticut" },
+          { name: "Maine YPAA", location: "Maine" },
+          { name: "Massachusetts YPAA", location: "Massachusetts" },
+          { name: "New Hampshire YPAA", location: "New Hampshire" },
+          { name: "New Jersey YPAA", location: "New Jersey" },
+          { name: "New York YPAA", location: "New York" },
+          { name: "Pennsylvania YPAA", location: "Pennsylvania" },
+          { name: "Rhode Island YPAA", location: "Rhode Island" },
+          { name: "Vermont YPAA", location: "Vermont" },
+        ],
       },
     },
     {

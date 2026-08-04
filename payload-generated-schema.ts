@@ -99,17 +99,315 @@ export const media = sqliteTable(
   ],
 );
 
+export const pages_blocks_hero_countdown = sqliteTable(
+  "pages_blocks_hero_countdown",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: text("id").primaryKey(),
+    eyebrow: text("eyebrow"),
+    heading: text("heading"),
+    body: text("body"),
+    eventDate: text("event_date"),
+    eventLocation: text("event_location"),
+    countdownTarget: text("countdown_target"),
+    registerLabel: text("register_label"),
+    registerUrl: text("register_url"),
+    hotelLabel: text("hotel_label"),
+    hotelUrl: text("hotel_url"),
+    textStyles: text("text_styles", { mode: "json" }),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("pages_blocks_hero_countdown_order_idx").on(columns._order),
+    index("pages_blocks_hero_countdown_parent_id_idx").on(columns._parentID),
+    index("pages_blocks_hero_countdown_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [pages.id],
+      name: "pages_blocks_hero_countdown_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const pages_blocks_about = sqliteTable(
+  "pages_blocks_about",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: text("id").primaryKey(),
+    eyebrow: text("eyebrow"),
+    heading: text("heading"),
+    body: text("body"),
+    advisoryHeading: text("advisory_heading"),
+    advisoryBody: text("advisory_body"),
+    textStyles: text("text_styles", { mode: "json" }),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("pages_blocks_about_order_idx").on(columns._order),
+    index("pages_blocks_about_parent_id_idx").on(columns._parentID),
+    index("pages_blocks_about_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [pages.id],
+      name: "pages_blocks_about_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const pages_blocks_meeting_info_important_dates = sqliteTable(
+  "pages_blocks_meeting_info_important_dates",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: text("_parent_id").notNull(),
+    id: text("id").primaryKey(),
+    date: text("date"),
+    label: text("label"),
+  },
+  (columns) => [
+    index("pages_blocks_meeting_info_important_dates_order_idx").on(
+      columns._order,
+    ),
+    index("pages_blocks_meeting_info_important_dates_parent_id_idx").on(
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [pages_blocks_meeting_info.id],
+      name: "pages_blocks_meeting_info_important_dates_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const pages_blocks_meeting_info = sqliteTable(
+  "pages_blocks_meeting_info",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: text("id").primaryKey(),
+    eyebrow: text("eyebrow"),
+    heading: text("heading"),
+    body: text("body"),
+    date: text("date"),
+    time: text("time"),
+    location: text("location"),
+    actionLabel: text("action_label"),
+    actionUrl: text("action_url"),
+    textStyles: text("text_styles", { mode: "json" }),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("pages_blocks_meeting_info_order_idx").on(columns._order),
+    index("pages_blocks_meeting_info_parent_id_idx").on(columns._parentID),
+    index("pages_blocks_meeting_info_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [pages.id],
+      name: "pages_blocks_meeting_info_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const pages_blocks_events_past_events = sqliteTable(
+  "pages_blocks_events_past_events",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: text("_parent_id").notNull(),
+    id: text("id").primaryKey(),
+    title: text("title"),
+    date: text("date"),
+  },
+  (columns) => [
+    index("pages_blocks_events_past_events_order_idx").on(columns._order),
+    index("pages_blocks_events_past_events_parent_id_idx").on(
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [pages_blocks_events.id],
+      name: "pages_blocks_events_past_events_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const pages_blocks_events = sqliteTable(
+  "pages_blocks_events",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: text("id").primaryKey(),
+    eyebrow: text("eyebrow"),
+    heading: text("heading"),
+    upcomingLabel: text("upcoming_label"),
+    upcomingTitle: text("upcoming_title"),
+    upcomingBody: text("upcoming_body"),
+    upcomingDate: text("upcoming_date"),
+    upcomingLocation: text("upcoming_location"),
+    textStyles: text("text_styles", { mode: "json" }),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("pages_blocks_events_order_idx").on(columns._order),
+    index("pages_blocks_events_parent_id_idx").on(columns._parentID),
+    index("pages_blocks_events_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [pages.id],
+      name: "pages_blocks_events_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const pages_blocks_meeting_directory_meetings = sqliteTable(
+  "pages_blocks_meeting_directory_meetings",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: text("_parent_id").notNull(),
+    id: text("id").primaryKey(),
+    name: text("name"),
+    location: text("location"),
+  },
+  (columns) => [
+    index("pages_blocks_meeting_directory_meetings_order_idx").on(
+      columns._order,
+    ),
+    index("pages_blocks_meeting_directory_meetings_parent_id_idx").on(
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [pages_blocks_meeting_directory.id],
+      name: "pages_blocks_meeting_directory_meetings_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const pages_blocks_meeting_directory = sqliteTable(
+  "pages_blocks_meeting_directory",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: text("id").primaryKey(),
+    eyebrow: text("eyebrow"),
+    heading: text("heading"),
+    body: text("body"),
+    textStyles: text("text_styles", { mode: "json" }),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("pages_blocks_meeting_directory_order_idx").on(columns._order),
+    index("pages_blocks_meeting_directory_parent_id_idx").on(columns._parentID),
+    index("pages_blocks_meeting_directory_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [pages.id],
+      name: "pages_blocks_meeting_directory_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const pages_blocks_call_to_action = sqliteTable(
+  "pages_blocks_call_to_action",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: text("id").primaryKey(),
+    eyebrow: text("eyebrow"),
+    heading: text("heading"),
+    body: text("body"),
+    primaryLabel: text("primary_label"),
+    primaryUrl: text("primary_url"),
+    secondaryLabel: text("secondary_label"),
+    secondaryUrl: text("secondary_url"),
+    textStyles: text("text_styles", { mode: "json" }),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("pages_blocks_call_to_action_order_idx").on(columns._order),
+    index("pages_blocks_call_to_action_parent_id_idx").on(columns._parentID),
+    index("pages_blocks_call_to_action_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [pages.id],
+      name: "pages_blocks_call_to_action_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const pages_blocks_rich_text = sqliteTable(
+  "pages_blocks_rich_text",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: text("id").primaryKey(),
+    content: text("content", { mode: "json" }),
+    fontSize: text("font_size").default("1rem"),
+    color: text("color").default("#171b20"),
+    fontWeight: text("font_weight", { enum: ["400", "700"] }).default("400"),
+    alignment: text("alignment", { enum: ["left", "center", "right"] }).default(
+      "left",
+    ),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("pages_blocks_rich_text_order_idx").on(columns._order),
+    index("pages_blocks_rich_text_parent_id_idx").on(columns._parentID),
+    index("pages_blocks_rich_text_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [pages.id],
+      name: "pages_blocks_rich_text_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const pages_blocks_free_text = sqliteTable(
+  "pages_blocks_free_text",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: text("id").primaryKey(),
+    text: text("text"),
+    fontSize: text("font_size").default("1rem"),
+    color: text("color").default("#171b20"),
+    fontWeight: text("font_weight", { enum: ["400", "700"] }).default("400"),
+    alignment: text("alignment", { enum: ["left", "center", "right"] }).default(
+      "left",
+    ),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("pages_blocks_free_text_order_idx").on(columns._order),
+    index("pages_blocks_free_text_parent_id_idx").on(columns._parentID),
+    index("pages_blocks_free_text_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [pages.id],
+      name: "pages_blocks_free_text_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
 export const pages = sqliteTable(
   "pages",
   {
     id: integer("id").primaryKey(),
     title: text("title"),
     slug: text("slug"),
-    builderData: text("builder_data", { mode: "json" }).default(
-      '{"root":{"props":{"title":"NECYPAA XXXVI"}},"content":[{"type":"HeroCountdown","props":{"id":"hero","eyebrow":"Escaping the Mad Realm","heading":"NECYPAA XXXVI","body":"Four days of recovery, fellowship, service, and celebration in Hartford, Connecticut.","eventDate":"December 31, 2026 – January 3, 2027","eventLocation":"Hartford Marriott Downtown","countdownTarget":"2026-12-31T17:00:00-05:00","registerLabel":"Register","registerUrl":"https://register.necypaact.com/en/register","hotelLabel":"Book a hotel room","hotelUrl":"https://www.necypaact.com/hotel"}},{"type":"About","props":{"id":"about","eyebrow":"About NECYPAA","heading":"Four days. One fellowship. A way out of the ordinary.","body":"NECYPAA brings young people in Alcoholics Anonymous together from across the Northeast for speakers, workshops, dancing, service, and the kind of connection that makes recovery feel possible. Young means young at heart—whether this is your first sober event or your fiftieth convention, you are welcome here.","advisoryHeading":"Anonymity matters","advisoryBody":"Please help protect personal anonymity when sharing photos or stories from convention spaces."}},{"type":"MeetingInfo","props":{"id":"business-meeting","eyebrow":"Host committee","heading":"Business meeting","body":"See how the convention is built through committee work, updates, votes, and fellowship. No title or commitment is required—just show up.","date":"Sunday, August 16, 2026","time":"2:00 PM Eastern","location":"Online via Zoom","actionLabel":"Join on Zoom","actionUrl":"https://www.necypaact.com/service","importantDates":"Aug 16 — Host committee business meeting\nAug 22 — Three Frogs on a Log workshop\nDec 31 — Convention opens at 5:00 PM\nJan 3 — Convention closes"}},{"type":"Events","props":{"id":"events","eyebrow":"Gather with us","heading":"Upcoming and past events","upcomingLabel":"Next up","upcomingTitle":"Three Frogs on a Log","upcomingBody":"A Step Two and Three workshop with four mini-speakers and a live Q&A.","upcomingDate":"Saturday, August 22, 2026","upcomingLocation":"Online via Zoom","pastEvents":"The Ultimate Cool Down — April 25, 2026\nZombie Prom — February 13, 2026\nNew Year’s Eve Bonfire — December 31, 2025\nCardboard Masquerade — May 30, 2025"}},{"type":"MeetingDirectory","props":{"id":"ypaa","eyebrow":"Across the Northeast","heading":"YPAA meetings near you","body":"Find young people’s meetings and committees throughout the region.","meetings":"Connecticut YPAA — Connecticut\nMaine YPAA — Maine\nMassachusetts YPAA — Massachusetts\nNew Hampshire YPAA — New Hampshire\nNew Jersey YPAA — New Jersey\nNew York YPAA — New York\nPennsylvania YPAA — Pennsylvania\nRhode Island YPAA — Rhode Island\nVermont YPAA — Vermont"}},{"type":"CallToAction","props":{"id":"register","eyebrow":"See you in Hartford","heading":"Ready for NECYPAA XXXVI?","body":"Register for the convention and reserve your room while space is available.","primaryLabel":"Register","primaryUrl":"https://register.necypaact.com/en/register","secondaryLabel":"Book a hotel room","secondaryUrl":"https://www.necypaact.com/hotel"}}],"zones":{}}',
-    ),
     meta_title: text("meta_title"),
     meta_description: text("meta_description"),
+    builderData: text("builder_data", { mode: "json" }).default(
+      '{"root":{"props":{"title":"NECYPAA XXXVI"}},"content":[{"type":"HeroCountdown","props":{"id":"hero","eyebrow":"Escaping the Mad Realm","heading":"NECYPAA XXXVI","body":"Four days of recovery, fellowship, service, and celebration in Hartford, Connecticut.","eventDate":"December 31, 2026 – January 3, 2027","eventLocation":"Hartford Marriott Downtown","countdownTarget":"2026-12-31T17:00:00-05:00","registerLabel":"Register","registerUrl":"https://register.necypaact.com/en/register","hotelLabel":"Book a hotel room","hotelUrl":"https://www.necypaact.com/hotel"}},{"type":"About","props":{"id":"about","eyebrow":"About NECYPAA","heading":"Four days. One fellowship. A way out of the ordinary.","body":"NECYPAA brings young people in Alcoholics Anonymous together from across the Northeast for speakers, workshops, dancing, service, and the kind of connection that makes recovery feel possible. Young means young at heart—whether this is your first sober event or your fiftieth convention, you are welcome here.","advisoryHeading":"Anonymity matters","advisoryBody":"Please help protect personal anonymity when sharing photos or stories from convention spaces."}},{"type":"MeetingInfo","props":{"id":"business-meeting","eyebrow":"Host committee","heading":"Business meeting","body":"See how the convention is built through committee work, updates, votes, and fellowship. No title or commitment is required—just show up.","date":"Sunday, August 16, 2026","time":"2:00 PM Eastern","location":"Online via Zoom","actionLabel":"Join on Zoom","actionUrl":"https://www.necypaact.com/service","importantDates":[{"date":"Aug 16","label":"Host committee business meeting"},{"date":"Aug 22","label":"Three Frogs on a Log workshop"},{"date":"Dec 31","label":"Convention opens at 5:00 PM"},{"date":"Jan 3","label":"Convention closes"}]}},{"type":"Events","props":{"id":"events","eyebrow":"Gather with us","heading":"Upcoming and past events","upcomingLabel":"Next up","upcomingTitle":"Three Frogs on a Log","upcomingBody":"A Step Two and Three workshop with four mini-speakers and a live Q&A.","upcomingDate":"Saturday, August 22, 2026","upcomingLocation":"Online via Zoom","pastEvents":[{"title":"The Ultimate Cool Down","date":"April 25, 2026"},{"title":"Zombie Prom","date":"February 13, 2026"},{"title":"New Year’s Eve Bonfire","date":"December 31, 2025"},{"title":"Cardboard Masquerade","date":"May 30, 2025"}]}},{"type":"MeetingDirectory","props":{"id":"ypaa","eyebrow":"Across the Northeast","heading":"YPAA meetings near you","body":"Find young people’s meetings and committees throughout the region.","meetings":[{"name":"Connecticut YPAA","location":"Connecticut"},{"name":"Maine YPAA","location":"Maine"},{"name":"Massachusetts YPAA","location":"Massachusetts"},{"name":"New Hampshire YPAA","location":"New Hampshire"},{"name":"New Jersey YPAA","location":"New Jersey"},{"name":"New York YPAA","location":"New York"},{"name":"Pennsylvania YPAA","location":"Pennsylvania"},{"name":"Rhode Island YPAA","location":"Rhode Island"},{"name":"Vermont YPAA","location":"Vermont"}]}},{"type":"CallToAction","props":{"id":"register","eyebrow":"See you in Hartford","heading":"Ready for NECYPAA XXXVI?","body":"Register for the convention and reserve your room while space is available.","primaryLabel":"Register","primaryUrl":"https://register.necypaact.com/en/register","secondaryLabel":"Book a hotel room","secondaryUrl":"https://www.necypaact.com/hotel"}}],"zones":{}}',
+    ),
     updatedAt: text("updated_at")
       .notNull()
       .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
@@ -126,6 +424,317 @@ export const pages = sqliteTable(
   ],
 );
 
+export const _pages_v_blocks_hero_countdown = sqliteTable(
+  "_pages_v_blocks_hero_countdown",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: integer("id").primaryKey(),
+    eyebrow: text("eyebrow"),
+    heading: text("heading"),
+    body: text("body"),
+    eventDate: text("event_date"),
+    eventLocation: text("event_location"),
+    countdownTarget: text("countdown_target"),
+    registerLabel: text("register_label"),
+    registerUrl: text("register_url"),
+    hotelLabel: text("hotel_label"),
+    hotelUrl: text("hotel_url"),
+    textStyles: text("text_styles", { mode: "json" }),
+    _uuid: text("_uuid"),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("_pages_v_blocks_hero_countdown_order_idx").on(columns._order),
+    index("_pages_v_blocks_hero_countdown_parent_id_idx").on(columns._parentID),
+    index("_pages_v_blocks_hero_countdown_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_pages_v.id],
+      name: "_pages_v_blocks_hero_countdown_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const _pages_v_blocks_about = sqliteTable(
+  "_pages_v_blocks_about",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: integer("id").primaryKey(),
+    eyebrow: text("eyebrow"),
+    heading: text("heading"),
+    body: text("body"),
+    advisoryHeading: text("advisory_heading"),
+    advisoryBody: text("advisory_body"),
+    textStyles: text("text_styles", { mode: "json" }),
+    _uuid: text("_uuid"),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("_pages_v_blocks_about_order_idx").on(columns._order),
+    index("_pages_v_blocks_about_parent_id_idx").on(columns._parentID),
+    index("_pages_v_blocks_about_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_pages_v.id],
+      name: "_pages_v_blocks_about_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const _pages_v_blocks_meeting_info_important_dates = sqliteTable(
+  "_pages_v_blocks_meeting_info_important_dates",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    id: integer("id").primaryKey(),
+    date: text("date"),
+    label: text("label"),
+    _uuid: text("_uuid"),
+  },
+  (columns) => [
+    index("_pages_v_blocks_meeting_info_important_dates_order_idx").on(
+      columns._order,
+    ),
+    index("_pages_v_blocks_meeting_info_important_dates_parent_id_idx").on(
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_pages_v_blocks_meeting_info.id],
+      name: "_pages_v_blocks_meeting_info_important_dates_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const _pages_v_blocks_meeting_info = sqliteTable(
+  "_pages_v_blocks_meeting_info",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: integer("id").primaryKey(),
+    eyebrow: text("eyebrow"),
+    heading: text("heading"),
+    body: text("body"),
+    date: text("date"),
+    time: text("time"),
+    location: text("location"),
+    actionLabel: text("action_label"),
+    actionUrl: text("action_url"),
+    textStyles: text("text_styles", { mode: "json" }),
+    _uuid: text("_uuid"),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("_pages_v_blocks_meeting_info_order_idx").on(columns._order),
+    index("_pages_v_blocks_meeting_info_parent_id_idx").on(columns._parentID),
+    index("_pages_v_blocks_meeting_info_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_pages_v.id],
+      name: "_pages_v_blocks_meeting_info_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const _pages_v_blocks_events_past_events = sqliteTable(
+  "_pages_v_blocks_events_past_events",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    id: integer("id").primaryKey(),
+    title: text("title"),
+    date: text("date"),
+    _uuid: text("_uuid"),
+  },
+  (columns) => [
+    index("_pages_v_blocks_events_past_events_order_idx").on(columns._order),
+    index("_pages_v_blocks_events_past_events_parent_id_idx").on(
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_pages_v_blocks_events.id],
+      name: "_pages_v_blocks_events_past_events_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const _pages_v_blocks_events = sqliteTable(
+  "_pages_v_blocks_events",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: integer("id").primaryKey(),
+    eyebrow: text("eyebrow"),
+    heading: text("heading"),
+    upcomingLabel: text("upcoming_label"),
+    upcomingTitle: text("upcoming_title"),
+    upcomingBody: text("upcoming_body"),
+    upcomingDate: text("upcoming_date"),
+    upcomingLocation: text("upcoming_location"),
+    textStyles: text("text_styles", { mode: "json" }),
+    _uuid: text("_uuid"),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("_pages_v_blocks_events_order_idx").on(columns._order),
+    index("_pages_v_blocks_events_parent_id_idx").on(columns._parentID),
+    index("_pages_v_blocks_events_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_pages_v.id],
+      name: "_pages_v_blocks_events_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const _pages_v_blocks_meeting_directory_meetings = sqliteTable(
+  "_pages_v_blocks_meeting_directory_meetings",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    id: integer("id").primaryKey(),
+    name: text("name"),
+    location: text("location"),
+    _uuid: text("_uuid"),
+  },
+  (columns) => [
+    index("_pages_v_blocks_meeting_directory_meetings_order_idx").on(
+      columns._order,
+    ),
+    index("_pages_v_blocks_meeting_directory_meetings_parent_id_idx").on(
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_pages_v_blocks_meeting_directory.id],
+      name: "_pages_v_blocks_meeting_directory_meetings_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const _pages_v_blocks_meeting_directory = sqliteTable(
+  "_pages_v_blocks_meeting_directory",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: integer("id").primaryKey(),
+    eyebrow: text("eyebrow"),
+    heading: text("heading"),
+    body: text("body"),
+    textStyles: text("text_styles", { mode: "json" }),
+    _uuid: text("_uuid"),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("_pages_v_blocks_meeting_directory_order_idx").on(columns._order),
+    index("_pages_v_blocks_meeting_directory_parent_id_idx").on(
+      columns._parentID,
+    ),
+    index("_pages_v_blocks_meeting_directory_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_pages_v.id],
+      name: "_pages_v_blocks_meeting_directory_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const _pages_v_blocks_call_to_action = sqliteTable(
+  "_pages_v_blocks_call_to_action",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: integer("id").primaryKey(),
+    eyebrow: text("eyebrow"),
+    heading: text("heading"),
+    body: text("body"),
+    primaryLabel: text("primary_label"),
+    primaryUrl: text("primary_url"),
+    secondaryLabel: text("secondary_label"),
+    secondaryUrl: text("secondary_url"),
+    textStyles: text("text_styles", { mode: "json" }),
+    _uuid: text("_uuid"),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("_pages_v_blocks_call_to_action_order_idx").on(columns._order),
+    index("_pages_v_blocks_call_to_action_parent_id_idx").on(columns._parentID),
+    index("_pages_v_blocks_call_to_action_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_pages_v.id],
+      name: "_pages_v_blocks_call_to_action_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const _pages_v_blocks_rich_text = sqliteTable(
+  "_pages_v_blocks_rich_text",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: integer("id").primaryKey(),
+    content: text("content", { mode: "json" }),
+    fontSize: text("font_size").default("1rem"),
+    color: text("color").default("#171b20"),
+    fontWeight: text("font_weight", { enum: ["400", "700"] }).default("400"),
+    alignment: text("alignment", { enum: ["left", "center", "right"] }).default(
+      "left",
+    ),
+    _uuid: text("_uuid"),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("_pages_v_blocks_rich_text_order_idx").on(columns._order),
+    index("_pages_v_blocks_rich_text_parent_id_idx").on(columns._parentID),
+    index("_pages_v_blocks_rich_text_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_pages_v.id],
+      name: "_pages_v_blocks_rich_text_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const _pages_v_blocks_free_text = sqliteTable(
+  "_pages_v_blocks_free_text",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: integer("id").primaryKey(),
+    text: text("text"),
+    fontSize: text("font_size").default("1rem"),
+    color: text("color").default("#171b20"),
+    fontWeight: text("font_weight", { enum: ["400", "700"] }).default("400"),
+    alignment: text("alignment", { enum: ["left", "center", "right"] }).default(
+      "left",
+    ),
+    _uuid: text("_uuid"),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("_pages_v_blocks_free_text_order_idx").on(columns._order),
+    index("_pages_v_blocks_free_text_parent_id_idx").on(columns._parentID),
+    index("_pages_v_blocks_free_text_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_pages_v.id],
+      name: "_pages_v_blocks_free_text_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
 export const _pages_v = sqliteTable(
   "_pages_v",
   {
@@ -135,11 +744,11 @@ export const _pages_v = sqliteTable(
     }),
     version_title: text("version_title"),
     version_slug: text("version_slug"),
-    version_builderData: text("version_builder_data", { mode: "json" }).default(
-      '{"root":{"props":{"title":"NECYPAA XXXVI"}},"content":[{"type":"HeroCountdown","props":{"id":"hero","eyebrow":"Escaping the Mad Realm","heading":"NECYPAA XXXVI","body":"Four days of recovery, fellowship, service, and celebration in Hartford, Connecticut.","eventDate":"December 31, 2026 – January 3, 2027","eventLocation":"Hartford Marriott Downtown","countdownTarget":"2026-12-31T17:00:00-05:00","registerLabel":"Register","registerUrl":"https://register.necypaact.com/en/register","hotelLabel":"Book a hotel room","hotelUrl":"https://www.necypaact.com/hotel"}},{"type":"About","props":{"id":"about","eyebrow":"About NECYPAA","heading":"Four days. One fellowship. A way out of the ordinary.","body":"NECYPAA brings young people in Alcoholics Anonymous together from across the Northeast for speakers, workshops, dancing, service, and the kind of connection that makes recovery feel possible. Young means young at heart—whether this is your first sober event or your fiftieth convention, you are welcome here.","advisoryHeading":"Anonymity matters","advisoryBody":"Please help protect personal anonymity when sharing photos or stories from convention spaces."}},{"type":"MeetingInfo","props":{"id":"business-meeting","eyebrow":"Host committee","heading":"Business meeting","body":"See how the convention is built through committee work, updates, votes, and fellowship. No title or commitment is required—just show up.","date":"Sunday, August 16, 2026","time":"2:00 PM Eastern","location":"Online via Zoom","actionLabel":"Join on Zoom","actionUrl":"https://www.necypaact.com/service","importantDates":"Aug 16 — Host committee business meeting\nAug 22 — Three Frogs on a Log workshop\nDec 31 — Convention opens at 5:00 PM\nJan 3 — Convention closes"}},{"type":"Events","props":{"id":"events","eyebrow":"Gather with us","heading":"Upcoming and past events","upcomingLabel":"Next up","upcomingTitle":"Three Frogs on a Log","upcomingBody":"A Step Two and Three workshop with four mini-speakers and a live Q&A.","upcomingDate":"Saturday, August 22, 2026","upcomingLocation":"Online via Zoom","pastEvents":"The Ultimate Cool Down — April 25, 2026\nZombie Prom — February 13, 2026\nNew Year’s Eve Bonfire — December 31, 2025\nCardboard Masquerade — May 30, 2025"}},{"type":"MeetingDirectory","props":{"id":"ypaa","eyebrow":"Across the Northeast","heading":"YPAA meetings near you","body":"Find young people’s meetings and committees throughout the region.","meetings":"Connecticut YPAA — Connecticut\nMaine YPAA — Maine\nMassachusetts YPAA — Massachusetts\nNew Hampshire YPAA — New Hampshire\nNew Jersey YPAA — New Jersey\nNew York YPAA — New York\nPennsylvania YPAA — Pennsylvania\nRhode Island YPAA — Rhode Island\nVermont YPAA — Vermont"}},{"type":"CallToAction","props":{"id":"register","eyebrow":"See you in Hartford","heading":"Ready for NECYPAA XXXVI?","body":"Register for the convention and reserve your room while space is available.","primaryLabel":"Register","primaryUrl":"https://register.necypaact.com/en/register","secondaryLabel":"Book a hotel room","secondaryUrl":"https://www.necypaact.com/hotel"}}],"zones":{}}',
-    ),
     version_meta_title: text("version_meta_title"),
     version_meta_description: text("version_meta_description"),
+    version_builderData: text("version_builder_data", { mode: "json" }).default(
+      '{"root":{"props":{"title":"NECYPAA XXXVI"}},"content":[{"type":"HeroCountdown","props":{"id":"hero","eyebrow":"Escaping the Mad Realm","heading":"NECYPAA XXXVI","body":"Four days of recovery, fellowship, service, and celebration in Hartford, Connecticut.","eventDate":"December 31, 2026 – January 3, 2027","eventLocation":"Hartford Marriott Downtown","countdownTarget":"2026-12-31T17:00:00-05:00","registerLabel":"Register","registerUrl":"https://register.necypaact.com/en/register","hotelLabel":"Book a hotel room","hotelUrl":"https://www.necypaact.com/hotel"}},{"type":"About","props":{"id":"about","eyebrow":"About NECYPAA","heading":"Four days. One fellowship. A way out of the ordinary.","body":"NECYPAA brings young people in Alcoholics Anonymous together from across the Northeast for speakers, workshops, dancing, service, and the kind of connection that makes recovery feel possible. Young means young at heart—whether this is your first sober event or your fiftieth convention, you are welcome here.","advisoryHeading":"Anonymity matters","advisoryBody":"Please help protect personal anonymity when sharing photos or stories from convention spaces."}},{"type":"MeetingInfo","props":{"id":"business-meeting","eyebrow":"Host committee","heading":"Business meeting","body":"See how the convention is built through committee work, updates, votes, and fellowship. No title or commitment is required—just show up.","date":"Sunday, August 16, 2026","time":"2:00 PM Eastern","location":"Online via Zoom","actionLabel":"Join on Zoom","actionUrl":"https://www.necypaact.com/service","importantDates":[{"date":"Aug 16","label":"Host committee business meeting"},{"date":"Aug 22","label":"Three Frogs on a Log workshop"},{"date":"Dec 31","label":"Convention opens at 5:00 PM"},{"date":"Jan 3","label":"Convention closes"}]}},{"type":"Events","props":{"id":"events","eyebrow":"Gather with us","heading":"Upcoming and past events","upcomingLabel":"Next up","upcomingTitle":"Three Frogs on a Log","upcomingBody":"A Step Two and Three workshop with four mini-speakers and a live Q&A.","upcomingDate":"Saturday, August 22, 2026","upcomingLocation":"Online via Zoom","pastEvents":[{"title":"The Ultimate Cool Down","date":"April 25, 2026"},{"title":"Zombie Prom","date":"February 13, 2026"},{"title":"New Year’s Eve Bonfire","date":"December 31, 2025"},{"title":"Cardboard Masquerade","date":"May 30, 2025"}]}},{"type":"MeetingDirectory","props":{"id":"ypaa","eyebrow":"Across the Northeast","heading":"YPAA meetings near you","body":"Find young people’s meetings and committees throughout the region.","meetings":[{"name":"Connecticut YPAA","location":"Connecticut"},{"name":"Maine YPAA","location":"Maine"},{"name":"Massachusetts YPAA","location":"Massachusetts"},{"name":"New Hampshire YPAA","location":"New Hampshire"},{"name":"New Jersey YPAA","location":"New Jersey"},{"name":"New York YPAA","location":"New York"},{"name":"Pennsylvania YPAA","location":"Pennsylvania"},{"name":"Rhode Island YPAA","location":"Rhode Island"},{"name":"Vermont YPAA","location":"Vermont"}]}},{"type":"CallToAction","props":{"id":"register","eyebrow":"See you in Hartford","heading":"Ready for NECYPAA XXXVI?","body":"Register for the convention and reserve your room while space is available.","primaryLabel":"Register","primaryUrl":"https://register.necypaact.com/en/register","secondaryLabel":"Book a hotel room","secondaryUrl":"https://www.necypaact.com/hotel"}}],"zones":{}}',
+    ),
     version_updatedAt: text("version_updated_at").default(
       sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`,
     ),
@@ -327,12 +936,299 @@ export const relations_users = relations(users, ({ many }) => ({
   }),
 }));
 export const relations_media = relations(media, () => ({}));
-export const relations_pages = relations(pages, () => ({}));
-export const relations__pages_v = relations(_pages_v, ({ one }) => ({
+export const relations_pages_blocks_hero_countdown = relations(
+  pages_blocks_hero_countdown,
+  ({ one }) => ({
+    _parentID: one(pages, {
+      fields: [pages_blocks_hero_countdown._parentID],
+      references: [pages.id],
+      relationName: "_blocks_HeroCountdown",
+    }),
+  }),
+);
+export const relations_pages_blocks_about = relations(
+  pages_blocks_about,
+  ({ one }) => ({
+    _parentID: one(pages, {
+      fields: [pages_blocks_about._parentID],
+      references: [pages.id],
+      relationName: "_blocks_About",
+    }),
+  }),
+);
+export const relations_pages_blocks_meeting_info_important_dates = relations(
+  pages_blocks_meeting_info_important_dates,
+  ({ one }) => ({
+    _parentID: one(pages_blocks_meeting_info, {
+      fields: [pages_blocks_meeting_info_important_dates._parentID],
+      references: [pages_blocks_meeting_info.id],
+      relationName: "importantDates",
+    }),
+  }),
+);
+export const relations_pages_blocks_meeting_info = relations(
+  pages_blocks_meeting_info,
+  ({ one, many }) => ({
+    _parentID: one(pages, {
+      fields: [pages_blocks_meeting_info._parentID],
+      references: [pages.id],
+      relationName: "_blocks_MeetingInfo",
+    }),
+    importantDates: many(pages_blocks_meeting_info_important_dates, {
+      relationName: "importantDates",
+    }),
+  }),
+);
+export const relations_pages_blocks_events_past_events = relations(
+  pages_blocks_events_past_events,
+  ({ one }) => ({
+    _parentID: one(pages_blocks_events, {
+      fields: [pages_blocks_events_past_events._parentID],
+      references: [pages_blocks_events.id],
+      relationName: "pastEvents",
+    }),
+  }),
+);
+export const relations_pages_blocks_events = relations(
+  pages_blocks_events,
+  ({ one, many }) => ({
+    _parentID: one(pages, {
+      fields: [pages_blocks_events._parentID],
+      references: [pages.id],
+      relationName: "_blocks_Events",
+    }),
+    pastEvents: many(pages_blocks_events_past_events, {
+      relationName: "pastEvents",
+    }),
+  }),
+);
+export const relations_pages_blocks_meeting_directory_meetings = relations(
+  pages_blocks_meeting_directory_meetings,
+  ({ one }) => ({
+    _parentID: one(pages_blocks_meeting_directory, {
+      fields: [pages_blocks_meeting_directory_meetings._parentID],
+      references: [pages_blocks_meeting_directory.id],
+      relationName: "meetings",
+    }),
+  }),
+);
+export const relations_pages_blocks_meeting_directory = relations(
+  pages_blocks_meeting_directory,
+  ({ one, many }) => ({
+    _parentID: one(pages, {
+      fields: [pages_blocks_meeting_directory._parentID],
+      references: [pages.id],
+      relationName: "_blocks_MeetingDirectory",
+    }),
+    meetings: many(pages_blocks_meeting_directory_meetings, {
+      relationName: "meetings",
+    }),
+  }),
+);
+export const relations_pages_blocks_call_to_action = relations(
+  pages_blocks_call_to_action,
+  ({ one }) => ({
+    _parentID: one(pages, {
+      fields: [pages_blocks_call_to_action._parentID],
+      references: [pages.id],
+      relationName: "_blocks_CallToAction",
+    }),
+  }),
+);
+export const relations_pages_blocks_rich_text = relations(
+  pages_blocks_rich_text,
+  ({ one }) => ({
+    _parentID: one(pages, {
+      fields: [pages_blocks_rich_text._parentID],
+      references: [pages.id],
+      relationName: "_blocks_RichText",
+    }),
+  }),
+);
+export const relations_pages_blocks_free_text = relations(
+  pages_blocks_free_text,
+  ({ one }) => ({
+    _parentID: one(pages, {
+      fields: [pages_blocks_free_text._parentID],
+      references: [pages.id],
+      relationName: "_blocks_FreeText",
+    }),
+  }),
+);
+export const relations_pages = relations(pages, ({ many }) => ({
+  _blocks_HeroCountdown: many(pages_blocks_hero_countdown, {
+    relationName: "_blocks_HeroCountdown",
+  }),
+  _blocks_About: many(pages_blocks_about, {
+    relationName: "_blocks_About",
+  }),
+  _blocks_MeetingInfo: many(pages_blocks_meeting_info, {
+    relationName: "_blocks_MeetingInfo",
+  }),
+  _blocks_Events: many(pages_blocks_events, {
+    relationName: "_blocks_Events",
+  }),
+  _blocks_MeetingDirectory: many(pages_blocks_meeting_directory, {
+    relationName: "_blocks_MeetingDirectory",
+  }),
+  _blocks_CallToAction: many(pages_blocks_call_to_action, {
+    relationName: "_blocks_CallToAction",
+  }),
+  _blocks_RichText: many(pages_blocks_rich_text, {
+    relationName: "_blocks_RichText",
+  }),
+  _blocks_FreeText: many(pages_blocks_free_text, {
+    relationName: "_blocks_FreeText",
+  }),
+}));
+export const relations__pages_v_blocks_hero_countdown = relations(
+  _pages_v_blocks_hero_countdown,
+  ({ one }) => ({
+    _parentID: one(_pages_v, {
+      fields: [_pages_v_blocks_hero_countdown._parentID],
+      references: [_pages_v.id],
+      relationName: "_blocks_HeroCountdown",
+    }),
+  }),
+);
+export const relations__pages_v_blocks_about = relations(
+  _pages_v_blocks_about,
+  ({ one }) => ({
+    _parentID: one(_pages_v, {
+      fields: [_pages_v_blocks_about._parentID],
+      references: [_pages_v.id],
+      relationName: "_blocks_About",
+    }),
+  }),
+);
+export const relations__pages_v_blocks_meeting_info_important_dates = relations(
+  _pages_v_blocks_meeting_info_important_dates,
+  ({ one }) => ({
+    _parentID: one(_pages_v_blocks_meeting_info, {
+      fields: [_pages_v_blocks_meeting_info_important_dates._parentID],
+      references: [_pages_v_blocks_meeting_info.id],
+      relationName: "importantDates",
+    }),
+  }),
+);
+export const relations__pages_v_blocks_meeting_info = relations(
+  _pages_v_blocks_meeting_info,
+  ({ one, many }) => ({
+    _parentID: one(_pages_v, {
+      fields: [_pages_v_blocks_meeting_info._parentID],
+      references: [_pages_v.id],
+      relationName: "_blocks_MeetingInfo",
+    }),
+    importantDates: many(_pages_v_blocks_meeting_info_important_dates, {
+      relationName: "importantDates",
+    }),
+  }),
+);
+export const relations__pages_v_blocks_events_past_events = relations(
+  _pages_v_blocks_events_past_events,
+  ({ one }) => ({
+    _parentID: one(_pages_v_blocks_events, {
+      fields: [_pages_v_blocks_events_past_events._parentID],
+      references: [_pages_v_blocks_events.id],
+      relationName: "pastEvents",
+    }),
+  }),
+);
+export const relations__pages_v_blocks_events = relations(
+  _pages_v_blocks_events,
+  ({ one, many }) => ({
+    _parentID: one(_pages_v, {
+      fields: [_pages_v_blocks_events._parentID],
+      references: [_pages_v.id],
+      relationName: "_blocks_Events",
+    }),
+    pastEvents: many(_pages_v_blocks_events_past_events, {
+      relationName: "pastEvents",
+    }),
+  }),
+);
+export const relations__pages_v_blocks_meeting_directory_meetings = relations(
+  _pages_v_blocks_meeting_directory_meetings,
+  ({ one }) => ({
+    _parentID: one(_pages_v_blocks_meeting_directory, {
+      fields: [_pages_v_blocks_meeting_directory_meetings._parentID],
+      references: [_pages_v_blocks_meeting_directory.id],
+      relationName: "meetings",
+    }),
+  }),
+);
+export const relations__pages_v_blocks_meeting_directory = relations(
+  _pages_v_blocks_meeting_directory,
+  ({ one, many }) => ({
+    _parentID: one(_pages_v, {
+      fields: [_pages_v_blocks_meeting_directory._parentID],
+      references: [_pages_v.id],
+      relationName: "_blocks_MeetingDirectory",
+    }),
+    meetings: many(_pages_v_blocks_meeting_directory_meetings, {
+      relationName: "meetings",
+    }),
+  }),
+);
+export const relations__pages_v_blocks_call_to_action = relations(
+  _pages_v_blocks_call_to_action,
+  ({ one }) => ({
+    _parentID: one(_pages_v, {
+      fields: [_pages_v_blocks_call_to_action._parentID],
+      references: [_pages_v.id],
+      relationName: "_blocks_CallToAction",
+    }),
+  }),
+);
+export const relations__pages_v_blocks_rich_text = relations(
+  _pages_v_blocks_rich_text,
+  ({ one }) => ({
+    _parentID: one(_pages_v, {
+      fields: [_pages_v_blocks_rich_text._parentID],
+      references: [_pages_v.id],
+      relationName: "_blocks_RichText",
+    }),
+  }),
+);
+export const relations__pages_v_blocks_free_text = relations(
+  _pages_v_blocks_free_text,
+  ({ one }) => ({
+    _parentID: one(_pages_v, {
+      fields: [_pages_v_blocks_free_text._parentID],
+      references: [_pages_v.id],
+      relationName: "_blocks_FreeText",
+    }),
+  }),
+);
+export const relations__pages_v = relations(_pages_v, ({ one, many }) => ({
   parent: one(pages, {
     fields: [_pages_v.parent],
     references: [pages.id],
     relationName: "parent",
+  }),
+  _blocks_HeroCountdown: many(_pages_v_blocks_hero_countdown, {
+    relationName: "_blocks_HeroCountdown",
+  }),
+  _blocks_About: many(_pages_v_blocks_about, {
+    relationName: "_blocks_About",
+  }),
+  _blocks_MeetingInfo: many(_pages_v_blocks_meeting_info, {
+    relationName: "_blocks_MeetingInfo",
+  }),
+  _blocks_Events: many(_pages_v_blocks_events, {
+    relationName: "_blocks_Events",
+  }),
+  _blocks_MeetingDirectory: many(_pages_v_blocks_meeting_directory, {
+    relationName: "_blocks_MeetingDirectory",
+  }),
+  _blocks_CallToAction: many(_pages_v_blocks_call_to_action, {
+    relationName: "_blocks_CallToAction",
+  }),
+  _blocks_RichText: many(_pages_v_blocks_rich_text, {
+    relationName: "_blocks_RichText",
+  }),
+  _blocks_FreeText: many(_pages_v_blocks_free_text, {
+    relationName: "_blocks_FreeText",
   }),
 }));
 export const relations_payload_kv = relations(payload_kv, () => ({}));
@@ -401,7 +1297,29 @@ type DatabaseSchema = {
   users_sessions: typeof users_sessions;
   users: typeof users;
   media: typeof media;
+  pages_blocks_hero_countdown: typeof pages_blocks_hero_countdown;
+  pages_blocks_about: typeof pages_blocks_about;
+  pages_blocks_meeting_info_important_dates: typeof pages_blocks_meeting_info_important_dates;
+  pages_blocks_meeting_info: typeof pages_blocks_meeting_info;
+  pages_blocks_events_past_events: typeof pages_blocks_events_past_events;
+  pages_blocks_events: typeof pages_blocks_events;
+  pages_blocks_meeting_directory_meetings: typeof pages_blocks_meeting_directory_meetings;
+  pages_blocks_meeting_directory: typeof pages_blocks_meeting_directory;
+  pages_blocks_call_to_action: typeof pages_blocks_call_to_action;
+  pages_blocks_rich_text: typeof pages_blocks_rich_text;
+  pages_blocks_free_text: typeof pages_blocks_free_text;
   pages: typeof pages;
+  _pages_v_blocks_hero_countdown: typeof _pages_v_blocks_hero_countdown;
+  _pages_v_blocks_about: typeof _pages_v_blocks_about;
+  _pages_v_blocks_meeting_info_important_dates: typeof _pages_v_blocks_meeting_info_important_dates;
+  _pages_v_blocks_meeting_info: typeof _pages_v_blocks_meeting_info;
+  _pages_v_blocks_events_past_events: typeof _pages_v_blocks_events_past_events;
+  _pages_v_blocks_events: typeof _pages_v_blocks_events;
+  _pages_v_blocks_meeting_directory_meetings: typeof _pages_v_blocks_meeting_directory_meetings;
+  _pages_v_blocks_meeting_directory: typeof _pages_v_blocks_meeting_directory;
+  _pages_v_blocks_call_to_action: typeof _pages_v_blocks_call_to_action;
+  _pages_v_blocks_rich_text: typeof _pages_v_blocks_rich_text;
+  _pages_v_blocks_free_text: typeof _pages_v_blocks_free_text;
   _pages_v: typeof _pages_v;
   payload_kv: typeof payload_kv;
   payload_locked_documents: typeof payload_locked_documents;
@@ -412,7 +1330,29 @@ type DatabaseSchema = {
   relations_users_sessions: typeof relations_users_sessions;
   relations_users: typeof relations_users;
   relations_media: typeof relations_media;
+  relations_pages_blocks_hero_countdown: typeof relations_pages_blocks_hero_countdown;
+  relations_pages_blocks_about: typeof relations_pages_blocks_about;
+  relations_pages_blocks_meeting_info_important_dates: typeof relations_pages_blocks_meeting_info_important_dates;
+  relations_pages_blocks_meeting_info: typeof relations_pages_blocks_meeting_info;
+  relations_pages_blocks_events_past_events: typeof relations_pages_blocks_events_past_events;
+  relations_pages_blocks_events: typeof relations_pages_blocks_events;
+  relations_pages_blocks_meeting_directory_meetings: typeof relations_pages_blocks_meeting_directory_meetings;
+  relations_pages_blocks_meeting_directory: typeof relations_pages_blocks_meeting_directory;
+  relations_pages_blocks_call_to_action: typeof relations_pages_blocks_call_to_action;
+  relations_pages_blocks_rich_text: typeof relations_pages_blocks_rich_text;
+  relations_pages_blocks_free_text: typeof relations_pages_blocks_free_text;
   relations_pages: typeof relations_pages;
+  relations__pages_v_blocks_hero_countdown: typeof relations__pages_v_blocks_hero_countdown;
+  relations__pages_v_blocks_about: typeof relations__pages_v_blocks_about;
+  relations__pages_v_blocks_meeting_info_important_dates: typeof relations__pages_v_blocks_meeting_info_important_dates;
+  relations__pages_v_blocks_meeting_info: typeof relations__pages_v_blocks_meeting_info;
+  relations__pages_v_blocks_events_past_events: typeof relations__pages_v_blocks_events_past_events;
+  relations__pages_v_blocks_events: typeof relations__pages_v_blocks_events;
+  relations__pages_v_blocks_meeting_directory_meetings: typeof relations__pages_v_blocks_meeting_directory_meetings;
+  relations__pages_v_blocks_meeting_directory: typeof relations__pages_v_blocks_meeting_directory;
+  relations__pages_v_blocks_call_to_action: typeof relations__pages_v_blocks_call_to_action;
+  relations__pages_v_blocks_rich_text: typeof relations__pages_v_blocks_rich_text;
+  relations__pages_v_blocks_free_text: typeof relations__pages_v_blocks_free_text;
   relations__pages_v: typeof relations__pages_v;
   relations_payload_kv: typeof relations_payload_kv;
   relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels;

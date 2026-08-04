@@ -57,6 +57,11 @@
 .cta .actions { justify-content: center; }
 .freeText { background: #fff; padding: 34px max(24px, calc((100vw - 1120px) / 2)); }
 .freeText p { margin: 0; }
+.richText { background: #fff; color: #171b20; padding: 70px 0; }
+.richText :is(h2, h3, h4) { color: inherit; margin: 1.25em 0 .45em; }
+.richText :is(p, li, blockquote) { color: inherit; line-height: 1.7; }
+.richText blockquote { border-left: 4px solid #f06445; margin-left: 0; padding-left: 20px; }
+.richText a { color: #5e2787; text-decoration-thickness: .12em; text-underline-offset: .16em; }
 :global(.puck-countdown) { display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(70px, 110px)); max-width: 480px; }
 :global(.puck-countdown > span) { background: #ffffff0d; border: 1px solid #ffffff24; border-radius: 12px; padding: 14px 10px; text-align: center; }
 :global(.puck-countdown strong), :global(.puck-countdown small) { display: block; }

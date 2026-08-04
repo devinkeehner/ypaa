@@ -9,13 +9,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { editableFieldsByType, puckConfig } from "@/puck/config";
 import type { NECYPAAData } from "@/puck/types";
 
+import { PuckLexicalTextEditor } from "./PuckLexicalTextEditor";
 import styles from "./puck-builder.module.css";
 
 const usePuck = createUsePuck();
 const EMPTY_FIELDS: string[] = [];
 
 function property(type: string, field: string, kind: "Color" | "FontSize" | "FontWeight" | "TextAlign") {
-  if (type === "FreeText" && field === "text") {
+  if ((type === "FreeText" && field === "text") || (type === "RichText" && field === "content")) {
     return kind === "Color" ? "color" : kind === "FontSize" ? "fontSize" : kind === "FontWeight" ? "fontWeight" : "alignment";
   }
   return `${field}${kind}`;
@@ -60,9 +61,13 @@ function FormattingBar() {
   const weight = String(props[weightName] || "400");
   const align = String(props[alignName] || "left");
 
+  const activeValue = props[activeField];
+
   return <div className={styles.formatBar} aria-label="Selected text formatting">
     <label><span>Text</span><select value={activeField} onChange={(event) => setFocus({ componentId, field: event.target.value })}>{fields.map((field) => <option key={field} value={field}>{field.replace(/([A-Z])/g, " $1")}</option>)}</select></label>
-    <input className={styles.copyInput} aria-label="Text content" value={typeof props[activeField] === "string" ? props[activeField] as string : ""} onChange={(event) => update(activeField, event.target.value)} />
+    {typeof activeValue === "string"
+      ? <input className={styles.copyInput} aria-label="Text content" value={activeValue} onChange={(event) => update(activeField, event.target.value)} />
+      : <span className={styles.richHint}>Edit the copy in the rich-text panel; style the whole block here.</span>}
     <label><span>Size</span><input aria-label="Font size in pixels" min="10" max="120" placeholder="px" type="number" value={size.endsWith("px") ? size.slice(0, -2) : ""} onChange={(event) => update(sizeName, event.target.value ? `${event.target.value}px` : "")} /></label>
     <label><span>Color</span><input aria-label="Text color" type="color" value={color} onChange={(event) => update(colorName, event.target.value)} /></label>
     <button aria-label="Bold" aria-pressed={weight === "700"} onClick={() => update(weightName, weight === "700" ? "400" : "700")} type="button"><Bold /></button>
@@ -101,5 +106,25 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageTitle }: { init
   }, [data, save]);
 
   const overrides = useMemo(() => ({ header: ({ actions }: { actions: React.ReactNode }) => <BuilderHeader actions={actions} pageId={pageId} pageTitle={pageTitle} /> }), [pageId, pageTitle]);
-  return <div className={styles.wrapper}><Puck config={puckConfig as unknown as Config} data={data} height="100dvh" onChange={(next) => setData(next as NECYPAAData)} onPublish={(next) => save(next, true)} overrides={overrides} renderHeaderActions={({ state }) => <div className={styles.publish}><span aria-live="polite">{message}</span><button onClick={() => void save(state.data, true)} type="button">Publish</button></div>} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div>;
+  const editorConfig = useMemo(() => {
+    const richText = puckConfig.components.RichText;
+    return {
+      ...puckConfig,
+      components: {
+        ...puckConfig.components,
+        RichText: {
+          ...richText,
+          fields: {
+            ...richText.fields,
+            content: {
+              type: "custom",
+              label: "Rich text",
+              render: ({ value, onChange, readOnly }: { value: unknown; onChange: (value: unknown) => void; readOnly?: boolean }) => <PuckLexicalTextEditor value={value} onChange={onChange} readOnly={readOnly} />,
+            },
+          },
+        },
+      },
+    };
+  }, []);
+  return <div className={styles.wrapper}><Puck config={editorConfig as unknown as Config} data={data} height="100dvh" onChange={(next) => setData(next as NECYPAAData)} onPublish={(next) => save(next, true)} overrides={overrides} renderHeaderActions={({ state }) => <div className={styles.publish}><span aria-live="polite">{message}</span><button onClick={() => void save(state.data, true)} type="button">Publish</button></div>} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div>;
 }

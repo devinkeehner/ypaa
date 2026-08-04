@@ -1,4 +1,4 @@
-.wrapper { height: 100dvh; }
+.wrapper { position: fixed; z-index: 1000; inset: 0; width: 100vw; height: 100dvh; overflow: hidden; isolation: isolate; background: #e9edf1; }
 .loading { align-items: center; display: flex; font: 600 1rem system-ui; height: 100dvh; justify-content: center; }
 .header { background: #11171d; color: #fff; }
 .topline { align-items: center; display: flex; justify-content: space-between; min-height: 58px; padding: 8px 14px; }
@@ -20,6 +20,7 @@
 .formatBar label span { font-size: .63rem; font-weight: 800; text-transform: uppercase; }
 .formatBar input, .formatBar select { background: #fff; border: 1px solid #171b2033; border-radius: 6px; height: 34px; padding: 0 8px; }
 .copyInput { min-width: 220px; width: min(34vw, 420px); }
+.richHint { min-width: 260px; color: #625e58; font-size: .72rem; }
 .formatBar input[type="number"] { width: 70px; }
 .formatBar input[type="color"] { padding: 3px; width: 42px; }
 .formatBar > button, .align button { align-items: center; background: #fff; border: 1px solid #171b2033; border-radius: 6px; color: #171b20; display: flex; height: 34px; justify-content: center; width: 34px; }

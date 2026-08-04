@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 const developmentPreviewMeta =
@@ -69,5 +69,15 @@ test("attaches the Payload admin stylesheet to its route layout", async () => {
     adminStyles.filter((file) => frontendStyles.includes(file)),
     [],
     "Public-site CSS must not be attached to the Payload admin layout",
+  );
+});
+
+test("packages the additive Payload layout migration", async () => {
+  const migrationFiles = await readdir(
+    new URL("../dist/.openai/drizzle", import.meta.url),
+  );
+  assert.ok(
+    migrationFiles.some((file) => /^0001_.+\.sql$/.test(file)),
+    "The structured page-layout migration must be included in the Sites artifact",
   );
 });

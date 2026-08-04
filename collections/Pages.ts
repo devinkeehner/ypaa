@@ -1,6 +1,9 @@
 import type { CollectionConfig } from "payload";
 
+import { PAGE_LAYOUT_BLOCKS } from "@/blocks/page-blocks";
 import { defaultPageData } from "@/puck/default-data";
+import { pageLayoutToPuckData, puckDataToLayout } from "@/puck/page-data";
+import type { PageDocument } from "@/puck/types";
 
 function formatSlug(value: unknown) {
   return String(value || "")
@@ -42,20 +45,70 @@ export const Pages: CollectionConfig = {
       hooks: { beforeValidate: [({ value }) => formatSlug(value)] },
     },
     {
+      type: "tabs",
+      tabs: [
+        {
+          label: "Content",
+          fields: [
+            {
+              name: "layout",
+              type: "blocks",
+              blocks: PAGE_LAYOUT_BLOCKS,
+              admin: {
+                description:
+                  "The same structured sections power the Payload form, visual builder, and public page.",
+                initCollapsed: true,
+              },
+            },
+          ],
+        },
+        {
+          label: "SEO",
+          fields: [
+            {
+              name: "meta",
+              type: "group",
+              fields: [
+                { name: "title", type: "text" },
+                { name: "description", type: "textarea" },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
       name: "builderData",
       type: "json",
       defaultValue: defaultPageData,
-      admin: { hidden: true },
-    },
-    {
-      name: "meta",
-      type: "group",
-      fields: [
-        { name: "title", type: "text" },
-        { name: "description", type: "textarea" },
-      ],
+      admin: {
+        hidden: true,
+        description: "Compatibility mirror for pages created before structured layout blocks were added.",
+      },
     },
   ],
+  hooks: {
+    afterRead: [
+      ({ doc }) => {
+        const page = doc as PageDocument;
+        if ((!Array.isArray(page.layout) || page.layout.length === 0) && page.builderData) {
+          page.layout = puckDataToLayout(page.builderData);
+        }
+        return page;
+      },
+    ],
+    beforeChange: [
+      ({ data, originalDoc }) => {
+        if (Array.isArray(data.layout)) {
+          data.builderData = pageLayoutToPuckData({
+            ...(originalDoc as PageDocument),
+            ...(data as PageDocument),
+          });
+        }
+        return data;
+      },
+    ],
+  },
   versions: {
     drafts: { autosave: { interval: 1000 } },
     maxPerDoc: 30,
