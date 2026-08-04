@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const developmentPreviewMeta =
@@ -29,7 +30,12 @@ test("renders development preview metadata", async () => {
     response.headers.get("content-type") ?? "",
     /^text\/html\b/i,
   );
-  assert.match(await response.text(), developmentPreviewMeta);
+  const html = await response.text();
+  assert.match(html, developmentPreviewMeta);
+  assert.match(
+    html,
+    /<link[^>]+href=["']\/assets\/frontend-styles-[^"']+\.css["'][^>]*>/i,
+  );
 });
 
 test("attaches the Payload admin stylesheet to its route layout", async () => {
@@ -45,5 +51,23 @@ test("attaches the Payload admin stylesheet to its route layout", async () => {
   assert.ok(
     Array.isArray(adminStyles) && adminStyles.length > 0,
     "Payload's route layout must emit at least one stylesheet link",
+  );
+
+  const clientManifest = JSON.parse(
+    await readFile(
+      new URL("../dist/client/.vite/manifest.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const frontendStyles =
+    clientManifest["app/(frontend)/frontend-styles.tsx"]?.css?.map(
+      (file) => `/${file}`,
+    ) ?? [];
+
+  assert.ok(frontendStyles.length > 0, "The public site must emit its stylesheet");
+  assert.deepEqual(
+    adminStyles.filter((file) => frontendStyles.includes(file)),
+    [],
+    "Public-site CSS must not be attached to the Payload admin layout",
   );
 });
