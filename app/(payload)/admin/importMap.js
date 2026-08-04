@@ -1,6 +1,10 @@
-import PuckPageBuilderView from "@/components/admin/PuckPageBuilderView";
+import { default as default_9fae9a50b1c0f53ea5eb1ee9db3c553d } from '@/components/admin/PuckPageBuilderView'
+import { R2ClientUploadHandler as R2ClientUploadHandler_85cc02ed84006fcc91d3aff39dda669d } from '@payloadcms/storage-r2/client'
+import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
-/** @type {import('payload').ImportMap} */
+/** @type import('payload').ImportMap */
 export const importMap = {
-  "@/components/admin/PuckPageBuilderView#default": PuckPageBuilderView,
-};
+  "@/components/admin/PuckPageBuilderView#default": default_9fae9a50b1c0f53ea5eb1ee9db3c553d,
+  "@payloadcms/storage-r2/client#R2ClientUploadHandler": R2ClientUploadHandler_85cc02ed84006fcc91d3aff39dda669d,
+  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
+}

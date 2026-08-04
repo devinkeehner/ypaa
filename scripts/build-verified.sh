@@ -18,6 +18,19 @@ if [[ ! -x "${vinext}" ]]; then
   exit 69
 fi
 
+payload="${SITES_PROJECT_ROOT}/node_modules/.bin/payload"
+if [[ ! -x "${payload}" ]]; then
+  echo "payload is unavailable. Run npm run install:ci and wait for it to finish before building." >&2
+  exit 69
+fi
+
+echo "Generating the Payload import map..."
+timeout \
+  --signal=TERM \
+  --kill-after="${SITES_BUILD_KILL_AFTER:-10s}" \
+  "${SITES_IMPORT_MAP_TIMEOUT:-1m}" \
+  "${payload}" generate:importmap
+
 echo "Running bounded vinext build..."
 timeout \
   --signal=TERM \
