@@ -1,5 +1,6 @@
 "use client";
 
+import { useDocumentInfo } from "@payloadcms/ui";
 import { useState } from "react";
 
 import styles from "./delete-page-button.module.css";
@@ -9,10 +10,12 @@ type DeletePageButtonProps = {
 };
 
 export default function DeletePageButton({ id }: DeletePageButtonProps) {
+  const { hasDeletePermission, id: documentID } = useDocumentInfo();
   const [status, setStatus] = useState("");
-  const pageID = id === undefined || id === null ? "" : String(id);
+  const resolvedID = id ?? documentID;
+  const pageID = resolvedID === undefined || resolvedID === null ? "" : String(resolvedID);
 
-  if (!pageID) return null;
+  if (!pageID || hasDeletePermission === false) return null;
 
   async function deletePage() {
     if (!window.confirm("Delete this page permanently? This cannot be undone.")) return;

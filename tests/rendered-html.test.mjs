@@ -38,6 +38,32 @@ test("renders development preview metadata", async () => {
   );
 });
 
+test("renders the home slug as the public homepage", async () => {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("home-test", `${process.pid}-${Date.now()}`);
+  const { default: worker } = await import(workerUrl.href);
+
+  const response = await worker.fetch(
+    new Request("http://localhost/home", {
+      headers: { accept: "text/html" },
+    }),
+    {
+      ASSETS: {
+        fetch: async () => new Response("Not found", { status: 404 }),
+      },
+    },
+    {
+      waitUntil() {},
+      passThroughOnException() {},
+    },
+  );
+
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+  const html = await response.text();
+  assert.match(html, /NECYPAA XXXVI/i);
+});
+
 test("attaches the Payload admin stylesheet to its route layout", async () => {
   const manifestUrl = new URL(
     "../dist/server/__vite_rsc_assets_manifest.js",
