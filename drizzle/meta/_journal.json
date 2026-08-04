@@ -15,6 +15,13 @@
       "when": 1785854805885,
       "tag": "0001_naive_chronomancer",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1785859852980,
+      "tag": "0002_repair_page_version_parents",
+      "breakpoints": true
     }
   ]
 }

@@ -98,7 +98,7 @@ test("attaches the Payload admin stylesheet to its route layout", async () => {
   );
 });
 
-test("packages the additive Payload layout migration", async () => {
+test("packages the Payload layout and version-parent repair migrations", async () => {
   const migrationFiles = await readdir(
     new URL("../dist/.openai/drizzle", import.meta.url),
   );
@@ -106,4 +106,19 @@ test("packages the additive Payload layout migration", async () => {
     migrationFiles.some((file) => /^0001_.+\.sql$/.test(file)),
     "The structured page-layout migration must be included in the Sites artifact",
   );
+
+  const repairMigration = migrationFiles.find(
+    (file) => file === "0002_repair_page_version_parents.sql",
+  );
+  assert.ok(
+    repairMigration,
+    "The version-parent repair migration must be included in the Sites artifact",
+  );
+
+  const repairSQL = await readFile(
+    new URL(`../dist/.openai/drizzle/${repairMigration}`, import.meta.url),
+    "utf8",
+  );
+  assert.match(repairSQL, /UPDATE\s+`_pages_v`/i);
+  assert.match(repairSQL, /WHERE\s+`parent_id`\s+IS\s+NULL/i);
 });
