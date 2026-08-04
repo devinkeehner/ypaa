@@ -3,6 +3,20 @@ import { defineConfig } from "vite";
 import hostingConfig from "./.openai/hosting.json";
 import { sites } from "./build/sites-vite-plugin";
 
+function payloadServerCssCompatibility() {
+  const htmlDiffModule = "/node_modules/@payloadcms/ui/dist/elements/HTMLDiff/index.js";
+
+  return {
+    name: "payload-server-css-compatibility",
+    enforce: "pre" as const,
+    async load(id: string) {
+      if (!id.replaceAll("\\\\", "/").endsWith(htmlDiffModule)) return null;
+      const source = await import("node:fs/promises").then(({ readFile }) => readFile(id, "utf8"));
+      return source.replace("import './index.scss';", "");
+    },
+  };
+}
+
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   "00000000-0000-4000-8000-000000000000";
 
@@ -47,11 +61,13 @@ export default defineConfig(async () => {
     server: {
       host: "0.0.0.0",
       allowedHosts: ["terminal.local"],
-      ...(isCodexSeatbeltSandbox
-        ? { watch: { useFsEvents: false, usePolling: true } }
-        : {}),
+      watch: {
+        ignored: ["**/.sites-runtime/**", "**/dist/**"],
+        ...(isCodexSeatbeltSandbox ? { useFsEvents: false, usePolling: true } : {}),
+      },
     },
     plugins: [
+      payloadServerCssCompatibility(),
       vinext(),
       sites(),
       cloudflare({
