@@ -1,9 +1,8 @@
 "use client";
 
-import { Render } from "@puckeditor/core";
 import { useEffect, useMemo, useState } from "react";
 
-import { puckConfig } from "@/puck/config";
+import { PublicPuckRender } from "@/puck/config";
 import type { NECYPAAData } from "@/puck/types";
 
 type Theme = "dark" | "light";
@@ -34,7 +33,7 @@ export function PublicPage({ data }: { data: NECYPAAData }) {
         <nav aria-label="Primary navigation"><a href="#about">About</a><a href="#business-meeting">Meetings</a><a href="#events">Events</a><a href="#ypaa">YPAA near you</a></nav>
         <div><a className="cms-hotel" href="https://www.necypaact.com/hotel">Book a hotel room</a><a className="cms-register" href="https://register.necypaact.com/en/register">Register</a></div>
       </header>
-      <div id="cms-main"><Render config={puckConfig} data={data} /></div>
+      <div id="cms-main"><PublicPuckRender data={data} /></div>
       <button className="display-gear" aria-expanded={settings} aria-label="Display and accessibility settings" onClick={() => setSettings((value) => !value)} type="button">⚙</button>
       {settings ? <aside className="display-panel" aria-label="Display settings"><button aria-label="Close display settings" onClick={() => setSettings(false)} type="button">×</button><h2>Display settings</h2><fieldset><legend>Theme</legend><button aria-pressed={theme === "light"} onClick={() => setTheme("light")} type="button">Light</button><button aria-pressed={theme === "dark"} onClick={() => setTheme("dark")} type="button">Dark</button></fieldset><fieldset><legend>Text size</legend><button aria-pressed={scale === "default"} onClick={() => setScale("default")} type="button">A</button><button aria-pressed={scale === "large"} onClick={() => setScale("large")} type="button">A+</button><button aria-pressed={scale === "largest"} onClick={() => setScale("largest")} type="button">A++</button></fieldset><label><input checked={contrast} onChange={(event) => setContrast(event.target.checked)} type="checkbox" /> Extra contrast</label><p>Motion follows your device’s reduced-motion setting.</p></aside> : null}
     </div>

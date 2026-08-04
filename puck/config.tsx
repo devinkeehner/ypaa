@@ -1,9 +1,10 @@
 "use client";
 
 import type { Config } from "@puckeditor/core";
-import type { CSSProperties, ElementType, ReactNode } from "react";
+import { Fragment, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { Countdown } from "@/components/site/Countdown";
+import type { NECYPAAData } from "@/puck/types";
 
 import styles from "./puck.module.css";
 
@@ -112,3 +113,21 @@ export const puckConfig: Config<Components> = {
     },
   },
 };
+
+export function PublicPuckRender({ data }: { data: NECYPAAData }) {
+  const renderers = puckConfig.components as unknown as Record<
+    string,
+    { render: (props: Base) => ReactNode }
+  >;
+
+  return (
+    <main className={styles.canvas}>
+      {data.content.map((item, index) => {
+        const renderer = renderers[item.type];
+        if (!renderer) return null;
+        const key = typeof item.props.id === "string" ? item.props.id : `${item.type}-${index}`;
+        return <Fragment key={key}>{renderer.render(item.props as Base)}</Fragment>;
+      })}
+    </main>
+  );
+}
