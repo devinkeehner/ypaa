@@ -40,6 +40,15 @@ function MenuIcon() {
   );
 }
 
+function GearIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" />
+      <path d="M19.2 13.1a7.8 7.8 0 0 0 .05-1.1 7.8 7.8 0 0 0-.05-1.1l2-1.55-2-3.46-2.46.99a8.5 8.5 0 0 0-1.9-1.1L14.48 3h-4l-.36 2.78a8.5 8.5 0 0 0-1.9 1.1l-2.46-.99-2 3.46 2 1.55A7.8 7.8 0 0 0 5.7 12c0 .37.02.74.06 1.1l-2 1.55 2 3.46 2.46-.99c.58.45 1.22.82 1.9 1.1l.36 2.78h4l.36-2.78a8.5 8.5 0 0 0 1.9-1.1l2.46.99 2-3.46-2-1.55Z" />
+    </svg>
+  );
+}
+
 function BrandMark() {
   return (
     <a className="brand" href="#top" aria-label="NECYPAA XXXVI home">
@@ -247,10 +256,6 @@ export function SiteHome({ content }: { content: SiteContent }) {
             {content.nav.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
           </nav>
           <div className="header-actions">
-            <button className="access-button" type="button" onClick={() => setAccessOpen(true)} aria-haspopup="dialog" aria-expanded={accessOpen}>
-              <span aria-hidden="true">Aa</span>
-              <span className="access-label">Display</span>
-            </button>
             <ActionLink href={content.convention.hotelUrl} variant="ghost">Book hotel</ActionLink>
             <ActionLink href={content.convention.registerUrl}>Register</ActionLink>
             <button className="menu-button" type="button" onClick={() => setMenuOpen((value) => !value)} aria-label="Toggle navigation" aria-expanded={menuOpen}>
@@ -341,36 +346,35 @@ export function SiteHome({ content }: { content: SiteContent }) {
           </div>
         </section>
 
-        <section className="featured section-pad" id="events" aria-labelledby="featured-title">
-          <div className="page-shell featured-grid">
-            <ArtPanel palette={content.featuredEvent.palette} label={`Placeholder event artwork for ${content.featuredEvent.title}`} />
-            <div className="featured-copy">
-              <p className="section-label">Coming up next</p>
-              <h2 id="featured-title">{content.featuredEvent.title}</h2>
-              <p>{content.featuredEvent.description}</p>
-              <dl className="event-facts">
-                <div><dt>Date</dt><dd>{content.featuredEvent.date}</dd></div>
-                <div><dt>Place</dt><dd>{content.featuredEvent.location}</dd></div>
-              </dl>
-              <a className="text-link" href="https://www.necypaact.com/events" target="_blank" rel="noreferrer">Event details <ExternalIcon /><span className="sr-only">{externalLabel}</span></a>
-            </div>
-          </div>
-        </section>
-
-        <section className="past section-pad" aria-labelledby="past-title">
+        <section className="events-section section-pad" id="events" aria-labelledby="featured-title">
           <div className="page-shell">
-            <div className="section-heading-row">
-              <div>
-                <p className="section-label">The road to Hartford</p>
-                <h2 id="past-title">Past events</h2>
-              </div>
-              <div className="rail-controls">
-                <button type="button" onClick={() => scrollRail(-1)} aria-label="Show previous events"><ArrowIcon direction="left" /></button>
-                <button type="button" onClick={() => scrollRail(1)} aria-label="Show more events"><ArrowIcon /></button>
+            <div className="featured-grid">
+              <ArtPanel palette={content.featuredEvent.palette} label={`Placeholder event artwork for ${content.featuredEvent.title}`} />
+              <div className="featured-copy">
+                <p className="section-label">Coming up next</p>
+                <h2 id="featured-title">{content.featuredEvent.title}</h2>
+                <p>{content.featuredEvent.description}</p>
+                <dl className="event-facts">
+                  <div><dt>Date</dt><dd>{content.featuredEvent.date}</dd></div>
+                  <div><dt>Place</dt><dd>{content.featuredEvent.location}</dd></div>
+                </dl>
+                <a className="text-link" href="https://www.necypaact.com/events" target="_blank" rel="noreferrer">Event details <ExternalIcon /><span className="sr-only">{externalLabel}</span></a>
               </div>
             </div>
-            <div className="event-rail" ref={railRef} tabIndex={0} aria-label="Past events carousel">
-              {content.pastEvents.map((event) => <EventCardView key={event.title} event={event} />)}
+            <div className="past-block" role="region" aria-labelledby="past-title">
+              <div className="section-heading-row">
+                <div>
+                  <p className="section-label">The road to Hartford</p>
+                  <h2 id="past-title">Past events</h2>
+                </div>
+                <div className="rail-controls">
+                  <button type="button" onClick={() => scrollRail(-1)} aria-label="Show previous events"><ArrowIcon direction="left" /></button>
+                  <button type="button" onClick={() => scrollRail(1)} aria-label="Show more events"><ArrowIcon /></button>
+                </div>
+              </div>
+              <div className="event-rail" ref={railRef} tabIndex={0} aria-label="Past events carousel">
+                {content.pastEvents.map((event) => <EventCardView key={event.title} event={event} />)}
+              </div>
             </div>
           </div>
         </section>
@@ -417,6 +421,18 @@ export function SiteHome({ content }: { content: SiteContent }) {
           <p>Alcoholics Anonymous®, A.A.®, and The Big Book® are registered trademarks of Alcoholics Anonymous World Services, Inc.</p>
         </div>
       </footer>
+
+      <button
+        className="floating-display"
+        type="button"
+        onClick={() => setAccessOpen(true)}
+        aria-label="Open display and accessibility settings"
+        aria-haspopup="dialog"
+        aria-expanded={accessOpen}
+        title="Display and accessibility settings"
+      >
+        <GearIcon />
+      </button>
 
       <div className="mobile-action-bar" aria-label="Convention actions">
         <ActionLink href={content.convention.hotelUrl} variant="secondary">Book hotel</ActionLink>
