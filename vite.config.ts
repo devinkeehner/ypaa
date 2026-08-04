@@ -24,14 +24,30 @@ function payloadWorkerModuleUrlCompatibility() {
     name: "payload-worker-module-url-compatibility",
     enforce: "pre" as const,
     transform(source: string, id: string) {
-      if (!payloadModule.test(id) || !source.includes("fileURLToPath(import.meta.url)")) {
-        return null;
+      let transformed = source;
+
+      if (
+        id.replaceAll("\\\\", "/").endsWith(
+          "/node_modules/@payloadcms/next/dist/routes/rest/og/index.js",
+        )
+      ) {
+        transformed = transformed.replace(
+          "from 'next/og.js'",
+          `from '${process.cwd()}/server/next-og-stub.ts'`,
+        );
       }
 
-      return source.replaceAll(
-        "fileURLToPath(import.meta.url)",
-        '"/worker/payload-module.js"',
-      );
+      if (
+        payloadModule.test(id) &&
+        transformed.includes("fileURLToPath(import.meta.url)")
+      ) {
+        transformed = transformed.replaceAll(
+          "fileURLToPath(import.meta.url)",
+          '"/worker/payload-module.js"',
+        );
+      }
+
+      return transformed === source ? null : transformed;
     },
   };
 }
