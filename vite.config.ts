@@ -39,11 +39,16 @@ function payloadWorkerModuleUrlCompatibility() {
 
       if (
         payloadModule.test(id) &&
-        transformed.includes("fileURLToPath(import.meta.url)")
+        (transformed.includes("fileURLToPath(import.meta.url)") ||
+          transformed.includes("createRequire(import.meta.url)"))
       ) {
         transformed = transformed.replaceAll(
           "fileURLToPath(import.meta.url)",
           '"/worker/payload-module.js"',
+        );
+        transformed = transformed.replaceAll(
+          "createRequire(import.meta.url)",
+          'createRequire("/worker/payload-module.js")',
         );
       }
 
