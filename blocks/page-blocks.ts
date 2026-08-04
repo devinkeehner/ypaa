@@ -55,6 +55,7 @@ export const HeroCountdownBlock: Block = {
     { name: "registerUrl", type: "text" },
     { name: "hotelLabel", type: "text" },
     { name: "hotelUrl", type: "text" },
+    { name: "image", type: "upload", relationTo: "media" },
     textStyles,
   ],
 };
@@ -69,6 +70,7 @@ export const AboutBlock: Block = {
     { name: "body", type: "textarea" },
     { name: "advisoryHeading", type: "text" },
     { name: "advisoryBody", type: "textarea" },
+    { name: "image", type: "upload", relationTo: "media" },
     textStyles,
   ],
 };
@@ -111,6 +113,7 @@ export const EventsBlock: Block = {
     { name: "upcomingBody", type: "textarea" },
     { name: "upcomingDate", type: "text" },
     { name: "upcomingLocation", type: "text" },
+    { name: "upcomingImage", type: "upload", relationTo: "media" },
     {
       name: "pastEvents",
       type: "array",
@@ -118,6 +121,7 @@ export const EventsBlock: Block = {
       fields: [
         { name: "title", type: "text" },
         { name: "date", type: "text" },
+        { name: "image", type: "upload", relationTo: "media" },
       ],
     },
     textStyles,
@@ -157,7 +161,30 @@ export const CallToActionBlock: Block = {
     { name: "primaryUrl", type: "text" },
     { name: "secondaryLabel", type: "text" },
     { name: "secondaryUrl", type: "text" },
+    { name: "image", type: "upload", relationTo: "media" },
     textStyles,
+  ],
+};
+
+export const ImageBlock: Block = {
+  slug: "Image",
+  labels: { singular: "Image", plural: "Images" },
+  admin: { group: "Flexible content" },
+  fields: [
+    { name: "image", type: "upload", relationTo: "media", required: true },
+    { name: "caption", type: "text" },
+    {
+      name: "aspectRatio",
+      type: "select",
+      defaultValue: "natural",
+      options: ["natural", "landscape", "portrait", "square"],
+    },
+    {
+      name: "width",
+      type: "select",
+      defaultValue: "wide",
+      options: ["full", "wide", "content"],
+    },
   ],
 };
 
@@ -225,6 +252,7 @@ export const PAGE_LAYOUT_BLOCKS: Block[] = [
   EventsBlock,
   MeetingDirectoryBlock,
   CallToActionBlock,
+  ImageBlock,
   RichTextBlock,
   FreeTextBlock,
 ];

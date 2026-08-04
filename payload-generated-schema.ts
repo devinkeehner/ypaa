@@ -116,6 +116,9 @@ export const pages_blocks_hero_countdown = sqliteTable(
     registerUrl: text("register_url"),
     hotelLabel: text("hotel_label"),
     hotelUrl: text("hotel_url"),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
     textStyles: text("text_styles", { mode: "json" }),
     blockName: text("block_name"),
   },
@@ -123,6 +126,7 @@ export const pages_blocks_hero_countdown = sqliteTable(
     index("pages_blocks_hero_countdown_order_idx").on(columns._order),
     index("pages_blocks_hero_countdown_parent_id_idx").on(columns._parentID),
     index("pages_blocks_hero_countdown_path_idx").on(columns._path),
+    index("pages_blocks_hero_countdown_image_idx").on(columns.image),
     foreignKey({
       columns: [columns["_parentID"]],
       foreignColumns: [pages.id],
@@ -143,6 +147,9 @@ export const pages_blocks_about = sqliteTable(
     body: text("body"),
     advisoryHeading: text("advisory_heading"),
     advisoryBody: text("advisory_body"),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
     textStyles: text("text_styles", { mode: "json" }),
     blockName: text("block_name"),
   },
@@ -150,6 +157,7 @@ export const pages_blocks_about = sqliteTable(
     index("pages_blocks_about_order_idx").on(columns._order),
     index("pages_blocks_about_parent_id_idx").on(columns._parentID),
     index("pages_blocks_about_path_idx").on(columns._path),
+    index("pages_blocks_about_image_idx").on(columns.image),
     foreignKey({
       columns: [columns["_parentID"]],
       foreignColumns: [pages.id],
@@ -220,12 +228,16 @@ export const pages_blocks_events_past_events = sqliteTable(
     id: text("id").primaryKey(),
     title: text("title"),
     date: text("date"),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
   },
   (columns) => [
     index("pages_blocks_events_past_events_order_idx").on(columns._order),
     index("pages_blocks_events_past_events_parent_id_idx").on(
       columns._parentID,
     ),
+    index("pages_blocks_events_past_events_image_idx").on(columns.image),
     foreignKey({
       columns: [columns["_parentID"]],
       foreignColumns: [pages_blocks_events.id],
@@ -248,6 +260,9 @@ export const pages_blocks_events = sqliteTable(
     upcomingBody: text("upcoming_body"),
     upcomingDate: text("upcoming_date"),
     upcomingLocation: text("upcoming_location"),
+    upcomingImage: integer("upcoming_image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
     textStyles: text("text_styles", { mode: "json" }),
     blockName: text("block_name"),
   },
@@ -255,6 +270,7 @@ export const pages_blocks_events = sqliteTable(
     index("pages_blocks_events_order_idx").on(columns._order),
     index("pages_blocks_events_parent_id_idx").on(columns._parentID),
     index("pages_blocks_events_path_idx").on(columns._path),
+    index("pages_blocks_events_upcoming_image_idx").on(columns.upcomingImage),
     foreignKey({
       columns: [columns["_parentID"]],
       foreignColumns: [pages.id],
@@ -326,6 +342,9 @@ export const pages_blocks_call_to_action = sqliteTable(
     primaryUrl: text("primary_url"),
     secondaryLabel: text("secondary_label"),
     secondaryUrl: text("secondary_url"),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
     textStyles: text("text_styles", { mode: "json" }),
     blockName: text("block_name"),
   },
@@ -333,10 +352,41 @@ export const pages_blocks_call_to_action = sqliteTable(
     index("pages_blocks_call_to_action_order_idx").on(columns._order),
     index("pages_blocks_call_to_action_parent_id_idx").on(columns._parentID),
     index("pages_blocks_call_to_action_path_idx").on(columns._path),
+    index("pages_blocks_call_to_action_image_idx").on(columns.image),
     foreignKey({
       columns: [columns["_parentID"]],
       foreignColumns: [pages.id],
       name: "pages_blocks_call_to_action_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const pages_blocks_image = sqliteTable(
+  "pages_blocks_image",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: text("id").primaryKey(),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
+    caption: text("caption"),
+    aspectRatio: text("aspect_ratio", {
+      enum: ["natural", "landscape", "portrait", "square"],
+    }).default("natural"),
+    width: text("width", { enum: ["full", "wide", "content"] }).default("wide"),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("pages_blocks_image_order_idx").on(columns._order),
+    index("pages_blocks_image_parent_id_idx").on(columns._parentID),
+    index("pages_blocks_image_path_idx").on(columns._path),
+    index("pages_blocks_image_image_idx").on(columns.image),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [pages.id],
+      name: "pages_blocks_image_parent_id_fk",
     }).onDelete("cascade"),
   ],
 );
@@ -441,6 +491,9 @@ export const _pages_v_blocks_hero_countdown = sqliteTable(
     registerUrl: text("register_url"),
     hotelLabel: text("hotel_label"),
     hotelUrl: text("hotel_url"),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
     textStyles: text("text_styles", { mode: "json" }),
     _uuid: text("_uuid"),
     blockName: text("block_name"),
@@ -449,6 +502,7 @@ export const _pages_v_blocks_hero_countdown = sqliteTable(
     index("_pages_v_blocks_hero_countdown_order_idx").on(columns._order),
     index("_pages_v_blocks_hero_countdown_parent_id_idx").on(columns._parentID),
     index("_pages_v_blocks_hero_countdown_path_idx").on(columns._path),
+    index("_pages_v_blocks_hero_countdown_image_idx").on(columns.image),
     foreignKey({
       columns: [columns["_parentID"]],
       foreignColumns: [_pages_v.id],
@@ -469,6 +523,9 @@ export const _pages_v_blocks_about = sqliteTable(
     body: text("body"),
     advisoryHeading: text("advisory_heading"),
     advisoryBody: text("advisory_body"),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
     textStyles: text("text_styles", { mode: "json" }),
     _uuid: text("_uuid"),
     blockName: text("block_name"),
@@ -477,6 +534,7 @@ export const _pages_v_blocks_about = sqliteTable(
     index("_pages_v_blocks_about_order_idx").on(columns._order),
     index("_pages_v_blocks_about_parent_id_idx").on(columns._parentID),
     index("_pages_v_blocks_about_path_idx").on(columns._path),
+    index("_pages_v_blocks_about_image_idx").on(columns.image),
     foreignKey({
       columns: [columns["_parentID"]],
       foreignColumns: [_pages_v.id],
@@ -549,6 +607,9 @@ export const _pages_v_blocks_events_past_events = sqliteTable(
     id: integer("id").primaryKey(),
     title: text("title"),
     date: text("date"),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
     _uuid: text("_uuid"),
   },
   (columns) => [
@@ -556,6 +617,7 @@ export const _pages_v_blocks_events_past_events = sqliteTable(
     index("_pages_v_blocks_events_past_events_parent_id_idx").on(
       columns._parentID,
     ),
+    index("_pages_v_blocks_events_past_events_image_idx").on(columns.image),
     foreignKey({
       columns: [columns["_parentID"]],
       foreignColumns: [_pages_v_blocks_events.id],
@@ -578,6 +640,9 @@ export const _pages_v_blocks_events = sqliteTable(
     upcomingBody: text("upcoming_body"),
     upcomingDate: text("upcoming_date"),
     upcomingLocation: text("upcoming_location"),
+    upcomingImage: integer("upcoming_image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
     textStyles: text("text_styles", { mode: "json" }),
     _uuid: text("_uuid"),
     blockName: text("block_name"),
@@ -586,6 +651,9 @@ export const _pages_v_blocks_events = sqliteTable(
     index("_pages_v_blocks_events_order_idx").on(columns._order),
     index("_pages_v_blocks_events_parent_id_idx").on(columns._parentID),
     index("_pages_v_blocks_events_path_idx").on(columns._path),
+    index("_pages_v_blocks_events_upcoming_image_idx").on(
+      columns.upcomingImage,
+    ),
     foreignKey({
       columns: [columns["_parentID"]],
       foreignColumns: [_pages_v.id],
@@ -661,6 +729,9 @@ export const _pages_v_blocks_call_to_action = sqliteTable(
     primaryUrl: text("primary_url"),
     secondaryLabel: text("secondary_label"),
     secondaryUrl: text("secondary_url"),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
     textStyles: text("text_styles", { mode: "json" }),
     _uuid: text("_uuid"),
     blockName: text("block_name"),
@@ -669,10 +740,42 @@ export const _pages_v_blocks_call_to_action = sqliteTable(
     index("_pages_v_blocks_call_to_action_order_idx").on(columns._order),
     index("_pages_v_blocks_call_to_action_parent_id_idx").on(columns._parentID),
     index("_pages_v_blocks_call_to_action_path_idx").on(columns._path),
+    index("_pages_v_blocks_call_to_action_image_idx").on(columns.image),
     foreignKey({
       columns: [columns["_parentID"]],
       foreignColumns: [_pages_v.id],
       name: "_pages_v_blocks_call_to_action_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const _pages_v_blocks_image = sqliteTable(
+  "_pages_v_blocks_image",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: integer("id").primaryKey(),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
+    caption: text("caption"),
+    aspectRatio: text("aspect_ratio", {
+      enum: ["natural", "landscape", "portrait", "square"],
+    }).default("natural"),
+    width: text("width", { enum: ["full", "wide", "content"] }).default("wide"),
+    _uuid: text("_uuid"),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("_pages_v_blocks_image_order_idx").on(columns._order),
+    index("_pages_v_blocks_image_parent_id_idx").on(columns._parentID),
+    index("_pages_v_blocks_image_path_idx").on(columns._path),
+    index("_pages_v_blocks_image_image_idx").on(columns.image),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_pages_v.id],
+      name: "_pages_v_blocks_image_parent_id_fk",
     }).onDelete("cascade"),
   ],
 );
@@ -944,6 +1047,11 @@ export const relations_pages_blocks_hero_countdown = relations(
       references: [pages.id],
       relationName: "_blocks_HeroCountdown",
     }),
+    image: one(media, {
+      fields: [pages_blocks_hero_countdown.image],
+      references: [media.id],
+      relationName: "image",
+    }),
   }),
 );
 export const relations_pages_blocks_about = relations(
@@ -953,6 +1061,11 @@ export const relations_pages_blocks_about = relations(
       fields: [pages_blocks_about._parentID],
       references: [pages.id],
       relationName: "_blocks_About",
+    }),
+    image: one(media, {
+      fields: [pages_blocks_about.image],
+      references: [media.id],
+      relationName: "image",
     }),
   }),
 );
@@ -987,6 +1100,11 @@ export const relations_pages_blocks_events_past_events = relations(
       references: [pages_blocks_events.id],
       relationName: "pastEvents",
     }),
+    image: one(media, {
+      fields: [pages_blocks_events_past_events.image],
+      references: [media.id],
+      relationName: "image",
+    }),
   }),
 );
 export const relations_pages_blocks_events = relations(
@@ -996,6 +1114,11 @@ export const relations_pages_blocks_events = relations(
       fields: [pages_blocks_events._parentID],
       references: [pages.id],
       relationName: "_blocks_Events",
+    }),
+    upcomingImage: one(media, {
+      fields: [pages_blocks_events.upcomingImage],
+      references: [media.id],
+      relationName: "upcomingImage",
     }),
     pastEvents: many(pages_blocks_events_past_events, {
       relationName: "pastEvents",
@@ -1032,6 +1155,26 @@ export const relations_pages_blocks_call_to_action = relations(
       fields: [pages_blocks_call_to_action._parentID],
       references: [pages.id],
       relationName: "_blocks_CallToAction",
+    }),
+    image: one(media, {
+      fields: [pages_blocks_call_to_action.image],
+      references: [media.id],
+      relationName: "image",
+    }),
+  }),
+);
+export const relations_pages_blocks_image = relations(
+  pages_blocks_image,
+  ({ one }) => ({
+    _parentID: one(pages, {
+      fields: [pages_blocks_image._parentID],
+      references: [pages.id],
+      relationName: "_blocks_Image",
+    }),
+    image: one(media, {
+      fields: [pages_blocks_image.image],
+      references: [media.id],
+      relationName: "image",
     }),
   }),
 );
@@ -1074,6 +1217,9 @@ export const relations_pages = relations(pages, ({ many }) => ({
   _blocks_CallToAction: many(pages_blocks_call_to_action, {
     relationName: "_blocks_CallToAction",
   }),
+  _blocks_Image: many(pages_blocks_image, {
+    relationName: "_blocks_Image",
+  }),
   _blocks_RichText: many(pages_blocks_rich_text, {
     relationName: "_blocks_RichText",
   }),
@@ -1089,6 +1235,11 @@ export const relations__pages_v_blocks_hero_countdown = relations(
       references: [_pages_v.id],
       relationName: "_blocks_HeroCountdown",
     }),
+    image: one(media, {
+      fields: [_pages_v_blocks_hero_countdown.image],
+      references: [media.id],
+      relationName: "image",
+    }),
   }),
 );
 export const relations__pages_v_blocks_about = relations(
@@ -1098,6 +1249,11 @@ export const relations__pages_v_blocks_about = relations(
       fields: [_pages_v_blocks_about._parentID],
       references: [_pages_v.id],
       relationName: "_blocks_About",
+    }),
+    image: one(media, {
+      fields: [_pages_v_blocks_about.image],
+      references: [media.id],
+      relationName: "image",
     }),
   }),
 );
@@ -1132,6 +1288,11 @@ export const relations__pages_v_blocks_events_past_events = relations(
       references: [_pages_v_blocks_events.id],
       relationName: "pastEvents",
     }),
+    image: one(media, {
+      fields: [_pages_v_blocks_events_past_events.image],
+      references: [media.id],
+      relationName: "image",
+    }),
   }),
 );
 export const relations__pages_v_blocks_events = relations(
@@ -1141,6 +1302,11 @@ export const relations__pages_v_blocks_events = relations(
       fields: [_pages_v_blocks_events._parentID],
       references: [_pages_v.id],
       relationName: "_blocks_Events",
+    }),
+    upcomingImage: one(media, {
+      fields: [_pages_v_blocks_events.upcomingImage],
+      references: [media.id],
+      relationName: "upcomingImage",
     }),
     pastEvents: many(_pages_v_blocks_events_past_events, {
       relationName: "pastEvents",
@@ -1177,6 +1343,26 @@ export const relations__pages_v_blocks_call_to_action = relations(
       fields: [_pages_v_blocks_call_to_action._parentID],
       references: [_pages_v.id],
       relationName: "_blocks_CallToAction",
+    }),
+    image: one(media, {
+      fields: [_pages_v_blocks_call_to_action.image],
+      references: [media.id],
+      relationName: "image",
+    }),
+  }),
+);
+export const relations__pages_v_blocks_image = relations(
+  _pages_v_blocks_image,
+  ({ one }) => ({
+    _parentID: one(_pages_v, {
+      fields: [_pages_v_blocks_image._parentID],
+      references: [_pages_v.id],
+      relationName: "_blocks_Image",
+    }),
+    image: one(media, {
+      fields: [_pages_v_blocks_image.image],
+      references: [media.id],
+      relationName: "image",
     }),
   }),
 );
@@ -1223,6 +1409,9 @@ export const relations__pages_v = relations(_pages_v, ({ one, many }) => ({
   }),
   _blocks_CallToAction: many(_pages_v_blocks_call_to_action, {
     relationName: "_blocks_CallToAction",
+  }),
+  _blocks_Image: many(_pages_v_blocks_image, {
+    relationName: "_blocks_Image",
   }),
   _blocks_RichText: many(_pages_v_blocks_rich_text, {
     relationName: "_blocks_RichText",
@@ -1306,6 +1495,7 @@ type DatabaseSchema = {
   pages_blocks_meeting_directory_meetings: typeof pages_blocks_meeting_directory_meetings;
   pages_blocks_meeting_directory: typeof pages_blocks_meeting_directory;
   pages_blocks_call_to_action: typeof pages_blocks_call_to_action;
+  pages_blocks_image: typeof pages_blocks_image;
   pages_blocks_rich_text: typeof pages_blocks_rich_text;
   pages_blocks_free_text: typeof pages_blocks_free_text;
   pages: typeof pages;
@@ -1318,6 +1508,7 @@ type DatabaseSchema = {
   _pages_v_blocks_meeting_directory_meetings: typeof _pages_v_blocks_meeting_directory_meetings;
   _pages_v_blocks_meeting_directory: typeof _pages_v_blocks_meeting_directory;
   _pages_v_blocks_call_to_action: typeof _pages_v_blocks_call_to_action;
+  _pages_v_blocks_image: typeof _pages_v_blocks_image;
   _pages_v_blocks_rich_text: typeof _pages_v_blocks_rich_text;
   _pages_v_blocks_free_text: typeof _pages_v_blocks_free_text;
   _pages_v: typeof _pages_v;
@@ -1339,6 +1530,7 @@ type DatabaseSchema = {
   relations_pages_blocks_meeting_directory_meetings: typeof relations_pages_blocks_meeting_directory_meetings;
   relations_pages_blocks_meeting_directory: typeof relations_pages_blocks_meeting_directory;
   relations_pages_blocks_call_to_action: typeof relations_pages_blocks_call_to_action;
+  relations_pages_blocks_image: typeof relations_pages_blocks_image;
   relations_pages_blocks_rich_text: typeof relations_pages_blocks_rich_text;
   relations_pages_blocks_free_text: typeof relations_pages_blocks_free_text;
   relations_pages: typeof relations_pages;
@@ -1351,6 +1543,7 @@ type DatabaseSchema = {
   relations__pages_v_blocks_meeting_directory_meetings: typeof relations__pages_v_blocks_meeting_directory_meetings;
   relations__pages_v_blocks_meeting_directory: typeof relations__pages_v_blocks_meeting_directory;
   relations__pages_v_blocks_call_to_action: typeof relations__pages_v_blocks_call_to_action;
+  relations__pages_v_blocks_image: typeof relations__pages_v_blocks_image;
   relations__pages_v_blocks_rich_text: typeof relations__pages_v_blocks_rich_text;
   relations__pages_v_blocks_free_text: typeof relations__pages_v_blocks_free_text;
   relations__pages_v: typeof relations__pages_v;

@@ -10,7 +10,7 @@ export default async function Home() {
   let data = defaultPageData;
   try {
     const payload = await getPayload({ config });
-    const result = await payload.find({ collection: "pages", depth: 0, limit: 1, where: { slug: { equals: "home" } } });
+    const result = await payload.find({ collection: "pages", depth: 1, limit: 1, where: { slug: { equals: "home" } } });
     const page = result.docs[0];
     if (page) data = pageDocumentToPuckData(page as unknown as PageDocument);
   } catch {

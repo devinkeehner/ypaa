@@ -29,7 +29,7 @@ export default async function VisualBuilderPage({ params }: { params: Promise<{ 
     collection: "pages",
     id,
     draft: true,
-    depth: 0,
+    depth: 1,
     disableErrors: true,
     overrideAccess: false,
     user,

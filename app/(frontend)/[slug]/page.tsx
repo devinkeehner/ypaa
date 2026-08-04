@@ -19,7 +19,7 @@ export default async function SlugPage({ params }: PageProps) {
     const payload = await getPayload({ config });
     const result = await payload.find({
       collection: "pages",
-      depth: 0,
+      depth: 1,
       limit: 1,
       where: { slug: { equals: slug } },
     });

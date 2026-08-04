@@ -15,6 +15,7 @@ const COMPONENT_TYPES = new Set([
   "Events",
   "MeetingDirectory",
   "CallToAction",
+  "Image",
   "RichText",
   "FreeText",
 ]);
@@ -105,6 +106,28 @@ function packTextStyles(props: Record<string, unknown>) {
   return payloadProps;
 }
 
+function mediaID(value: unknown) {
+  if (typeof value === "string" || typeof value === "number") return value;
+  if (!isRecord(value)) return null;
+  return typeof value.id === "string" || typeof value.id === "number" ? value.id : null;
+}
+
+function packMedia(type: string, props: Record<string, unknown>) {
+  const packed = { ...props };
+  if (type === "HeroCountdown" || type === "About" || type === "CallToAction" || type === "Image") {
+    packed.image = mediaID(packed.image);
+  }
+  if (type === "Events") {
+    packed.upcomingImage = mediaID(packed.upcomingImage);
+    if (Array.isArray(packed.pastEvents)) {
+      packed.pastEvents = packed.pastEvents.map((event) =>
+        isRecord(event) ? { ...event, image: mediaID(event.image) } : event,
+      );
+    }
+  }
+  return packed;
+}
+
 function layoutToContent(layout: unknown): ComponentData<Record<string, unknown>>[] {
   if (!Array.isArray(layout)) return [];
 
@@ -171,7 +194,7 @@ export function puckDataToLayout(value: unknown): Array<Record<string, unknown>>
     if (!COMPONENT_TYPES.has(item.type)) return [];
     const props = isRecord(item.props) ? normalizeProps(item.type, item.props) : {};
     const id = typeof props.id === "string" ? props.id : `${item.type}-${index}`;
-    const packed = packTextStyles({ ...props, id });
+    const packed = packMedia(item.type, packTextStyles({ ...props, id }));
     return [{ ...packed, id, blockType: item.type }];
   });
 }

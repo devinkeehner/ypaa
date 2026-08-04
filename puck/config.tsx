@@ -11,22 +11,23 @@ import {
   normalizeMeetings,
   normalizePastEvents,
 } from "@/puck/list-values";
-import type { ImportantDate, MeetingListing, PastEvent } from "@/puck/list-values";
+import type { ImportantDate, MediaValue, MeetingListing, PastEvent } from "@/puck/list-values";
 import type { NECYPAAData } from "@/puck/types";
 
 import styles from "./puck.module.css";
 
 type Base = { id?: string };
-type Hero = Base & { eyebrow: string; heading: string; body: string; eventDate: string; eventLocation: string; countdownTarget: string; registerLabel: string; registerUrl: string; hotelLabel: string; hotelUrl: string };
-type About = Base & { eyebrow: string; heading: string; body: string; advisoryHeading: string; advisoryBody: string };
+type Hero = Base & { eyebrow: string; heading: string; body: string; eventDate: string; eventLocation: string; countdownTarget: string; registerLabel: string; registerUrl: string; hotelLabel: string; hotelUrl: string; image?: MediaValue | null };
+type About = Base & { eyebrow: string; heading: string; body: string; advisoryHeading: string; advisoryBody: string; image?: MediaValue | null };
 type Meeting = Base & { eyebrow: string; heading: string; body: string; date: string; time: string; location: string; actionLabel: string; actionUrl: string; importantDates: ImportantDate[] };
-type Events = Base & { eyebrow: string; heading: string; upcomingLabel: string; upcomingTitle: string; upcomingBody: string; upcomingDate: string; upcomingLocation: string; pastEvents: PastEvent[] };
+type Events = Base & { eyebrow: string; heading: string; upcomingLabel: string; upcomingTitle: string; upcomingBody: string; upcomingDate: string; upcomingLocation: string; upcomingImage?: MediaValue | null; pastEvents: PastEvent[] };
 type Directory = Base & { eyebrow: string; heading: string; body: string; meetings: MeetingListing[] };
-type CTA = Base & { eyebrow: string; heading: string; body: string; primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string };
+type CTA = Base & { eyebrow: string; heading: string; body: string; primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; image?: MediaValue | null };
+type ImageBlock = Base & { image?: MediaValue | null; caption: string; aspectRatio: "natural" | "landscape" | "portrait" | "square"; width: "full" | "wide" | "content" };
 type FreeText = Base & { text: string; fontSize: string; color: string; fontWeight: string; alignment: "left" | "center" | "right" };
 type RichTextSection = Base & { content: unknown; fontSize: string; color: string; fontWeight: string; alignment: "left" | "center" | "right" };
 
-type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; RichText: RichTextSection; FreeText: FreeText };
+type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText };
 
 export const editableFieldsByType: Record<keyof Components, string[]> = {
   HeroCountdown: ["eyebrow", "heading", "body", "eventDate", "eventLocation", "registerLabel", "hotelLabel"],
@@ -35,6 +36,7 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   Events: ["eyebrow", "heading", "upcomingLabel", "upcomingTitle", "upcomingBody", "upcomingDate", "upcomingLocation"],
   MeetingDirectory: ["eyebrow", "heading", "body"],
   CallToAction: ["eyebrow", "heading", "body", "primaryLabel", "secondaryLabel"],
+  Image: ["caption"],
   RichText: ["content"],
   FreeText: ["text"],
 };
@@ -42,6 +44,53 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
 const text = (label: string) => ({ type: "text" as const, label, contentEditable: true });
 const area = (label: string) => ({ type: "textarea" as const, label, contentEditable: true });
 const plainText = (label: string) => ({ type: "text" as const, label });
+
+function normalizeMedia(value: unknown): MediaValue | null {
+  if (typeof value === "string" && value.trim()) return { url: value.trim(), alt: "" };
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const record = value as Record<string, unknown>;
+  if (typeof record.url !== "string" || !record.url.trim()) return null;
+  return {
+    id: typeof record.id === "string" || typeof record.id === "number" ? record.id : undefined,
+    url: record.url,
+    alt: typeof record.alt === "string" ? record.alt : "",
+    filename: typeof record.filename === "string" ? record.filename : undefined,
+    width: typeof record.width === "number" ? record.width : undefined,
+    height: typeof record.height === "number" ? record.height : undefined,
+  };
+}
+
+const mediaField = (label: string): Field<MediaValue | null | undefined> => ({
+  type: "external",
+  label,
+  placeholder: "Choose from Payload Media",
+  showSearch: true,
+  cache: { enabled: false },
+  fetchList: async ({ query }) => {
+    const response = await fetch("/api/media?limit=100&sort=-createdAt&depth=0", { credentials: "same-origin" });
+    if (!response.ok) return [];
+    const result = await response.json() as { docs?: unknown[] };
+    const docs = Array.isArray(result.docs) ? result.docs : [];
+    const needle = query.trim().toLowerCase();
+    if (!needle) return docs;
+    return docs.filter((value) => {
+      if (!value || typeof value !== "object") return false;
+      const record = value as Record<string, unknown>;
+      return [record.alt, record.filename].some((item) => typeof item === "string" && item.toLowerCase().includes(needle));
+    });
+  },
+  mapProp: (value) => normalizeMedia(value) || { url: "", alt: "" },
+  mapRow: (value) => {
+    const image = normalizeMedia(value);
+    return {
+      Preview: image?.url ? <img alt="" src={image.url} style={{ aspectRatio: "4 / 3", height: 58, objectFit: "cover", width: 76 }} /> : "No preview",
+      Name: image?.alt || image?.filename || "Untitled image",
+      Size: image?.width && image?.height ? `${image.width} × ${image.height}` : "—",
+    };
+  },
+  getItemSummary: (value) => value?.alt || value?.filename || "Selected image",
+  renderFooter: () => <a href="/admin/collections/media/create" rel="noreferrer" target="_blank">Upload a new image in Media</a>,
+});
 
 const richTextPlaceholder = {
   type: "custom" as const,
@@ -60,8 +109,8 @@ const importantDatesField: Field<ImportantDate[]> = {
 const pastEventsField: Field<PastEvent[]> = {
   type: "array",
   label: "Past events",
-  defaultItemProps: { title: "", date: "" },
-  arrayFields: { title: plainText("Title"), date: plainText("Date") },
+  defaultItemProps: { title: "", date: "", image: null },
+  arrayFields: { title: plainText("Title"), date: plainText("Date"), image: mediaField("Event flyer") },
   getItemSummary: (item) => item.title || item.date || "Past event",
 };
 
@@ -104,7 +153,7 @@ function Button({ href, children, outline = false }: { href: string; children: R
 export const puckConfig: Config<Components> = {
   categories: {
     "NECYPAA sections": { components: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "CallToAction"] },
-    "Flexible elements": { components: ["RichText", "FreeText"] },
+    "Flexible elements": { components: ["Image", "RichText", "FreeText"] },
   },
   root: {
     fields: {
@@ -118,15 +167,15 @@ export const puckConfig: Config<Components> = {
   components: {
     HeroCountdown: {
       label: "Hero + countdown",
-      defaultProps: { eyebrow: "Escaping the Mad Realm", heading: "NECYPAA XXXVI", body: "Connection, service, and recovery.", eventDate: "December 31, 2026 – January 3, 2027", eventLocation: "Hartford, Connecticut", countdownTarget: "2026-12-31T17:00:00-05:00", registerLabel: "Register", registerUrl: "#", hotelLabel: "Book a hotel room", hotelUrl: "#" },
-      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Introduction"), eventDate: text("Dates"), eventLocation: text("Location"), countdownTarget: plainText("Countdown ISO date"), registerLabel: text("Register label"), registerUrl: plainText("Register URL"), hotelLabel: text("Hotel label"), hotelUrl: plainText("Hotel URL") },
-      render: (props) => <section className={styles.hero} id={props.id}><div className={styles.shell}><div className={styles.heroCopy}><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h1" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.lede} field="body" props={props}>{props.body}</Editable><div className={styles.meta}><Editable field="eventDate" props={props}>{props.eventDate}</Editable><Editable field="eventLocation" props={props}>{props.eventLocation}</Editable></div><div className={styles.actions}><Button href={props.registerUrl}><Editable field="registerLabel" props={props}>{props.registerLabel}</Editable></Button><Button href={props.hotelUrl} outline><Editable field="hotelLabel" props={props}>{props.hotelLabel}</Editable></Button></div></div><div className={styles.heroArt} aria-hidden="true"><i /><i /><i /></div><Countdown target={props.countdownTarget} /></div></section>,
+      defaultProps: { eyebrow: "Escaping the Mad Realm", heading: "NECYPAA XXXVI", body: "Connection, service, and recovery.", eventDate: "December 31, 2026 – January 3, 2027", eventLocation: "Hartford, Connecticut", countdownTarget: "2026-12-31T17:00:00-05:00", registerLabel: "Register", registerUrl: "#", hotelLabel: "Book a hotel room", hotelUrl: "#", image: null },
+      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Introduction"), eventDate: text("Dates"), eventLocation: text("Location"), countdownTarget: plainText("Countdown ISO date"), registerLabel: text("Register label"), registerUrl: plainText("Register URL"), hotelLabel: text("Hotel label"), hotelUrl: plainText("Hotel URL"), image: mediaField("Hero artwork") },
+      render: (props) => { const image = normalizeMedia(props.image); return <section className={styles.hero} id={props.id}><div className={styles.shell}><div className={styles.heroCopy}><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h1" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.lede} field="body" props={props}>{props.body}</Editable><div className={styles.meta}><Editable field="eventDate" props={props}>{props.eventDate}</Editable><Editable field="eventLocation" props={props}>{props.eventLocation}</Editable></div><div className={styles.actions}><Button href={props.registerUrl}><Editable field="registerLabel" props={props}>{props.registerLabel}</Editable></Button><Button href={props.hotelUrl} outline><Editable field="hotelLabel" props={props}>{props.hotelLabel}</Editable></Button></div></div><div className={styles.heroArt} data-has-image={Boolean(image)}>{image ? <img alt={image.alt || ""} src={image.url} /> : <><i /><i /><i /></>}</div><Countdown target={props.countdownTarget} /></div></section>; },
     },
     About: {
       label: "About + advisory",
-      defaultProps: { eyebrow: "About NECYPAA", heading: "A weekend built around connection", body: "Add the convention story here.", advisoryHeading: "Anonymity matters", advisoryBody: "Please protect personal anonymity." },
-      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Body"), advisoryHeading: text("Advisory heading"), advisoryBody: area("Advisory body") },
-      render: (props) => <section className={styles.dark} id={props.id}><div className={`${styles.shell} ${styles.twoCol}`}><div className={styles.artPlaceholder} role="img" aria-label="Convention artwork placeholder"><span>Mad Realm imagery</span></div><div><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="body" props={props}>{props.body}</Editable><aside className={styles.advisory}><Editable as="h3" field="advisoryHeading" props={props}>{props.advisoryHeading}</Editable><Editable as="p" field="advisoryBody" props={props}>{props.advisoryBody}</Editable></aside></div></div></section>,
+      defaultProps: { eyebrow: "About NECYPAA", heading: "A weekend built around connection", body: "Add the convention story here.", advisoryHeading: "Anonymity matters", advisoryBody: "Please protect personal anonymity.", image: null },
+      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Body"), advisoryHeading: text("Advisory heading"), advisoryBody: area("Advisory body"), image: mediaField("About artwork") },
+      render: (props) => { const image = normalizeMedia(props.image); return <section className={styles.dark} id={props.id}><div className={`${styles.shell} ${styles.twoCol}`}><div className={styles.artPlaceholder} data-has-image={Boolean(image)}>{image ? <img alt={image.alt || ""} src={image.url} /> : <span>Mad Realm imagery</span>}</div><div><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="body" props={props}>{props.body}</Editable><aside className={styles.advisory}><Editable as="h3" field="advisoryHeading" props={props}>{props.advisoryHeading}</Editable><Editable as="p" field="advisoryBody" props={props}>{props.advisoryBody}</Editable></aside></div></div></section>; },
     },
     MeetingInfo: {
       label: "Business meeting",
@@ -136,9 +185,9 @@ export const puckConfig: Config<Components> = {
     },
     Events: {
       label: "Upcoming + past events",
-      defaultProps: { eyebrow: "Gather with us", heading: "Upcoming and past events", upcomingLabel: "Next up", upcomingTitle: "Upcoming event", upcomingBody: "Event details", upcomingDate: "Date", upcomingLocation: "Location", pastEvents: [{ title: "Past event", date: "Date" }] },
-      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), upcomingLabel: text("Upcoming label"), upcomingTitle: text("Upcoming title"), upcomingBody: area("Upcoming description"), upcomingDate: text("Upcoming date"), upcomingLocation: text("Upcoming location"), pastEvents: pastEventsField },
-      render: (props) => <section className={styles.events} id={props.id}><div className={styles.shell}><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><div className={styles.eventBlend}><article className={styles.upcoming}><div className={styles.flyer}>Upcoming flyer</div><div><Editable as="p" className={styles.eventLabel} field="upcomingLabel" props={props}>{props.upcomingLabel}</Editable><Editable as="h3" field="upcomingTitle" props={props}>{props.upcomingTitle}</Editable><Editable as="p" field="upcomingBody" props={props}>{props.upcomingBody}</Editable><Editable as="strong" field="upcomingDate" props={props}>{props.upcomingDate}</Editable><Editable as="span" field="upcomingLocation" props={props}>{props.upcomingLocation}</Editable></div></article><div className={styles.archive}><span>From the archive</span><div>{normalizePastEvents(props.pastEvents).map((item, index) => <article key={`${item.title}-${item.date}-${index}`}><div>Event flyer</div><small>{item.date}</small><strong>{item.title}</strong></article>)}</div></div></div></div></section>,
+      defaultProps: { eyebrow: "Gather with us", heading: "Upcoming and past events", upcomingLabel: "Next up", upcomingTitle: "Upcoming event", upcomingBody: "Event details", upcomingDate: "Date", upcomingLocation: "Location", upcomingImage: null, pastEvents: [{ title: "Past event", date: "Date", image: null }] },
+      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), upcomingLabel: text("Upcoming label"), upcomingTitle: text("Upcoming title"), upcomingBody: area("Upcoming description"), upcomingDate: text("Upcoming date"), upcomingLocation: text("Upcoming location"), upcomingImage: mediaField("Upcoming flyer"), pastEvents: pastEventsField },
+      render: (props) => { const upcomingImage = normalizeMedia(props.upcomingImage); return <section className={styles.events} id={props.id}><div className={styles.shell}><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><div className={styles.eventBlend}><article className={styles.upcoming}><div className={styles.flyer} data-has-image={Boolean(upcomingImage)}>{upcomingImage ? <img alt={upcomingImage.alt || ""} src={upcomingImage.url} /> : "Upcoming flyer"}</div><div><Editable as="p" className={styles.eventLabel} field="upcomingLabel" props={props}>{props.upcomingLabel}</Editable><Editable as="h3" field="upcomingTitle" props={props}>{props.upcomingTitle}</Editable><Editable as="p" field="upcomingBody" props={props}>{props.upcomingBody}</Editable><Editable as="strong" field="upcomingDate" props={props}>{props.upcomingDate}</Editable><Editable as="span" field="upcomingLocation" props={props}>{props.upcomingLocation}</Editable></div></article><div className={styles.archive}><span>From the archive</span><div>{normalizePastEvents(props.pastEvents).map((item, index) => { const image = normalizeMedia(item.image); return <article key={`${item.title}-${item.date}-${index}`}><div data-has-image={Boolean(image)}>{image ? <img alt={image.alt || ""} src={image.url} /> : "Event flyer"}</div><small>{item.date}</small><strong>{item.title}</strong></article>; })}</div></div></div></div></section>; },
     },
     MeetingDirectory: {
       label: "YPAA directory",
@@ -148,9 +197,15 @@ export const puckConfig: Config<Components> = {
     },
     CallToAction: {
       label: "Call to action",
-      defaultProps: { eyebrow: "See you there", heading: "Ready for NECYPAA?", body: "Register and reserve your room.", primaryLabel: "Register", primaryUrl: "#", secondaryLabel: "Book a hotel room", secondaryUrl: "#" },
-      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Body"), primaryLabel: text("Primary label"), primaryUrl: plainText("Primary URL"), secondaryLabel: text("Secondary label"), secondaryUrl: plainText("Secondary URL") },
-      render: (props) => <section className={styles.cta} id={props.id}><div className={styles.shell}><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.lede} field="body" props={props}>{props.body}</Editable><div className={styles.actions}><Button href={props.primaryUrl}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button><Button href={props.secondaryUrl} outline><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button></div></div></section>,
+      defaultProps: { eyebrow: "See you there", heading: "Ready for NECYPAA?", body: "Register and reserve your room.", primaryLabel: "Register", primaryUrl: "#", secondaryLabel: "Book a hotel room", secondaryUrl: "#", image: null },
+      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Body"), primaryLabel: text("Primary label"), primaryUrl: plainText("Primary URL"), secondaryLabel: text("Secondary label"), secondaryUrl: plainText("Secondary URL"), image: mediaField("Closing artwork") },
+      render: (props) => { const image = normalizeMedia(props.image); return <section className={styles.cta} data-has-image={Boolean(image)} id={props.id}>{image ? <img className={styles.ctaImage} alt={image.alt || ""} src={image.url} /> : null}<div className={styles.shell}><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.lede} field="body" props={props}>{props.body}</Editable><div className={styles.actions}><Button href={props.primaryUrl}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button><Button href={props.secondaryUrl} outline><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button></div></div></section>; },
+    },
+    Image: {
+      label: "Image",
+      defaultProps: { image: null, caption: "", aspectRatio: "natural", width: "wide" },
+      fields: { image: mediaField("Image"), caption: text("Caption"), aspectRatio: { type: "select", label: "Crop", options: [{ label: "Natural", value: "natural" }, { label: "Landscape", value: "landscape" }, { label: "Portrait", value: "portrait" }, { label: "Square", value: "square" }] }, width: { type: "select", label: "Width", options: [{ label: "Full width", value: "full" }, { label: "Wide", value: "wide" }, { label: "Content", value: "content" }] } },
+      render: (props) => { const image = normalizeMedia(props.image); return <figure className={styles.imageBlock} data-aspect={props.aspectRatio} data-width={props.width} id={props.id}>{image ? <img alt={image.alt || ""} src={image.url} /> : <div className={styles.imageEmpty}>Choose an image from Payload Media</div>}{props.caption ? <Editable as="figcaption" field="caption" props={props}>{props.caption}</Editable> : null}</figure>; },
     },
     RichText: {
       label: "Rich text",

@@ -121,4 +121,15 @@ test("packages the Payload layout and version-parent repair migrations", async (
   );
   assert.match(repairSQL, /UPDATE\s+`_pages_v`/i);
   assert.match(repairSQL, /WHERE\s+`parent_id`\s+IS\s+NULL/i);
+
+  const mediaMigration = migrationFiles.find(
+    (file) => file === "0003_familiar_fallen_one.sql",
+  );
+  assert.ok(mediaMigration, "The editable Puck media migration must be included in the Sites artifact");
+  const mediaSQL = await readFile(
+    new URL(`../dist/.openai/drizzle/${mediaMigration}`, import.meta.url),
+    "utf8",
+  );
+  assert.match(mediaSQL, /CREATE TABLE `pages_blocks_image`/i);
+  assert.match(mediaSQL, /ADD `upcoming_image_id`/i);
 });

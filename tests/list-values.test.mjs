@@ -26,6 +26,10 @@ test("normalizes past events and meeting directory entries", () => {
     { title: "Zombie Prom", date: "February 13, 2026" },
   ]);
   assert.deepEqual(
+    normalizePastEvents([{ title: "Bonfire", date: "December 31", image: { id: 7, url: "/api/media/file/bonfire.jpg", alt: "A bonfire" } }]),
+    [{ title: "Bonfire", date: "December 31", image: { id: 7, url: "/api/media/file/bonfire.jpg", alt: "A bonfire" } }],
+  );
+  assert.deepEqual(
     normalizeMeetings([{ title: "Connecticut YPAA", state: "Connecticut" }]),
     [{ name: "Connecticut YPAA", location: "Connecticut" }],
   );

@@ -55,6 +55,10 @@ export function normalizePastEvents(value) {
       return {
         title: text(item, ["title", "name", "label", "value"]),
         date: text(item, ["date", "when"]),
+        image:
+          item.image && typeof item.image === "object" && !Array.isArray(item.image)
+            ? item.image
+            : null,
       };
     })
     .filter((item) => item && (item.title || item.date));
