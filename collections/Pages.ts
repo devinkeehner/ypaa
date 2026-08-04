@@ -15,6 +15,7 @@ function formatSlug(value: unknown) {
 
 export const Pages: CollectionConfig = {
   slug: "pages",
+  disableBulkDelete: true,
   access: {
     read: ({ req }) => (req.user ? true : { _status: { equals: "published" } }),
   },
@@ -23,6 +24,9 @@ export const Pages: CollectionConfig = {
     defaultColumns: ["title", "slug", "_status", "updatedAt"],
     description: "Build public pages visually with the NECYPAA section library.",
     components: {
+      edit: {
+        beforeDocumentControls: ["@/components/admin/DeletePageButton"],
+      },
       views: {
         edit: {
           visual: {
