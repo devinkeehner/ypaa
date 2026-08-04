@@ -12,6 +12,7 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     importMap: { baseDir: "." },
+    meta: { defaultOGImageType: "off" },
   },
   collections: [Users, Media, Pages],
   db: sqliteD1Adapter({ binding: payloadD1, push: false }),

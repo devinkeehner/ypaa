@@ -17,6 +17,25 @@ function payloadServerCssCompatibility() {
   };
 }
 
+function payloadWorkerModuleUrlCompatibility() {
+  const payloadModule = /\/node_modules\/(?:@payloadcms\/|payload\/)/;
+
+  return {
+    name: "payload-worker-module-url-compatibility",
+    enforce: "pre" as const,
+    transform(source: string, id: string) {
+      if (!payloadModule.test(id) || !source.includes("fileURLToPath(import.meta.url)")) {
+        return null;
+      }
+
+      return source.replaceAll(
+        "fileURLToPath(import.meta.url)",
+        '"/worker/payload-module.js"',
+      );
+    },
+  };
+}
+
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   "00000000-0000-4000-8000-000000000000";
 
@@ -68,6 +87,7 @@ export default defineConfig(async () => {
     },
     plugins: [
       payloadServerCssCompatibility(),
+      payloadWorkerModuleUrlCompatibility(),
       vinext(),
       sites(),
       cloudflare({
