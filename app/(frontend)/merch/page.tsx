@@ -3,6 +3,7 @@ import config from "@payload-config";
 import { getPayload } from "payload";
 
 import { MerchandiseCatalog, type MerchandiseItem } from "@/components/site/MerchandiseCatalog";
+import { sampleMerchandise } from "./sample-data";
 
 export const metadata: Metadata = {
   title: "Merchandise | NECYPAA XXXVI",
@@ -26,5 +27,5 @@ export default async function MerchandisePage() {
     // The empty catalog remains useful before the collection migration runs.
   }
 
-  return <MerchandiseCatalog items={items} />;
+  return <MerchandiseCatalog items={items.length ? items : sampleMerchandise} />;
 }

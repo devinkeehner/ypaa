@@ -21,6 +21,7 @@ export type MerchandiseItem = {
   description: string;
   searchTerms?: string | null;
   featured?: boolean | null;
+  sample?: boolean | null;
   image?: { url?: string | null; alt?: string | null } | number | string | null;
   options?: MerchandiseOption[] | null;
 };
@@ -52,6 +53,7 @@ function ProductCard({ item }: { item: MerchandiseItem }) {
       <div className="merch-image-wrap">
         {image?.url ? <img src={image.url} alt={image.alt || `${item.name} merchandise design`} /> : <div className="merch-image-placeholder" role="img" aria-label={`${item.name} image coming soon`}><ShoppingBag aria-hidden="true" /><span>Image coming soon</span></div>}
         {item.featured ? <span className="merch-featured-label">Featured design</span> : null}
+        {item.sample ? <span className="merch-sample-label">Sample listing</span> : null}
       </div>
       <div className="merch-card-copy">
         <div className="merch-card-heading">

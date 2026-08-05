@@ -119,6 +119,7 @@
 .merch-image-placeholder svg { color: #e85e27; height: 50px; width: 50px; }
 .merch-image-placeholder span { font-size: .68rem; font-weight: 800; letter-spacing: .12em; }
 .merch-featured-label { background: #e85e27; color: #fff; font-size: .65rem; font-weight: 850; left: 14px; letter-spacing: .09em; padding: 8px 11px; position: absolute; text-transform: uppercase; top: 14px; }
+.merch-sample-label { background: #17191be6; border: 1px solid #f4e8d34a; bottom: 14px; color: #f4e8d3; font-size: .62rem; font-weight: 850; letter-spacing: .09em; padding: 8px 11px; position: absolute; right: 14px; text-transform: uppercase; }
 .merch-card-copy { padding: clamp(22px, 3vw, 34px); }
 .merch-card-heading { align-items: start; display: flex; gap: 22px; justify-content: space-between; }
 .merch-kicker { font-size: .64rem; margin-bottom: 10px; }
