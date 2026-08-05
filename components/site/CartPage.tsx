@@ -21,7 +21,7 @@ export function CartPage() {
   }, []);
 
   const updateQuantity = (key: string, quantity: number) => {
-    const next = items.map((item) => item.key === key ? { ...item, quantity: Math.max(1, Math.min(10, quantity)) } : item);
+    const next = items.map((item) => item.key === key ? { ...item, quantity: Math.max(1, Math.min(item.maxStock || 10, quantity)) } : item);
     setItems(next);
     writeCart(next);
   };
@@ -44,7 +44,7 @@ export function CartPage() {
             <div className="cart-list">
               {items.map((item) => <article className="cart-item" key={item.key}>
                 <div className="cart-item-image">{item.imageUrl ? <img src={item.imageUrl} alt={item.imageAlt || ""} /> : <ShoppingBag aria-hidden="true" />}</div>
-                <div className="cart-item-copy"><p>{item.type}</p><h2>{item.name}</h2><div>{item.size ? <span>Size: {item.size}</span> : null}{item.color ? <span>Color: {item.color}</span> : null}</div><strong>{formatMerchandisePrice(item.price)}</strong></div>
+                <div className="cart-item-copy"><p>{item.type}</p><h2>{item.name}</h2><div>{item.size ? <span>Size: {item.size}</span> : null}{item.color ? <span>Color: {item.color}</span> : null}{item.maxStock ? <span>{item.maxStock} currently available</span> : null}</div><strong>{formatMerchandisePrice(item.price)}</strong></div>
                 <div className="cart-quantity" aria-label={`Quantity for ${item.name}`}><button type="button" onClick={() => updateQuantity(item.key, item.quantity - 1)} aria-label="Decrease quantity"><Minus aria-hidden="true" /></button><span>{item.quantity}</span><button type="button" onClick={() => updateQuantity(item.key, item.quantity + 1)} aria-label="Increase quantity"><Plus aria-hidden="true" /></button></div>
                 <button className="cart-remove" type="button" onClick={() => remove(item.key)} aria-label={`Remove ${item.name}`}><Trash2 aria-hidden="true" /></button>
               </article>)}

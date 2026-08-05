@@ -444,13 +444,27 @@ export interface Merchandise {
    */
   price: number;
   /**
-   * Optional comma-separated choices. Example: S, M, L, XL, 2XL.
+   * Add one row for each sellable size/color combination. For items without sizes or colors, add one row and leave both blank.
    */
-  sizes?: string | null;
-  /**
-   * Optional comma-separated choices. Example: Black, Cream, Navy.
-   */
-  colors?: string | null;
+  inventory: {
+    /**
+     * Optional. Example: M or One size.
+     */
+    size?: string | null;
+    /**
+     * Optional. Example: Black.
+     */
+    color?: string | null;
+    /**
+     * Optional internal item code.
+     */
+    sku?: string | null;
+    /**
+     * Units currently available.
+     */
+    quantity: number;
+    id?: string | null;
+  }[];
   available?: boolean | null;
   /**
    * Optional comma-separated keywords visitors might search for.
@@ -760,8 +774,15 @@ export interface MerchandiseSelect<T extends boolean = true> {
   description?: T;
   type?: T;
   price?: T;
-  sizes?: T;
-  colors?: T;
+  inventory?:
+    | T
+    | {
+        size?: T;
+        color?: T;
+        sku?: T;
+        quantity?: T;
+        id?: T;
+      };
   available?: T;
   searchTerms?: T;
   featured?: T;

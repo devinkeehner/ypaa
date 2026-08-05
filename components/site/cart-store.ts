@@ -8,6 +8,8 @@ export type CartItem = {
   type: string;
   price: number;
   quantity: number;
+  variantId?: string;
+  maxStock?: number;
   size?: string;
   color?: string;
   imageUrl?: string;
@@ -34,10 +36,10 @@ export function cartCount(items = readCart()) {
 }
 
 export function addCartItem(item: Omit<CartItem, "key">) {
-  const key = [item.slug, item.size || "", item.color || ""].join("::");
+  const key = [item.slug, item.variantId || "", item.size || "", item.color || ""].join("::");
   const cart = readCart();
   const existing = cart.find((entry) => entry.key === key);
-  if (existing) existing.quantity += item.quantity;
+  if (existing) existing.quantity = Math.min(item.maxStock || 10, existing.quantity + item.quantity);
   else cart.push({ ...item, key });
   writeCart(cart);
   return cart;

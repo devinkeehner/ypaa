@@ -935,6 +935,28 @@ export const _pages_v = sqliteTable(
   ],
 );
 
+export const merchandise_inventory = sqliteTable(
+  "merchandise_inventory",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    id: text("id").primaryKey(),
+    size: text("size"),
+    color: text("color"),
+    sku: text("sku"),
+    quantity: numeric("quantity", { mode: "number" }).default(0),
+  },
+  (columns) => [
+    index("merchandise_inventory_order_idx").on(columns._order),
+    index("merchandise_inventory_parent_id_idx").on(columns._parentID),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [merchandise.id],
+      name: "merchandise_inventory_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
 export const merchandise = sqliteTable(
   "merchandise",
   {
@@ -960,8 +982,6 @@ export const merchandise = sqliteTable(
       ],
     }),
     price: numeric("price", { mode: "number" }),
-    sizes: text("sizes"),
-    colors: text("colors"),
     available: integer("available", { mode: "boolean" }).default(true),
     searchTerms: text("search_terms"),
     featured: integer("featured", { mode: "boolean" }).default(false),
@@ -981,6 +1001,31 @@ export const merchandise = sqliteTable(
     index("merchandise_updated_at_idx").on(columns.updatedAt),
     index("merchandise_created_at_idx").on(columns.createdAt),
     index("merchandise__status_idx").on(columns._status),
+  ],
+);
+
+export const _merchandise_v_version_inventory = sqliteTable(
+  "_merchandise_v_version_inventory",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    id: integer("id").primaryKey(),
+    size: text("size"),
+    color: text("color"),
+    sku: text("sku"),
+    quantity: numeric("quantity", { mode: "number" }).default(0),
+    _uuid: text("_uuid"),
+  },
+  (columns) => [
+    index("_merchandise_v_version_inventory_order_idx").on(columns._order),
+    index("_merchandise_v_version_inventory_parent_id_idx").on(
+      columns._parentID,
+    ),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_merchandise_v.id],
+      name: "_merchandise_v_version_inventory_parent_id_fk",
+    }).onDelete("cascade"),
   ],
 );
 
@@ -1012,8 +1057,6 @@ export const _merchandise_v = sqliteTable(
       ],
     }),
     version_price: numeric("version_price", { mode: "number" }),
-    version_sizes: text("version_sizes"),
-    version_colors: text("version_colors"),
     version_available: integer("version_available", {
       mode: "boolean",
     }).default(true),
@@ -1631,16 +1674,42 @@ export const relations__pages_v = relations(_pages_v, ({ one, many }) => ({
     relationName: "_blocks_FreeText",
   }),
 }));
-export const relations_merchandise = relations(merchandise, ({ one }) => ({
-  image: one(media, {
-    fields: [merchandise.image],
-    references: [media.id],
-    relationName: "image",
+export const relations_merchandise_inventory = relations(
+  merchandise_inventory,
+  ({ one }) => ({
+    _parentID: one(merchandise, {
+      fields: [merchandise_inventory._parentID],
+      references: [merchandise.id],
+      relationName: "inventory",
+    }),
   }),
-}));
+);
+export const relations_merchandise = relations(
+  merchandise,
+  ({ one, many }) => ({
+    image: one(media, {
+      fields: [merchandise.image],
+      references: [media.id],
+      relationName: "image",
+    }),
+    inventory: many(merchandise_inventory, {
+      relationName: "inventory",
+    }),
+  }),
+);
+export const relations__merchandise_v_version_inventory = relations(
+  _merchandise_v_version_inventory,
+  ({ one }) => ({
+    _parentID: one(_merchandise_v, {
+      fields: [_merchandise_v_version_inventory._parentID],
+      references: [_merchandise_v.id],
+      relationName: "version_inventory",
+    }),
+  }),
+);
 export const relations__merchandise_v = relations(
   _merchandise_v,
-  ({ one }) => ({
+  ({ one, many }) => ({
     parent: one(merchandise, {
       fields: [_merchandise_v.parent],
       references: [merchandise.id],
@@ -1650,6 +1719,9 @@ export const relations__merchandise_v = relations(
       fields: [_merchandise_v.version_image],
       references: [media.id],
       relationName: "version_image",
+    }),
+    version_inventory: many(_merchandise_v_version_inventory, {
+      relationName: "version_inventory",
     }),
   }),
 );
@@ -1750,7 +1822,9 @@ type DatabaseSchema = {
   _pages_v_blocks_rich_text: typeof _pages_v_blocks_rich_text;
   _pages_v_blocks_free_text: typeof _pages_v_blocks_free_text;
   _pages_v: typeof _pages_v;
+  merchandise_inventory: typeof merchandise_inventory;
   merchandise: typeof merchandise;
+  _merchandise_v_version_inventory: typeof _merchandise_v_version_inventory;
   _merchandise_v: typeof _merchandise_v;
   payload_kv: typeof payload_kv;
   payload_locked_documents: typeof payload_locked_documents;
@@ -1787,7 +1861,9 @@ type DatabaseSchema = {
   relations__pages_v_blocks_rich_text: typeof relations__pages_v_blocks_rich_text;
   relations__pages_v_blocks_free_text: typeof relations__pages_v_blocks_free_text;
   relations__pages_v: typeof relations__pages_v;
+  relations_merchandise_inventory: typeof relations_merchandise_inventory;
   relations_merchandise: typeof relations_merchandise;
+  relations__merchandise_v_version_inventory: typeof relations__merchandise_v_version_inventory;
   relations__merchandise_v: typeof relations__merchandise_v;
   relations_payload_kv: typeof relations_payload_kv;
   relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels;

@@ -18,8 +18,14 @@ export const sampleMerchandise: MerchandiseItem[] = [
     image: placeholderImage,
     type: "t-shirt",
     price: 25,
-    sizes: "S, M, L, XL, 2XL, 3XL",
-    colors: "Black, Cream",
+    inventory: [
+      { id: "escape-black-s", size: "S", color: "Black", quantity: 6 },
+      { id: "escape-black-m", size: "M", color: "Black", quantity: 10 },
+      { id: "escape-black-l", size: "L", color: "Black", quantity: 8 },
+      { id: "escape-black-xl", size: "XL", color: "Black", quantity: 5 },
+      { id: "escape-cream-m", size: "M", color: "Cream", quantity: 4 },
+      { id: "escape-cream-l", size: "L", color: "Cream", quantity: 3 },
+    ],
     available: true,
   },
   {
@@ -34,8 +40,12 @@ export const sampleMerchandise: MerchandiseItem[] = [
     image: placeholderImage,
     type: "crewneck",
     price: 45,
-    sizes: "S, M, L, XL, 2XL",
-    colors: "Charcoal, Rust",
+    inventory: [
+      { id: "hartford-charcoal-s", size: "S", color: "Charcoal", quantity: 3 },
+      { id: "hartford-charcoal-m", size: "M", color: "Charcoal", quantity: 7 },
+      { id: "hartford-charcoal-l", size: "L", color: "Charcoal", quantity: 7 },
+      { id: "hartford-rust-xl", size: "XL", color: "Rust", quantity: 2 },
+    ],
     available: true,
   },
   {
@@ -50,8 +60,7 @@ export const sampleMerchandise: MerchandiseItem[] = [
     image: placeholderImage,
     type: "hat",
     price: 25,
-    sizes: "Adjustable",
-    colors: "Black",
+    inventory: [{ id: "thirty-six-black", size: "Adjustable", color: "Black", quantity: 12 }],
     available: true,
   },
   {
@@ -66,8 +75,12 @@ export const sampleMerchandise: MerchandiseItem[] = [
     image: placeholderImage,
     type: "hoodie",
     price: 55,
-    sizes: "S, M, L, XL, 2XL, 3XL",
-    colors: "Black, Deep purple",
+    inventory: [
+      { id: "portal-black-m", size: "M", color: "Black", quantity: 5 },
+      { id: "portal-black-l", size: "L", color: "Black", quantity: 5 },
+      { id: "portal-purple-l", size: "L", color: "Deep purple", quantity: 2 },
+      { id: "portal-purple-xl", size: "XL", color: "Deep purple", quantity: 0 },
+    ],
     available: true,
   },
 ];

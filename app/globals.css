@@ -132,6 +132,9 @@
 .merch-image-placeholder span { font-size: .68rem; font-weight: 800; letter-spacing: .12em; }
 .merch-featured-label { background: #e85e27; color: #fff; font-size: .65rem; font-weight: 850; left: 14px; letter-spacing: .09em; padding: 8px 11px; position: absolute; text-transform: uppercase; top: 14px; }
 .merch-sample-label { background: #17191be6; border: 1px solid #f4e8d34a; bottom: 14px; color: #f4e8d3; font-size: .62rem; font-weight: 850; letter-spacing: .09em; padding: 8px 11px; position: absolute; right: 14px; text-transform: uppercase; }
+.merch-sold-out-label { background: #f4e8d3; color: #171614; font-size: .65rem; font-weight: 900; left: 14px; letter-spacing: .09em; padding: 8px 11px; position: absolute; text-transform: uppercase; top: 14px; }
+.merch-featured .merch-sold-out-label { top: 52px; }
+.merch-sold-out .merch-image-wrap img { filter: grayscale(.82); opacity: .66; }
 .merch-card-copy { display: flex; flex: 1; flex-direction: column; padding: clamp(22px, 2.5vw, 32px); }
 .merch-kicker { font-size: .64rem; margin-bottom: 10px; }
 .merch-card h2 { font: 600 clamp(1.65rem, 2.5vw, 2.45rem)/.98 Georgia, "Times New Roman", serif; letter-spacing: -.035em; margin: 0; }
@@ -169,9 +172,13 @@
 .product-form :is(select, input) { background: #15181a; border: 1px solid #f4e8d33b; color: #f4e8d3; min-height: 50px; padding: 0 14px; width: 100%; }
 .theme-light .product-form :is(select, input) { background: #fffaf1; border-color: #17161445; color: #171614; }
 .product-form input[type="number"] { max-width: 110px; }
+.product-stock { color: #75d08d; font: 800 .69rem/1 var(--font-geist-mono), monospace; letter-spacing: .06em; margin: 0; text-transform: uppercase; }
+.product-stock.low-stock { color: #ffb06d; }
+.product-stock.sold-out { color: #e18b7e; }
 .product-fixed-option strong { font-size: .94rem; }
 .product-add { align-items: center; background: #e85e27; border: 1px solid #e85e27; color: #fff; cursor: pointer; display: flex; font-size: .76rem; font-weight: 900; gap: 10px; justify-content: center; letter-spacing: .09em; min-height: 56px; text-transform: uppercase; width: 100%; }
 .product-add:hover { background: #ff6b2f; }
+.product-add:disabled { background: #444746; border-color: #444746; color: #aaa; cursor: not-allowed; }
 .product-add svg { height: 20px; width: 20px; }
 .product-added { align-items: center; background: #163522; border: 1px solid #50b66d66; color: #d9ffe4; display: flex; gap: 10px; margin-top: 20px; padding: 15px; }
 .product-added svg { height: 19px; width: 19px; }

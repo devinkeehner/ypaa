@@ -9,9 +9,16 @@ export type MerchandiseItem = {
   image?: { url?: string | null; alt?: string | null } | number | string | null;
   type: string;
   price: number;
-  sizes?: string | null;
-  colors?: string | null;
+  inventory?: InventoryOption[] | null;
   available?: boolean | null;
+};
+
+export type InventoryOption = {
+  id?: string | null;
+  size?: string | null;
+  color?: string | null;
+  sku?: string | null;
+  quantity: number;
 };
 
 export const merchandiseTypeLabels: Record<string, string> = {
@@ -35,9 +42,18 @@ export function formatMerchandisePrice(value: number) {
   }).format(value);
 }
 
-export function parseProductOptions(value?: string | null) {
-  return (value || "")
-    .split(/[,\n]/)
-    .map((option) => option.trim())
-    .filter(Boolean);
+export function inventoryKey(option: InventoryOption, index = 0) {
+  return option.id || [option.size || "", option.color || "", option.sku || "", index].join("::");
+}
+
+export function inventoryLabel(option: InventoryOption) {
+  return [option.color, option.size].filter(Boolean).join(" / ") || "Standard item";
+}
+
+export function inStockInventory(item: MerchandiseItem) {
+  return (item.inventory || []).filter((option) => option.quantity > 0);
+}
+
+export function totalInventory(item: MerchandiseItem) {
+  return (item.inventory || []).reduce((total, option) => total + Math.max(0, option.quantity || 0), 0);
 }

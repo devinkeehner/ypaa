@@ -69,14 +69,38 @@ export const Merchandise: CollectionConfig = {
       admin: { description: "Price in dollars." },
     },
     {
-      name: "sizes",
-      type: "text",
-      admin: { description: "Optional comma-separated choices. Example: S, M, L, XL, 2XL." },
-    },
-    {
-      name: "colors",
-      type: "text",
-      admin: { description: "Optional comma-separated choices. Example: Black, Cream, Navy." },
+      name: "inventory",
+      type: "array",
+      required: true,
+      minRows: 1,
+      labels: { singular: "Inventory option", plural: "Inventory by size and color" },
+      admin: {
+        description:
+          "Add one row for each sellable size/color combination. For items without sizes or colors, add one row and leave both blank.",
+        initCollapsed: false,
+      },
+      validate: (value) => {
+        if (!Array.isArray(value) || value.length === 0) return "Add at least one inventory option.";
+        const rows = value as Array<{ color?: unknown; size?: unknown }>;
+        const combinations = rows.map(
+          (row) =>
+            `${String(row.size || "").trim().toLowerCase()}::${String(row.color || "").trim().toLowerCase()}`,
+        );
+        return new Set(combinations).size === combinations.length || "Each size and color combination must be unique.";
+      },
+      fields: [
+        { name: "size", type: "text", admin: { description: "Optional. Example: M or One size." } },
+        { name: "color", type: "text", admin: { description: "Optional. Example: Black." } },
+        { name: "sku", type: "text", admin: { description: "Optional internal item code." } },
+        {
+          name: "quantity",
+          type: "number",
+          required: true,
+          min: 0,
+          defaultValue: 0,
+          admin: { description: "Units currently available." },
+        },
+      ],
     },
     {
       name: "available",
