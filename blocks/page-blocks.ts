@@ -55,7 +55,24 @@ export const HeroCountdownBlock: Block = {
     { name: "registerUrl", type: "text" },
     { name: "hotelLabel", type: "text" },
     { name: "hotelUrl", type: "text" },
-    { name: "image", type: "upload", relationTo: "media" },
+    {
+      name: "foregroundImage",
+      type: "upload",
+      relationTo: "media",
+      admin: { description: "The transparent artwork layered in front of the hero." },
+    },
+    {
+      name: "backgroundImage",
+      type: "upload",
+      relationTo: "media",
+      admin: { description: "Optional full-bleed image behind the hero copy and foreground artwork." },
+    },
+    {
+      name: "image",
+      type: "upload",
+      relationTo: "media",
+      admin: { hidden: true },
+    },
     textStyles,
   ],
 };

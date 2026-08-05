@@ -17,7 +17,22 @@ import type { NECYPAAData } from "@/puck/types";
 import styles from "./puck.module.css";
 
 type Base = { id?: string };
-type Hero = Base & { eyebrow: string; heading: string; body: string; eventDate: string; eventLocation: string; countdownTarget: string; registerLabel: string; registerUrl: string; hotelLabel: string; hotelUrl: string; image?: MediaValue | null };
+type Hero = Base & {
+  eyebrow: string;
+  heading: string;
+  body: string;
+  eventDate: string;
+  eventLocation: string;
+  countdownTarget: string;
+  registerLabel: string;
+  registerUrl: string;
+  hotelLabel: string;
+  hotelUrl: string;
+  foregroundImage?: MediaValue | null;
+  backgroundImage?: MediaValue | null;
+  /** Retained so older pages that used the original single image field keep working. */
+  image?: MediaValue | null;
+};
 type About = Base & { eyebrow: string; heading: string; body: string; advisoryHeading: string; advisoryBody: string; image?: MediaValue | null };
 type Meeting = Base & { eyebrow: string; heading: string; body: string; date: string; time: string; location: string; actionLabel: string; actionUrl: string; importantDates: ImportantDate[] };
 type Events = Base & { eyebrow: string; heading: string; upcomingLabel: string; upcomingTitle: string; upcomingBody: string; upcomingDate: string; upcomingLocation: string; upcomingImage?: MediaValue | null; pastEvents: PastEvent[] };
@@ -167,9 +182,39 @@ export const puckConfig: Config<Components> = {
   components: {
     HeroCountdown: {
       label: "Hero + countdown",
-      defaultProps: { eyebrow: "Escaping the Mad Realm", heading: "NECYPAA XXXVI", body: "Connection, service, and recovery.", eventDate: "December 31, 2026 – January 3, 2027", eventLocation: "Hartford, Connecticut", countdownTarget: "2026-12-31T17:00:00-05:00", registerLabel: "Register", registerUrl: "#", hotelLabel: "Book a hotel room", hotelUrl: "#", image: null },
-      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Introduction"), eventDate: text("Dates"), eventLocation: text("Location"), countdownTarget: plainText("Countdown ISO date"), registerLabel: text("Register label"), registerUrl: plainText("Register URL"), hotelLabel: text("Hotel label"), hotelUrl: plainText("Hotel URL"), image: mediaField("Hero artwork") },
-      render: (props) => { const image = normalizeMedia(props.image); return <section className={styles.hero} id={props.id}><div className={styles.shell}><div className={styles.heroCopy}><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h1" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.lede} field="body" props={props}>{props.body}</Editable><div className={styles.meta}><Editable field="eventDate" props={props}>{props.eventDate}</Editable><Editable field="eventLocation" props={props}>{props.eventLocation}</Editable></div><div className={styles.actions}><Button href={props.registerUrl}><Editable field="registerLabel" props={props}>{props.registerLabel}</Editable></Button><Button href={props.hotelUrl} outline><Editable field="hotelLabel" props={props}>{props.hotelLabel}</Editable></Button></div></div><div className={styles.heroArt} data-has-image={Boolean(image)}>{image ? <img alt={image.alt || ""} src={image.url} /> : <><i /><i /><i /></>}</div><Countdown target={props.countdownTarget} /></div></section>; },
+      defaultProps: { eyebrow: "Escaping the Mad Realm", heading: "NECYPAA XXXVI", body: "Connection, service, and recovery.", eventDate: "December 31, 2026 – January 3, 2027", eventLocation: "Hartford, Connecticut", countdownTarget: "2026-12-31T17:00:00-05:00", registerLabel: "Register", registerUrl: "#", hotelLabel: "Book a hotel room", hotelUrl: "#", foregroundImage: null, backgroundImage: null },
+      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Introduction"), eventDate: text("Dates"), eventLocation: text("Location"), countdownTarget: plainText("Countdown ISO date"), registerLabel: text("Register label"), registerUrl: plainText("Register URL"), hotelLabel: text("Hotel label"), hotelUrl: plainText("Hotel URL"), foregroundImage: mediaField("Foreground image"), backgroundImage: mediaField("Background image (optional)") },
+      render: (props) => {
+        const foregroundImage = normalizeMedia(props.foregroundImage) || normalizeMedia(props.image);
+        const backgroundImage = normalizeMedia(props.backgroundImage);
+        const foregroundSource = foregroundImage?.url || "/images/necypaa-floating-hotel-hero.webp";
+        const foregroundAlt = foregroundImage?.alt || "Hartford Marriott Downtown flying above a floating island with two illustrated mascots";
+
+        return (
+          <section className={styles.hero} data-has-background={Boolean(backgroundImage)} id={props.id}>
+            {backgroundImage ? <img aria-hidden="true" alt="" className={styles.heroBackground} src={backgroundImage.url} /> : null}
+            <div className={styles.shell}>
+              <div className={styles.heroCopy}>
+                <Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable>
+                <Editable as="h1" field="heading" props={props}>{props.heading}</Editable>
+                <Editable as="p" className={styles.lede} field="body" props={props}>{props.body}</Editable>
+                <div className={styles.meta}>
+                  <Editable field="eventDate" props={props}>{props.eventDate}</Editable>
+                  <Editable field="eventLocation" props={props}>{props.eventLocation}</Editable>
+                </div>
+                <div className={styles.actions}>
+                  <Button href={props.registerUrl}><Editable field="registerLabel" props={props}>{props.registerLabel}</Editable></Button>
+                  <Button href={props.hotelUrl} outline><Editable field="hotelLabel" props={props}>{props.hotelLabel}</Editable></Button>
+                </div>
+              </div>
+              <div className={styles.heroArt} data-has-image="true">
+                <img alt={foregroundAlt} src={foregroundSource} />
+              </div>
+              <Countdown target={props.countdownTarget} />
+            </div>
+          </section>
+        );
+      },
     },
     About: {
       label: "About + advisory",

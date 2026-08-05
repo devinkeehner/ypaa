@@ -116,6 +116,12 @@ export const pages_blocks_hero_countdown = sqliteTable(
     registerUrl: text("register_url"),
     hotelLabel: text("hotel_label"),
     hotelUrl: text("hotel_url"),
+    foregroundImage: integer("foreground_image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
+    backgroundImage: integer("background_image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
     image: integer("image_id").references(() => media.id, {
       onDelete: "set null",
     }),
@@ -126,6 +132,12 @@ export const pages_blocks_hero_countdown = sqliteTable(
     index("pages_blocks_hero_countdown_order_idx").on(columns._order),
     index("pages_blocks_hero_countdown_parent_id_idx").on(columns._parentID),
     index("pages_blocks_hero_countdown_path_idx").on(columns._path),
+    index("pages_blocks_hero_countdown_foreground_image_idx").on(
+      columns.foregroundImage,
+    ),
+    index("pages_blocks_hero_countdown_background_image_idx").on(
+      columns.backgroundImage,
+    ),
     index("pages_blocks_hero_countdown_image_idx").on(columns.image),
     foreignKey({
       columns: [columns["_parentID"]],
@@ -491,6 +503,12 @@ export const _pages_v_blocks_hero_countdown = sqliteTable(
     registerUrl: text("register_url"),
     hotelLabel: text("hotel_label"),
     hotelUrl: text("hotel_url"),
+    foregroundImage: integer("foreground_image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
+    backgroundImage: integer("background_image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
     image: integer("image_id").references(() => media.id, {
       onDelete: "set null",
     }),
@@ -502,6 +520,12 @@ export const _pages_v_blocks_hero_countdown = sqliteTable(
     index("_pages_v_blocks_hero_countdown_order_idx").on(columns._order),
     index("_pages_v_blocks_hero_countdown_parent_id_idx").on(columns._parentID),
     index("_pages_v_blocks_hero_countdown_path_idx").on(columns._path),
+    index("_pages_v_blocks_hero_countdown_foreground_image_idx").on(
+      columns.foregroundImage,
+    ),
+    index("_pages_v_blocks_hero_countdown_background_image_idx").on(
+      columns.backgroundImage,
+    ),
     index("_pages_v_blocks_hero_countdown_image_idx").on(columns.image),
     foreignKey({
       columns: [columns["_parentID"]],
@@ -1047,6 +1071,16 @@ export const relations_pages_blocks_hero_countdown = relations(
       references: [pages.id],
       relationName: "_blocks_HeroCountdown",
     }),
+    foregroundImage: one(media, {
+      fields: [pages_blocks_hero_countdown.foregroundImage],
+      references: [media.id],
+      relationName: "foregroundImage",
+    }),
+    backgroundImage: one(media, {
+      fields: [pages_blocks_hero_countdown.backgroundImage],
+      references: [media.id],
+      relationName: "backgroundImage",
+    }),
     image: one(media, {
       fields: [pages_blocks_hero_countdown.image],
       references: [media.id],
@@ -1234,6 +1268,16 @@ export const relations__pages_v_blocks_hero_countdown = relations(
       fields: [_pages_v_blocks_hero_countdown._parentID],
       references: [_pages_v.id],
       relationName: "_blocks_HeroCountdown",
+    }),
+    foregroundImage: one(media, {
+      fields: [_pages_v_blocks_hero_countdown.foregroundImage],
+      references: [media.id],
+      relationName: "foregroundImage",
+    }),
+    backgroundImage: one(media, {
+      fields: [_pages_v_blocks_hero_countdown.backgroundImage],
+      references: [media.id],
+      relationName: "backgroundImage",
     }),
     image: one(media, {
       fields: [_pages_v_blocks_hero_countdown.image],

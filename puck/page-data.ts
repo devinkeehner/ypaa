@@ -114,7 +114,12 @@ function mediaID(value: unknown) {
 
 function packMedia(type: string, props: Record<string, unknown>) {
   const packed = { ...props };
-  if (type === "HeroCountdown" || type === "About" || type === "CallToAction" || type === "Image") {
+  if (type === "HeroCountdown") {
+    packed.foregroundImage = mediaID(packed.foregroundImage);
+    packed.backgroundImage = mediaID(packed.backgroundImage);
+    packed.image = mediaID(packed.image);
+  }
+  if (type === "About" || type === "CallToAction" || type === "Image") {
     packed.image = mediaID(packed.image);
   }
   if (type === "Events") {
