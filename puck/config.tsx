@@ -30,6 +30,7 @@ type Hero = Base & {
   hotelUrl: string;
   foregroundImage?: MediaValue | null;
   backgroundImage?: MediaValue | null;
+  backgroundPosterImage?: MediaValue | null;
   /** Retained so older pages that used the original single image field keep working. */
   image?: MediaValue | null;
 };
@@ -70,12 +71,13 @@ function normalizeMedia(value: unknown): MediaValue | null {
     url: record.url,
     alt: typeof record.alt === "string" ? record.alt : "",
     filename: typeof record.filename === "string" ? record.filename : undefined,
+    mimeType: typeof record.mimeType === "string" ? record.mimeType : undefined,
     width: typeof record.width === "number" ? record.width : undefined,
     height: typeof record.height === "number" ? record.height : undefined,
   };
 }
 
-const mediaField = (label: string): Field<MediaValue | null | undefined> => ({
+const mediaField = (label: string, allowVideo = false): Field<MediaValue | null | undefined> => ({
   type: "external",
   label,
   placeholder: "Choose from Payload Media",
@@ -86,9 +88,14 @@ const mediaField = (label: string): Field<MediaValue | null | undefined> => ({
     if (!response.ok) return [];
     const result = await response.json() as { docs?: unknown[] };
     const docs = Array.isArray(result.docs) ? result.docs : [];
+    const compatibleDocs = allowVideo ? docs : docs.filter((value) => {
+      if (!value || typeof value !== "object") return false;
+      const mimeType = (value as Record<string, unknown>).mimeType;
+      return typeof mimeType !== "string" || mimeType.startsWith("image/");
+    });
     const needle = query.trim().toLowerCase();
-    if (!needle) return docs;
-    return docs.filter((value) => {
+    if (!needle) return compatibleDocs;
+    return compatibleDocs.filter((value) => {
       if (!value || typeof value !== "object") return false;
       const record = value as Record<string, unknown>;
       return [record.alt, record.filename].some((item) => typeof item === "string" && item.toLowerCase().includes(needle));
@@ -96,11 +103,12 @@ const mediaField = (label: string): Field<MediaValue | null | undefined> => ({
   },
   mapProp: (value) => normalizeMedia(value) || { url: "", alt: "" },
   mapRow: (value) => {
-    const image = normalizeMedia(value);
+    const media = normalizeMedia(value);
+    const isVideo = media?.mimeType?.startsWith("video/") || /\.(?:mp4|webm)(?:\?.*)?$/i.test(media?.url || "");
     return {
-      Preview: image?.url ? <img alt="" src={image.url} style={{ aspectRatio: "4 / 3", height: 58, objectFit: "cover", width: 76 }} /> : "No preview",
-      Name: image?.alt || image?.filename || "Untitled image",
-      Size: image?.width && image?.height ? `${image.width} × ${image.height}` : "—",
+      Preview: media?.url ? (isVideo ? <video aria-label="Video preview" muted preload="metadata" src={media.url} style={{ aspectRatio: "4 / 3", height: 58, objectFit: "cover", width: 76 }} /> : <img alt="" src={media.url} style={{ aspectRatio: "4 / 3", height: 58, objectFit: "cover", width: 76 }} />) : "No preview",
+      Name: media?.alt || media?.filename || "Untitled media",
+      Size: media?.width && media?.height ? `${media.width} × ${media.height}` : "—",
     };
   },
   getItemSummary: (value) => value?.alt || value?.filename || "Selected image",
@@ -182,17 +190,30 @@ export const puckConfig: Config<Components> = {
   components: {
     HeroCountdown: {
       label: "Hero + countdown",
-      defaultProps: { eyebrow: "Escaping the Mad Realm", heading: "NECYPAA XXXVI", body: "Connection, service, and recovery.", eventDate: "December 31, 2026 – January 3, 2027", eventLocation: "Hartford, Connecticut", countdownTarget: "2026-12-31T17:00:00-05:00", registerLabel: "Register", registerUrl: "#", hotelLabel: "Book a hotel room", hotelUrl: "#", foregroundImage: null, backgroundImage: null },
-      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Introduction"), eventDate: text("Dates"), eventLocation: text("Location"), countdownTarget: plainText("Countdown ISO date"), registerLabel: text("Register label"), registerUrl: plainText("Register URL"), hotelLabel: text("Hotel label"), hotelUrl: plainText("Hotel URL"), foregroundImage: mediaField("Foreground image"), backgroundImage: mediaField("Background image (optional)") },
+      defaultProps: { eyebrow: "Escaping the Mad Realm", heading: "NECYPAA XXXVI", body: "Connection, service, and recovery.", eventDate: "December 31, 2026 – January 3, 2027", eventLocation: "Hartford, Connecticut", countdownTarget: "2026-12-31T17:00:00-05:00", registerLabel: "Register", registerUrl: "#", hotelLabel: "Book a hotel room", hotelUrl: "#", foregroundImage: null, backgroundImage: null, backgroundPosterImage: null },
+      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Introduction"), eventDate: text("Dates"), eventLocation: text("Location"), countdownTarget: plainText("Countdown ISO date"), registerLabel: text("Register label"), registerUrl: plainText("Register URL"), hotelLabel: text("Hotel label"), hotelUrl: plainText("Hotel URL"), foregroundImage: mediaField("Foreground image"), backgroundImage: mediaField("Background image or video (optional)", true), backgroundPosterImage: mediaField("Video poster image (optional)") },
       render: (props) => {
         const foregroundImage = normalizeMedia(props.foregroundImage) || normalizeMedia(props.image);
-        const backgroundImage = normalizeMedia(props.backgroundImage);
+        const selectedBackground = normalizeMedia(props.backgroundImage);
+        const selectedPoster = normalizeMedia(props.backgroundPosterImage);
+        const backgroundSource = selectedBackground?.url || "/media/necypaa-portal-background.mp4";
+        const backgroundPoster = selectedPoster?.url || (selectedBackground ? undefined : "/images/necypaa-portal-background.webp");
+        const backgroundIsVideo = selectedBackground
+          ? selectedBackground.mimeType?.startsWith("video/") || /\.(?:mp4|webm)(?:\?.*)?$/i.test(selectedBackground.url)
+          : true;
         const foregroundSource = foregroundImage?.url || "/images/necypaa-floating-hotel-hero.webp";
         const foregroundAlt = foregroundImage?.alt || "Hartford Marriott Downtown flying above a floating island with two illustrated mascots";
 
         return (
-          <section className={styles.hero} data-has-background={Boolean(backgroundImage)} id={props.id}>
-            {backgroundImage ? <img aria-hidden="true" alt="" className={styles.heroBackground} src={backgroundImage.url} /> : null}
+          <section className={styles.hero} data-has-background="true" id={props.id}>
+            {backgroundIsVideo ? (
+              <>
+                {backgroundPoster ? <img aria-hidden="true" alt="" className={`${styles.heroBackground} ${styles.heroBackgroundPoster}`} src={backgroundPoster} /> : null}
+                <video aria-hidden="true" autoPlay className={`${styles.heroBackground} ${styles.heroBackgroundVideo}`} loop muted playsInline poster={backgroundPoster} preload="metadata">
+                  <source src={backgroundSource} type={selectedBackground?.mimeType || "video/mp4"} />
+                </video>
+              </>
+            ) : <img aria-hidden="true" alt="" className={styles.heroBackground} src={backgroundSource} />}
             <div className={styles.shell}>
               <div className={styles.heroCopy}>
                 <Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable>

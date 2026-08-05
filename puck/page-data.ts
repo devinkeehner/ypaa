@@ -117,6 +117,7 @@ function packMedia(type: string, props: Record<string, unknown>) {
   if (type === "HeroCountdown") {
     packed.foregroundImage = mediaID(packed.foregroundImage);
     packed.backgroundImage = mediaID(packed.backgroundImage);
+    packed.backgroundPosterImage = mediaID(packed.backgroundPosterImage);
     packed.image = mediaID(packed.image);
   }
   if (type === "About" || type === "CallToAction" || type === "Image") {

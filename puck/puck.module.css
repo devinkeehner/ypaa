@@ -146,6 +146,8 @@
   width: 100%;
   z-index: 0;
 }
+.heroBackgroundPoster { z-index: 0; }
+.heroBackgroundVideo { z-index: 0; }
 .hero[data-has-background="true"]::before {
   background:
     linear-gradient(90deg, rgba(10, 12, 13, .95) 0%, rgba(10, 12, 13, .78) 44%, rgba(10, 12, 13, .38) 72%, rgba(10, 12, 13, .6) 100%),
@@ -569,4 +571,5 @@
 @media (prefers-reduced-motion: reduce) {
   .button { transition: none; }
   .button:hover { transform: none; }
+  .heroBackgroundVideo { display: none; }
 }

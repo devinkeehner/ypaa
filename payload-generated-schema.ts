@@ -122,6 +122,12 @@ export const pages_blocks_hero_countdown = sqliteTable(
     backgroundImage: integer("background_image_id").references(() => media.id, {
       onDelete: "set null",
     }),
+    backgroundPosterImage: integer("background_poster_image_id").references(
+      () => media.id,
+      {
+        onDelete: "set null",
+      },
+    ),
     image: integer("image_id").references(() => media.id, {
       onDelete: "set null",
     }),
@@ -137,6 +143,9 @@ export const pages_blocks_hero_countdown = sqliteTable(
     ),
     index("pages_blocks_hero_countdown_background_image_idx").on(
       columns.backgroundImage,
+    ),
+    index("pages_blocks_hero_countdown_background_poster_image_idx").on(
+      columns.backgroundPosterImage,
     ),
     index("pages_blocks_hero_countdown_image_idx").on(columns.image),
     foreignKey({
@@ -509,6 +518,12 @@ export const _pages_v_blocks_hero_countdown = sqliteTable(
     backgroundImage: integer("background_image_id").references(() => media.id, {
       onDelete: "set null",
     }),
+    backgroundPosterImage: integer("background_poster_image_id").references(
+      () => media.id,
+      {
+        onDelete: "set null",
+      },
+    ),
     image: integer("image_id").references(() => media.id, {
       onDelete: "set null",
     }),
@@ -525,6 +540,9 @@ export const _pages_v_blocks_hero_countdown = sqliteTable(
     ),
     index("_pages_v_blocks_hero_countdown_background_image_idx").on(
       columns.backgroundImage,
+    ),
+    index("_pages_v_blocks_hero_countdown_background_poster_image_idx").on(
+      columns.backgroundPosterImage,
     ),
     index("_pages_v_blocks_hero_countdown_image_idx").on(columns.image),
     foreignKey({
@@ -1081,6 +1099,11 @@ export const relations_pages_blocks_hero_countdown = relations(
       references: [media.id],
       relationName: "backgroundImage",
     }),
+    backgroundPosterImage: one(media, {
+      fields: [pages_blocks_hero_countdown.backgroundPosterImage],
+      references: [media.id],
+      relationName: "backgroundPosterImage",
+    }),
     image: one(media, {
       fields: [pages_blocks_hero_countdown.image],
       references: [media.id],
@@ -1278,6 +1301,11 @@ export const relations__pages_v_blocks_hero_countdown = relations(
       fields: [_pages_v_blocks_hero_countdown.backgroundImage],
       references: [media.id],
       relationName: "backgroundImage",
+    }),
+    backgroundPosterImage: one(media, {
+      fields: [_pages_v_blocks_hero_countdown.backgroundPosterImage],
+      references: [media.id],
+      relationName: "backgroundPosterImage",
     }),
     image: one(media, {
       fields: [_pages_v_blocks_hero_countdown.image],

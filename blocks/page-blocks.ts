@@ -65,7 +65,13 @@ export const HeroCountdownBlock: Block = {
       name: "backgroundImage",
       type: "upload",
       relationTo: "media",
-      admin: { description: "Optional full-bleed image behind the hero copy and foreground artwork." },
+      admin: { description: "Optional full-bleed image or muted looping video behind the hero." },
+    },
+    {
+      name: "backgroundPosterImage",
+      type: "upload",
+      relationTo: "media",
+      admin: { description: "Optional still image shown while a background video loads and when reduced motion is preferred." },
     },
     {
       name: "image",

@@ -4,7 +4,7 @@ export const Media: CollectionConfig = {
   slug: "media",
   access: { read: () => true },
   upload: {
-    mimeTypes: ["image/*"],
+    mimeTypes: ["image/*", "video/mp4", "video/webm"],
   },
   fields: [
     { name: "alt", type: "text", required: true },

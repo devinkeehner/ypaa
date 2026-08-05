@@ -4,6 +4,7 @@ export type MediaValue = {
   url: string;
   alt?: string;
   filename?: string;
+  mimeType?: string;
   width?: number;
   height?: number;
 };
