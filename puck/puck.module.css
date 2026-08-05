@@ -150,8 +150,8 @@
 .heroBackgroundVideo { z-index: 0; }
 .hero[data-has-background="true"]::before {
   background:
-    linear-gradient(90deg, rgba(10, 12, 13, .95) 0%, rgba(10, 12, 13, .78) 44%, rgba(10, 12, 13, .38) 72%, rgba(10, 12, 13, .6) 100%),
-    linear-gradient(180deg, rgba(10, 12, 13, .18), rgba(10, 12, 13, .72));
+    linear-gradient(90deg, rgba(8, 10, 16, .7) 0%, rgba(8, 10, 16, .46) 38%, rgba(8, 10, 16, .14) 64%, rgba(8, 10, 16, .22) 100%),
+    linear-gradient(180deg, rgba(8, 10, 16, .04), rgba(8, 10, 16, .28));
   opacity: 1;
 }
 .hero > .shell { min-height: 610px; z-index: 2; }
