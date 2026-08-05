@@ -935,6 +935,163 @@ export const _pages_v = sqliteTable(
   ],
 );
 
+export const merchandise_options = sqliteTable(
+  "merchandise_options",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    id: text("id").primaryKey(),
+    type: text("type", {
+      enum: [
+        "t-shirt",
+        "long-sleeve",
+        "hoodie",
+        "crewneck",
+        "hat",
+        "sticker",
+        "pin",
+        "tote",
+        "mug",
+        "other",
+      ],
+    }),
+    label: text("label"),
+    price: numeric("price", { mode: "number" }),
+    sizes: text("sizes"),
+    available: integer("available", { mode: "boolean" }).default(true),
+  },
+  (columns) => [
+    index("merchandise_options_order_idx").on(columns._order),
+    index("merchandise_options_parent_id_idx").on(columns._parentID),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [merchandise.id],
+      name: "merchandise_options_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const merchandise = sqliteTable(
+  "merchandise",
+  {
+    id: integer("id").primaryKey(),
+    name: text("name"),
+    slug: text("slug"),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
+    description: text("description"),
+    searchTerms: text("search_terms"),
+    featured: integer("featured", { mode: "boolean" }).default(false),
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    _status: text("_status", { enum: ["draft", "published"] }).default("draft"),
+  },
+  (columns) => [
+    index("merchandise_name_idx").on(columns.name),
+    uniqueIndex("merchandise_slug_idx").on(columns.slug),
+    index("merchandise_image_idx").on(columns.image),
+    index("merchandise_updated_at_idx").on(columns.updatedAt),
+    index("merchandise_created_at_idx").on(columns.createdAt),
+    index("merchandise__status_idx").on(columns._status),
+  ],
+);
+
+export const _merchandise_v_version_options = sqliteTable(
+  "_merchandise_v_version_options",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    id: integer("id").primaryKey(),
+    type: text("type", {
+      enum: [
+        "t-shirt",
+        "long-sleeve",
+        "hoodie",
+        "crewneck",
+        "hat",
+        "sticker",
+        "pin",
+        "tote",
+        "mug",
+        "other",
+      ],
+    }),
+    label: text("label"),
+    price: numeric("price", { mode: "number" }),
+    sizes: text("sizes"),
+    available: integer("available", { mode: "boolean" }).default(true),
+    _uuid: text("_uuid"),
+  },
+  (columns) => [
+    index("_merchandise_v_version_options_order_idx").on(columns._order),
+    index("_merchandise_v_version_options_parent_id_idx").on(columns._parentID),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_merchandise_v.id],
+      name: "_merchandise_v_version_options_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const _merchandise_v = sqliteTable(
+  "_merchandise_v",
+  {
+    id: integer("id").primaryKey(),
+    parent: integer("parent_id").references(() => merchandise.id, {
+      onDelete: "set null",
+    }),
+    version_name: text("version_name"),
+    version_slug: text("version_slug"),
+    version_image: integer("version_image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
+    version_description: text("version_description"),
+    version_searchTerms: text("version_search_terms"),
+    version_featured: integer("version_featured", { mode: "boolean" }).default(
+      false,
+    ),
+    version_updatedAt: text("version_updated_at").default(
+      sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`,
+    ),
+    version_createdAt: text("version_created_at").default(
+      sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`,
+    ),
+    version__status: text("version__status", {
+      enum: ["draft", "published"],
+    }).default("draft"),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    latest: integer("latest", { mode: "boolean" }),
+  },
+  (columns) => [
+    index("_merchandise_v_parent_idx").on(columns.parent),
+    index("_merchandise_v_version_version_name_idx").on(columns.version_name),
+    index("_merchandise_v_version_version_slug_idx").on(columns.version_slug),
+    index("_merchandise_v_version_version_image_idx").on(columns.version_image),
+    index("_merchandise_v_version_version_updated_at_idx").on(
+      columns.version_updatedAt,
+    ),
+    index("_merchandise_v_version_version_created_at_idx").on(
+      columns.version_createdAt,
+    ),
+    index("_merchandise_v_version_version__status_idx").on(
+      columns.version__status,
+    ),
+    index("_merchandise_v_created_at_idx").on(columns.createdAt),
+    index("_merchandise_v_updated_at_idx").on(columns.updatedAt),
+    index("_merchandise_v_latest_idx").on(columns.latest),
+  ],
+);
+
 export const payload_kv = sqliteTable(
   "payload_kv",
   {
@@ -974,6 +1131,7 @@ export const payload_locked_documents_rels = sqliteTable(
     usersID: integer("users_id"),
     mediaID: integer("media_id"),
     pagesID: integer("pages_id"),
+    merchandiseID: integer("merchandise_id"),
   },
   (columns) => [
     index("payload_locked_documents_rels_order_idx").on(columns.order),
@@ -982,6 +1140,9 @@ export const payload_locked_documents_rels = sqliteTable(
     index("payload_locked_documents_rels_users_id_idx").on(columns.usersID),
     index("payload_locked_documents_rels_media_id_idx").on(columns.mediaID),
     index("payload_locked_documents_rels_pages_id_idx").on(columns.pagesID),
+    index("payload_locked_documents_rels_merchandise_id_idx").on(
+      columns.merchandiseID,
+    ),
     foreignKey({
       columns: [columns["parent"]],
       foreignColumns: [payload_locked_documents.id],
@@ -1001,6 +1162,11 @@ export const payload_locked_documents_rels = sqliteTable(
       columns: [columns["pagesID"]],
       foreignColumns: [pages.id],
       name: "payload_locked_documents_rels_pages_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [columns["merchandiseID"]],
+      foreignColumns: [merchandise.id],
+      name: "payload_locked_documents_rels_merchandise_fk",
     }).onDelete("cascade"),
   ],
 );
@@ -1498,6 +1664,57 @@ export const relations__pages_v = relations(_pages_v, ({ one, many }) => ({
     relationName: "_blocks_FreeText",
   }),
 }));
+export const relations_merchandise_options = relations(
+  merchandise_options,
+  ({ one }) => ({
+    _parentID: one(merchandise, {
+      fields: [merchandise_options._parentID],
+      references: [merchandise.id],
+      relationName: "options",
+    }),
+  }),
+);
+export const relations_merchandise = relations(
+  merchandise,
+  ({ one, many }) => ({
+    image: one(media, {
+      fields: [merchandise.image],
+      references: [media.id],
+      relationName: "image",
+    }),
+    options: many(merchandise_options, {
+      relationName: "options",
+    }),
+  }),
+);
+export const relations__merchandise_v_version_options = relations(
+  _merchandise_v_version_options,
+  ({ one }) => ({
+    _parentID: one(_merchandise_v, {
+      fields: [_merchandise_v_version_options._parentID],
+      references: [_merchandise_v.id],
+      relationName: "version_options",
+    }),
+  }),
+);
+export const relations__merchandise_v = relations(
+  _merchandise_v,
+  ({ one, many }) => ({
+    parent: one(merchandise, {
+      fields: [_merchandise_v.parent],
+      references: [merchandise.id],
+      relationName: "parent",
+    }),
+    version_image: one(media, {
+      fields: [_merchandise_v.version_image],
+      references: [media.id],
+      relationName: "version_image",
+    }),
+    version_options: many(_merchandise_v_version_options, {
+      relationName: "version_options",
+    }),
+  }),
+);
 export const relations_payload_kv = relations(payload_kv, () => ({}));
 export const relations_payload_locked_documents_rels = relations(
   payload_locked_documents_rels,
@@ -1521,6 +1738,11 @@ export const relations_payload_locked_documents_rels = relations(
       fields: [payload_locked_documents_rels.pagesID],
       references: [pages.id],
       relationName: "pages",
+    }),
+    merchandiseID: one(merchandise, {
+      fields: [payload_locked_documents_rels.merchandiseID],
+      references: [merchandise.id],
+      relationName: "merchandise",
     }),
   }),
 );
@@ -1590,6 +1812,10 @@ type DatabaseSchema = {
   _pages_v_blocks_rich_text: typeof _pages_v_blocks_rich_text;
   _pages_v_blocks_free_text: typeof _pages_v_blocks_free_text;
   _pages_v: typeof _pages_v;
+  merchandise_options: typeof merchandise_options;
+  merchandise: typeof merchandise;
+  _merchandise_v_version_options: typeof _merchandise_v_version_options;
+  _merchandise_v: typeof _merchandise_v;
   payload_kv: typeof payload_kv;
   payload_locked_documents: typeof payload_locked_documents;
   payload_locked_documents_rels: typeof payload_locked_documents_rels;
@@ -1625,6 +1851,10 @@ type DatabaseSchema = {
   relations__pages_v_blocks_rich_text: typeof relations__pages_v_blocks_rich_text;
   relations__pages_v_blocks_free_text: typeof relations__pages_v_blocks_free_text;
   relations__pages_v: typeof relations__pages_v;
+  relations_merchandise_options: typeof relations_merchandise_options;
+  relations_merchandise: typeof relations_merchandise;
+  relations__merchandise_v_version_options: typeof relations__merchandise_v_version_options;
+  relations__merchandise_v: typeof relations__merchandise_v;
   relations_payload_kv: typeof relations_payload_kv;
   relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels;
   relations_payload_locked_documents: typeof relations_payload_locked_documents;

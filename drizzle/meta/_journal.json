@@ -50,6 +50,13 @@
       "when": 1785899877400,
       "tag": "0006_sour_princess_powerful",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1785960904048,
+      "tag": "0007_low_micromax",
+      "breakpoints": true
     }
   ]
 }

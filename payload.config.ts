@@ -6,6 +6,7 @@ import { buildConfig } from "payload";
 import { Users } from "./collections/Users";
 import { Media } from "./collections/Media";
 import { Pages } from "./collections/Pages";
+import { Merchandise } from "./collections/Merchandise";
 import { payloadBucket, payloadD1 } from "./server/cloudflare-bindings";
 
 export default buildConfig({
@@ -14,7 +15,7 @@ export default buildConfig({
     importMap: { baseDir: "." },
     meta: { defaultOGImageType: "off" },
   },
-  collections: [Users, Media, Pages],
+  collections: [Users, Media, Pages, Merchandise],
   db: sqliteD1Adapter({ binding: payloadD1, push: false }),
   editor: lexicalEditor(),
   plugins: [
