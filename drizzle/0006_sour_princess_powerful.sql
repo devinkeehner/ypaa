@@ -1,0 +1,2 @@
+ALTER TABLE `_pages_v_blocks_hero_countdown` ADD `background_darkness` numeric DEFAULT 45;--> statement-breakpoint
+ALTER TABLE `pages_blocks_hero_countdown` ADD `background_darkness` numeric DEFAULT 45;

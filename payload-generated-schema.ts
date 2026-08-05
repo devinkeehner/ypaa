@@ -128,6 +128,9 @@ export const pages_blocks_hero_countdown = sqliteTable(
         onDelete: "set null",
       },
     ),
+    backgroundDarkness: numeric("background_darkness", {
+      mode: "number",
+    }).default(45),
     image: integer("image_id").references(() => media.id, {
       onDelete: "set null",
     }),
@@ -524,6 +527,9 @@ export const _pages_v_blocks_hero_countdown = sqliteTable(
         onDelete: "set null",
       },
     ),
+    backgroundDarkness: numeric("background_darkness", {
+      mode: "number",
+    }).default(45),
     image: integer("image_id").references(() => media.id, {
       onDelete: "set null",
     }),

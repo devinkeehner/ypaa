@@ -31,6 +31,7 @@ type Hero = Base & {
   foregroundImage?: MediaValue | null;
   backgroundImage?: MediaValue | null;
   backgroundPosterImage?: MediaValue | null;
+  backgroundDarkness: number;
   /** Retained so older pages that used the original single image field keep working. */
   image?: MediaValue | null;
 };
@@ -60,6 +61,29 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
 const text = (label: string) => ({ type: "text" as const, label, contentEditable: true });
 const area = (label: string) => ({ type: "textarea" as const, label, contentEditable: true });
 const plainText = (label: string) => ({ type: "text" as const, label });
+
+const backgroundDarknessField: Field<number> = {
+  type: "custom",
+  label: "Background darkness",
+  render: ({ value, onChange, readOnly }) => {
+    const darkness = Number.isFinite(value) ? Math.min(100, Math.max(0, value)) : 45;
+    return (
+      <div style={{ alignItems: "center", display: "grid", gap: 10, gridTemplateColumns: "1fr 52px" }}>
+        <input
+          aria-label="Background darkness"
+          disabled={readOnly}
+          max={100}
+          min={0}
+          onChange={(event) => onChange(Number(event.currentTarget.value))}
+          step={1}
+          type="range"
+          value={darkness}
+        />
+        <output style={{ fontVariantNumeric: "tabular-nums", textAlign: "right" }}>{darkness}%</output>
+      </div>
+    );
+  },
+};
 
 function normalizeMedia(value: unknown): MediaValue | null {
   if (typeof value === "string" && value.trim()) return { url: value.trim(), alt: "" };
@@ -190,8 +214,8 @@ export const puckConfig: Config<Components> = {
   components: {
     HeroCountdown: {
       label: "Hero + countdown",
-      defaultProps: { eyebrow: "Escaping the Mad Realm", heading: "NECYPAA XXXVI", body: "Connection, service, and recovery.", eventDate: "December 31, 2026 – January 3, 2027", eventLocation: "Hartford, Connecticut", countdownTarget: "2026-12-31T17:00:00-05:00", registerLabel: "Register", registerUrl: "#", hotelLabel: "Book a hotel room", hotelUrl: "#", foregroundImage: null, backgroundImage: null, backgroundPosterImage: null },
-      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Introduction"), eventDate: text("Dates"), eventLocation: text("Location"), countdownTarget: plainText("Countdown ISO date"), registerLabel: text("Register label"), registerUrl: plainText("Register URL"), hotelLabel: text("Hotel label"), hotelUrl: plainText("Hotel URL"), foregroundImage: mediaField("Foreground image"), backgroundImage: mediaField("Background image or video (optional)", true), backgroundPosterImage: mediaField("Video poster image (optional)") },
+      defaultProps: { eyebrow: "Escaping the Mad Realm", heading: "NECYPAA XXXVI", body: "Connection, service, and recovery.", eventDate: "December 31, 2026 – January 3, 2027", eventLocation: "Hartford, Connecticut", countdownTarget: "2026-12-31T17:00:00-05:00", registerLabel: "Register", registerUrl: "#", hotelLabel: "Book a hotel room", hotelUrl: "#", foregroundImage: null, backgroundImage: null, backgroundPosterImage: null, backgroundDarkness: 45 },
+      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Introduction"), eventDate: text("Dates"), eventLocation: text("Location"), countdownTarget: plainText("Countdown ISO date"), registerLabel: text("Register label"), registerUrl: plainText("Register URL"), hotelLabel: text("Hotel label"), hotelUrl: plainText("Hotel URL"), foregroundImage: mediaField("Foreground image"), backgroundImage: mediaField("Background image or video (optional)", true), backgroundPosterImage: mediaField("Video poster image (optional)"), backgroundDarkness: backgroundDarknessField },
       render: (props) => {
         const foregroundImage = normalizeMedia(props.foregroundImage) || normalizeMedia(props.image);
         const selectedBackground = normalizeMedia(props.backgroundImage);
@@ -203,9 +227,17 @@ export const puckConfig: Config<Components> = {
           : true;
         const foregroundSource = foregroundImage?.url || "/images/necypaa-floating-hotel-hero.webp";
         const foregroundAlt = foregroundImage?.alt || "Hartford Marriott Downtown flying above a floating island with two illustrated mascots";
+        const darkness = Number.isFinite(props.backgroundDarkness) ? Math.min(100, Math.max(0, props.backgroundDarkness)) : 45;
+        const darknessScale = darkness / 45;
+        const overlayStyle = {
+          "--hero-overlay-left": Math.min(.96, .7 * darknessScale).toFixed(3),
+          "--hero-overlay-middle": Math.min(.96, .46 * darknessScale).toFixed(3),
+          "--hero-overlay-right": Math.min(.75, .14 * darknessScale).toFixed(3),
+          "--hero-overlay-bottom": Math.min(.9, .28 * darknessScale).toFixed(3),
+        } as CSSProperties;
 
         return (
-          <section className={styles.hero} data-has-background="true" id={props.id}>
+          <section className={styles.hero} data-has-background="true" id={props.id} style={overlayStyle}>
             {backgroundIsVideo ? (
               <>
                 {backgroundPoster ? <img aria-hidden="true" alt="" className={`${styles.heroBackground} ${styles.heroBackgroundPoster}`} src={backgroundPoster} /> : null}

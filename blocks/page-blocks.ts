@@ -74,6 +74,14 @@ export const HeroCountdownBlock: Block = {
       admin: { description: "Optional still image shown while a background video loads and when reduced motion is preferred." },
     },
     {
+      name: "backgroundDarkness",
+      type: "number",
+      defaultValue: 45,
+      min: 0,
+      max: 100,
+      admin: { description: "0 leaves the background untouched; 100 applies the strongest readability overlay." },
+    },
+    {
       name: "image",
       type: "upload",
       relationTo: "media",
