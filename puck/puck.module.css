@@ -177,12 +177,21 @@
 }
 .meta span + span { color: var(--teal); }
 .hero .actions { margin-bottom: 0; }
+@keyframes heroSurf {
+  0%, 100% { transform: translate3d(0, 1px, 0) rotate(-.8deg); }
+  28% { transform: translate3d(2px, -6px, 0) rotate(.25deg); }
+  54% { transform: translate3d(0, -10px, 0) rotate(1.15deg); }
+  78% { transform: translate3d(-2px, -4px, 0) rotate(.1deg); }
+}
 .heroArt {
+  animation: heroSurf 7.8s ease-in-out infinite;
   bottom: 88px;
   pointer-events: none;
   position: absolute;
   right: -4%;
   top: 12px;
+  transform-origin: 52% 70%;
+  will-change: transform;
   width: min(56%, 720px);
 }
 .heroArt::before {
@@ -571,5 +580,6 @@
 @media (prefers-reduced-motion: reduce) {
   .button { transition: none; }
   .button:hover { transform: none; }
+  .heroArt { animation: none; transform: none; }
   .heroBackgroundVideo { display: none; }
 }
