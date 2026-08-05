@@ -961,6 +961,7 @@ export const merchandise = sqliteTable(
     }),
     price: numeric("price", { mode: "number" }),
     sizes: text("sizes"),
+    colors: text("colors"),
     available: integer("available", { mode: "boolean" }).default(true),
     searchTerms: text("search_terms"),
     featured: integer("featured", { mode: "boolean" }).default(false),
@@ -1012,6 +1013,7 @@ export const _merchandise_v = sqliteTable(
     }),
     version_price: numeric("version_price", { mode: "number" }),
     version_sizes: text("version_sizes"),
+    version_colors: text("version_colors"),
     version_available: integer("version_available", {
       mode: "boolean",
     }).default(true),

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Menu, Settings, X } from "lucide-react";
 import Link from "next/link";
+import { CartLink } from "./CartLink";
 
 type Theme = "dark" | "light";
 type Scale = "default" | "large" | "largest";
@@ -40,7 +41,7 @@ export function SiteFrame({ children, mainId }: { children: React.ReactNode; mai
       <header className="cms-header">
         <Link className="cms-brand" href="/#hero"><span>36</span><strong>NECYPAA</strong></Link>
         <nav aria-label="Primary navigation">{navItems.map((item) => <Link href={item.href} key={item.href}>{item.label}</Link>)}</nav>
-        <div className="cms-actions"><a className="cms-register" href="https://register.necypaact.com/en/register">Register</a><a className="cms-hotel" href="https://www.necypaact.com/hotel">Book a hotel room</a><button className="cms-menu-button" aria-expanded={menu} aria-controls="cms-mobile-menu" aria-label={menu ? "Close navigation" : "Open navigation"} onClick={() => setMenu((value) => !value)} type="button">{menu ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button></div>
+        <div className="cms-actions"><CartLink /><a className="cms-register" href="https://register.necypaact.com/en/register">Register</a><a className="cms-hotel" href="https://www.necypaact.com/hotel">Book a hotel room</a><button className="cms-menu-button" aria-expanded={menu} aria-controls="cms-mobile-menu" aria-label={menu ? "Close navigation" : "Open navigation"} onClick={() => setMenu((value) => !value)} type="button">{menu ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button></div>
         {menu ? <nav className="cms-mobile-menu" id="cms-mobile-menu" aria-label="Mobile navigation">{navItems.map((item) => <Link href={item.href} key={item.href} onClick={() => setMenu(false)}>{item.label}</Link>)}</nav> : null}
       </header>
       {children}

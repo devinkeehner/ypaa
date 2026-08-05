@@ -444,9 +444,13 @@ export interface Merchandise {
    */
   price: number;
   /**
-   * Optional. Example: S–3XL or One size.
+   * Optional comma-separated choices. Example: S, M, L, XL, 2XL.
    */
   sizes?: string | null;
+  /**
+   * Optional comma-separated choices. Example: Black, Cream, Navy.
+   */
+  colors?: string | null;
   available?: boolean | null;
   /**
    * Optional comma-separated keywords visitors might search for.
@@ -757,6 +761,7 @@ export interface MerchandiseSelect<T extends boolean = true> {
   type?: T;
   price?: T;
   sizes?: T;
+  colors?: T;
   available?: T;
   searchTerms?: T;
   featured?: T;

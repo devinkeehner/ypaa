@@ -71,7 +71,12 @@ export const Merchandise: CollectionConfig = {
     {
       name: "sizes",
       type: "text",
-      admin: { description: "Optional. Example: S–3XL or One size." },
+      admin: { description: "Optional comma-separated choices. Example: S, M, L, XL, 2XL." },
+    },
+    {
+      name: "colors",
+      type: "text",
+      admin: { description: "Optional comma-separated choices. Example: Black, Cream, Navy." },
     },
     {
       name: "available",

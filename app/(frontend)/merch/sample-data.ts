@@ -1,4 +1,4 @@
-import type { MerchandiseItem } from "@/components/site/MerchandiseCatalog";
+import type { MerchandiseItem } from "@/components/site/merch";
 
 const placeholderImage = {
   url: "/images/merch-placeholder.jpg",
@@ -18,7 +18,8 @@ export const sampleMerchandise: MerchandiseItem[] = [
     image: placeholderImage,
     type: "t-shirt",
     price: 25,
-    sizes: "S–3XL",
+    sizes: "S, M, L, XL, 2XL, 3XL",
+    colors: "Black, Cream",
     available: true,
   },
   {
@@ -33,7 +34,8 @@ export const sampleMerchandise: MerchandiseItem[] = [
     image: placeholderImage,
     type: "crewneck",
     price: 45,
-    sizes: "S–2XL",
+    sizes: "S, M, L, XL, 2XL",
+    colors: "Charcoal, Rust",
     available: true,
   },
   {
@@ -49,6 +51,7 @@ export const sampleMerchandise: MerchandiseItem[] = [
     type: "hat",
     price: 25,
     sizes: "Adjustable",
+    colors: "Black",
     available: true,
   },
   {
@@ -63,7 +66,8 @@ export const sampleMerchandise: MerchandiseItem[] = [
     image: placeholderImage,
     type: "hoodie",
     price: 55,
-    sizes: "S–3XL",
+    sizes: "S, M, L, XL, 2XL, 3XL",
+    colors: "Black, Deep purple",
     available: true,
   },
 ];

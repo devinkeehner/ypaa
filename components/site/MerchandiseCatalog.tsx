@@ -1,46 +1,19 @@
 "use client";
 
 import { Search, ShoppingBag, SlidersHorizontal } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import { SiteFrame } from "./SiteFrame";
+import { formatMerchandisePrice, merchandiseTypeLabels, type MerchandiseItem } from "./merch";
 
-export type MerchandiseItem = {
-  id: number | string;
-  name: string;
-  slug: string;
-  description: string;
-  searchTerms?: string | null;
-  featured?: boolean | null;
-  sample?: boolean | null;
-  image?: { url?: string | null; alt?: string | null } | number | string | null;
-  type: string;
-  price: number;
-  sizes?: string | null;
-  available?: boolean | null;
-};
-
-const typeLabels: Record<string, string> = {
-  "t-shirt": "T-shirt",
-  "long-sleeve": "Long-sleeve shirt",
-  hoodie: "Hoodie",
-  crewneck: "Crewneck sweatshirt",
-  hat: "Hat",
-  sticker: "Sticker",
-  pin: "Pin",
-  tote: "Tote bag",
-  mug: "Mug",
-  other: "Other",
-};
-
-function money(value: number) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: value % 1 ? 2 : 0 }).format(value);
-}
+export type { MerchandiseItem } from "./merch";
 
 function ProductCard({ item }: { item: MerchandiseItem }) {
   const image = typeof item.image === "object" && item.image ? item.image : null;
 
   return (
+    <Link className="merch-card-link" href={`/merch/${item.slug}`} aria-label={`View ${item.name}`}>
     <article className={`merch-card${item.featured ? " merch-featured" : ""}`}>
       <div className="merch-image-wrap">
         {image?.url ? <img src={image.url} alt={image.alt || `${item.name} merchandise design`} /> : <div className="merch-image-placeholder" role="img" aria-label={`${item.name} image coming soon`}><ShoppingBag aria-hidden="true" /><span>Image coming soon</span></div>}
@@ -48,15 +21,17 @@ function ProductCard({ item }: { item: MerchandiseItem }) {
         {item.sample ? <span className="merch-sample-label">Sample listing</span> : null}
       </div>
       <div className="merch-card-copy">
-        <p className="merch-kicker">{typeLabels[item.type] || item.type}</p>
+        <p className="merch-kicker">{merchandiseTypeLabels[item.type] || item.type}</p>
         <h2>{item.name}</h2>
         <p className="merch-description">{item.description}</p>
         <div className="merch-card-meta">
-          <p className="merch-price">{money(item.price)}</p>
+          <p className="merch-price">{formatMerchandisePrice(item.price)}</p>
           {item.sizes ? <p className="merch-sizes"><span>Sizes</span>{item.sizes}</p> : null}
         </div>
+        <span className="merch-view-item">View item <span aria-hidden="true">→</span></span>
       </div>
     </article>
+    </Link>
   );
 }
 
@@ -67,14 +42,14 @@ export function MerchandiseCatalog({ items }: { items: MerchandiseItem[] }) {
   const availableTypes = useMemo(() => {
     const values = new Set<string>();
     items.forEach((item) => item.available !== false && values.add(item.type));
-    return [...values].sort((a, b) => (typeLabels[a] || a).localeCompare(typeLabels[b] || b));
+    return [...values].sort((a, b) => (merchandiseTypeLabels[a] || a).localeCompare(merchandiseTypeLabels[b] || b));
   }, [items]);
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return items.filter((item) => {
       const matchesType = type === "all" || item.type === type;
-      const haystack = [item.name, item.description, item.searchTerms, item.type, typeLabels[item.type], item.sizes].filter(Boolean).join(" ").toLowerCase();
+      const haystack = [item.name, item.description, item.searchTerms, item.type, merchandiseTypeLabels[item.type], item.sizes, item.colors].filter(Boolean).join(" ").toLowerCase();
       return item.available !== false && matchesType && (!needle || haystack.includes(needle));
     });
   }, [items, query, type]);
@@ -105,7 +80,7 @@ export function MerchandiseCatalog({ items }: { items: MerchandiseItem[] }) {
 
           <div className="merch-tools">
             <label className="merch-search"><span className="sr-only">Search merchandise</span><Search aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search designs, items, or sizes" type="search" /></label>
-            <label className="merch-filter"><SlidersHorizontal aria-hidden="true" /><span className="sr-only">Filter by merchandise type</span><select value={type} onChange={(event) => setType(event.target.value)}><option value="all">All merchandise types</option>{availableTypes.map((value) => <option key={value} value={value}>{typeLabels[value] || value}</option>)}</select></label>
+            <label className="merch-filter"><SlidersHorizontal aria-hidden="true" /><span className="sr-only">Filter by merchandise type</span><select value={type} onChange={(event) => setType(event.target.value)}><option value="all">All merchandise types</option>{availableTypes.map((value) => <option key={value} value={value}>{merchandiseTypeLabels[value] || value}</option>)}</select></label>
           </div>
 
           {filtered.length ? <div className={`merch-grid merch-grid-${Math.min(filtered.length, 4)}`}>{filtered.map((item) => <ProductCard item={item} key={item.id} />)}</div> : (
