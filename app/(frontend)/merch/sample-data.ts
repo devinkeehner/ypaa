@@ -16,11 +16,10 @@ export const sampleMerchandise: MerchandiseItem[] = [
     featured: true,
     sample: true,
     image: placeholderImage,
-    options: [
-      { id: "escape-tee", type: "t-shirt", label: "Classic T-shirt", price: 25, sizes: "S–3XL", available: true },
-      { id: "escape-hoodie", type: "hoodie", label: "Pullover hoodie", price: 50, sizes: "S–3XL", available: true },
-      { id: "escape-sticker", type: "sticker", label: "Die-cut sticker", price: 5, sizes: "3 inches", available: true },
-    ],
+    type: "t-shirt",
+    price: 25,
+    sizes: "S–3XL",
+    available: true,
   },
   {
     id: "sample-hartford-after-dark",
@@ -32,10 +31,10 @@ export const sampleMerchandise: MerchandiseItem[] = [
     featured: false,
     sample: true,
     image: placeholderImage,
-    options: [
-      { id: "hartford-crewneck", type: "crewneck", label: "Midweight crewneck", price: 45, sizes: "S–2XL", available: true },
-      { id: "hartford-tote", type: "tote", label: "Canvas tote bag", price: 20, sizes: "One size", available: true },
-    ],
+    type: "crewneck",
+    price: 45,
+    sizes: "S–2XL",
+    available: true,
   },
   {
     id: "sample-thirty-six-and-free",
@@ -47,11 +46,10 @@ export const sampleMerchandise: MerchandiseItem[] = [
     featured: false,
     sample: true,
     image: placeholderImage,
-    options: [
-      { id: "thirty-six-hat", type: "hat", label: "Embroidered cap", price: 25, sizes: "Adjustable", available: true },
-      { id: "thirty-six-pin", type: "pin", label: "Enamel pin", price: 8, sizes: "1.25 inches", available: true },
-      { id: "thirty-six-mug", type: "mug", label: "Ceramic mug", price: 15, sizes: "12 oz.", available: true },
-    ],
+    type: "hat",
+    price: 25,
+    sizes: "Adjustable",
+    available: true,
   },
   {
     id: "sample-mad-realm-portal",
@@ -63,10 +61,9 @@ export const sampleMerchandise: MerchandiseItem[] = [
     featured: false,
     sample: true,
     image: placeholderImage,
-    options: [
-      { id: "portal-long-sleeve", type: "long-sleeve", label: "Long-sleeve shirt", price: 35, sizes: "S–3XL", available: true },
-      { id: "portal-hoodie", type: "hoodie", label: "Heavyweight hoodie", price: 55, sizes: "S–3XL", available: true },
-      { id: "portal-stickers", type: "sticker", label: "Sticker two-pack", price: 6, sizes: "Two 3-inch stickers", available: true },
-    ],
+    type: "hoodie",
+    price: 55,
+    sizes: "S–3XL",
+    available: true,
   },
 ];

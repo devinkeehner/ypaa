@@ -10,15 +10,14 @@ function formatSlug(value: unknown) {
 
 export const Merchandise: CollectionConfig = {
   slug: "merchandise",
-  labels: { singular: "Merchandise design", plural: "Merchandise" },
+  labels: { singular: "Merchandise item", plural: "Merchandise" },
   access: {
     read: ({ req }) => (req.user ? true : { _status: { equals: "published" } }),
   },
   admin: {
     useAsTitle: "name",
     defaultColumns: ["name", "featured", "_status", "updatedAt"],
-    description:
-      "Add each artwork or design once, then list every item it can be printed on with its own price.",
+    description: "Each entry is one sellable item and appears as one card in the merchandise portal.",
   },
   fields: [
     { name: "name", type: "text", required: true, index: true },
@@ -45,6 +44,42 @@ export const Merchandise: CollectionConfig = {
       admin: { description: "A short description of the design. This text is searchable." },
     },
     {
+      name: "type",
+      type: "select",
+      required: true,
+      index: true,
+      options: [
+        { label: "T-shirt", value: "t-shirt" },
+        { label: "Long-sleeve shirt", value: "long-sleeve" },
+        { label: "Hoodie", value: "hoodie" },
+        { label: "Crewneck sweatshirt", value: "crewneck" },
+        { label: "Hat", value: "hat" },
+        { label: "Sticker", value: "sticker" },
+        { label: "Pin", value: "pin" },
+        { label: "Tote bag", value: "tote" },
+        { label: "Mug", value: "mug" },
+        { label: "Other", value: "other" },
+      ],
+    },
+    {
+      name: "price",
+      type: "number",
+      required: true,
+      min: 0,
+      admin: { description: "Price in dollars." },
+    },
+    {
+      name: "sizes",
+      type: "text",
+      admin: { description: "Optional. Example: S–3XL or One size." },
+    },
+    {
+      name: "available",
+      type: "checkbox",
+      defaultValue: true,
+      admin: { position: "sidebar" },
+    },
+    {
       name: "searchTerms",
       type: "text",
       admin: { description: "Optional comma-separated keywords visitors might search for." },
@@ -54,59 +89,6 @@ export const Merchandise: CollectionConfig = {
       type: "checkbox",
       defaultValue: false,
       admin: { position: "sidebar" },
-    },
-    {
-      name: "options",
-      type: "array",
-      required: true,
-      minRows: 1,
-      labels: { singular: "Merchandise option", plural: "Merchandise options" },
-      admin: {
-        description:
-          "Add every item available with this design. Prices can differ by merchandise type.",
-        initCollapsed: false,
-      },
-      fields: [
-        {
-          name: "type",
-          type: "select",
-          required: true,
-          options: [
-            { label: "T-shirt", value: "t-shirt" },
-            { label: "Long-sleeve shirt", value: "long-sleeve" },
-            { label: "Hoodie", value: "hoodie" },
-            { label: "Crewneck sweatshirt", value: "crewneck" },
-            { label: "Hat", value: "hat" },
-            { label: "Sticker", value: "sticker" },
-            { label: "Pin", value: "pin" },
-            { label: "Tote bag", value: "tote" },
-            { label: "Mug", value: "mug" },
-            { label: "Other", value: "other" },
-          ],
-        },
-        {
-          name: "label",
-          type: "text",
-          admin: { description: "Optional custom label, such as ‘Black heavyweight tee’." },
-        },
-        {
-          name: "price",
-          type: "number",
-          required: true,
-          min: 0,
-          admin: { description: "Price in dollars." },
-        },
-        {
-          name: "sizes",
-          type: "text",
-          admin: { description: "Optional. Example: S–3XL or One size." },
-        },
-        {
-          name: "available",
-          type: "checkbox",
-          defaultValue: true,
-        },
-      ],
     },
   ],
   versions: {

@@ -935,12 +935,16 @@ export const _pages_v = sqliteTable(
   ],
 );
 
-export const merchandise_options = sqliteTable(
-  "merchandise_options",
+export const merchandise = sqliteTable(
+  "merchandise",
   {
-    _order: integer("_order").notNull(),
-    _parentID: integer("_parent_id").notNull(),
-    id: text("id").primaryKey(),
+    id: integer("id").primaryKey(),
+    name: text("name"),
+    slug: text("slug"),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
+    description: text("description"),
     type: text("type", {
       enum: [
         "t-shirt",
@@ -955,32 +959,9 @@ export const merchandise_options = sqliteTable(
         "other",
       ],
     }),
-    label: text("label"),
     price: numeric("price", { mode: "number" }),
     sizes: text("sizes"),
     available: integer("available", { mode: "boolean" }).default(true),
-  },
-  (columns) => [
-    index("merchandise_options_order_idx").on(columns._order),
-    index("merchandise_options_parent_id_idx").on(columns._parentID),
-    foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [merchandise.id],
-      name: "merchandise_options_parent_id_fk",
-    }).onDelete("cascade"),
-  ],
-);
-
-export const merchandise = sqliteTable(
-  "merchandise",
-  {
-    id: integer("id").primaryKey(),
-    name: text("name"),
-    slug: text("slug"),
-    image: integer("image_id").references(() => media.id, {
-      onDelete: "set null",
-    }),
-    description: text("description"),
     searchTerms: text("search_terms"),
     featured: integer("featured", { mode: "boolean" }).default(false),
     updatedAt: text("updated_at")
@@ -995,46 +976,10 @@ export const merchandise = sqliteTable(
     index("merchandise_name_idx").on(columns.name),
     uniqueIndex("merchandise_slug_idx").on(columns.slug),
     index("merchandise_image_idx").on(columns.image),
+    index("merchandise_type_idx").on(columns.type),
     index("merchandise_updated_at_idx").on(columns.updatedAt),
     index("merchandise_created_at_idx").on(columns.createdAt),
     index("merchandise__status_idx").on(columns._status),
-  ],
-);
-
-export const _merchandise_v_version_options = sqliteTable(
-  "_merchandise_v_version_options",
-  {
-    _order: integer("_order").notNull(),
-    _parentID: integer("_parent_id").notNull(),
-    id: integer("id").primaryKey(),
-    type: text("type", {
-      enum: [
-        "t-shirt",
-        "long-sleeve",
-        "hoodie",
-        "crewneck",
-        "hat",
-        "sticker",
-        "pin",
-        "tote",
-        "mug",
-        "other",
-      ],
-    }),
-    label: text("label"),
-    price: numeric("price", { mode: "number" }),
-    sizes: text("sizes"),
-    available: integer("available", { mode: "boolean" }).default(true),
-    _uuid: text("_uuid"),
-  },
-  (columns) => [
-    index("_merchandise_v_version_options_order_idx").on(columns._order),
-    index("_merchandise_v_version_options_parent_id_idx").on(columns._parentID),
-    foreignKey({
-      columns: [columns["_parentID"]],
-      foreignColumns: [_merchandise_v.id],
-      name: "_merchandise_v_version_options_parent_id_fk",
-    }).onDelete("cascade"),
   ],
 );
 
@@ -1051,6 +996,25 @@ export const _merchandise_v = sqliteTable(
       onDelete: "set null",
     }),
     version_description: text("version_description"),
+    version_type: text("version_type", {
+      enum: [
+        "t-shirt",
+        "long-sleeve",
+        "hoodie",
+        "crewneck",
+        "hat",
+        "sticker",
+        "pin",
+        "tote",
+        "mug",
+        "other",
+      ],
+    }),
+    version_price: numeric("version_price", { mode: "number" }),
+    version_sizes: text("version_sizes"),
+    version_available: integer("version_available", {
+      mode: "boolean",
+    }).default(true),
     version_searchTerms: text("version_search_terms"),
     version_featured: integer("version_featured", { mode: "boolean" }).default(
       false,
@@ -1077,6 +1041,7 @@ export const _merchandise_v = sqliteTable(
     index("_merchandise_v_version_version_name_idx").on(columns.version_name),
     index("_merchandise_v_version_version_slug_idx").on(columns.version_slug),
     index("_merchandise_v_version_version_image_idx").on(columns.version_image),
+    index("_merchandise_v_version_version_type_idx").on(columns.version_type),
     index("_merchandise_v_version_version_updated_at_idx").on(
       columns.version_updatedAt,
     ),
@@ -1664,42 +1629,16 @@ export const relations__pages_v = relations(_pages_v, ({ one, many }) => ({
     relationName: "_blocks_FreeText",
   }),
 }));
-export const relations_merchandise_options = relations(
-  merchandise_options,
-  ({ one }) => ({
-    _parentID: one(merchandise, {
-      fields: [merchandise_options._parentID],
-      references: [merchandise.id],
-      relationName: "options",
-    }),
+export const relations_merchandise = relations(merchandise, ({ one }) => ({
+  image: one(media, {
+    fields: [merchandise.image],
+    references: [media.id],
+    relationName: "image",
   }),
-);
-export const relations_merchandise = relations(
-  merchandise,
-  ({ one, many }) => ({
-    image: one(media, {
-      fields: [merchandise.image],
-      references: [media.id],
-      relationName: "image",
-    }),
-    options: many(merchandise_options, {
-      relationName: "options",
-    }),
-  }),
-);
-export const relations__merchandise_v_version_options = relations(
-  _merchandise_v_version_options,
-  ({ one }) => ({
-    _parentID: one(_merchandise_v, {
-      fields: [_merchandise_v_version_options._parentID],
-      references: [_merchandise_v.id],
-      relationName: "version_options",
-    }),
-  }),
-);
+}));
 export const relations__merchandise_v = relations(
   _merchandise_v,
-  ({ one, many }) => ({
+  ({ one }) => ({
     parent: one(merchandise, {
       fields: [_merchandise_v.parent],
       references: [merchandise.id],
@@ -1709,9 +1648,6 @@ export const relations__merchandise_v = relations(
       fields: [_merchandise_v.version_image],
       references: [media.id],
       relationName: "version_image",
-    }),
-    version_options: many(_merchandise_v_version_options, {
-      relationName: "version_options",
     }),
   }),
 );
@@ -1812,9 +1748,7 @@ type DatabaseSchema = {
   _pages_v_blocks_rich_text: typeof _pages_v_blocks_rich_text;
   _pages_v_blocks_free_text: typeof _pages_v_blocks_free_text;
   _pages_v: typeof _pages_v;
-  merchandise_options: typeof merchandise_options;
   merchandise: typeof merchandise;
-  _merchandise_v_version_options: typeof _merchandise_v_version_options;
   _merchandise_v: typeof _merchandise_v;
   payload_kv: typeof payload_kv;
   payload_locked_documents: typeof payload_locked_documents;
@@ -1851,9 +1785,7 @@ type DatabaseSchema = {
   relations__pages_v_blocks_rich_text: typeof relations__pages_v_blocks_rich_text;
   relations__pages_v_blocks_free_text: typeof relations__pages_v_blocks_free_text;
   relations__pages_v: typeof relations__pages_v;
-  relations_merchandise_options: typeof relations_merchandise_options;
   relations_merchandise: typeof relations_merchandise;
-  relations__merchandise_v_version_options: typeof relations__merchandise_v_version_options;
   relations__merchandise_v: typeof relations__merchandise_v;
   relations_payload_kv: typeof relations_payload_kv;
   relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels;

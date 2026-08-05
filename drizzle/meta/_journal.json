@@ -57,6 +57,13 @@
       "when": 1785960904048,
       "tag": "0007_low_micromax",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1785967974215,
+      "tag": "0008_slippery_silvermane",
+      "breakpoints": true
     }
   ]
 }

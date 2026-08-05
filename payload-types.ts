@@ -418,7 +418,7 @@ export interface Page {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Add each artwork or design once, then list every item it can be printed on with its own price.
+ * Each entry is one sellable item and appears as one card in the merchandise portal.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "merchandise".
@@ -438,31 +438,21 @@ export interface Merchandise {
    * A short description of the design. This text is searchable.
    */
   description: string;
+  type: 't-shirt' | 'long-sleeve' | 'hoodie' | 'crewneck' | 'hat' | 'sticker' | 'pin' | 'tote' | 'mug' | 'other';
+  /**
+   * Price in dollars.
+   */
+  price: number;
+  /**
+   * Optional. Example: S–3XL or One size.
+   */
+  sizes?: string | null;
+  available?: boolean | null;
   /**
    * Optional comma-separated keywords visitors might search for.
    */
   searchTerms?: string | null;
   featured?: boolean | null;
-  /**
-   * Add every item available with this design. Prices can differ by merchandise type.
-   */
-  options: {
-    type: 't-shirt' | 'long-sleeve' | 'hoodie' | 'crewneck' | 'hat' | 'sticker' | 'pin' | 'tote' | 'mug' | 'other';
-    /**
-     * Optional custom label, such as ‘Black heavyweight tee’.
-     */
-    label?: string | null;
-    /**
-     * Price in dollars.
-     */
-    price: number;
-    /**
-     * Optional. Example: S–3XL or One size.
-     */
-    sizes?: string | null;
-    available?: boolean | null;
-    id?: string | null;
-  }[];
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -764,18 +754,12 @@ export interface MerchandiseSelect<T extends boolean = true> {
   slug?: T;
   image?: T;
   description?: T;
+  type?: T;
+  price?: T;
+  sizes?: T;
+  available?: T;
   searchTerms?: T;
   featured?: T;
-  options?:
-    | T
-    | {
-        type?: T;
-        label?: T;
-        price?: T;
-        sizes?: T;
-        available?: T;
-        id?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
