@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Building2, CalendarDays, GripVertical, Pencil, Plus, RotateCw, Save, Trash2, X } from "lucide-react";
+import { ArrowLeft, Building2, CalendarDays, ChevronLeft, ChevronRight, GripVertical, Pencil, Plus, RotateCw, Save, Trash2, X } from "lucide-react";
 import Link from "next/link";
 
 import type { ProgramRoom, ProgramSession } from "@/components/site/program-types";
@@ -109,6 +109,7 @@ export function ProgramBoard() {
   const [roomForm, setRoomForm] = useState<RoomFormState | null>(null);
   const [roomSaving, setRoomSaving] = useState(false);
   const [roomMessage, setRoomMessage] = useState("");
+  const [roomOrdering, setRoomOrdering] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -184,6 +185,32 @@ export function ProgramBoard() {
     }
     setRoomForm(null);
     await load();
+  }
+
+  async function moveRoom(roomID: string, direction: -1 | 1) {
+    const currentIndex = rooms.findIndex((room) => String(room.id) === roomID);
+    const nextIndex = currentIndex + direction;
+    if (currentIndex < 0 || nextIndex < 0 || nextIndex >= rooms.length || roomOrdering) return;
+
+    const previousRooms = rooms;
+    const reordered = [...rooms];
+    [reordered[currentIndex], reordered[nextIndex]] = [reordered[nextIndex], reordered[currentIndex]];
+    const normalized = reordered.map((room, index) => ({ ...room, displayOrder: index * 10 }));
+    setRooms(normalized);
+    setRoomOrdering(true);
+    setMessage("Saving room order…");
+
+    try {
+      const responses = await Promise.all(normalized.map((room) => fetch(`/api/rooms/${room.id}`, { method: "PATCH", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ displayOrder: room.displayOrder }) })));
+      if (responses.some((response) => !response.ok)) throw new Error("Room order failed");
+      setMessage("Room order saved.");
+    } catch {
+      setRooms(previousRooms);
+      setMessage("The room order could not be saved.");
+      await load();
+    } finally {
+      setRoomOrdering(false);
+    }
   }
 
   function overlapping(candidate: { id?: string | number; room: string; startAt: string; endAt: string }) {
@@ -271,7 +298,7 @@ export function ProgramBoard() {
         <div className="program-board-scroll">
           <div className="program-board-grid" style={{ "--room-count": rooms.length, "--slot-height": `${slotHeight}px` } as React.CSSProperties}>
             <div className="program-board-corner">Time</div>
-            {rooms.map((room) => <div className="program-board-room" key={room.id}><span style={{ background: room.color || undefined }} /><strong>{room.shortLabel}</strong><small>{room.floor}</small><button aria-label={`Edit ${room.name}`} className="program-board-room-edit" onClick={() => startEditRoom(room)} title={`Edit ${room.name}`} type="button"><Pencil aria-hidden="true" /></button></div>)}
+            {rooms.map((room, index) => <div className="program-board-room" key={room.id}><span style={{ background: room.color || undefined }} /><strong>{room.shortLabel}</strong><small>{room.floor}</small><div className="program-board-room-actions"><button aria-label={`Move ${room.name} left`} disabled={index === 0 || roomOrdering} onClick={() => void moveRoom(String(room.id), -1)} title="Move room left" type="button"><ChevronLeft aria-hidden="true" /></button><button aria-label={`Edit ${room.name}`} onClick={() => startEditRoom(room)} title={`Edit ${room.name}`} type="button"><Pencil aria-hidden="true" /></button><button aria-label={`Move ${room.name} right`} disabled={index === rooms.length - 1 || roomOrdering} onClick={() => void moveRoom(String(room.id), 1)} title="Move room right" type="button"><ChevronRight aria-hidden="true" /></button></div></div>)}
             <div className="program-board-axis" style={{ height: slots * slotHeight }}>{Array.from({ length: slots }, (_, index) => { const minutes = startMinute + index * 30; const hour = Math.floor(minutes / 60); const minute = minutes % 60; return <span key={index} style={{ top: index * slotHeight }}>{new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" }).format(new Date(`${day}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00-05:00`))}</span>; })}</div>
             {rooms.map((room) => <div className="program-board-track" key={room.id} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDropTarget(null); }} style={{ height: slots * slotHeight }}>{Array.from({ length: slots }, (_, index) => { const minutes = startMinute + index * 30; const time = `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`; const highlighted = dropTarget?.roomID === String(room.id) && index >= dropStartIndex && index < dropStartIndex + dropDurationSlots; return <button aria-label={`Add session in ${room.name} at ${time}`} className="program-board-cell" data-drop-active={highlighted || undefined} data-drop-end={highlighted && index === dropStartIndex + dropDurationSlots - 1 || undefined} data-drop-start={highlighted && index === dropStartIndex || undefined} key={time} onClick={() => startCreate(String(room.id), time)} onDragEnter={(event) => { event.preventDefault(); setDropTarget({ roomID: String(room.id), time }); }} onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = "move"; }} onDrop={(event) => { event.preventDefault(); const sessionID = event.dataTransfer.getData("text/program-session"); setDropTarget(null); setDraggedSessionID(null); void moveSession(sessionID, String(room.id), time); }} style={{ height: slotHeight, top: index * slotHeight }} type="button" />; })}{daySessions.filter((session) => String(session.room.id) === String(room.id)).map((session) => { const sessionID = String(session.id); const [hour, minute] = timeValue(session.startAt).split(":").map(Number); const top = Math.max(0, ((hour * 60 + minute) - startMinute) / 30 * slotHeight + 3); const height = Math.max(slotHeight - 6, (new Date(session.endAt).getTime() - new Date(session.startAt).getTime()) / 60000 / 30 * slotHeight - 6); const moving = movingSessionIDs.has(sessionID); return <button aria-busy={moving} className="program-board-event" data-moving={moving || undefined} draggable={!moving} key={session.id} onClick={() => startEdit(session)} onDragEnd={() => { setDraggedSessionID(null); setDropTarget(null); }} onDragStart={(event) => { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/program-session", sessionID); setDraggedSessionID(sessionID); }} style={{ background: room.color || undefined, height, top }} type="button"><GripVertical aria-hidden="true" /><span>{timeValue(session.startAt)}</span><strong>{session.title}</strong><small>{moving ? "Saving…" : SESSION_TYPE_LABELS[session.sessionType] || session.sessionType}</small></button>; })}</div>)}
           </div>
