@@ -3,17 +3,34 @@
 import "@puckeditor/core/puck.css";
 
 import { createUsePuck, Puck, type Config, type Data } from "@puckeditor/core";
-import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, Bold, Redo2, Undo2 } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, Bold, Palette, Redo2, Save, Undo2, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { editableFieldsByType, puckConfig } from "@/puck/config";
 import type { NECYPAAData } from "@/puck/types";
+import type { TenantTheme } from "@/components/site/TenantThemeProvider";
 
 import { PuckLexicalTextEditor } from "./PuckLexicalTextEditor";
 import styles from "./puck-builder.module.css";
 
 const usePuck = createUsePuck();
 const EMPTY_FIELDS: string[] = [];
+type ThemeColors = Omit<TenantTheme, "logoAlt" | "logoUrl">;
+const THEME_FIELDS: Array<{ key: keyof ThemeColors; label: string }> = [
+  { key: "primary", label: "Primary" },
+  { key: "secondary", label: "Secondary" },
+  { key: "accent", label: "Accent" },
+  { key: "background", label: "Dark background" },
+  { key: "surface", label: "Dark surface" },
+  { key: "lightBackground", label: "Light background" },
+  { key: "darkText", label: "Text on light" },
+  { key: "lightText", label: "Text on dark" },
+];
+const HEX_COLOR = /^#[0-9a-f]{6}$/i;
+
+function colorPickerValue(value: string) {
+  return HEX_COLOR.test(value) ? value : "#000000";
+}
 
 function property(type: string, field: string, kind: "Color" | "FontSize" | "FontWeight" | "TextAlign") {
   if ((type === "FreeText" && field === "text") || (type === "RichText" && field === "content")) {
@@ -75,12 +92,42 @@ function FormattingBar() {
   </div>;
 }
 
-function BuilderHeader({ actions, pageId, pageTitle }: { actions: React.ReactNode; pageId: string; pageTitle: string }) {
-  const history = usePuck((state) => state.history);
-  return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerActions}><button disabled={!history.hasPast} aria-label="Undo" onClick={() => history.back()} type="button"><Undo2 /></button><button disabled={!history.hasFuture} aria-label="Redo" onClick={() => history.forward()} type="button"><Redo2 /></button>{actions}</div></div><FormattingBar /></header>;
+function ThemePanel({ initialTheme, initialTenantId }: { initialTheme: TenantTheme; initialTenantId?: string }) {
+  const [open, setOpen] = useState(false);
+  const [tenantId, setTenantId] = useState(initialTenantId);
+  const [colors, setColors] = useState<ThemeColors>(() => ({ primary: initialTheme.primary, secondary: initialTheme.secondary, accent: initialTheme.accent, background: initialTheme.background, surface: initialTheme.surface, lightBackground: initialTheme.lightBackground, darkText: initialTheme.darkText, lightText: initialTheme.lightText }));
+  const [status, setStatus] = useState("");
+
+  async function saveTheme() {
+    if (THEME_FIELDS.some(({ key }) => !HEX_COLOR.test(colors[key]))) {
+      setStatus("Each color needs a six-digit hex code");
+      return;
+    }
+    setStatus("Saving…");
+    try {
+      const response = await fetch(tenantId ? `/api/tenants/${tenantId}` : "/api/tenants", { method: tenantId ? "PATCH" : "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(tenantId ? { theme: colors } : { name: "NECYPAA XXXVI", logoAlt: "NECYPAA XXXVI", theme: colors }) });
+      if (!response.ok) throw new Error(await response.text());
+      const result = await response.json() as { doc?: { id?: string | number }; id?: string | number };
+      const nextId = result.doc?.id ?? result.id;
+      if (nextId != null) setTenantId(String(nextId));
+      setStatus("Theme saved");
+    } catch {
+      setStatus("Could not save theme");
+    }
+  }
+
+  return <>
+    <button aria-expanded={open} className={styles.themeToggle} onClick={() => setOpen((value) => !value)} type="button"><Palette /> Theme</button>
+    {open ? <section aria-label="Site theme defaults" className={styles.themePanel}><div className={styles.themePanelHeading}><div><strong>Site theme defaults</strong><span>These colors apply across the entire site.</span></div><button aria-label="Close theme panel" onClick={() => setOpen(false)} type="button"><X /></button></div><div className={styles.themeFields}>{THEME_FIELDS.map(({ key, label }) => <label key={key}><span>{label}</span><div><input aria-label={`${label} color picker`} onChange={(event) => setColors((current) => ({ ...current, [key]: event.target.value.toUpperCase() }))} type="color" value={colorPickerValue(colors[key])} /><input aria-invalid={!HEX_COLOR.test(colors[key])} aria-label={`${label} hex code`} maxLength={7} onChange={(event) => setColors((current) => ({ ...current, [key]: event.target.value.toUpperCase() }))} value={colors[key]} /></div></label>)}</div><footer><span aria-live="polite">{status}</span><button onClick={() => void saveTheme()} type="button"><Save /> Save theme</button></footer></section> : null}
+  </>;
 }
 
-export function PuckPageBuilderEditor({ initialData, pageId, pageTitle }: { initialData: NECYPAAData; pageId: string; pageTitle: string }) {
+function BuilderHeader({ actions, pageId, pageTitle, themePanel }: { actions: React.ReactNode; pageId: string; pageTitle: string; themePanel?: React.ReactNode }) {
+  const history = usePuck((state) => state.history);
+  return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerActions}>{themePanel}<button disabled={!history.hasPast} aria-label="Undo" onClick={() => history.back()} type="button"><Undo2 /></button><button disabled={!history.hasFuture} aria-label="Redo" onClick={() => history.forward()} type="button"><Redo2 /></button>{actions}</div></div><FormattingBar /></header>;
+}
+
+export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle, tenantId, tenantTheme }: { initialData: NECYPAAData; pageId: string; pageSlug: string; pageTitle: string; tenantId?: string; tenantTheme: TenantTheme }) {
   const [data, setData] = useState(initialData);
   const latest = useRef(initialData);
   const lastSaved = useRef(JSON.stringify(initialData));
@@ -105,7 +152,7 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageTitle }: { init
     return () => { if (timer.current) window.clearTimeout(timer.current); };
   }, [data, save]);
 
-  const overrides = useMemo(() => ({ header: ({ actions }: { actions: React.ReactNode }) => <BuilderHeader actions={actions} pageId={pageId} pageTitle={pageTitle} /> }), [pageId, pageTitle]);
+  const overrides = useMemo(() => ({ header: ({ actions }: { actions: React.ReactNode }) => <BuilderHeader actions={actions} pageId={pageId} pageTitle={pageTitle} themePanel={pageSlug === "home" ? <ThemePanel initialTenantId={tenantId} initialTheme={tenantTheme} /> : undefined} /> }), [pageId, pageSlug, pageTitle, tenantId, tenantTheme]);
   const editorConfig = useMemo(() => {
     const richText = puckConfig.components.RichText;
     return {

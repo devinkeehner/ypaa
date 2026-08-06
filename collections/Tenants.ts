@@ -12,7 +12,10 @@ const colorField = (name: string, label: string, defaultValue: string) => ({
   required: true,
   defaultValue,
   validate: hexColor,
-  admin: { description: "Six-digit hex code, including the #." },
+  admin: {
+    description: "Choose a color or paste an exact six-digit hex code.",
+    components: { Field: "@/components/admin/HexColorField" },
+  },
 });
 
 export const Tenants: CollectionConfig = {

@@ -16,6 +16,7 @@ import { HeadingFeatureClient as HeadingFeatureClient_e70f5e05f09f93e00b997edb1e
 import { ParagraphFeatureClient as ParagraphFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { default as default_144c3c1198cf63d305ab8264d5a2b1aa } from '@/components/admin/DeletePageButton'
 import { default as default_9fae9a50b1c0f53ea5eb1ee9db3c553d } from '@/components/admin/PuckPageBuilderView'
+import { default as default_58e097ffd737c28c33127f4662812319 } from '@/components/admin/HexColorField'
 import { default as default_68d2bb17e1ec48e6755095f938acf95b } from '@/components/admin/ProgramBoardNavLink'
 import { R2ClientUploadHandler as R2ClientUploadHandler_85cc02ed84006fcc91d3aff39dda669d } from '@payloadcms/storage-r2/client'
 import { default as default_527e3cc5584c179551c753b0bb54551a } from '@/components/admin/ProgramBoardAdminView'
@@ -41,6 +42,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#ParagraphFeatureClient": ParagraphFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/components/admin/DeletePageButton#default": default_144c3c1198cf63d305ab8264d5a2b1aa,
   "@/components/admin/PuckPageBuilderView#default": default_9fae9a50b1c0f53ea5eb1ee9db3c553d,
+  "@/components/admin/HexColorField#default": default_58e097ffd737c28c33127f4662812319,
   "@/components/admin/ProgramBoardNavLink#default": default_68d2bb17e1ec48e6755095f938acf95b,
   "@payloadcms/storage-r2/client#R2ClientUploadHandler": R2ClientUploadHandler_85cc02ed84006fcc91d3aff39dda669d,
   "@/components/admin/ProgramBoardAdminView#default": default_527e3cc5584c179551c753b0bb54551a,
