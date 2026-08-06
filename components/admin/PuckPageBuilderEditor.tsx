@@ -3,7 +3,7 @@
 import "@puckeditor/core/puck.css";
 
 import { createUsePuck, Puck, type Config, type Data } from "@puckeditor/core";
-import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, Bold, Palette, Redo2, Save, Undo2, X } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, Bold, ChevronDown, ChevronUp, Palette, Redo2, Save, Undo2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { editableFieldsByType, puckConfig } from "@/puck/config";
@@ -116,15 +116,15 @@ function ThemePanel({ initialTheme, initialTenantId }: { initialTheme: TenantThe
     }
   }
 
-  return <>
-    <button aria-expanded={open} className={styles.themeToggle} onClick={() => setOpen((value) => !value)} type="button"><Palette /> Theme</button>
-    {open ? <section aria-label="Site theme defaults" className={styles.themePanel}><div className={styles.themePanelHeading}><div><strong>Site theme defaults</strong><span>These colors apply across the entire site.</span></div><button aria-label="Close theme panel" onClick={() => setOpen(false)} type="button"><X /></button></div><div className={styles.themeFields}>{THEME_FIELDS.map(({ key, label }) => <label key={key}><span>{label}</span><div><input aria-label={`${label} color picker`} onChange={(event) => setColors((current) => ({ ...current, [key]: event.target.value.toUpperCase() }))} type="color" value={colorPickerValue(colors[key])} /><input aria-invalid={!HEX_COLOR.test(colors[key])} aria-label={`${label} hex code`} maxLength={7} onChange={(event) => setColors((current) => ({ ...current, [key]: event.target.value.toUpperCase() }))} value={colors[key]} /></div></label>)}</div><footer><span aria-live="polite">{status}</span><button onClick={() => void saveTheme()} type="button"><Save /> Save theme</button></footer></section> : null}
-  </>;
+  return <div className={styles.themeSidebar}>
+    <button aria-expanded={open} className={styles.themeToggle} onClick={() => setOpen((value) => !value)} type="button"><span><Palette /> Theme colors</span>{open ? <ChevronUp /> : <ChevronDown />}</button>
+    {open ? <section aria-label="Site theme defaults" className={styles.themePanel}><div className={styles.themePanelHeading}><strong>Site theme defaults</strong><span>These colors apply across the entire site.</span></div><div className={styles.themeFields}>{THEME_FIELDS.map(({ key, label }) => <label key={key}><span>{label}</span><div><input aria-label={`${label} color picker`} onChange={(event) => setColors((current) => ({ ...current, [key]: event.target.value.toUpperCase() }))} type="color" value={colorPickerValue(colors[key])} /><input aria-invalid={!HEX_COLOR.test(colors[key])} aria-label={`${label} hex code`} maxLength={7} onChange={(event) => setColors((current) => ({ ...current, [key]: event.target.value.toUpperCase() }))} value={colors[key]} /></div></label>)}</div><footer><span aria-live="polite">{status}</span><button onClick={() => void saveTheme()} type="button"><Save /> Save theme</button></footer></section> : null}
+  </div>;
 }
 
-function BuilderHeader({ actions, pageId, pageTitle, themePanel }: { actions: React.ReactNode; pageId: string; pageTitle: string; themePanel?: React.ReactNode }) {
+function BuilderHeader({ actions, pageId, pageTitle }: { actions: React.ReactNode; pageId: string; pageTitle: string }) {
   const history = usePuck((state) => state.history);
-  return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerActions}>{themePanel}<button disabled={!history.hasPast} aria-label="Undo" onClick={() => history.back()} type="button"><Undo2 /></button><button disabled={!history.hasFuture} aria-label="Redo" onClick={() => history.forward()} type="button"><Redo2 /></button>{actions}</div></div><FormattingBar /></header>;
+  return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerActions}><button disabled={!history.hasPast} aria-label="Undo" onClick={() => history.back()} type="button"><Undo2 /></button><button disabled={!history.hasFuture} aria-label="Redo" onClick={() => history.forward()} type="button"><Redo2 /></button>{actions}</div></div><FormattingBar /></header>;
 }
 
 export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle, tenantId, tenantTheme }: { initialData: NECYPAAData; pageId: string; pageSlug: string; pageTitle: string; tenantId?: string; tenantTheme: TenantTheme }) {
@@ -152,7 +152,10 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
     return () => { if (timer.current) window.clearTimeout(timer.current); };
   }, [data, save]);
 
-  const overrides = useMemo(() => ({ header: ({ actions }: { actions: React.ReactNode }) => <BuilderHeader actions={actions} pageId={pageId} pageTitle={pageTitle} themePanel={pageSlug === "home" ? <ThemePanel initialTenantId={tenantId} initialTheme={tenantTheme} /> : undefined} /> }), [pageId, pageSlug, pageTitle, tenantId, tenantTheme]);
+  const overrides = useMemo(() => ({
+    header: ({ actions }: { actions: React.ReactNode }) => <BuilderHeader actions={actions} pageId={pageId} pageTitle={pageTitle} />,
+    ...(pageSlug === "home" ? { drawer: ({ children }: { children: React.ReactNode }) => <div className={styles.themeDrawer}><ThemePanel initialTenantId={tenantId} initialTheme={tenantTheme} />{children}</div> } : {}),
+  }), [pageId, pageSlug, pageTitle, tenantId, tenantTheme]);
   const editorConfig = useMemo(() => {
     const richText = puckConfig.components.RichText;
     return {
