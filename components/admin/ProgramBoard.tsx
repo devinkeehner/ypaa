@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowLeft, CalendarDays, GripVertical, Plus, RotateCw, Save, Trash2, X } from "lucide-react";
+import { ArrowLeft, Building2, CalendarDays, GripVertical, Pencil, Plus, RotateCw, Save, Trash2, X } from "lucide-react";
 import Link from "next/link";
 
 import type { ProgramRoom, ProgramSession } from "@/components/site/program-types";
@@ -25,9 +25,32 @@ type FormState = {
   internalNotes: string;
 };
 type DropTarget = { roomID: string; time: string };
+type EditableRoom = ProgramRoom & {
+  capacity: number | null;
+  accessible: boolean;
+  directions: string;
+  mapX: number | null;
+  mapY: number | null;
+  notes: string;
+};
+type RoomFormState = {
+  id?: string | number;
+  name: string;
+  shortLabel: string;
+  floor: string;
+  capacity: string;
+  accessible: boolean;
+  directions: string;
+  displayOrder: string;
+  mapX: string;
+  mapY: string;
+  color: string;
+  notes: string;
+};
 
 const CONVENTION_DAYS = ["2026-12-31", "2027-01-01", "2027-01-02", "2027-01-03"];
 const EMPTY_FORM: FormState = { title: "", sessionType: "panel", date: CONVENTION_DAYS[0], startTime: "09:00", endTime: "10:00", room: "", shortDescription: "", language: "English", audience: "", accessibility: "", status: "published", featured: false, internalNotes: "" };
+const EMPTY_ROOM_FORM: RoomFormState = { name: "", shortLabel: "", floor: "Convention level", capacity: "", accessible: true, directions: "", displayOrder: "0", mapX: "", mapY: "", color: "#E85E27", notes: "" };
 const TIME_ZONE = "America/New_York";
 
 function dateKey(value: string) {
@@ -57,10 +80,10 @@ export function relationshipID(value: string) {
   return /^\d+$/.test(value) ? Number(value) : value;
 }
 
-function normalizeRoom(value: unknown): ProgramRoom | null {
+function normalizeRoom(value: unknown): EditableRoom | null {
   if (!value || typeof value !== "object") return null;
   const room = value as Record<string, unknown>;
-  return { id: room.id as string | number, name: String(room.name || "Room"), shortLabel: String(room.shortLabel || room.name || "Room"), floor: typeof room.floor === "string" ? room.floor : null, displayOrder: Number(room.displayOrder || 0), color: typeof room.color === "string" ? room.color : null };
+  return { id: room.id as string | number, name: String(room.name || "Room"), shortLabel: String(room.shortLabel || room.name || "Room"), floor: typeof room.floor === "string" ? room.floor : null, capacity: typeof room.capacity === "number" ? room.capacity : null, accessible: room.accessible !== false, directions: typeof room.directions === "string" ? room.directions : "", displayOrder: Number(room.displayOrder || 0), mapX: typeof room.mapX === "number" ? room.mapX : null, mapY: typeof room.mapY === "number" ? room.mapY : null, color: typeof room.color === "string" ? room.color : null, notes: typeof room.notes === "string" ? room.notes : "" };
 }
 
 function normalizeSession(value: unknown, rooms: ProgramRoom[]): ProgramSession | null {
@@ -74,7 +97,7 @@ function normalizeSession(value: unknown, rooms: ProgramRoom[]): ProgramSession 
 
 export function ProgramBoard() {
   const [state, setState] = useState<EditorState>("loading");
-  const [rooms, setRooms] = useState<ProgramRoom[]>([]);
+  const [rooms, setRooms] = useState<EditableRoom[]>([]);
   const [sessions, setSessions] = useState<ProgramSession[]>([]);
   const [day, setDay] = useState(CONVENTION_DAYS[0]);
   const [form, setForm] = useState<FormState | null>(null);
@@ -83,6 +106,9 @@ export function ProgramBoard() {
   const [draggedSessionID, setDraggedSessionID] = useState<string | null>(null);
   const [dropTarget, setDropTarget] = useState<DropTarget | null>(null);
   const [movingSessionIDs, setMovingSessionIDs] = useState<Set<string>>(() => new Set());
+  const [roomForm, setRoomForm] = useState<RoomFormState | null>(null);
+  const [roomSaving, setRoomSaving] = useState(false);
+  const [roomMessage, setRoomMessage] = useState("");
 
   const load = useCallback(async () => {
     try {
@@ -102,7 +128,7 @@ export function ProgramBoard() {
       }
       if (!roomResponse.ok || !sessionResponse.ok) throw new Error("Unable to load program data");
       const roomJSON = await roomResponse.json() as { docs?: unknown[] };
-      const nextRooms = (roomJSON.docs || []).map(normalizeRoom).filter((value): value is ProgramRoom => Boolean(value));
+      const nextRooms = (roomJSON.docs || []).map(normalizeRoom).filter((value): value is EditableRoom => Boolean(value));
       const sessionJSON = await sessionResponse.json() as { docs?: unknown[] };
       const nextSessions = (sessionJSON.docs || []).map((value) => normalizeSession(value, nextRooms)).filter((value): value is ProgramSession => Boolean(value));
       setRooms(nextRooms);
@@ -130,6 +156,34 @@ export function ProgramBoard() {
   function startEdit(session: ProgramSession) {
     setMessage("");
     setForm({ id: session.id, title: session.title, sessionType: session.sessionType, date: dateKey(session.startAt), startTime: timeValue(session.startAt), endTime: timeValue(session.endAt), room: String(session.room.id), shortDescription: session.shortDescription || "", language: session.language || "English", audience: session.audience || "", accessibility: session.accessibility || "", status: session.status || "published", featured: Boolean(session.featured), internalNotes: "" });
+  }
+
+  function startCreateRoom() {
+    const nextOrder = rooms.length ? Math.max(...rooms.map((room) => room.displayOrder)) + 10 : 0;
+    setRoomMessage("");
+    setRoomForm({ ...EMPTY_ROOM_FORM, displayOrder: String(nextOrder) });
+  }
+
+  function startEditRoom(room: EditableRoom) {
+    setRoomMessage("");
+    setRoomForm({ id: room.id, name: room.name, shortLabel: room.shortLabel, floor: room.floor || "", capacity: room.capacity == null ? "" : String(room.capacity), accessible: room.accessible, directions: room.directions, displayOrder: String(room.displayOrder), mapX: room.mapX == null ? "" : String(room.mapX), mapY: room.mapY == null ? "" : String(room.mapY), color: room.color || "#E85E27", notes: room.notes });
+  }
+
+  async function saveRoom(event: React.FormEvent) {
+    event.preventDefault();
+    if (!roomForm) return;
+    setRoomSaving(true);
+    setRoomMessage("");
+    const payload = { name: roomForm.name, shortLabel: roomForm.shortLabel, floor: roomForm.floor, capacity: roomForm.capacity === "" ? null : Number(roomForm.capacity), accessible: roomForm.accessible, directions: roomForm.directions, displayOrder: Number(roomForm.displayOrder), mapX: roomForm.mapX === "" ? null : Number(roomForm.mapX), mapY: roomForm.mapY === "" ? null : Number(roomForm.mapY), color: roomForm.color, notes: roomForm.notes };
+    const response = await fetch(roomForm.id ? `/api/rooms/${roomForm.id}` : "/api/rooms", { method: roomForm.id ? "PATCH" : "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    setRoomSaving(false);
+    if (!response.ok) {
+      const result = await response.json().catch(() => ({})) as { errors?: Array<{ message?: string }> };
+      setRoomMessage(result.errors?.[0]?.message || "The room could not be saved.");
+      return;
+    }
+    setRoomForm(null);
+    await load();
   }
 
   function overlapping(candidate: { id?: string | number; room: string; startAt: string; endAt: string }) {
@@ -211,19 +265,20 @@ export function ProgramBoard() {
     : 1;
   return (
     <main className="program-board-page">
-      <header className="program-board-header"><div><Link href="/admin"><ArrowLeft aria-hidden="true" /> Payload admin</Link><h1>Program Board</h1><p>Drag sessions to move them. Click an empty time to add one.</p></div><div><Link href="/program" target="_blank">View public program</Link><button onClick={() => startCreate()} type="button"><Plus aria-hidden="true" /> Add session</button></div></header>
+      <header className="program-board-header"><div><Link href="/admin"><ArrowLeft aria-hidden="true" /> Payload admin</Link><h1>Program Board</h1><p>Drag sessions to move them. Click an empty time to add one.</p></div><div><Link href="/program" target="_blank">View public program</Link><button className="program-board-secondary-action" onClick={startCreateRoom} type="button"><Building2 aria-hidden="true" /> Add room</button><button onClick={() => startCreate()} type="button"><Plus aria-hidden="true" /> Add session</button></div></header>
       <div className="program-board-toolbar"><div role="tablist" aria-label="Convention day">{CONVENTION_DAYS.map((value) => <button aria-selected={day === value} key={value} onClick={() => setDay(value)} role="tab" type="button">{dayLabel(value)}</button>)}</div><p aria-live="polite">{message || `${daySessions.length} sessions · ${rooms.length} rooms`}</p></div>
       {state === "loading" ? <div className="program-board-loading">Loading program records…</div> : (
         <div className="program-board-scroll">
           <div className="program-board-grid" style={{ "--room-count": rooms.length, "--slot-height": `${slotHeight}px` } as React.CSSProperties}>
             <div className="program-board-corner">Time</div>
-            {rooms.map((room) => <div className="program-board-room" key={room.id}><span style={{ background: room.color || undefined }} /><strong>{room.shortLabel}</strong><small>{room.floor}</small></div>)}
+            {rooms.map((room) => <div className="program-board-room" key={room.id}><span style={{ background: room.color || undefined }} /><strong>{room.shortLabel}</strong><small>{room.floor}</small><button aria-label={`Edit ${room.name}`} className="program-board-room-edit" onClick={() => startEditRoom(room)} title={`Edit ${room.name}`} type="button"><Pencil aria-hidden="true" /></button></div>)}
             <div className="program-board-axis" style={{ height: slots * slotHeight }}>{Array.from({ length: slots }, (_, index) => { const minutes = startMinute + index * 30; const hour = Math.floor(minutes / 60); const minute = minutes % 60; return <span key={index} style={{ top: index * slotHeight }}>{new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" }).format(new Date(`${day}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00-05:00`))}</span>; })}</div>
             {rooms.map((room) => <div className="program-board-track" key={room.id} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDropTarget(null); }} style={{ height: slots * slotHeight }}>{Array.from({ length: slots }, (_, index) => { const minutes = startMinute + index * 30; const time = `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`; const highlighted = dropTarget?.roomID === String(room.id) && index >= dropStartIndex && index < dropStartIndex + dropDurationSlots; return <button aria-label={`Add session in ${room.name} at ${time}`} className="program-board-cell" data-drop-active={highlighted || undefined} data-drop-end={highlighted && index === dropStartIndex + dropDurationSlots - 1 || undefined} data-drop-start={highlighted && index === dropStartIndex || undefined} key={time} onClick={() => startCreate(String(room.id), time)} onDragEnter={(event) => { event.preventDefault(); setDropTarget({ roomID: String(room.id), time }); }} onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = "move"; }} onDrop={(event) => { event.preventDefault(); const sessionID = event.dataTransfer.getData("text/program-session"); setDropTarget(null); setDraggedSessionID(null); void moveSession(sessionID, String(room.id), time); }} style={{ height: slotHeight, top: index * slotHeight }} type="button" />; })}{daySessions.filter((session) => String(session.room.id) === String(room.id)).map((session) => { const sessionID = String(session.id); const [hour, minute] = timeValue(session.startAt).split(":").map(Number); const top = Math.max(0, ((hour * 60 + minute) - startMinute) / 30 * slotHeight + 3); const height = Math.max(slotHeight - 6, (new Date(session.endAt).getTime() - new Date(session.startAt).getTime()) / 60000 / 30 * slotHeight - 6); const moving = movingSessionIDs.has(sessionID); return <button aria-busy={moving} className="program-board-event" data-moving={moving || undefined} draggable={!moving} key={session.id} onClick={() => startEdit(session)} onDragEnd={() => { setDraggedSessionID(null); setDropTarget(null); }} onDragStart={(event) => { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/program-session", sessionID); setDraggedSessionID(sessionID); }} style={{ background: room.color || undefined, height, top }} type="button"><GripVertical aria-hidden="true" /><span>{timeValue(session.startAt)}</span><strong>{session.title}</strong><small>{moving ? "Saving…" : SESSION_TYPE_LABELS[session.sessionType] || session.sessionType}</small></button>; })}</div>)}
           </div>
         </div>
       )}
-      {form ? <div className="program-board-modal-backdrop"><section aria-labelledby="program-form-title" aria-modal="true" className="program-board-modal" role="dialog"><header><div><p>{form.id ? "Edit program record" : "New program record"}</p><h2 id="program-form-title">{form.id ? form.title : "Add a session"}</h2></div><button aria-label="Close form" onClick={() => setForm(null)} type="button"><X aria-hidden="true" /></button></header><form onSubmit={save}><label className="program-board-wide"><span>Title</span><input autoFocus onChange={(event) => setForm({ ...form, title: event.target.value })} required value={form.title} /></label><label><span>Type</span><select onChange={(event) => setForm({ ...form, sessionType: event.target.value })} value={form.sessionType}>{Object.entries(SESSION_TYPE_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label><label><span>Room</span><select onChange={(event) => setForm({ ...form, room: event.target.value })} required value={form.room}>{rooms.map((value) => <option key={value.id} value={String(value.id)}>{value.name}</option>)}</select></label><label><span>Date</span><input onChange={(event) => setForm({ ...form, date: event.target.value })} required type="date" value={form.date} /></label><label><span>Starts</span><input onChange={(event) => setForm({ ...form, startTime: event.target.value })} required step="1800" type="time" value={form.startTime} /></label><label><span>Ends</span><input onChange={(event) => setForm({ ...form, endTime: event.target.value })} required step="1800" type="time" value={form.endTime} /></label><label><span>Status</span><select onChange={(event) => setForm({ ...form, status: event.target.value })} value={form.status}><option value="published">Published</option><option value="draft">Draft</option><option value="cancelled">Cancelled</option></select></label><label className="program-board-wide"><span>Public description</span><textarea onChange={(event) => setForm({ ...form, shortDescription: event.target.value })} rows={3} value={form.shortDescription} /></label><label><span>Language</span><input onChange={(event) => setForm({ ...form, language: event.target.value })} value={form.language} /></label><label><span>Audience / affinity</span><input onChange={(event) => setForm({ ...form, audience: event.target.value })} value={form.audience} /></label><label className="program-board-wide"><span>Accessibility information</span><textarea onChange={(event) => setForm({ ...form, accessibility: event.target.value })} rows={2} value={form.accessibility} /></label><label className="program-board-wide"><span>Internal committee notes</span><textarea onChange={(event) => setForm({ ...form, internalNotes: event.target.value })} rows={2} value={form.internalNotes} /></label><label className="program-board-check"><input checked={form.featured} onChange={(event) => setForm({ ...form, featured: event.target.checked })} type="checkbox" /> Feature this session</label>{message ? <p className="program-board-form-error">{message}</p> : null}<footer>{form.id ? <button className="program-board-delete" disabled={saving} onClick={() => void remove()} type="button"><Trash2 aria-hidden="true" /> Delete</button> : <span /> }<div><button onClick={() => setForm(null)} type="button">Cancel</button><button disabled={saving} type="submit"><Save aria-hidden="true" /> {saving ? "Saving…" : "Save session"}</button></div></footer></form></section></div> : null}
+      {form ? <div className="program-board-modal-backdrop"><section aria-labelledby="program-form-title" aria-modal="true" className="program-board-modal" role="dialog"><header><div><p>{form.id ? "Edit program record" : "New program record"}</p><h2 id="program-form-title">{form.id ? form.title : "Add a session"}</h2></div><button aria-label="Close form" onClick={() => setForm(null)} type="button"><X aria-hidden="true" /></button></header><form onSubmit={save}><label className="program-board-wide"><span>Title</span><input autoFocus onChange={(event) => setForm({ ...form, title: event.target.value })} required value={form.title} /></label><label><span>Type</span><select onChange={(event) => setForm({ ...form, sessionType: event.target.value })} value={form.sessionType}>{Object.entries(SESSION_TYPE_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label><label><span>Room</span><select onChange={(event) => setForm({ ...form, room: event.target.value })} required value={form.room}>{rooms.map((value) => <option key={value.id} value={String(value.id)}>{value.name}</option>)}</select></label><label><span>Date</span><input onChange={(event) => setForm({ ...form, date: event.target.value })} required type="date" value={form.date} /></label><label><span>Starts</span><input onChange={(event) => setForm({ ...form, startTime: event.target.value })} required step="1800" type="time" value={form.startTime} /></label><label><span>Ends</span><input onChange={(event) => setForm({ ...form, endTime: event.target.value })} required step="1800" type="time" value={form.endTime} /></label><label><span>Status</span><select onChange={(event) => setForm({ ...form, status: event.target.value })} value={form.status}><option value="published">Published</option><option value="draft">Draft</option><option value="cancelled">Cancelled</option></select></label><label className="program-board-wide"><span>Public description</span><textarea onChange={(event) => setForm({ ...form, shortDescription: event.target.value })} rows={3} value={form.shortDescription} /></label><label><span>Language</span><input onChange={(event) => setForm({ ...form, language: event.target.value })} value={form.language} /></label><label><span>Audience / affinity</span><input onChange={(event) => setForm({ ...form, audience: event.target.value })} value={form.audience} /></label><label className="program-board-wide"><span>Accessibility information</span><textarea onChange={(event) => setForm({ ...form, accessibility: event.target.value })} rows={2} value={form.accessibility} /></label><label className="program-board-wide"><span>Internal committee notes</span><textarea onChange={(event) => setForm({ ...form, internalNotes: event.target.value })} rows={2} value={form.internalNotes} /></label><label className="program-board-check"><input checked={form.featured} onChange={(event) => setForm({ ...form, featured: event.target.checked })} type="checkbox" /><span>Mark as featured <small>Saved for future homepage or program spotlight sections; it does not currently change the schedule display.</small></span></label>{message ? <p className="program-board-form-error">{message}</p> : null}<footer>{form.id ? <button className="program-board-delete" disabled={saving} onClick={() => void remove()} type="button"><Trash2 aria-hidden="true" /> Delete</button> : <span /> }<div><button onClick={() => setForm(null)} type="button">Cancel</button><button disabled={saving} type="submit"><Save aria-hidden="true" /> {saving ? "Saving…" : "Save session"}</button></div></footer></form></section></div> : null}
+      {roomForm ? <div className="program-board-modal-backdrop"><section aria-labelledby="room-form-title" aria-modal="true" className="program-board-modal" role="dialog"><header><div><p>{roomForm.id ? "Edit room record" : "New room record"}</p><h2 id="room-form-title">{roomForm.id ? roomForm.name : "Add a room"}</h2></div><button aria-label="Close room form" onClick={() => setRoomForm(null)} type="button"><X aria-hidden="true" /></button></header><form onSubmit={saveRoom}><label className="program-board-wide"><span>Full room name</span><input autoFocus onChange={(event) => setRoomForm({ ...roomForm, name: event.target.value })} required value={roomForm.name} /></label><label><span>Short grid label</span><input maxLength={30} onChange={(event) => setRoomForm({ ...roomForm, shortLabel: event.target.value })} required value={roomForm.shortLabel} /></label><label><span>Floor / area</span><input onChange={(event) => setRoomForm({ ...roomForm, floor: event.target.value })} value={roomForm.floor} /></label><label><span>Capacity</span><input min="0" onChange={(event) => setRoomForm({ ...roomForm, capacity: event.target.value })} type="number" value={roomForm.capacity} /></label><label><span>Grid order</span><input onChange={(event) => setRoomForm({ ...roomForm, displayOrder: event.target.value })} required type="number" value={roomForm.displayOrder} /></label><label><span>Room color</span><input className="program-board-color-input" onChange={(event) => setRoomForm({ ...roomForm, color: event.target.value })} type="color" value={roomForm.color} /></label><label><span>Map position X (%)</span><input max="100" min="0" onChange={(event) => setRoomForm({ ...roomForm, mapX: event.target.value })} type="number" value={roomForm.mapX} /></label><label><span>Map position Y (%)</span><input max="100" min="0" onChange={(event) => setRoomForm({ ...roomForm, mapY: event.target.value })} type="number" value={roomForm.mapY} /></label><label className="program-board-wide"><span>Public directions</span><textarea onChange={(event) => setRoomForm({ ...roomForm, directions: event.target.value })} rows={2} value={roomForm.directions} /></label><label className="program-board-wide"><span>Internal room notes</span><textarea onChange={(event) => setRoomForm({ ...roomForm, notes: event.target.value })} rows={2} value={roomForm.notes} /></label><label className="program-board-check"><input checked={roomForm.accessible} onChange={(event) => setRoomForm({ ...roomForm, accessible: event.target.checked })} type="checkbox" /><span>Accessible room</span></label>{roomMessage ? <p className="program-board-form-error">{roomMessage}</p> : null}<footer><span /><div><button onClick={() => setRoomForm(null)} type="button">Cancel</button><button disabled={roomSaving} type="submit"><Save aria-hidden="true" /> {roomSaving ? "Saving…" : "Save room"}</button></div></footer></form></section></div> : null}
     </main>
   );
 }
