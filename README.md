@@ -1,4 +1,32 @@
-# vinext-starter
+# NECYPAA XXXVI
+
+## Site administration
+
+- Use **Media** to upload homepage artwork and video.
+- Use the home page editor to replace the hero background, hero poster, hero foreground, about artwork, upcoming event flyer, every past-event image, and closing artwork.
+- Use **Tenant / site settings** to upload the header logo and set the site palette with six-digit hex codes.
+- Use **Access Codes** to create the codes accepted by `/cash`, including activation and redemption limits.
+- Cash orders appear under **Cash Transactions**.
+
+## Registration and Stripe
+
+`/register` provides one checkout for a $40 self-registration, $25 breakfast tickets for Friday, Saturday, or Sunday, a named $40 registration scholarship, or a general scholarship contribution starting at $40. The policy and its seven acknowledgments appear only when the purchaser registers themself.
+
+`/cash` provides the same order builder after an authorized access code is entered. A cash order does not create a fake $0 card charge. It creates or updates a Stripe Customer with the registration metadata and saves the cash value and order as a Cash Transaction in Payload.
+
+Configure these hosted secrets before enabling live submissions:
+
+```text
+STRIPE_SECRET_KEY
+STRIPE_WEBHOOK_SECRET
+RESEND_API_KEY
+SCHOLARSHIP_FROM_EMAIL
+PAYLOAD_SECRET
+```
+
+Configure the Stripe webhook endpoint as `/api/stripe/webhook` and subscribe it to `checkout.session.completed`. Named scholarship notices are sent only after Stripe confirms payment; cash scholarship notices are sent after the authorized cash record is created. If the email variables are absent, the transaction still records and the notification remains marked as awaiting configuration.
+
+## Starter and lifecycle notes
 
 A clean full-stack starter running on
 [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and

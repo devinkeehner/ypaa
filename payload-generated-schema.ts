@@ -480,7 +480,7 @@ export const pages = sqliteTable(
     meta_title: text("meta_title"),
     meta_description: text("meta_description"),
     builderData: text("builder_data", { mode: "json" }).default(
-      '{"root":{"props":{"title":"NECYPAA XXXVI"}},"content":[{"type":"HeroCountdown","props":{"id":"hero","eyebrow":"Escaping the Mad Realm","heading":"NECYPAA XXXVI","body":"Four days of recovery, fellowship, service, and celebration in Hartford, Connecticut.","eventDate":"December 31, 2026 – January 3, 2027","eventLocation":"Hartford Marriott Downtown","countdownTarget":"2026-12-31T17:00:00-05:00","registerLabel":"Register","registerUrl":"https://register.necypaact.com/en/register","hotelLabel":"Book a hotel room","hotelUrl":"https://www.necypaact.com/hotel"}},{"type":"About","props":{"id":"about","eyebrow":"About NECYPAA","heading":"Four days. One fellowship. A way out of the ordinary.","body":"NECYPAA brings young people in Alcoholics Anonymous together from across the Northeast for speakers, workshops, dancing, service, and the kind of connection that makes recovery feel possible. Young means young at heart—whether this is your first sober event or your fiftieth convention, you are welcome here.","advisoryHeading":"Anonymity matters","advisoryBody":"Please help protect personal anonymity when sharing photos or stories from convention spaces."}},{"type":"MeetingInfo","props":{"id":"business-meeting","eyebrow":"Host committee","heading":"Business meeting","body":"See how the convention is built through committee work, updates, votes, and fellowship. No title or commitment is required—just show up.","date":"Sunday, August 16, 2026","time":"2:00 PM Eastern","location":"Online via Zoom","actionLabel":"Join on Zoom","actionUrl":"https://www.necypaact.com/service","importantDates":[{"date":"Aug 16","label":"Host committee business meeting"},{"date":"Aug 22","label":"Three Frogs on a Log workshop"},{"date":"Dec 31","label":"Convention opens at 5:00 PM"},{"date":"Jan 3","label":"Convention closes"}]}},{"type":"Events","props":{"id":"events","eyebrow":"Gather with us","heading":"Upcoming and past events","upcomingLabel":"Next up","upcomingTitle":"Three Frogs on a Log","upcomingBody":"A Step Two and Three workshop with four mini-speakers and a live Q&A.","upcomingDate":"Saturday, August 22, 2026","upcomingLocation":"Online via Zoom","pastEvents":[{"title":"The Ultimate Cool Down","date":"April 25, 2026"},{"title":"Zombie Prom","date":"February 13, 2026"},{"title":"New Year’s Eve Bonfire","date":"December 31, 2025"},{"title":"Cardboard Masquerade","date":"May 30, 2025"}]}},{"type":"MeetingDirectory","props":{"id":"ypaa","eyebrow":"Across the Northeast","heading":"YPAA meetings near you","body":"Find young people’s meetings and committees throughout the region.","meetings":[{"name":"Connecticut YPAA","location":"Connecticut"},{"name":"Maine YPAA","location":"Maine"},{"name":"Massachusetts YPAA","location":"Massachusetts"},{"name":"New Hampshire YPAA","location":"New Hampshire"},{"name":"New Jersey YPAA","location":"New Jersey"},{"name":"New York YPAA","location":"New York"},{"name":"Pennsylvania YPAA","location":"Pennsylvania"},{"name":"Rhode Island YPAA","location":"Rhode Island"},{"name":"Vermont YPAA","location":"Vermont"}]}},{"type":"CallToAction","props":{"id":"register","eyebrow":"See you in Hartford","heading":"Ready for NECYPAA XXXVI?","body":"Register for the convention and reserve your room while space is available.","primaryLabel":"Register","primaryUrl":"https://register.necypaact.com/en/register","secondaryLabel":"Book a hotel room","secondaryUrl":"https://www.necypaact.com/hotel"}}],"zones":{}}',
+      '{"root":{"props":{"title":"NECYPAA XXXVI"}},"content":[{"type":"HeroCountdown","props":{"id":"hero","eyebrow":"Escaping the Mad Realm","heading":"NECYPAA XXXVI","body":"Four days of recovery, fellowship, service, and celebration in Hartford, Connecticut.","eventDate":"December 31, 2026 – January 3, 2027","eventLocation":"Hartford Marriott Downtown","countdownTarget":"2026-12-31T17:00:00-05:00","registerLabel":"Register","registerUrl":"/register","hotelLabel":"Book a hotel room","hotelUrl":"https://www.necypaact.com/hotel"}},{"type":"About","props":{"id":"about","eyebrow":"About NECYPAA","heading":"Four days. One fellowship. A way out of the ordinary.","body":"NECYPAA brings young people in Alcoholics Anonymous together from across the Northeast for speakers, workshops, dancing, service, and the kind of connection that makes recovery feel possible. Young means young at heart—whether this is your first sober event or your fiftieth convention, you are welcome here.","advisoryHeading":"Anonymity matters","advisoryBody":"Please help protect personal anonymity when sharing photos or stories from convention spaces."}},{"type":"MeetingInfo","props":{"id":"business-meeting","eyebrow":"Host committee","heading":"Business meeting","body":"See how the convention is built through committee work, updates, votes, and fellowship. No title or commitment is required—just show up.","date":"Sunday, August 16, 2026","time":"2:00 PM Eastern","location":"Online via Zoom","actionLabel":"Join on Zoom","actionUrl":"https://www.necypaact.com/service","importantDates":[{"date":"Aug 16","label":"Host committee business meeting"},{"date":"Aug 22","label":"Three Frogs on a Log workshop"},{"date":"Dec 31","label":"Convention opens at 5:00 PM"},{"date":"Jan 3","label":"Convention closes"}]}},{"type":"Events","props":{"id":"events","eyebrow":"Gather with us","heading":"Upcoming and past events","upcomingLabel":"Next up","upcomingTitle":"Three Frogs on a Log","upcomingBody":"A Step Two and Three workshop with four mini-speakers and a live Q&A.","upcomingDate":"Saturday, August 22, 2026","upcomingLocation":"Online via Zoom","pastEvents":[{"title":"The Ultimate Cool Down","date":"April 25, 2026"},{"title":"Zombie Prom","date":"February 13, 2026"},{"title":"New Year’s Eve Bonfire","date":"December 31, 2025"},{"title":"Cardboard Masquerade","date":"May 30, 2025"}]}},{"type":"MeetingDirectory","props":{"id":"ypaa","eyebrow":"Across the Northeast","heading":"YPAA meetings near you","body":"Find young people’s meetings and committees throughout the region.","meetings":[{"name":"Connecticut YPAA","location":"Connecticut"},{"name":"Maine YPAA","location":"Maine"},{"name":"Massachusetts YPAA","location":"Massachusetts"},{"name":"New Hampshire YPAA","location":"New Hampshire"},{"name":"New Jersey YPAA","location":"New Jersey"},{"name":"New York YPAA","location":"New York"},{"name":"Pennsylvania YPAA","location":"Pennsylvania"},{"name":"Rhode Island YPAA","location":"Rhode Island"},{"name":"Vermont YPAA","location":"Vermont"}]}},{"type":"CallToAction","props":{"id":"register","eyebrow":"See you in Hartford","heading":"Ready for NECYPAA XXXVI?","body":"Register for the convention and reserve your room while space is available.","primaryLabel":"Register","primaryUrl":"/register","secondaryLabel":"Book a hotel room","secondaryUrl":"https://www.necypaact.com/hotel"}}],"zones":{}}',
     ),
     updatedAt: text("updated_at")
       .notNull()
@@ -898,7 +898,7 @@ export const _pages_v = sqliteTable(
     version_meta_title: text("version_meta_title"),
     version_meta_description: text("version_meta_description"),
     version_builderData: text("version_builder_data", { mode: "json" }).default(
-      '{"root":{"props":{"title":"NECYPAA XXXVI"}},"content":[{"type":"HeroCountdown","props":{"id":"hero","eyebrow":"Escaping the Mad Realm","heading":"NECYPAA XXXVI","body":"Four days of recovery, fellowship, service, and celebration in Hartford, Connecticut.","eventDate":"December 31, 2026 – January 3, 2027","eventLocation":"Hartford Marriott Downtown","countdownTarget":"2026-12-31T17:00:00-05:00","registerLabel":"Register","registerUrl":"https://register.necypaact.com/en/register","hotelLabel":"Book a hotel room","hotelUrl":"https://www.necypaact.com/hotel"}},{"type":"About","props":{"id":"about","eyebrow":"About NECYPAA","heading":"Four days. One fellowship. A way out of the ordinary.","body":"NECYPAA brings young people in Alcoholics Anonymous together from across the Northeast for speakers, workshops, dancing, service, and the kind of connection that makes recovery feel possible. Young means young at heart—whether this is your first sober event or your fiftieth convention, you are welcome here.","advisoryHeading":"Anonymity matters","advisoryBody":"Please help protect personal anonymity when sharing photos or stories from convention spaces."}},{"type":"MeetingInfo","props":{"id":"business-meeting","eyebrow":"Host committee","heading":"Business meeting","body":"See how the convention is built through committee work, updates, votes, and fellowship. No title or commitment is required—just show up.","date":"Sunday, August 16, 2026","time":"2:00 PM Eastern","location":"Online via Zoom","actionLabel":"Join on Zoom","actionUrl":"https://www.necypaact.com/service","importantDates":[{"date":"Aug 16","label":"Host committee business meeting"},{"date":"Aug 22","label":"Three Frogs on a Log workshop"},{"date":"Dec 31","label":"Convention opens at 5:00 PM"},{"date":"Jan 3","label":"Convention closes"}]}},{"type":"Events","props":{"id":"events","eyebrow":"Gather with us","heading":"Upcoming and past events","upcomingLabel":"Next up","upcomingTitle":"Three Frogs on a Log","upcomingBody":"A Step Two and Three workshop with four mini-speakers and a live Q&A.","upcomingDate":"Saturday, August 22, 2026","upcomingLocation":"Online via Zoom","pastEvents":[{"title":"The Ultimate Cool Down","date":"April 25, 2026"},{"title":"Zombie Prom","date":"February 13, 2026"},{"title":"New Year’s Eve Bonfire","date":"December 31, 2025"},{"title":"Cardboard Masquerade","date":"May 30, 2025"}]}},{"type":"MeetingDirectory","props":{"id":"ypaa","eyebrow":"Across the Northeast","heading":"YPAA meetings near you","body":"Find young people’s meetings and committees throughout the region.","meetings":[{"name":"Connecticut YPAA","location":"Connecticut"},{"name":"Maine YPAA","location":"Maine"},{"name":"Massachusetts YPAA","location":"Massachusetts"},{"name":"New Hampshire YPAA","location":"New Hampshire"},{"name":"New Jersey YPAA","location":"New Jersey"},{"name":"New York YPAA","location":"New York"},{"name":"Pennsylvania YPAA","location":"Pennsylvania"},{"name":"Rhode Island YPAA","location":"Rhode Island"},{"name":"Vermont YPAA","location":"Vermont"}]}},{"type":"CallToAction","props":{"id":"register","eyebrow":"See you in Hartford","heading":"Ready for NECYPAA XXXVI?","body":"Register for the convention and reserve your room while space is available.","primaryLabel":"Register","primaryUrl":"https://register.necypaact.com/en/register","secondaryLabel":"Book a hotel room","secondaryUrl":"https://www.necypaact.com/hotel"}}],"zones":{}}',
+      '{"root":{"props":{"title":"NECYPAA XXXVI"}},"content":[{"type":"HeroCountdown","props":{"id":"hero","eyebrow":"Escaping the Mad Realm","heading":"NECYPAA XXXVI","body":"Four days of recovery, fellowship, service, and celebration in Hartford, Connecticut.","eventDate":"December 31, 2026 – January 3, 2027","eventLocation":"Hartford Marriott Downtown","countdownTarget":"2026-12-31T17:00:00-05:00","registerLabel":"Register","registerUrl":"/register","hotelLabel":"Book a hotel room","hotelUrl":"https://www.necypaact.com/hotel"}},{"type":"About","props":{"id":"about","eyebrow":"About NECYPAA","heading":"Four days. One fellowship. A way out of the ordinary.","body":"NECYPAA brings young people in Alcoholics Anonymous together from across the Northeast for speakers, workshops, dancing, service, and the kind of connection that makes recovery feel possible. Young means young at heart—whether this is your first sober event or your fiftieth convention, you are welcome here.","advisoryHeading":"Anonymity matters","advisoryBody":"Please help protect personal anonymity when sharing photos or stories from convention spaces."}},{"type":"MeetingInfo","props":{"id":"business-meeting","eyebrow":"Host committee","heading":"Business meeting","body":"See how the convention is built through committee work, updates, votes, and fellowship. No title or commitment is required—just show up.","date":"Sunday, August 16, 2026","time":"2:00 PM Eastern","location":"Online via Zoom","actionLabel":"Join on Zoom","actionUrl":"https://www.necypaact.com/service","importantDates":[{"date":"Aug 16","label":"Host committee business meeting"},{"date":"Aug 22","label":"Three Frogs on a Log workshop"},{"date":"Dec 31","label":"Convention opens at 5:00 PM"},{"date":"Jan 3","label":"Convention closes"}]}},{"type":"Events","props":{"id":"events","eyebrow":"Gather with us","heading":"Upcoming and past events","upcomingLabel":"Next up","upcomingTitle":"Three Frogs on a Log","upcomingBody":"A Step Two and Three workshop with four mini-speakers and a live Q&A.","upcomingDate":"Saturday, August 22, 2026","upcomingLocation":"Online via Zoom","pastEvents":[{"title":"The Ultimate Cool Down","date":"April 25, 2026"},{"title":"Zombie Prom","date":"February 13, 2026"},{"title":"New Year’s Eve Bonfire","date":"December 31, 2025"},{"title":"Cardboard Masquerade","date":"May 30, 2025"}]}},{"type":"MeetingDirectory","props":{"id":"ypaa","eyebrow":"Across the Northeast","heading":"YPAA meetings near you","body":"Find young people’s meetings and committees throughout the region.","meetings":[{"name":"Connecticut YPAA","location":"Connecticut"},{"name":"Maine YPAA","location":"Maine"},{"name":"Massachusetts YPAA","location":"Massachusetts"},{"name":"New Hampshire YPAA","location":"New Hampshire"},{"name":"New Jersey YPAA","location":"New Jersey"},{"name":"New York YPAA","location":"New York"},{"name":"Pennsylvania YPAA","location":"Pennsylvania"},{"name":"Rhode Island YPAA","location":"Rhode Island"},{"name":"Vermont YPAA","location":"Vermont"}]}},{"type":"CallToAction","props":{"id":"register","eyebrow":"See you in Hartford","heading":"Ready for NECYPAA XXXVI?","body":"Register for the convention and reserve your room while space is available.","primaryLabel":"Register","primaryUrl":"/register","secondaryLabel":"Book a hotel room","secondaryUrl":"https://www.necypaact.com/hotel"}}],"zones":{}}',
     ),
     version_updatedAt: text("version_updated_at").default(
       sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`,
@@ -1102,6 +1102,109 @@ export const _merchandise_v = sqliteTable(
   ],
 );
 
+export const tenants = sqliteTable(
+  "tenants",
+  {
+    id: integer("id").primaryKey(),
+    name: text("name").notNull().default("NECYPAA XXXVI"),
+    logo: integer("logo_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
+    logoAlt: text("logo_alt").default("NECYPAA XXXVI"),
+    theme_primary: text("theme_primary").notNull().default("#E85E27"),
+    theme_secondary: text("theme_secondary").notNull().default("#31275A"),
+    theme_accent: text("theme_accent").notNull().default("#FFD76A"),
+    theme_background: text("theme_background").notNull().default("#0C0D0E"),
+    theme_surface: text("theme_surface").notNull().default("#15181A"),
+    theme_lightBackground: text("theme_light_background")
+      .notNull()
+      .default("#F5EEE1"),
+    theme_darkText: text("theme_dark_text").notNull().default("#171614"),
+    theme_lightText: text("theme_light_text").notNull().default("#F4E8D3"),
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (columns) => [
+    index("tenants_logo_idx").on(columns.logo),
+    index("tenants_updated_at_idx").on(columns.updatedAt),
+    index("tenants_created_at_idx").on(columns.createdAt),
+  ],
+);
+
+export const access_codes = sqliteTable(
+  "access_codes",
+  {
+    id: integer("id").primaryKey(),
+    code: text("code").notNull(),
+    active: integer("active", { mode: "boolean" }).notNull().default(true),
+    maxRedemptions: numeric("max_redemptions", { mode: "number" })
+      .notNull()
+      .default(1),
+    redemptionCount: numeric("redemption_count", { mode: "number" })
+      .notNull()
+      .default(0),
+    grantType: text("grant_type", {
+      enum: ["cash_order", "complimentary_registration", "door_scholarship"],
+    })
+      .notNull()
+      .default("cash_order"),
+    issuerSource: text("issuer_source").default("necypaa_host_committee"),
+    notes: text("notes"),
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (columns) => [
+    uniqueIndex("access_codes_code_idx").on(columns.code),
+    index("access_codes_updated_at_idx").on(columns.updatedAt),
+    index("access_codes_created_at_idx").on(columns.createdAt),
+  ],
+);
+
+export const cash_transactions = sqliteTable(
+  "cash_transactions",
+  {
+    id: integer("id").primaryKey(),
+    purchaserName: text("purchaser_name").notNull(),
+    purchaserEmail: text("purchaser_email").notNull(),
+    recordedValueCents: numeric("recorded_value_cents", {
+      mode: "number",
+    }).notNull(),
+    status: text("status", { enum: ["recorded", "voided"] })
+      .notNull()
+      .default("recorded"),
+    stripeCustomerId: text("stripe_customer_id"),
+    accessCode: integer("access_code_id")
+      .notNull()
+      .references(() => access_codes.id, {
+        onDelete: "set null",
+      }),
+    order: text("order", { mode: "json" }).notNull(),
+    metadata: text("metadata", { mode: "json" }).notNull(),
+    notificationStatus: text("notification_status", {
+      enum: ["not_required", "sent", "pending_configuration", "failed"],
+    }).default("not_required"),
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (columns) => [
+    index("cash_transactions_access_code_idx").on(columns.accessCode),
+    index("cash_transactions_updated_at_idx").on(columns.updatedAt),
+    index("cash_transactions_created_at_idx").on(columns.createdAt),
+  ],
+);
+
 export const payload_kv = sqliteTable(
   "payload_kv",
   {
@@ -1142,6 +1245,9 @@ export const payload_locked_documents_rels = sqliteTable(
     mediaID: integer("media_id"),
     pagesID: integer("pages_id"),
     merchandiseID: integer("merchandise_id"),
+    tenantsID: integer("tenants_id"),
+    "access-codesID": integer("access_codes_id"),
+    "cash-transactionsID": integer("cash_transactions_id"),
   },
   (columns) => [
     index("payload_locked_documents_rels_order_idx").on(columns.order),
@@ -1152,6 +1258,13 @@ export const payload_locked_documents_rels = sqliteTable(
     index("payload_locked_documents_rels_pages_id_idx").on(columns.pagesID),
     index("payload_locked_documents_rels_merchandise_id_idx").on(
       columns.merchandiseID,
+    ),
+    index("payload_locked_documents_rels_tenants_id_idx").on(columns.tenantsID),
+    index("payload_locked_documents_rels_access_codes_id_idx").on(
+      columns["access-codesID"],
+    ),
+    index("payload_locked_documents_rels_cash_transactions_id_idx").on(
+      columns["cash-transactionsID"],
     ),
     foreignKey({
       columns: [columns["parent"]],
@@ -1177,6 +1290,21 @@ export const payload_locked_documents_rels = sqliteTable(
       columns: [columns["merchandiseID"]],
       foreignColumns: [merchandise.id],
       name: "payload_locked_documents_rels_merchandise_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [columns["tenantsID"]],
+      foreignColumns: [tenants.id],
+      name: "payload_locked_documents_rels_tenants_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [columns["access-codesID"]],
+      foreignColumns: [access_codes.id],
+      name: "payload_locked_documents_rels_access_codes_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [columns["cash-transactionsID"]],
+      foreignColumns: [cash_transactions.id],
+      name: "payload_locked_documents_rels_cash_transactions_fk",
     }).onDelete("cascade"),
   ],
 );
@@ -1725,6 +1853,24 @@ export const relations__merchandise_v = relations(
     }),
   }),
 );
+export const relations_tenants = relations(tenants, ({ one }) => ({
+  logo: one(media, {
+    fields: [tenants.logo],
+    references: [media.id],
+    relationName: "logo",
+  }),
+}));
+export const relations_access_codes = relations(access_codes, () => ({}));
+export const relations_cash_transactions = relations(
+  cash_transactions,
+  ({ one }) => ({
+    accessCode: one(access_codes, {
+      fields: [cash_transactions.accessCode],
+      references: [access_codes.id],
+      relationName: "accessCode",
+    }),
+  }),
+);
 export const relations_payload_kv = relations(payload_kv, () => ({}));
 export const relations_payload_locked_documents_rels = relations(
   payload_locked_documents_rels,
@@ -1753,6 +1899,21 @@ export const relations_payload_locked_documents_rels = relations(
       fields: [payload_locked_documents_rels.merchandiseID],
       references: [merchandise.id],
       relationName: "merchandise",
+    }),
+    tenantsID: one(tenants, {
+      fields: [payload_locked_documents_rels.tenantsID],
+      references: [tenants.id],
+      relationName: "tenants",
+    }),
+    "access-codesID": one(access_codes, {
+      fields: [payload_locked_documents_rels["access-codesID"]],
+      references: [access_codes.id],
+      relationName: "access-codes",
+    }),
+    "cash-transactionsID": one(cash_transactions, {
+      fields: [payload_locked_documents_rels["cash-transactionsID"]],
+      references: [cash_transactions.id],
+      relationName: "cash-transactions",
     }),
   }),
 );
@@ -1826,6 +1987,9 @@ type DatabaseSchema = {
   merchandise: typeof merchandise;
   _merchandise_v_version_inventory: typeof _merchandise_v_version_inventory;
   _merchandise_v: typeof _merchandise_v;
+  tenants: typeof tenants;
+  access_codes: typeof access_codes;
+  cash_transactions: typeof cash_transactions;
   payload_kv: typeof payload_kv;
   payload_locked_documents: typeof payload_locked_documents;
   payload_locked_documents_rels: typeof payload_locked_documents_rels;
@@ -1865,6 +2029,9 @@ type DatabaseSchema = {
   relations_merchandise: typeof relations_merchandise;
   relations__merchandise_v_version_inventory: typeof relations__merchandise_v_version_inventory;
   relations__merchandise_v: typeof relations__merchandise_v;
+  relations_tenants: typeof relations_tenants;
+  relations_access_codes: typeof relations_access_codes;
+  relations_cash_transactions: typeof relations_cash_transactions;
   relations_payload_kv: typeof relations_payload_kv;
   relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels;
   relations_payload_locked_documents: typeof relations_payload_locked_documents;

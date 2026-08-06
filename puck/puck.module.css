@@ -1,17 +1,17 @@
 .canvas {
-  --night: #0b0d0e;
-  --night-soft: #131617;
+  --night: var(--tenant-background, #0b0d0e);
+  --night-soft: var(--tenant-surface, #131617);
   --night-raised: #191d1d;
-  --paper: #f1e7d5;
-  --paper-soft: #fbf5e9;
-  --ink: #191714;
-  --cream: #f5ead7;
+  --paper: var(--tenant-light-background, #f1e7d5);
+  --paper-soft: var(--tenant-light-background, #fbf5e9);
+  --ink: var(--tenant-dark-text, #191714);
+  --cream: var(--tenant-light-text, #f5ead7);
   --cream-muted: #c8beae;
-  --ember: #e85e27;
+  --ember: var(--tenant-primary, #e85e27);
   --ember-bright: #ff7437;
   --teal: #83b7ad;
-  --violet: #a78ca8;
-  --gold: #c99b52;
+  --violet: var(--tenant-secondary, #a78ca8);
+  --gold: var(--tenant-accent, #c99b52);
   --line-dark: rgba(245, 234, 215, .19);
   --line-paper: rgba(25, 23, 20, .22);
   background: var(--paper);

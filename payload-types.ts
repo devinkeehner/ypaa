@@ -71,6 +71,9 @@ export interface Config {
     media: Media;
     pages: Page;
     merchandise: Merchandise;
+    tenants: Tenant;
+    'access-codes': AccessCode;
+    'cash-transactions': CashTransaction;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -82,6 +85,9 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     merchandise: MerchandiseSelect<false> | MerchandiseSelect<true>;
+    tenants: TenantsSelect<false> | TenantsSelect<true>;
+    'access-codes': AccessCodesSelect<false> | AccessCodesSelect<true>;
+    'cash-transactions': CashTransactionsSelect<false> | CashTransactionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -476,6 +482,111 @@ export interface Merchandise {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Branding shared by the homepage, registration, cash entry, merchandise, and cart.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tenants".
+ */
+export interface Tenant {
+  id: number;
+  name: string;
+  /**
+   * Header logo. Leave blank to use the NECYPAA 36 fallback mark.
+   */
+  logo?: (number | null) | Media;
+  logoAlt?: string | null;
+  theme: {
+    /**
+     * Six-digit hex code, including the #.
+     */
+    primary: string;
+    /**
+     * Six-digit hex code, including the #.
+     */
+    secondary: string;
+    /**
+     * Six-digit hex code, including the #.
+     */
+    accent: string;
+    /**
+     * Six-digit hex code, including the #.
+     */
+    background: string;
+    /**
+     * Six-digit hex code, including the #.
+     */
+    surface: string;
+    /**
+     * Six-digit hex code, including the #.
+     */
+    lightBackground: string;
+    /**
+     * Six-digit hex code, including the #.
+     */
+    darkText: string;
+    /**
+     * Six-digit hex code, including the #.
+     */
+    lightText: string;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Codes that authorize recording an in-person cash order at /cash.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "access-codes".
+ */
+export interface AccessCode {
+  id: number;
+  code: string;
+  active: boolean;
+  maxRedemptions: number;
+  redemptionCount: number;
+  grantType: 'cash_order' | 'complimentary_registration' | 'door_scholarship';
+  issuerSource?: string | null;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * In-person cash orders recorded through the protected /cash form.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cash-transactions".
+ */
+export interface CashTransaction {
+  id: number;
+  purchaserName: string;
+  purchaserEmail: string;
+  recordedValueCents: number;
+  status: 'recorded' | 'voided';
+  stripeCustomerId?: string | null;
+  accessCode: number | AccessCode;
+  order:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  metadata:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  notificationStatus?: ('not_required' | 'sent' | 'pending_configuration' | 'failed') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -514,6 +625,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'merchandise';
         value: number | Merchandise;
+      } | null)
+    | ({
+        relationTo: 'tenants';
+        value: number | Tenant;
+      } | null)
+    | ({
+        relationTo: 'access-codes';
+        value: number | AccessCode;
+      } | null)
+    | ({
+        relationTo: 'cash-transactions';
+        value: number | CashTransaction;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -789,6 +912,61 @@ export interface MerchandiseSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tenants_select".
+ */
+export interface TenantsSelect<T extends boolean = true> {
+  name?: T;
+  logo?: T;
+  logoAlt?: T;
+  theme?:
+    | T
+    | {
+        primary?: T;
+        secondary?: T;
+        accent?: T;
+        background?: T;
+        surface?: T;
+        lightBackground?: T;
+        darkText?: T;
+        lightText?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "access-codes_select".
+ */
+export interface AccessCodesSelect<T extends boolean = true> {
+  code?: T;
+  active?: T;
+  maxRedemptions?: T;
+  redemptionCount?: T;
+  grantType?: T;
+  issuerSource?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cash-transactions_select".
+ */
+export interface CashTransactionsSelect<T extends boolean = true> {
+  purchaserName?: T;
+  purchaserEmail?: T;
+  recordedValueCents?: T;
+  status?: T;
+  stripeCustomerId?: T;
+  accessCode?: T;
+  order?: T;
+  metadata?: T;
+  notificationStatus?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
