@@ -2,9 +2,9 @@
 
 import "@puckeditor/core/puck.css";
 
-import { createUsePuck, Puck, type Config, type Data } from "@puckeditor/core";
-import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, Bold, ChevronDown, ChevronUp, Palette, Redo2, Save, Undo2 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createUsePuck, Puck, type Config, type Data, type Plugin } from "@puckeditor/core";
+import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, Bold, Palette, Redo2, Save, Undo2 } from "lucide-react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 import { editableFieldsByType, puckConfig } from "@/puck/config";
 import type { NECYPAAData } from "@/puck/types";
@@ -27,6 +27,29 @@ const THEME_FIELDS: Array<{ key: keyof ThemeColors; label: string }> = [
   { key: "lightText", label: "Text on dark" },
 ];
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
+const ThemePreviewContext = createContext<ThemeColors | null>(null);
+
+function themeColors(theme: TenantTheme): ThemeColors {
+  return { primary: theme.primary, secondary: theme.secondary, accent: theme.accent, background: theme.background, surface: theme.surface, lightBackground: theme.lightBackground, darkText: theme.darkText, lightText: theme.lightText };
+}
+
+function themeVariables(colors: ThemeColors) {
+  return {
+    "--tenant-primary": colors.primary,
+    "--tenant-secondary": colors.secondary,
+    "--tenant-accent": colors.accent,
+    "--tenant-background": colors.background,
+    "--tenant-surface": colors.surface,
+    "--tenant-light-background": colors.lightBackground,
+    "--tenant-dark-text": colors.darkText,
+    "--tenant-light-text": colors.lightText,
+  } as CSSProperties;
+}
+
+function ThemePreviewFrame({ children }: { children: React.ReactNode }) {
+  const colors = useContext(ThemePreviewContext);
+  return <div className="tenant-theme" style={colors ? themeVariables(colors) : undefined}>{children}</div>;
+}
 
 function colorPickerValue(value: string) {
   return HEX_COLOR.test(value) ? value : "#000000";
@@ -92,11 +115,17 @@ function FormattingBar() {
   </div>;
 }
 
-function ThemePanel({ initialTheme, initialTenantId }: { initialTheme: TenantTheme; initialTenantId?: string }) {
-  const [open, setOpen] = useState(false);
+function ThemePanel({ initialTheme, initialTenantId, onPreviewTheme }: { initialTheme: TenantTheme; initialTenantId?: string; onPreviewTheme: (colors: ThemeColors) => void }) {
   const [tenantId, setTenantId] = useState(initialTenantId);
-  const [colors, setColors] = useState<ThemeColors>(() => ({ primary: initialTheme.primary, secondary: initialTheme.secondary, accent: initialTheme.accent, background: initialTheme.background, surface: initialTheme.surface, lightBackground: initialTheme.lightBackground, darkText: initialTheme.darkText, lightText: initialTheme.lightText }));
+  const [colors, setColors] = useState<ThemeColors>(() => themeColors(initialTheme));
   const [status, setStatus] = useState("");
+
+  const updateColor = useCallback((key: keyof ThemeColors, value: string) => {
+    const next = { ...colors, [key]: value.toUpperCase() };
+    setColors(next);
+    onPreviewTheme(next);
+    setStatus("Previewing unsaved colors");
+  }, [colors, onPreviewTheme]);
 
   async function saveTheme() {
     if (THEME_FIELDS.some(({ key }) => !HEX_COLOR.test(colors[key]))) {
@@ -116,10 +145,7 @@ function ThemePanel({ initialTheme, initialTenantId }: { initialTheme: TenantThe
     }
   }
 
-  return <div className={styles.themeSidebar}>
-    <button aria-expanded={open} className={styles.themeToggle} onClick={() => setOpen((value) => !value)} type="button"><span><Palette /> Theme colors</span>{open ? <ChevronUp /> : <ChevronDown />}</button>
-    {open ? <section aria-label="Site theme defaults" className={styles.themePanel}><div className={styles.themePanelHeading}><strong>Site theme defaults</strong><span>These colors apply across the entire site.</span></div><div className={styles.themeFields}>{THEME_FIELDS.map(({ key, label }) => <label key={key}><span>{label}</span><div><input aria-label={`${label} color picker`} onChange={(event) => setColors((current) => ({ ...current, [key]: event.target.value.toUpperCase() }))} type="color" value={colorPickerValue(colors[key])} /><input aria-invalid={!HEX_COLOR.test(colors[key])} aria-label={`${label} hex code`} maxLength={7} onChange={(event) => setColors((current) => ({ ...current, [key]: event.target.value.toUpperCase() }))} value={colors[key]} /></div></label>)}</div><footer><span aria-live="polite">{status}</span><button onClick={() => void saveTheme()} type="button"><Save /> Save theme</button></footer></section> : null}
-  </div>;
+  return <div className={styles.themePlugin}><section aria-label="Site theme defaults" className={styles.themePanel}><div className={styles.themePanelHeading}><strong>Theme colors</strong><span>Changes preview instantly. Save when you want them applied across the entire site.</span></div><div className={styles.themeFields}>{THEME_FIELDS.map(({ key, label }) => <label key={key}><span>{label}</span><div><input aria-label={`${label} color picker`} onChange={(event) => updateColor(key, event.target.value)} type="color" value={colorPickerValue(colors[key])} /><input aria-invalid={!HEX_COLOR.test(colors[key])} aria-label={`${label} hex code`} maxLength={7} onChange={(event) => updateColor(key, event.target.value)} value={colors[key]} /></div></label>)}</div><footer><span aria-live="polite">{status}</span><button onClick={() => void saveTheme()} type="button"><Save /> Save theme</button></footer></section></div>;
 }
 
 function BuilderHeader({ actions, pageId, pageTitle }: { actions: React.ReactNode; pageId: string; pageTitle: string }) {
@@ -129,6 +155,7 @@ function BuilderHeader({ actions, pageId, pageTitle }: { actions: React.ReactNod
 
 export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle, tenantId, tenantTheme }: { initialData: NECYPAAData; pageId: string; pageSlug: string; pageTitle: string; tenantId?: string; tenantTheme: TenantTheme }) {
   const [data, setData] = useState(initialData);
+  const [previewTheme, setPreviewTheme] = useState<ThemeColors>(() => themeColors(tenantTheme));
   const latest = useRef(initialData);
   const lastSaved = useRef(JSON.stringify(initialData));
   const timer = useRef<number | null>(null);
@@ -154,8 +181,9 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
 
   const overrides = useMemo(() => ({
     header: ({ actions }: { actions: React.ReactNode }) => <BuilderHeader actions={actions} pageId={pageId} pageTitle={pageTitle} />,
-    ...(pageSlug === "home" ? { drawer: ({ children }: { children: React.ReactNode }) => <div className={styles.themeDrawer}><ThemePanel initialTenantId={tenantId} initialTheme={tenantTheme} />{children}</div> } : {}),
-  }), [pageId, pageSlug, pageTitle, tenantId, tenantTheme]);
+    ...(pageSlug === "home" ? { iframe: ThemePreviewFrame } : {}),
+  }), [pageId, pageSlug, pageTitle]);
+  const plugins = useMemo<Plugin[]>(() => pageSlug === "home" ? [{ name: "theme", label: "Theme", icon: <Palette />, render: () => <ThemePanel initialTenantId={tenantId} initialTheme={tenantTheme} onPreviewTheme={setPreviewTheme} /> }] : [], [pageSlug, tenantId, tenantTheme]);
   const editorConfig = useMemo(() => {
     const richText = puckConfig.components.RichText;
     return {
@@ -176,5 +204,5 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
       },
     };
   }, []);
-  return <div className={styles.wrapper}><Puck config={editorConfig as unknown as Config} data={data} height="100dvh" onChange={(next) => setData(next as NECYPAAData)} onPublish={(next) => save(next, true)} overrides={overrides} renderHeaderActions={({ state }) => <div className={styles.publish}><span aria-live="polite">{message}</span><button onClick={() => void save(state.data, true)} type="button">Publish</button></div>} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div>;
+  return <ThemePreviewContext.Provider value={previewTheme}><div className={styles.wrapper}><Puck config={editorConfig as unknown as Config} data={data} height="100dvh" onChange={(next) => setData(next as NECYPAAData)} onPublish={(next) => save(next, true)} overrides={overrides} plugins={plugins} renderHeaderActions={({ state }) => <div className={styles.publish}><span aria-live="polite">{message}</span><button onClick={() => void save(state.data, true)} type="button">Publish</button></div>} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></ThemePreviewContext.Provider>;
 }
