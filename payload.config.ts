@@ -23,6 +23,16 @@ export default buildConfig({
     user: Users.slug,
     importMap: { baseDir: "." },
     meta: { defaultOGImageType: "off" },
+    components: {
+      afterNavLinks: ["@/components/admin/ProgramBoardNavLink"],
+      views: {
+        programBoard: {
+          Component: "@/components/admin/ProgramBoardAdminView",
+          exact: true,
+          path: "/program-board",
+        },
+      },
+    },
   },
   collections: [Users, Media, Pages, Merchandise, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, Rooms, ProgramSessions, VenueMaps],
   db: sqliteD1Adapter({ binding: payloadD1, push: false }),

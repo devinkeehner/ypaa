@@ -52,6 +52,10 @@ function slugify(value: string) {
   return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
+export function relationshipID(value: string) {
+  return /^\d+$/.test(value) ? Number(value) : value;
+}
+
 function normalizeRoom(value: unknown): ProgramRoom | null {
   if (!value || typeof value !== "object") return null;
   const room = value as Record<string, unknown>;
@@ -140,7 +144,7 @@ export function ProgramBoard() {
     if (conflict) { setMessage(`That overlaps “${conflict.title}” in the same room.`); return; }
     setSaving(true);
     setMessage("");
-    const payload = { title: form.title, slug: `${slugify(form.title)}-${form.date}-${form.startTime.replace(":", "")}`, sessionType: form.sessionType, startAt, endAt, room: form.room, shortDescription: form.shortDescription, language: form.language, audience: form.audience, accessibility: form.accessibility, status: form.status, featured: form.featured, internalNotes: form.internalNotes };
+    const payload = { title: form.title, slug: `${slugify(form.title)}-${form.date}-${form.startTime.replace(":", "")}`, sessionType: form.sessionType, startAt, endAt, room: relationshipID(form.room), shortDescription: form.shortDescription, language: form.language, audience: form.audience, accessibility: form.accessibility, status: form.status, featured: form.featured, internalNotes: form.internalNotes };
     const response = await fetch(form.id ? `/api/program-sessions/${form.id}` : "/api/program-sessions", { method: form.id ? "PATCH" : "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
     setSaving(false);
     if (!response.ok) { const result = await response.json().catch(() => ({})) as { errors?: Array<{ message?: string }> }; setMessage(result.errors?.[0]?.message || "The session could not be saved."); return; }
@@ -167,8 +171,12 @@ export function ProgramBoard() {
     const conflict = overlapping({ id: session.id, room: roomID, startAt, endAt });
     if (conflict) { setMessage(`Move blocked: “${conflict.title}” already uses that room and time.`); return; }
     setMessage("Saving move…");
-    const response = await fetch(`/api/program-sessions/${session.id}`, { method: "PATCH", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ room: roomID, startAt, endAt }) });
-    if (!response.ok) { setMessage("The move could not be saved."); return; }
+    const response = await fetch(`/api/program-sessions/${session.id}`, { method: "PATCH", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ room: relationshipID(roomID), startAt, endAt }) });
+    if (!response.ok) {
+      const result = await response.json().catch(() => ({})) as { errors?: Array<{ message?: string }> };
+      setMessage(result.errors?.[0]?.message || "The move could not be saved.");
+      return;
+    }
     setMessage("Move saved.");
     await load();
   }
