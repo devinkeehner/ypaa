@@ -32,7 +32,11 @@ export async function POST(request: Request) {
     const metadata = buildMetadata(order, { dataOrigin: "cash_checkout", processingFeeCents: 0, totalChargeCents: 0 });
     delete metadata.necy_processing_fee_line_cents;
     delete metadata.necy_total_charge_cents;
-    delete metadata.breakfast_price_version;
+    delete metadata.purchase_type;
+    delete metadata.self_registration_quantity;
+    delete metadata.scholarship_quantity;
+    delete metadata.breakfast_tickets;
+    delete metadata.necy_registration_qty_35;
     Object.assign(metadata, {
       registration_type: "cash",
       transaction_method: "cash",

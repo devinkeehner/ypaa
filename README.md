@@ -7,12 +7,13 @@
 - Use **Tenant / site settings** to upload the header logo and set the site palette with six-digit hex codes.
 - Use **Access Codes** to create the codes accepted by `/cash`, including activation and redemption limits.
 - Cash orders appear under **Cash Transactions**.
-- Paid registrations from both card and cash orders appear under **Attendees**.
+- **Attendees** is the working roster. It includes self-registrants and identified scholarship recipients from both card and cash orders, plus attendees added manually in Payload. General-fund contributions do not create an attendee until a person is identified.
+- Attendee records include attendance/payment source, accessibility information, all policy acknowledgments and signature status, Stripe or cash references, and editable internal notes.
 - Every breakfast admission gets its own **Breakfast Tickets** record, so individual tickets can later be marked used, refunded, or voided.
 
 ## Registration and Stripe
 
-`/register` provides one checkout for a $40 self-registration, $25 breakfast tickets for Friday, Saturday, or Sunday, a named $40 registration scholarship, or a general scholarship contribution starting at $40. The policy and its seven acknowledgments appear only when the purchaser registers themself.
+`/register` provides one checkout for a $40 self-registration, $25 breakfast tickets for Friday, Saturday, or Sunday, a named $40 registration scholarship, or a general scholarship contribution starting at $40. The policy and its seven acknowledgments appear only when the purchaser registers themself. A named scholarship collects recipient contact, state, homegroup, and accessibility details and creates an expected attendee whose policy status remains pending until personally completed.
 
 `/cash` provides the same order builder after an authorized access code is entered. A cash order does not create a fake $0 card charge. It creates or updates a Stripe Customer with the registration metadata and saves the cash value and order as a Cash Transaction in Payload.
 

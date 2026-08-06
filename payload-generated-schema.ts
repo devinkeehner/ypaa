@@ -1214,6 +1214,16 @@ export const attendees = sqliteTable(
     attendeeEmail: text("attendee_email").notNull(),
     state: text("state").notNull(),
     homegroupCommittee: text("homegroup_committee"),
+    attendanceStatus: text("attendance_status", {
+      enum: ["expected", "checked_in", "cancelled"],
+    })
+      .notNull()
+      .default("expected"),
+    attendanceBasis: text("attendance_basis", {
+      enum: ["self_registration", "scholarship_recipient", "manual_expected"],
+    })
+      .notNull()
+      .default("manual_expected"),
     accommodations: text("accommodations"),
     interpretationNeeded: integer("interpretation_needed", {
       mode: "boolean",
@@ -1230,21 +1240,28 @@ export const attendees = sqliteTable(
       mode: "number",
     })
       .notNull()
-      .default(4000),
+      .default(0),
     paymentSource: text("payment_source", {
-      enum: ["stripe", "cash"],
-    }).notNull(),
+      enum: ["stripe", "cash", "manual"],
+    })
+      .notNull()
+      .default("manual"),
     paymentStatus: text("payment_status", {
-      enum: ["paid", "recorded", "refunded", "disputed", "voided"],
-    }).notNull(),
+      enum: ["pending", "paid", "recorded", "refunded", "disputed", "voided"],
+    })
+      .notNull()
+      .default("pending"),
     dataOrigin: text("data_origin", {
       enum: [
         "live_checkout",
         "stripe_webhook",
         "stripe_backfill",
         "cash_checkout",
+        "manual",
       ],
-    }).notNull(),
+    })
+      .notNull()
+      .default("manual"),
     purchasedAt: text("purchased_at")
       .notNull()
       .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
@@ -1258,6 +1275,15 @@ export const attendees = sqliteTable(
         onDelete: "set null",
       },
     ),
+    policyAcknowledgments_status: text("policy_acknowledgments_status", {
+      enum: ["pending", "signed", "waived"],
+    })
+      .notNull()
+      .default("pending"),
+    policyAcknowledgments_signatureName: text(
+      "policy_acknowledgments_signature_name",
+    ),
+    policyAcknowledgments_signedAt: text("policy_acknowledgments_signed_at"),
     policyAcknowledgments_readPolicy: integer(
       "policy_acknowledgments_read_policy",
       { mode: "boolean" },
@@ -1286,6 +1312,7 @@ export const attendees = sqliteTable(
       "policy_acknowledgments_signature_agreement",
       { mode: "boolean" },
     ).default(false),
+    notes: text("notes"),
     rawMetadata: text("raw_metadata", { mode: "json" }),
     updatedAt: text("updated_at")
       .notNull()
@@ -1298,6 +1325,7 @@ export const attendees = sqliteTable(
     uniqueIndex("attendees_source_key_idx").on(columns.sourceKey),
     index("attendees_attendee_name_idx").on(columns.attendeeName),
     index("attendees_attendee_email_idx").on(columns.attendeeEmail),
+    index("attendees_attendance_status_idx").on(columns.attendanceStatus),
     index("attendees_purchaser_email_idx").on(columns.purchaserEmail),
     index("attendees_purchased_at_idx").on(columns.purchasedAt),
     index("attendees_stripe_checkout_session_id_idx").on(

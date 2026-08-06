@@ -591,7 +591,7 @@ export interface CashTransaction {
   createdAt: string;
 }
 /**
- * Convention registrations from Stripe, cash entry, and historical Stripe backfills.
+ * The working convention roster: paid registrants, identified scholarship recipients, cash registrations, and manually managed expected attendees.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "attendees".
@@ -603,6 +603,8 @@ export interface Attendee {
   attendeeEmail: string;
   state: string;
   homegroupCommittee?: string | null;
+  attendanceStatus: 'expected' | 'checked_in' | 'cancelled';
+  attendanceBasis: 'self_registration' | 'scholarship_recipient' | 'manual_expected';
   accommodations?: string | null;
   interpretationNeeded?: boolean | null;
   mobilityAccessibility?: boolean | null;
@@ -610,16 +612,19 @@ export interface Attendee {
   purchaserName: string;
   purchaserEmail: string;
   registrationPriceCents: number;
-  paymentSource: 'stripe' | 'cash';
-  paymentStatus: 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
-  dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout';
+  paymentSource: 'stripe' | 'cash' | 'manual';
+  paymentStatus: 'pending' | 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
+  dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout' | 'manual';
   purchasedAt: string;
   stripeCheckoutSessionId?: string | null;
   stripePaymentIntentId?: string | null;
   stripeChargeId?: string | null;
   stripeCustomerId?: string | null;
   cashTransaction?: (number | null) | CashTransaction;
-  policyAcknowledgments?: {
+  policyAcknowledgments: {
+    status: 'pending' | 'signed' | 'waived';
+    signatureName?: string | null;
+    signedAt?: string | null;
     readPolicy?: boolean | null;
     understandQuestions?: boolean | null;
     acknowledgeBehavior?: boolean | null;
@@ -628,6 +633,10 @@ export interface Attendee {
     understandInvestigation?: boolean | null;
     signatureAgreement?: boolean | null;
   };
+  /**
+   * Internal roster notes. This field is editable in Payload and is not sent to Stripe.
+   */
+  notes?: string | null;
   rawMetadata?:
     | {
         [k: string]: unknown;
@@ -1077,6 +1086,8 @@ export interface AttendeesSelect<T extends boolean = true> {
   attendeeEmail?: T;
   state?: T;
   homegroupCommittee?: T;
+  attendanceStatus?: T;
+  attendanceBasis?: T;
   accommodations?: T;
   interpretationNeeded?: T;
   mobilityAccessibility?: T;
@@ -1096,6 +1107,9 @@ export interface AttendeesSelect<T extends boolean = true> {
   policyAcknowledgments?:
     | T
     | {
+        status?: T;
+        signatureName?: T;
+        signedAt?: T;
         readPolicy?: T;
         understandQuestions?: T;
         acknowledgeBehavior?: T;
@@ -1104,6 +1118,7 @@ export interface AttendeesSelect<T extends boolean = true> {
         understandInvestigation?: T;
         signatureAgreement?: T;
       };
+  notes?: T;
   rawMetadata?: T;
   updatedAt?: T;
   createdAt?: T;

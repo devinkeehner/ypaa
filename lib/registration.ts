@@ -40,6 +40,12 @@ export type RegistrationOrder = {
     amountCents: number;
     recipientName: string;
     recipientEmail: string;
+    recipientState: string;
+    recipientHomegroupCommittee: string;
+    recipientAccommodations: string;
+    recipientInterpretationNeeded: boolean;
+    recipientMobilityAccessibility: boolean;
+    recipientWillingToServe: boolean;
     attribution: string;
   };
 };
@@ -82,6 +88,12 @@ export function normalizeOrder(value: unknown): RegistrationOrder {
       amountCents: kind === "specific" ? REGISTRATION_PRICE_CENTS : Math.min(500000, Math.max(REGISTRATION_PRICE_CENTS, requestedAmount)),
       recipientName: clean(scholarship.recipientName, 120),
       recipientEmail: clean(scholarship.recipientEmail, 180).toLowerCase(),
+      recipientState: clean(scholarship.recipientState, 80),
+      recipientHomegroupCommittee: clean(scholarship.recipientHomegroupCommittee, 180),
+      recipientAccommodations: clean(scholarship.recipientAccommodations),
+      recipientInterpretationNeeded: scholarship.recipientInterpretationNeeded === true,
+      recipientMobilityAccessibility: scholarship.recipientMobilityAccessibility === true,
+      recipientWillingToServe: scholarship.recipientWillingToServe === true,
       attribution: clean(scholarship.attribution, 180),
     },
   };
@@ -96,8 +108,8 @@ export function validateOrder(order: RegistrationOrder) {
     if (!POLICY_KEYS.every((key) => order.policy[key])) return "Every policy acknowledgment is required for self-registration.";
   }
   if (order.scholarship.enabled && order.scholarship.kind === "specific") {
-    if (!order.scholarship.recipientName || !/^\S+@\S+\.\S+$/.test(order.scholarship.recipientEmail)) {
-      return "Enter the scholarship recipient's name and email.";
+    if (!order.scholarship.recipientName || !/^\S+@\S+\.\S+$/.test(order.scholarship.recipientEmail) || !order.scholarship.recipientState) {
+      return "Enter the scholarship recipient's name, email, and state.";
     }
   }
   if (orderSubtotalCents(order) <= 0) return "Choose a registration, breakfast ticket, or scholarship.";
@@ -151,14 +163,17 @@ export function buildMetadata(order: RegistrationOrder, totals: { dataOrigin: "l
     attendee_name: order.selfRegistration ? order.attendee.name : "Not applicable",
     attendee_state: order.selfRegistration ? order.attendee.state : "Not applicable",
     attendee_email: order.selfRegistration ? order.attendee.email : order.purchaserEmail,
-    breakfast_price_version: "2026-25-dollar",
-    breakfast_ticket_price_cents: String(BREAKFAST_PRICE_CENTS),
     breakfast_tickets: breakfasts,
-    breakfast_count: String(breakfastCount(order)),
     scholarship_recipient_name: order.scholarship.kind === "specific" ? order.scholarship.recipientName : "General scholarship fund",
     scholarship_recipient_email: order.scholarship.kind === "specific" ? order.scholarship.recipientEmail : "None",
+    scholarship_recipient_state: order.scholarship.kind === "specific" ? order.scholarship.recipientState : "Not applicable",
+    scholarship_recipient_homegroup: order.scholarship.kind === "specific" ? order.scholarship.recipientHomegroupCommittee || "None" : "Not applicable",
+    scholarship_recipient_accommodations: order.scholarship.kind === "specific" ? order.scholarship.recipientAccommodations || "None" : "Not applicable",
+    scholarship_recipient_interpretation: order.scholarship.kind === "specific" ? String(order.scholarship.recipientInterpretationNeeded) : "not_applicable",
+    scholarship_recipient_mobility: order.scholarship.kind === "specific" ? String(order.scholarship.recipientMobilityAccessibility) : "not_applicable",
+    scholarship_recipient_willing_to_serve: order.scholarship.kind === "specific" ? String(order.scholarship.recipientWillingToServe) : "not_applicable",
+    scholarship_recipient_policy_signed: "false",
     attribution_aa_entity: order.scholarship.attribution || "None",
-    attribution_reserved_for_person: order.scholarship.kind === "specific" ? order.scholarship.recipientName : "None",
     accommodations: order.selfRegistration ? order.attendee.accommodations || "None" : "Not applicable",
     interpretation_needed: order.selfRegistration ? String(order.attendee.interpretationNeeded) : "not_applicable",
     mobility_accessibility: order.selfRegistration ? String(order.attendee.mobilityAccessibility) : "not_applicable",
@@ -166,7 +181,7 @@ export function buildMetadata(order: RegistrationOrder, totals: { dataOrigin: "l
     homegroup_committee: order.selfRegistration ? order.attendee.homegroupCommittee : "Not applicable",
     ...policyMetadata,
     necy_project_source: "necypaa_ct_site",
-    necy_schema_version: "2026-03-slim",
+    necy_schema_version: "2026-08-attendance-roster",
     necy_event_slug: "necypaa_xxxvi",
     necy_data_origin: totals.dataOrigin,
     necy_reporting_category: reportingCategory(order),

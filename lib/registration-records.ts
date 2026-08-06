@@ -52,6 +52,8 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
       purchaserName: order.purchaserName,
       purchaserEmail: order.purchaserEmail,
       registrationPriceCents: REGISTRATION_PRICE_CENTS,
+      attendanceStatus: "expected" as const,
+      attendanceBasis: "self_registration" as const,
       paymentSource: context.paymentSource,
       paymentStatus: context.paymentStatus,
       dataOrigin: context.dataOrigin,
@@ -61,7 +63,12 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
       stripeChargeId: context.stripeChargeId,
       stripeCustomerId: context.stripeCustomerId,
       cashTransaction: context.cashTransactionId,
-      policyAcknowledgments: order.policy,
+      policyAcknowledgments: {
+        ...order.policy,
+        status: "signed" as const,
+        signatureName: order.attendee.name,
+        signedAt: context.purchasedAt,
+      },
       rawMetadata: context.rawMetadata,
     } as const;
     const existing = await findBySourceKey(payload, "attendees", sourceKey);
@@ -69,6 +76,43 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
       ? await payload.update({ collection: "attendees", id: existing.id, overrideAccess: true, data })
       : await payload.create({ collection: "attendees", overrideAccess: true, data });
     attendeeId = attendee.id;
+  }
+
+  if (order.scholarship.enabled && order.scholarship.kind === "specific") {
+    const sourceKey = `${context.sourceKey}:scholarship:1`;
+    const unsignedPolicy = Object.fromEntries(POLICY_KEYS.map((key) => [key, false])) as RegistrationOrder["policy"];
+    const data = {
+      sourceKey,
+      attendeeName: order.scholarship.recipientName,
+      attendeeEmail: order.scholarship.recipientEmail,
+      state: order.scholarship.recipientState || "Unknown",
+      homegroupCommittee: order.scholarship.recipientHomegroupCommittee,
+      accommodations: order.scholarship.recipientAccommodations,
+      interpretationNeeded: order.scholarship.recipientInterpretationNeeded,
+      mobilityAccessibility: order.scholarship.recipientMobilityAccessibility,
+      willingToServe: order.scholarship.recipientWillingToServe,
+      purchaserName: order.purchaserName,
+      purchaserEmail: order.purchaserEmail,
+      registrationPriceCents: REGISTRATION_PRICE_CENTS,
+      attendanceStatus: "expected" as const,
+      attendanceBasis: "scholarship_recipient" as const,
+      paymentSource: context.paymentSource,
+      paymentStatus: context.paymentStatus,
+      dataOrigin: context.dataOrigin,
+      purchasedAt: context.purchasedAt,
+      stripeCheckoutSessionId: context.stripeCheckoutSessionId,
+      stripePaymentIntentId: context.stripePaymentIntentId,
+      stripeChargeId: context.stripeChargeId,
+      stripeCustomerId: context.stripeCustomerId,
+      cashTransaction: context.cashTransactionId,
+      policyAcknowledgments: { ...unsignedPolicy, status: "pending" as const },
+      rawMetadata: context.rawMetadata,
+    } as const;
+    const existing = await findBySourceKey(payload, "attendees", sourceKey);
+    const attendee = existing
+      ? await payload.update({ collection: "attendees", id: existing.id, overrideAccess: true, data })
+      : await payload.create({ collection: "attendees", overrideAccess: true, data });
+    attendeeId ??= attendee.id;
   }
 
   for (const breakfast of BREAKFASTS) {
@@ -154,6 +198,12 @@ export function orderFromStripeMetadata(metadata: Record<string, string>, purcha
       amountCents: REGISTRATION_PRICE_CENTS,
       recipientName: useful(metadata.scholarship_recipient_name),
       recipientEmail: useful(metadata.scholarship_recipient_email),
+      recipientState: useful(metadata.scholarship_recipient_state, "Unknown"),
+      recipientHomegroupCommittee: useful(metadata.scholarship_recipient_homegroup),
+      recipientAccommodations: useful(metadata.scholarship_recipient_accommodations),
+      recipientInterpretationNeeded: bool(metadata.scholarship_recipient_interpretation),
+      recipientMobilityAccessibility: bool(metadata.scholarship_recipient_mobility),
+      recipientWillingToServe: bool(metadata.scholarship_recipient_willing_to_serve),
       attribution: useful(metadata.attribution_aa_entity),
     },
   };
