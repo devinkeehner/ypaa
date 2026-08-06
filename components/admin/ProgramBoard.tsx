@@ -24,6 +24,7 @@ type FormState = {
   featured: boolean;
   internalNotes: string;
 };
+type DropTarget = { roomID: string; time: string };
 
 const CONVENTION_DAYS = ["2026-12-31", "2027-01-01", "2027-01-02", "2027-01-03"];
 const EMPTY_FORM: FormState = { title: "", sessionType: "panel", date: CONVENTION_DAYS[0], startTime: "09:00", endTime: "10:00", room: "", shortDescription: "", language: "English", audience: "", accessibility: "", status: "published", featured: false, internalNotes: "" };
@@ -79,6 +80,9 @@ export function ProgramBoard() {
   const [form, setForm] = useState<FormState | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [draggedSessionID, setDraggedSessionID] = useState<string | null>(null);
+  const [dropTarget, setDropTarget] = useState<DropTarget | null>(null);
+  const [movingSessionIDs, setMovingSessionIDs] = useState<Set<string>>(() => new Set());
 
   const load = useCallback(async () => {
     try {
@@ -170,15 +174,26 @@ export function ProgramBoard() {
     const endAt = new Date(new Date(startAt).getTime() + duration).toISOString();
     const conflict = overlapping({ id: session.id, room: roomID, startAt, endAt });
     if (conflict) { setMessage(`Move blocked: “${conflict.title}” already uses that room and time.`); return; }
+    const nextRoom = rooms.find((room) => String(room.id) === roomID);
+    if (!nextRoom) return;
+
+    // Land the card immediately. Payload saves in the background and the card
+    // only returns to its old position if that request is rejected.
+    setSessions((current) => current.map((candidate) => String(candidate.id) === sessionID
+      ? { ...candidate, room: nextRoom, startAt, endAt }
+      : candidate));
+    setMovingSessionIDs((current) => new Set(current).add(sessionID));
     setMessage("Saving move…");
     const response = await fetch(`/api/program-sessions/${session.id}`, { method: "PATCH", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ room: relationshipID(roomID), startAt, endAt }) });
     if (!response.ok) {
       const result = await response.json().catch(() => ({})) as { errors?: Array<{ message?: string }> };
+      setSessions((current) => current.map((candidate) => String(candidate.id) === sessionID ? session : candidate));
+      setMovingSessionIDs((current) => { const next = new Set(current); next.delete(sessionID); return next; });
       setMessage(result.errors?.[0]?.message || "The move could not be saved.");
       return;
     }
+    setMovingSessionIDs((current) => { const next = new Set(current); next.delete(sessionID); return next; });
     setMessage("Move saved.");
-    await load();
   }
 
   if (state === "unauthorized") return <main className="program-board-gate"><CalendarDays aria-hidden="true" /><h1>Program Board</h1><p>Sign in to Payload before opening the committee planning board.</p><Link href="/admin">Sign in to Payload</Link></main>;
@@ -187,6 +202,13 @@ export function ProgramBoard() {
   const startMinute = 8 * 60;
   const slots = 32;
   const slotHeight = 58;
+  const draggedSession = sessions.find((session) => String(session.id) === draggedSessionID);
+  const dropStartIndex = dropTarget
+    ? (Number(dropTarget.time.slice(0, 2)) * 60 + Number(dropTarget.time.slice(3, 5)) - startMinute) / 30
+    : -1;
+  const dropDurationSlots = draggedSession
+    ? Math.max(1, Math.ceil((new Date(draggedSession.endAt).getTime() - new Date(draggedSession.startAt).getTime()) / 1_800_000))
+    : 1;
   return (
     <main className="program-board-page">
       <header className="program-board-header"><div><Link href="/admin"><ArrowLeft aria-hidden="true" /> Payload admin</Link><h1>Program Board</h1><p>Drag sessions to move them. Click an empty time to add one.</p></div><div><Link href="/program" target="_blank">View public program</Link><button onClick={() => startCreate()} type="button"><Plus aria-hidden="true" /> Add session</button></div></header>
@@ -197,7 +219,7 @@ export function ProgramBoard() {
             <div className="program-board-corner">Time</div>
             {rooms.map((room) => <div className="program-board-room" key={room.id}><span style={{ background: room.color || undefined }} /><strong>{room.shortLabel}</strong><small>{room.floor}</small></div>)}
             <div className="program-board-axis" style={{ height: slots * slotHeight }}>{Array.from({ length: slots }, (_, index) => { const minutes = startMinute + index * 30; const hour = Math.floor(minutes / 60); const minute = minutes % 60; return <span key={index} style={{ top: index * slotHeight }}>{new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" }).format(new Date(`${day}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00-05:00`))}</span>; })}</div>
-            {rooms.map((room) => <div className="program-board-track" key={room.id} style={{ height: slots * slotHeight }}>{Array.from({ length: slots }, (_, index) => { const minutes = startMinute + index * 30; const time = `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`; return <button aria-label={`Add session in ${room.name} at ${time}`} className="program-board-cell" key={time} onClick={() => startCreate(String(room.id), time)} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); void moveSession(event.dataTransfer.getData("text/program-session"), String(room.id), time); }} style={{ height: slotHeight, top: index * slotHeight }} type="button" />; })}{daySessions.filter((session) => String(session.room.id) === String(room.id)).map((session) => { const [hour, minute] = timeValue(session.startAt).split(":").map(Number); const top = Math.max(0, ((hour * 60 + minute) - startMinute) / 30 * slotHeight + 3); const height = Math.max(slotHeight - 6, (new Date(session.endAt).getTime() - new Date(session.startAt).getTime()) / 60000 / 30 * slotHeight - 6); return <button className="program-board-event" draggable key={session.id} onClick={() => startEdit(session)} onDragStart={(event) => { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/program-session", String(session.id)); }} style={{ background: room.color || undefined, height, top }} type="button"><GripVertical aria-hidden="true" /><span>{timeValue(session.startAt)}</span><strong>{session.title}</strong><small>{SESSION_TYPE_LABELS[session.sessionType] || session.sessionType}</small></button>; })}</div>)}
+            {rooms.map((room) => <div className="program-board-track" key={room.id} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDropTarget(null); }} style={{ height: slots * slotHeight }}>{Array.from({ length: slots }, (_, index) => { const minutes = startMinute + index * 30; const time = `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`; const highlighted = dropTarget?.roomID === String(room.id) && index >= dropStartIndex && index < dropStartIndex + dropDurationSlots; return <button aria-label={`Add session in ${room.name} at ${time}`} className="program-board-cell" data-drop-active={highlighted || undefined} data-drop-end={highlighted && index === dropStartIndex + dropDurationSlots - 1 || undefined} data-drop-start={highlighted && index === dropStartIndex || undefined} key={time} onClick={() => startCreate(String(room.id), time)} onDragEnter={(event) => { event.preventDefault(); setDropTarget({ roomID: String(room.id), time }); }} onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = "move"; }} onDrop={(event) => { event.preventDefault(); const sessionID = event.dataTransfer.getData("text/program-session"); setDropTarget(null); setDraggedSessionID(null); void moveSession(sessionID, String(room.id), time); }} style={{ height: slotHeight, top: index * slotHeight }} type="button" />; })}{daySessions.filter((session) => String(session.room.id) === String(room.id)).map((session) => { const sessionID = String(session.id); const [hour, minute] = timeValue(session.startAt).split(":").map(Number); const top = Math.max(0, ((hour * 60 + minute) - startMinute) / 30 * slotHeight + 3); const height = Math.max(slotHeight - 6, (new Date(session.endAt).getTime() - new Date(session.startAt).getTime()) / 60000 / 30 * slotHeight - 6); const moving = movingSessionIDs.has(sessionID); return <button aria-busy={moving} className="program-board-event" data-moving={moving || undefined} draggable={!moving} key={session.id} onClick={() => startEdit(session)} onDragEnd={() => { setDraggedSessionID(null); setDropTarget(null); }} onDragStart={(event) => { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/program-session", sessionID); setDraggedSessionID(sessionID); }} style={{ background: room.color || undefined, height, top }} type="button"><GripVertical aria-hidden="true" /><span>{timeValue(session.startAt)}</span><strong>{session.title}</strong><small>{moving ? "Saving…" : SESSION_TYPE_LABELS[session.sessionType] || session.sessionType}</small></button>; })}</div>)}
           </div>
         </div>
       )}
