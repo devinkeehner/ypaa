@@ -10,6 +10,8 @@ import { Merchandise } from "./collections/Merchandise";
 import { Tenants } from "./collections/Tenants";
 import { AccessCodes } from "./collections/AccessCodes";
 import { CashTransactions } from "./collections/CashTransactions";
+import { Attendees } from "./collections/Attendees";
+import { BreakfastTickets } from "./collections/BreakfastTickets";
 import { payloadBucket, payloadD1 } from "./server/cloudflare-bindings";
 
 export default buildConfig({
@@ -18,7 +20,7 @@ export default buildConfig({
     importMap: { baseDir: "." },
     meta: { defaultOGImageType: "off" },
   },
-  collections: [Users, Media, Pages, Merchandise, Tenants, AccessCodes, CashTransactions],
+  collections: [Users, Media, Pages, Merchandise, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets],
   db: sqliteD1Adapter({ binding: payloadD1, push: false }),
   editor: lexicalEditor(),
   plugins: [

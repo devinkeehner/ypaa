@@ -1205,6 +1205,193 @@ export const cash_transactions = sqliteTable(
   ],
 );
 
+export const attendees = sqliteTable(
+  "attendees",
+  {
+    id: integer("id").primaryKey(),
+    sourceKey: text("source_key").notNull(),
+    attendeeName: text("attendee_name").notNull(),
+    attendeeEmail: text("attendee_email").notNull(),
+    state: text("state").notNull(),
+    homegroupCommittee: text("homegroup_committee"),
+    accommodations: text("accommodations"),
+    interpretationNeeded: integer("interpretation_needed", {
+      mode: "boolean",
+    }).default(false),
+    mobilityAccessibility: integer("mobility_accessibility", {
+      mode: "boolean",
+    }).default(false),
+    willingToServe: integer("willing_to_serve", { mode: "boolean" }).default(
+      false,
+    ),
+    purchaserName: text("purchaser_name").notNull(),
+    purchaserEmail: text("purchaser_email").notNull(),
+    registrationPriceCents: numeric("registration_price_cents", {
+      mode: "number",
+    })
+      .notNull()
+      .default(4000),
+    paymentSource: text("payment_source", {
+      enum: ["stripe", "cash"],
+    }).notNull(),
+    paymentStatus: text("payment_status", {
+      enum: ["paid", "recorded", "refunded", "disputed", "voided"],
+    }).notNull(),
+    dataOrigin: text("data_origin", {
+      enum: [
+        "live_checkout",
+        "stripe_webhook",
+        "stripe_backfill",
+        "cash_checkout",
+      ],
+    }).notNull(),
+    purchasedAt: text("purchased_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    stripeCheckoutSessionId: text("stripe_checkout_session_id"),
+    stripePaymentIntentId: text("stripe_payment_intent_id"),
+    stripeChargeId: text("stripe_charge_id"),
+    stripeCustomerId: text("stripe_customer_id"),
+    cashTransaction: integer("cash_transaction_id").references(
+      () => cash_transactions.id,
+      {
+        onDelete: "set null",
+      },
+    ),
+    policyAcknowledgments_readPolicy: integer(
+      "policy_acknowledgments_read_policy",
+      { mode: "boolean" },
+    ).default(false),
+    policyAcknowledgments_understandQuestions: integer(
+      "policy_acknowledgments_understand_questions",
+      { mode: "boolean" },
+    ).default(false),
+    policyAcknowledgments_acknowledgeBehavior: integer(
+      "policy_acknowledgments_acknowledge_behavior",
+      { mode: "boolean" },
+    ).default(false),
+    policyAcknowledgments_understandAdmission: integer(
+      "policy_acknowledgments_understand_admission",
+      { mode: "boolean" },
+    ).default(false),
+    policyAcknowledgments_understandReporting: integer(
+      "policy_acknowledgments_understand_reporting",
+      { mode: "boolean" },
+    ).default(false),
+    policyAcknowledgments_understandInvestigation: integer(
+      "policy_acknowledgments_understand_investigation",
+      { mode: "boolean" },
+    ).default(false),
+    policyAcknowledgments_signatureAgreement: integer(
+      "policy_acknowledgments_signature_agreement",
+      { mode: "boolean" },
+    ).default(false),
+    rawMetadata: text("raw_metadata", { mode: "json" }),
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (columns) => [
+    uniqueIndex("attendees_source_key_idx").on(columns.sourceKey),
+    index("attendees_attendee_name_idx").on(columns.attendeeName),
+    index("attendees_attendee_email_idx").on(columns.attendeeEmail),
+    index("attendees_purchaser_email_idx").on(columns.purchaserEmail),
+    index("attendees_purchased_at_idx").on(columns.purchasedAt),
+    index("attendees_stripe_checkout_session_id_idx").on(
+      columns.stripeCheckoutSessionId,
+    ),
+    index("attendees_stripe_payment_intent_id_idx").on(
+      columns.stripePaymentIntentId,
+    ),
+    index("attendees_stripe_charge_id_idx").on(columns.stripeChargeId),
+    index("attendees_stripe_customer_id_idx").on(columns.stripeCustomerId),
+    index("attendees_cash_transaction_idx").on(columns.cashTransaction),
+    index("attendees_updated_at_idx").on(columns.updatedAt),
+    index("attendees_created_at_idx").on(columns.createdAt),
+  ],
+);
+
+export const breakfast_tickets = sqliteTable(
+  "breakfast_tickets",
+  {
+    id: integer("id").primaryKey(),
+    sourceKey: text("source_key").notNull(),
+    ticketCode: text("ticket_code").notNull(),
+    breakfastDay: text("breakfast_day", {
+      enum: ["friday", "saturday", "sunday"],
+    }).notNull(),
+    status: text("status", { enum: ["valid", "used", "refunded", "voided"] })
+      .notNull()
+      .default("valid"),
+    unitPriceCents: numeric("unit_price_cents", { mode: "number" })
+      .notNull()
+      .default(2500),
+    purchaserName: text("purchaser_name").notNull(),
+    purchaserEmail: text("purchaser_email").notNull(),
+    attendee: integer("attendee_id").references(() => attendees.id, {
+      onDelete: "set null",
+    }),
+    paymentSource: text("payment_source", {
+      enum: ["stripe", "cash"],
+    }).notNull(),
+    paymentStatus: text("payment_status", {
+      enum: ["paid", "recorded", "refunded", "disputed", "voided"],
+    }).notNull(),
+    dataOrigin: text("data_origin", {
+      enum: [
+        "live_checkout",
+        "stripe_webhook",
+        "stripe_backfill",
+        "cash_checkout",
+      ],
+    }).notNull(),
+    purchasedAt: text("purchased_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    stripeCheckoutSessionId: text("stripe_checkout_session_id"),
+    stripePaymentIntentId: text("stripe_payment_intent_id"),
+    stripeChargeId: text("stripe_charge_id"),
+    stripeCustomerId: text("stripe_customer_id"),
+    cashTransaction: integer("cash_transaction_id").references(
+      () => cash_transactions.id,
+      {
+        onDelete: "set null",
+      },
+    ),
+    rawMetadata: text("raw_metadata", { mode: "json" }),
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (columns) => [
+    uniqueIndex("breakfast_tickets_source_key_idx").on(columns.sourceKey),
+    uniqueIndex("breakfast_tickets_ticket_code_idx").on(columns.ticketCode),
+    index("breakfast_tickets_breakfast_day_idx").on(columns.breakfastDay),
+    index("breakfast_tickets_purchaser_email_idx").on(columns.purchaserEmail),
+    index("breakfast_tickets_attendee_idx").on(columns.attendee),
+    index("breakfast_tickets_purchased_at_idx").on(columns.purchasedAt),
+    index("breakfast_tickets_stripe_checkout_session_id_idx").on(
+      columns.stripeCheckoutSessionId,
+    ),
+    index("breakfast_tickets_stripe_payment_intent_id_idx").on(
+      columns.stripePaymentIntentId,
+    ),
+    index("breakfast_tickets_stripe_charge_id_idx").on(columns.stripeChargeId),
+    index("breakfast_tickets_stripe_customer_id_idx").on(
+      columns.stripeCustomerId,
+    ),
+    index("breakfast_tickets_cash_transaction_idx").on(columns.cashTransaction),
+    index("breakfast_tickets_updated_at_idx").on(columns.updatedAt),
+    index("breakfast_tickets_created_at_idx").on(columns.createdAt),
+  ],
+);
+
 export const payload_kv = sqliteTable(
   "payload_kv",
   {
@@ -1248,6 +1435,8 @@ export const payload_locked_documents_rels = sqliteTable(
     tenantsID: integer("tenants_id"),
     "access-codesID": integer("access_codes_id"),
     "cash-transactionsID": integer("cash_transactions_id"),
+    attendeesID: integer("attendees_id"),
+    "breakfast-ticketsID": integer("breakfast_tickets_id"),
   },
   (columns) => [
     index("payload_locked_documents_rels_order_idx").on(columns.order),
@@ -1265,6 +1454,12 @@ export const payload_locked_documents_rels = sqliteTable(
     ),
     index("payload_locked_documents_rels_cash_transactions_id_idx").on(
       columns["cash-transactionsID"],
+    ),
+    index("payload_locked_documents_rels_attendees_id_idx").on(
+      columns.attendeesID,
+    ),
+    index("payload_locked_documents_rels_breakfast_tickets_id_idx").on(
+      columns["breakfast-ticketsID"],
     ),
     foreignKey({
       columns: [columns["parent"]],
@@ -1305,6 +1500,16 @@ export const payload_locked_documents_rels = sqliteTable(
       columns: [columns["cash-transactionsID"]],
       foreignColumns: [cash_transactions.id],
       name: "payload_locked_documents_rels_cash_transactions_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [columns["attendeesID"]],
+      foreignColumns: [attendees.id],
+      name: "payload_locked_documents_rels_attendees_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [columns["breakfast-ticketsID"]],
+      foreignColumns: [breakfast_tickets.id],
+      name: "payload_locked_documents_rels_breakfast_tickets_fk",
     }).onDelete("cascade"),
   ],
 );
@@ -1871,6 +2076,28 @@ export const relations_cash_transactions = relations(
     }),
   }),
 );
+export const relations_attendees = relations(attendees, ({ one }) => ({
+  cashTransaction: one(cash_transactions, {
+    fields: [attendees.cashTransaction],
+    references: [cash_transactions.id],
+    relationName: "cashTransaction",
+  }),
+}));
+export const relations_breakfast_tickets = relations(
+  breakfast_tickets,
+  ({ one }) => ({
+    attendee: one(attendees, {
+      fields: [breakfast_tickets.attendee],
+      references: [attendees.id],
+      relationName: "attendee",
+    }),
+    cashTransaction: one(cash_transactions, {
+      fields: [breakfast_tickets.cashTransaction],
+      references: [cash_transactions.id],
+      relationName: "cashTransaction",
+    }),
+  }),
+);
 export const relations_payload_kv = relations(payload_kv, () => ({}));
 export const relations_payload_locked_documents_rels = relations(
   payload_locked_documents_rels,
@@ -1914,6 +2141,16 @@ export const relations_payload_locked_documents_rels = relations(
       fields: [payload_locked_documents_rels["cash-transactionsID"]],
       references: [cash_transactions.id],
       relationName: "cash-transactions",
+    }),
+    attendeesID: one(attendees, {
+      fields: [payload_locked_documents_rels.attendeesID],
+      references: [attendees.id],
+      relationName: "attendees",
+    }),
+    "breakfast-ticketsID": one(breakfast_tickets, {
+      fields: [payload_locked_documents_rels["breakfast-ticketsID"]],
+      references: [breakfast_tickets.id],
+      relationName: "breakfast-tickets",
     }),
   }),
 );
@@ -1990,6 +2227,8 @@ type DatabaseSchema = {
   tenants: typeof tenants;
   access_codes: typeof access_codes;
   cash_transactions: typeof cash_transactions;
+  attendees: typeof attendees;
+  breakfast_tickets: typeof breakfast_tickets;
   payload_kv: typeof payload_kv;
   payload_locked_documents: typeof payload_locked_documents;
   payload_locked_documents_rels: typeof payload_locked_documents_rels;
@@ -2032,6 +2271,8 @@ type DatabaseSchema = {
   relations_tenants: typeof relations_tenants;
   relations_access_codes: typeof relations_access_codes;
   relations_cash_transactions: typeof relations_cash_transactions;
+  relations_attendees: typeof relations_attendees;
+  relations_breakfast_tickets: typeof relations_breakfast_tickets;
   relations_payload_kv: typeof relations_payload_kv;
   relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels;
   relations_payload_locked_documents: typeof relations_payload_locked_documents;

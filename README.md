@@ -7,6 +7,8 @@
 - Use **Tenant / site settings** to upload the header logo and set the site palette with six-digit hex codes.
 - Use **Access Codes** to create the codes accepted by `/cash`, including activation and redemption limits.
 - Cash orders appear under **Cash Transactions**.
+- Paid registrations from both card and cash orders appear under **Attendees**.
+- Every breakfast admission gets its own **Breakfast Tickets** record, so individual tickets can later be marked used, refunded, or voided.
 
 ## Registration and Stripe
 
@@ -19,12 +21,15 @@ Configure these hosted secrets before enabling live submissions:
 ```text
 STRIPE_SECRET_KEY
 STRIPE_WEBHOOK_SECRET
+STRIPE_BACKFILL_SECRET
 RESEND_API_KEY
 SCHOLARSHIP_FROM_EMAIL
 PAYLOAD_SECRET
 ```
 
-Configure the Stripe webhook endpoint as `/api/stripe/webhook` and subscribe it to `checkout.session.completed`. Named scholarship notices are sent only after Stripe confirms payment; cash scholarship notices are sent after the authorized cash record is created. If the email variables are absent, the transaction still records and the notification remains marked as awaiting configuration.
+Configure the Stripe webhook endpoint as `/api/stripe/webhook` and subscribe it to `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Successful Stripe and cash orders are materialized into the Attendees and Breakfast Tickets collections. Named scholarship notices are sent only after Stripe confirms payment; cash scholarship notices are sent after the authorized cash record is created. If the email variables are absent, the transaction still records and the notification remains marked as awaiting configuration.
+
+Historical Stripe data can be imported into Payload in batches through `POST /api/admin/stripe-backfill`, authenticated with the `x-backfill-secret` header. The request accepts `limit`, optional `createdGte` (a Unix timestamp), and the previous response's `nextStartingAfter` cursor. Stripe remains the source of the historical data. Stable source keys make the import idempotent, so rerunning a batch updates matching records instead of duplicating them.
 
 ## Starter and lifecycle notes
 

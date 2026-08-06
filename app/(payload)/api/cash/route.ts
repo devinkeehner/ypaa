@@ -5,6 +5,7 @@ import { getPayload } from "payload";
 import { buildMetadata, normalizeOrder, orderSubtotalCents, validateOrder } from "@/lib/registration";
 import { sendScholarshipNotification } from "@/lib/scholarship-email";
 import { getStripe } from "@/lib/stripe-server";
+import { recordRegistrationOrder } from "@/lib/registration-records";
 
 export async function POST(request: Request) {
   try {
@@ -71,6 +72,16 @@ export async function POST(request: Request) {
       id: accessCode.id,
       overrideAccess: true,
       data: { redemptionCount: Number(accessCode.redemptionCount || 0) + 1 },
+    });
+    await recordRegistrationOrder(payload, order, {
+      sourceKey: `cash:${transaction.id}`,
+      paymentSource: "cash",
+      paymentStatus: "recorded",
+      dataOrigin: "cash_checkout",
+      purchasedAt: transaction.createdAt,
+      stripeCustomerId: customer.id,
+      cashTransactionId: transaction.id,
+      rawMetadata: metadata,
     });
 
     if (order.scholarship.enabled && order.scholarship.kind === "specific") {

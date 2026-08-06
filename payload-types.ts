@@ -74,6 +74,8 @@ export interface Config {
     tenants: Tenant;
     'access-codes': AccessCode;
     'cash-transactions': CashTransaction;
+    attendees: Attendee;
+    'breakfast-tickets': BreakfastTicket;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +90,8 @@ export interface Config {
     tenants: TenantsSelect<false> | TenantsSelect<true>;
     'access-codes': AccessCodesSelect<false> | AccessCodesSelect<true>;
     'cash-transactions': CashTransactionsSelect<false> | CashTransactionsSelect<true>;
+    attendees: AttendeesSelect<false> | AttendeesSelect<true>;
+    'breakfast-tickets': BreakfastTicketsSelect<false> | BreakfastTicketsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -587,6 +591,93 @@ export interface CashTransaction {
   createdAt: string;
 }
 /**
+ * Convention registrations from Stripe, cash entry, and historical Stripe backfills.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attendees".
+ */
+export interface Attendee {
+  id: number;
+  sourceKey: string;
+  attendeeName: string;
+  attendeeEmail: string;
+  state: string;
+  homegroupCommittee?: string | null;
+  accommodations?: string | null;
+  interpretationNeeded?: boolean | null;
+  mobilityAccessibility?: boolean | null;
+  willingToServe?: boolean | null;
+  purchaserName: string;
+  purchaserEmail: string;
+  registrationPriceCents: number;
+  paymentSource: 'stripe' | 'cash';
+  paymentStatus: 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
+  dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout';
+  purchasedAt: string;
+  stripeCheckoutSessionId?: string | null;
+  stripePaymentIntentId?: string | null;
+  stripeChargeId?: string | null;
+  stripeCustomerId?: string | null;
+  cashTransaction?: (number | null) | CashTransaction;
+  policyAcknowledgments?: {
+    readPolicy?: boolean | null;
+    understandQuestions?: boolean | null;
+    acknowledgeBehavior?: boolean | null;
+    understandAdmission?: boolean | null;
+    understandReporting?: boolean | null;
+    understandInvestigation?: boolean | null;
+    signatureAgreement?: boolean | null;
+  };
+  rawMetadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * One record per breakfast admission, including Stripe purchases, cash purchases, and Stripe backfills.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "breakfast-tickets".
+ */
+export interface BreakfastTicket {
+  id: number;
+  sourceKey: string;
+  ticketCode: string;
+  breakfastDay: 'friday' | 'saturday' | 'sunday';
+  status: 'valid' | 'used' | 'refunded' | 'voided';
+  unitPriceCents: number;
+  purchaserName: string;
+  purchaserEmail: string;
+  attendee?: (number | null) | Attendee;
+  paymentSource: 'stripe' | 'cash';
+  paymentStatus: 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
+  dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout';
+  purchasedAt: string;
+  stripeCheckoutSessionId?: string | null;
+  stripePaymentIntentId?: string | null;
+  stripeChargeId?: string | null;
+  stripeCustomerId?: string | null;
+  cashTransaction?: (number | null) | CashTransaction;
+  rawMetadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -637,6 +728,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'cash-transactions';
         value: number | CashTransaction;
+      } | null)
+    | ({
+        relationTo: 'attendees';
+        value: number | Attendee;
+      } | null)
+    | ({
+        relationTo: 'breakfast-tickets';
+        value: number | BreakfastTicket;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -965,6 +1064,73 @@ export interface CashTransactionsSelect<T extends boolean = true> {
   order?: T;
   metadata?: T;
   notificationStatus?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attendees_select".
+ */
+export interface AttendeesSelect<T extends boolean = true> {
+  sourceKey?: T;
+  attendeeName?: T;
+  attendeeEmail?: T;
+  state?: T;
+  homegroupCommittee?: T;
+  accommodations?: T;
+  interpretationNeeded?: T;
+  mobilityAccessibility?: T;
+  willingToServe?: T;
+  purchaserName?: T;
+  purchaserEmail?: T;
+  registrationPriceCents?: T;
+  paymentSource?: T;
+  paymentStatus?: T;
+  dataOrigin?: T;
+  purchasedAt?: T;
+  stripeCheckoutSessionId?: T;
+  stripePaymentIntentId?: T;
+  stripeChargeId?: T;
+  stripeCustomerId?: T;
+  cashTransaction?: T;
+  policyAcknowledgments?:
+    | T
+    | {
+        readPolicy?: T;
+        understandQuestions?: T;
+        acknowledgeBehavior?: T;
+        understandAdmission?: T;
+        understandReporting?: T;
+        understandInvestigation?: T;
+        signatureAgreement?: T;
+      };
+  rawMetadata?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "breakfast-tickets_select".
+ */
+export interface BreakfastTicketsSelect<T extends boolean = true> {
+  sourceKey?: T;
+  ticketCode?: T;
+  breakfastDay?: T;
+  status?: T;
+  unitPriceCents?: T;
+  purchaserName?: T;
+  purchaserEmail?: T;
+  attendee?: T;
+  paymentSource?: T;
+  paymentStatus?: T;
+  dataOrigin?: T;
+  purchasedAt?: T;
+  stripeCheckoutSessionId?: T;
+  stripePaymentIntentId?: T;
+  stripeChargeId?: T;
+  stripeCustomerId?: T;
+  cashTransaction?: T;
+  rawMetadata?: T;
   updatedAt?: T;
   createdAt?: T;
 }
