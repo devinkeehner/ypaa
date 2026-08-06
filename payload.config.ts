@@ -25,6 +25,7 @@ export default buildConfig({
     meta: { defaultOGImageType: "off" },
     components: {
       afterNavLinks: ["@/components/admin/ProgramBoardNavLink"],
+      providers: ["@/components/admin/AdminRuntimeRecovery"],
       views: {
         programBoard: {
           Component: "@/components/admin/ProgramBoardAdminView",
