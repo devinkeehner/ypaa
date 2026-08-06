@@ -13,6 +13,7 @@ const navItems = [
   { label: "About", href: "/#about" },
   { label: "Meetings", href: "/#business-meeting" },
   { label: "Events", href: "/#events" },
+  { label: "Program", href: "/program" },
   { label: "YPAA near you", href: "/#ypaa" },
   { label: "Merch", href: "/merch" },
   { label: "Register", href: "/register" },

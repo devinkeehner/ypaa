@@ -12,6 +12,10 @@ import { AccessCodes } from "./collections/AccessCodes";
 import { CashTransactions } from "./collections/CashTransactions";
 import { Attendees } from "./collections/Attendees";
 import { BreakfastTickets } from "./collections/BreakfastTickets";
+import { Rooms } from "./collections/Rooms";
+import { ProgramSessions } from "./collections/ProgramSessions";
+import { VenueMaps } from "./collections/VenueMaps";
+import { ensureProgramSeed } from "./lib/program-seed";
 import { payloadBucket, payloadD1 } from "./server/cloudflare-bindings";
 
 export default buildConfig({
@@ -20,7 +24,7 @@ export default buildConfig({
     importMap: { baseDir: "." },
     meta: { defaultOGImageType: "off" },
   },
-  collections: [Users, Media, Pages, Merchandise, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets],
+  collections: [Users, Media, Pages, Merchandise, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, Rooms, ProgramSessions, VenueMaps],
   db: sqliteD1Adapter({ binding: payloadD1, push: false }),
   editor: lexicalEditor(),
   plugins: [
@@ -32,4 +36,11 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || "local-preview-secret-change-me",
   telemetry: false,
   typescript: { outputFile: "payload-types.ts" },
+  onInit: async (payload) => {
+    try {
+      await ensureProgramSeed(payload);
+    } catch (error) {
+      payload.logger.error({ err: error, msg: "Unable to seed the sample program records" });
+    }
+  },
 });

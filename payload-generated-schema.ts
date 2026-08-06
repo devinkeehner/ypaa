@@ -471,6 +471,31 @@ export const pages_blocks_free_text = sqliteTable(
   ],
 );
 
+export const pages_blocks_program_schedule = sqliteTable(
+  "pages_blocks_program_schedule",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: text("id").primaryKey(),
+    heading: text("heading").default("Your weekend, mapped out"),
+    introduction: text("introduction").default(
+      "Search the live convention schedule by day, room, or session type.",
+    ),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("pages_blocks_program_schedule_order_idx").on(columns._order),
+    index("pages_blocks_program_schedule_parent_id_idx").on(columns._parentID),
+    index("pages_blocks_program_schedule_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [pages.id],
+      name: "pages_blocks_program_schedule_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
 export const pages = sqliteTable(
   "pages",
   {
@@ -882,6 +907,34 @@ export const _pages_v_blocks_free_text = sqliteTable(
       columns: [columns["_parentID"]],
       foreignColumns: [_pages_v.id],
       name: "_pages_v_blocks_free_text_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const _pages_v_blocks_program_schedule = sqliteTable(
+  "_pages_v_blocks_program_schedule",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    _path: text("_path").notNull(),
+    id: integer("id").primaryKey(),
+    heading: text("heading").default("Your weekend, mapped out"),
+    introduction: text("introduction").default(
+      "Search the live convention schedule by day, room, or session type.",
+    ),
+    _uuid: text("_uuid"),
+    blockName: text("block_name"),
+  },
+  (columns) => [
+    index("_pages_v_blocks_program_schedule_order_idx").on(columns._order),
+    index("_pages_v_blocks_program_schedule_parent_id_idx").on(
+      columns._parentID,
+    ),
+    index("_pages_v_blocks_program_schedule_path_idx").on(columns._path),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [_pages_v.id],
+      name: "_pages_v_blocks_program_schedule_parent_id_fk",
     }).onDelete("cascade"),
   ],
 );
@@ -1420,6 +1473,185 @@ export const breakfast_tickets = sqliteTable(
   ],
 );
 
+export const rooms = sqliteTable(
+  "rooms",
+  {
+    id: integer("id").primaryKey(),
+    name: text("name").notNull(),
+    shortLabel: text("short_label").notNull(),
+    floor: text("floor").default("Convention level"),
+    capacity: numeric("capacity", { mode: "number" }),
+    accessible: integer("accessible", { mode: "boolean" }).default(true),
+    directions: text("directions"),
+    displayOrder: numeric("display_order", { mode: "number" })
+      .notNull()
+      .default(0),
+    mapX: numeric("map_x", { mode: "number" }),
+    mapY: numeric("map_y", { mode: "number" }),
+    color: text("color").default("#E85E27"),
+    notes: text("notes"),
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (columns) => [
+    uniqueIndex("rooms_name_idx").on(columns.name),
+    index("rooms_display_order_idx").on(columns.displayOrder),
+    index("rooms_updated_at_idx").on(columns.updatedAt),
+    index("rooms_created_at_idx").on(columns.createdAt),
+  ],
+);
+
+export const program_sessions_presenters = sqliteTable(
+  "program_sessions_presenters",
+  {
+    _order: integer("_order").notNull(),
+    _parentID: integer("_parent_id").notNull(),
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    role: text("role"),
+  },
+  (columns) => [
+    index("program_sessions_presenters_order_idx").on(columns._order),
+    index("program_sessions_presenters_parent_id_idx").on(columns._parentID),
+    foreignKey({
+      columns: [columns["_parentID"]],
+      foreignColumns: [program_sessions.id],
+      name: "program_sessions_presenters_parent_id_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const program_sessions_tracks = sqliteTable(
+  "program_sessions_tracks",
+  {
+    order: integer("order").notNull(),
+    parent: integer("parent_id").notNull(),
+    value: text("value", {
+      enum: [
+        "Recovery",
+        "Service",
+        "Unity",
+        "Accessibility",
+        "LGBTQ+",
+        "BIPOC",
+        "Al-Anon",
+        "Spanish / bilingual",
+      ],
+    }),
+    id: integer("id").primaryKey(),
+  },
+  (columns) => [
+    index("program_sessions_tracks_order_idx").on(columns.order),
+    index("program_sessions_tracks_parent_idx").on(columns.parent),
+    foreignKey({
+      columns: [columns["parent"]],
+      foreignColumns: [program_sessions.id],
+      name: "program_sessions_tracks_parent_fk",
+    }).onDelete("cascade"),
+  ],
+);
+
+export const program_sessions = sqliteTable(
+  "program_sessions",
+  {
+    id: integer("id").primaryKey(),
+    title: text("title").notNull(),
+    slug: text("slug").notNull(),
+    sessionType: text("session_type", {
+      enum: [
+        "main_meeting",
+        "panel",
+        "workshop",
+        "dance",
+        "marathon",
+        "affinity",
+        "special_event",
+      ],
+    })
+      .notNull()
+      .default("panel"),
+    startAt: text("start_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    endAt: text("end_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    room: integer("room_id")
+      .notNull()
+      .references(() => rooms.id, {
+        onDelete: "set null",
+      }),
+    shortDescription: text("short_description"),
+    language: text("language").notNull().default("English"),
+    audience: text("audience"),
+    accessibility: text("accessibility"),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
+    featured: integer("featured", { mode: "boolean" }).default(false),
+    status: text("status", { enum: ["draft", "published", "cancelled"] })
+      .notNull()
+      .default("published"),
+    internalNotes: text("internal_notes"),
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (columns) => [
+    index("program_sessions_title_idx").on(columns.title),
+    uniqueIndex("program_sessions_slug_idx").on(columns.slug),
+    index("program_sessions_session_type_idx").on(columns.sessionType),
+    index("program_sessions_start_at_idx").on(columns.startAt),
+    index("program_sessions_end_at_idx").on(columns.endAt),
+    index("program_sessions_room_idx").on(columns.room),
+    index("program_sessions_image_idx").on(columns.image),
+    index("program_sessions_status_idx").on(columns.status),
+    index("program_sessions_updated_at_idx").on(columns.updatedAt),
+    index("program_sessions_created_at_idx").on(columns.createdAt),
+  ],
+);
+
+export const venue_maps = sqliteTable(
+  "venue_maps",
+  {
+    id: integer("id").primaryKey(),
+    title: text("title").notNull(),
+    floor: text("floor").notNull().default("Convention level"),
+    image: integer("image_id").references(() => media.id, {
+      onDelete: "set null",
+    }),
+    altText: text("alt_text")
+      .notNull()
+      .default("Schematic convention-level hotel map."),
+    description: text("description"),
+    status: text("status", { enum: ["draft", "published"] })
+      .notNull()
+      .default("published"),
+    displayOrder: numeric("display_order", { mode: "number" })
+      .notNull()
+      .default(0),
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+  },
+  (columns) => [
+    index("venue_maps_image_idx").on(columns.image),
+    index("venue_maps_status_idx").on(columns.status),
+    index("venue_maps_updated_at_idx").on(columns.updatedAt),
+    index("venue_maps_created_at_idx").on(columns.createdAt),
+  ],
+);
+
 export const payload_kv = sqliteTable(
   "payload_kv",
   {
@@ -1465,6 +1697,9 @@ export const payload_locked_documents_rels = sqliteTable(
     "cash-transactionsID": integer("cash_transactions_id"),
     attendeesID: integer("attendees_id"),
     "breakfast-ticketsID": integer("breakfast_tickets_id"),
+    roomsID: integer("rooms_id"),
+    "program-sessionsID": integer("program_sessions_id"),
+    "venue-mapsID": integer("venue_maps_id"),
   },
   (columns) => [
     index("payload_locked_documents_rels_order_idx").on(columns.order),
@@ -1488,6 +1723,13 @@ export const payload_locked_documents_rels = sqliteTable(
     ),
     index("payload_locked_documents_rels_breakfast_tickets_id_idx").on(
       columns["breakfast-ticketsID"],
+    ),
+    index("payload_locked_documents_rels_rooms_id_idx").on(columns.roomsID),
+    index("payload_locked_documents_rels_program_sessions_id_idx").on(
+      columns["program-sessionsID"],
+    ),
+    index("payload_locked_documents_rels_venue_maps_id_idx").on(
+      columns["venue-mapsID"],
     ),
     foreignKey({
       columns: [columns["parent"]],
@@ -1538,6 +1780,21 @@ export const payload_locked_documents_rels = sqliteTable(
       columns: [columns["breakfast-ticketsID"]],
       foreignColumns: [breakfast_tickets.id],
       name: "payload_locked_documents_rels_breakfast_tickets_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [columns["roomsID"]],
+      foreignColumns: [rooms.id],
+      name: "payload_locked_documents_rels_rooms_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [columns["program-sessionsID"]],
+      foreignColumns: [program_sessions.id],
+      name: "payload_locked_documents_rels_program_sessions_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [columns["venue-mapsID"]],
+      foreignColumns: [venue_maps.id],
+      name: "payload_locked_documents_rels_venue_maps_fk",
     }).onDelete("cascade"),
   ],
 );
@@ -1798,6 +2055,16 @@ export const relations_pages_blocks_free_text = relations(
     }),
   }),
 );
+export const relations_pages_blocks_program_schedule = relations(
+  pages_blocks_program_schedule,
+  ({ one }) => ({
+    _parentID: one(pages, {
+      fields: [pages_blocks_program_schedule._parentID],
+      references: [pages.id],
+      relationName: "_blocks_ProgramSchedule",
+    }),
+  }),
+);
 export const relations_pages = relations(pages, ({ many }) => ({
   _blocks_HeroCountdown: many(pages_blocks_hero_countdown, {
     relationName: "_blocks_HeroCountdown",
@@ -1825,6 +2092,9 @@ export const relations_pages = relations(pages, ({ many }) => ({
   }),
   _blocks_FreeText: many(pages_blocks_free_text, {
     relationName: "_blocks_FreeText",
+  }),
+  _blocks_ProgramSchedule: many(pages_blocks_program_schedule, {
+    relationName: "_blocks_ProgramSchedule",
   }),
 }));
 export const relations__pages_v_blocks_hero_countdown = relations(
@@ -2001,6 +2271,16 @@ export const relations__pages_v_blocks_free_text = relations(
     }),
   }),
 );
+export const relations__pages_v_blocks_program_schedule = relations(
+  _pages_v_blocks_program_schedule,
+  ({ one }) => ({
+    _parentID: one(_pages_v, {
+      fields: [_pages_v_blocks_program_schedule._parentID],
+      references: [_pages_v.id],
+      relationName: "_blocks_ProgramSchedule",
+    }),
+  }),
+);
 export const relations__pages_v = relations(_pages_v, ({ one, many }) => ({
   parent: one(pages, {
     fields: [_pages_v.parent],
@@ -2033,6 +2313,9 @@ export const relations__pages_v = relations(_pages_v, ({ one, many }) => ({
   }),
   _blocks_FreeText: many(_pages_v_blocks_free_text, {
     relationName: "_blocks_FreeText",
+  }),
+  _blocks_ProgramSchedule: many(_pages_v_blocks_program_schedule, {
+    relationName: "_blocks_ProgramSchedule",
   }),
 }));
 export const relations_merchandise_inventory = relations(
@@ -2126,6 +2409,55 @@ export const relations_breakfast_tickets = relations(
     }),
   }),
 );
+export const relations_rooms = relations(rooms, () => ({}));
+export const relations_program_sessions_presenters = relations(
+  program_sessions_presenters,
+  ({ one }) => ({
+    _parentID: one(program_sessions, {
+      fields: [program_sessions_presenters._parentID],
+      references: [program_sessions.id],
+      relationName: "presenters",
+    }),
+  }),
+);
+export const relations_program_sessions_tracks = relations(
+  program_sessions_tracks,
+  ({ one }) => ({
+    parent: one(program_sessions, {
+      fields: [program_sessions_tracks.parent],
+      references: [program_sessions.id],
+      relationName: "tracks",
+    }),
+  }),
+);
+export const relations_program_sessions = relations(
+  program_sessions,
+  ({ one, many }) => ({
+    room: one(rooms, {
+      fields: [program_sessions.room],
+      references: [rooms.id],
+      relationName: "room",
+    }),
+    presenters: many(program_sessions_presenters, {
+      relationName: "presenters",
+    }),
+    tracks: many(program_sessions_tracks, {
+      relationName: "tracks",
+    }),
+    image: one(media, {
+      fields: [program_sessions.image],
+      references: [media.id],
+      relationName: "image",
+    }),
+  }),
+);
+export const relations_venue_maps = relations(venue_maps, ({ one }) => ({
+  image: one(media, {
+    fields: [venue_maps.image],
+    references: [media.id],
+    relationName: "image",
+  }),
+}));
 export const relations_payload_kv = relations(payload_kv, () => ({}));
 export const relations_payload_locked_documents_rels = relations(
   payload_locked_documents_rels,
@@ -2179,6 +2511,21 @@ export const relations_payload_locked_documents_rels = relations(
       fields: [payload_locked_documents_rels["breakfast-ticketsID"]],
       references: [breakfast_tickets.id],
       relationName: "breakfast-tickets",
+    }),
+    roomsID: one(rooms, {
+      fields: [payload_locked_documents_rels.roomsID],
+      references: [rooms.id],
+      relationName: "rooms",
+    }),
+    "program-sessionsID": one(program_sessions, {
+      fields: [payload_locked_documents_rels["program-sessionsID"]],
+      references: [program_sessions.id],
+      relationName: "program-sessions",
+    }),
+    "venue-mapsID": one(venue_maps, {
+      fields: [payload_locked_documents_rels["venue-mapsID"]],
+      references: [venue_maps.id],
+      relationName: "venue-maps",
     }),
   }),
 );
@@ -2234,6 +2581,7 @@ type DatabaseSchema = {
   pages_blocks_image: typeof pages_blocks_image;
   pages_blocks_rich_text: typeof pages_blocks_rich_text;
   pages_blocks_free_text: typeof pages_blocks_free_text;
+  pages_blocks_program_schedule: typeof pages_blocks_program_schedule;
   pages: typeof pages;
   _pages_v_blocks_hero_countdown: typeof _pages_v_blocks_hero_countdown;
   _pages_v_blocks_about: typeof _pages_v_blocks_about;
@@ -2247,6 +2595,7 @@ type DatabaseSchema = {
   _pages_v_blocks_image: typeof _pages_v_blocks_image;
   _pages_v_blocks_rich_text: typeof _pages_v_blocks_rich_text;
   _pages_v_blocks_free_text: typeof _pages_v_blocks_free_text;
+  _pages_v_blocks_program_schedule: typeof _pages_v_blocks_program_schedule;
   _pages_v: typeof _pages_v;
   merchandise_inventory: typeof merchandise_inventory;
   merchandise: typeof merchandise;
@@ -2257,6 +2606,11 @@ type DatabaseSchema = {
   cash_transactions: typeof cash_transactions;
   attendees: typeof attendees;
   breakfast_tickets: typeof breakfast_tickets;
+  rooms: typeof rooms;
+  program_sessions_presenters: typeof program_sessions_presenters;
+  program_sessions_tracks: typeof program_sessions_tracks;
+  program_sessions: typeof program_sessions;
+  venue_maps: typeof venue_maps;
   payload_kv: typeof payload_kv;
   payload_locked_documents: typeof payload_locked_documents;
   payload_locked_documents_rels: typeof payload_locked_documents_rels;
@@ -2278,6 +2632,7 @@ type DatabaseSchema = {
   relations_pages_blocks_image: typeof relations_pages_blocks_image;
   relations_pages_blocks_rich_text: typeof relations_pages_blocks_rich_text;
   relations_pages_blocks_free_text: typeof relations_pages_blocks_free_text;
+  relations_pages_blocks_program_schedule: typeof relations_pages_blocks_program_schedule;
   relations_pages: typeof relations_pages;
   relations__pages_v_blocks_hero_countdown: typeof relations__pages_v_blocks_hero_countdown;
   relations__pages_v_blocks_about: typeof relations__pages_v_blocks_about;
@@ -2291,6 +2646,7 @@ type DatabaseSchema = {
   relations__pages_v_blocks_image: typeof relations__pages_v_blocks_image;
   relations__pages_v_blocks_rich_text: typeof relations__pages_v_blocks_rich_text;
   relations__pages_v_blocks_free_text: typeof relations__pages_v_blocks_free_text;
+  relations__pages_v_blocks_program_schedule: typeof relations__pages_v_blocks_program_schedule;
   relations__pages_v: typeof relations__pages_v;
   relations_merchandise_inventory: typeof relations_merchandise_inventory;
   relations_merchandise: typeof relations_merchandise;
@@ -2301,6 +2657,11 @@ type DatabaseSchema = {
   relations_cash_transactions: typeof relations_cash_transactions;
   relations_attendees: typeof relations_attendees;
   relations_breakfast_tickets: typeof relations_breakfast_tickets;
+  relations_rooms: typeof relations_rooms;
+  relations_program_sessions_presenters: typeof relations_program_sessions_presenters;
+  relations_program_sessions_tracks: typeof relations_program_sessions_tracks;
+  relations_program_sessions: typeof relations_program_sessions;
+  relations_venue_maps: typeof relations_venue_maps;
   relations_payload_kv: typeof relations_payload_kv;
   relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels;
   relations_payload_locked_documents: typeof relations_payload_locked_documents;

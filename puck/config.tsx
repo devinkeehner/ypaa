@@ -5,6 +5,7 @@ import { RichText as PayloadRichText } from "@payloadcms/richtext-lexical/react"
 import { Fragment, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { Countdown } from "@/components/site/Countdown";
+import { ProgramExplorer } from "@/components/site/ProgramExplorer";
 import { normalizeLexicalValue } from "@/puck/lexical-value";
 import {
   normalizeImportantDates,
@@ -43,8 +44,9 @@ type CTA = Base & { eyebrow: string; heading: string; body: string; primaryLabel
 type ImageBlock = Base & { image?: MediaValue | null; caption: string; aspectRatio: "natural" | "landscape" | "portrait" | "square"; width: "full" | "wide" | "content" };
 type FreeText = Base & { text: string; fontSize: string; color: string; fontWeight: string; alignment: "left" | "center" | "right" };
 type RichTextSection = Base & { content: unknown; fontSize: string; color: string; fontWeight: string; alignment: "left" | "center" | "right" };
+type ProgramSchedule = Base & { heading: string; introduction: string };
 
-type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText };
+type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; ProgramSchedule: ProgramSchedule };
 
 export const editableFieldsByType: Record<keyof Components, string[]> = {
   HeroCountdown: ["eyebrow", "heading", "body", "eventDate", "eventLocation", "registerLabel", "hotelLabel"],
@@ -56,6 +58,7 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   Image: ["caption"],
   RichText: ["content"],
   FreeText: ["text"],
+  ProgramSchedule: ["heading", "introduction"],
 };
 
 const text = (label: string) => ({ type: "text" as const, label, contentEditable: true });
@@ -199,7 +202,7 @@ function Button({ href, children, outline = false }: { href: string; children: R
 
 export const puckConfig: Config<Components> = {
   categories: {
-    "NECYPAA sections": { components: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "CallToAction"] },
+    "NECYPAA sections": { components: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "ProgramSchedule", "CallToAction"] },
     "Flexible elements": { components: ["Image", "RichText", "FreeText"] },
   },
   root: {
@@ -316,6 +319,12 @@ export const puckConfig: Config<Components> = {
       defaultProps: { text: "Click to edit this text.", fontSize: "1rem", color: "#171b20", fontWeight: "400", alignment: "left" },
       fields: { text: area("Text"), fontSize: plainText("Font size"), color: plainText("Color"), fontWeight: plainText("Weight"), alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } },
       render: (props) => <section className={styles.freeText}><Editable as="p" field="text" props={{ ...props, textFontSize: props.fontSize, textColor: props.color, textFontWeight: props.fontWeight, textTextAlign: props.alignment } as unknown as Base}>{props.text}</Editable></section>,
+    },
+    ProgramSchedule: {
+      label: "Live program",
+      defaultProps: { heading: "Your weekend, mapped out", introduction: "Search the live convention schedule by day, room, or session type." },
+      fields: { heading: text("Heading"), introduction: area("Introduction") },
+      render: (props) => <section id={props.id}><ProgramExplorer embedded heading={props.heading} introduction={props.introduction} /></section>,
     },
   },
 };

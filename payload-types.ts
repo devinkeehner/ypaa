@@ -76,6 +76,9 @@ export interface Config {
     'cash-transactions': CashTransaction;
     attendees: Attendee;
     'breakfast-tickets': BreakfastTicket;
+    rooms: Room;
+    'program-sessions': ProgramSession;
+    'venue-maps': VenueMap;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -92,6 +95,9 @@ export interface Config {
     'cash-transactions': CashTransactionsSelect<false> | CashTransactionsSelect<true>;
     attendees: AttendeesSelect<false> | AttendeesSelect<true>;
     'breakfast-tickets': BreakfastTicketsSelect<false> | BreakfastTicketsSelect<true>;
+    rooms: RoomsSelect<false> | RoomsSelect<true>;
+    'program-sessions': ProgramSessionsSelect<false> | ProgramSessionsSelect<true>;
+    'venue-maps': VenueMapsSelect<false> | VenueMapsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -405,6 +411,13 @@ export interface Page {
             blockName?: string | null;
             blockType: 'FreeText';
           }
+        | {
+            heading?: string | null;
+            introduction?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'ProgramSchedule';
+          }
       )[]
     | null;
   meta?: {
@@ -687,6 +700,93 @@ export interface BreakfastTicket {
   createdAt: string;
 }
 /**
+ * Convention rooms used by the public program and visual planning board.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rooms".
+ */
+export interface Room {
+  id: number;
+  name: string;
+  shortLabel: string;
+  floor?: string | null;
+  capacity?: number | null;
+  accessible?: boolean | null;
+  directions?: string | null;
+  displayOrder: number;
+  mapX?: number | null;
+  mapY?: number | null;
+  /**
+   * Six-digit hex color used on the planning board.
+   */
+  color?: string | null;
+  /**
+   * Internal notes; never displayed publicly.
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Schedule records shown on the public Program page and editable on the visual Program Board at /program-editor.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "program-sessions".
+ */
+export interface ProgramSession {
+  id: number;
+  title: string;
+  slug: string;
+  sessionType: 'main_meeting' | 'panel' | 'workshop' | 'dance' | 'marathon' | 'affinity' | 'special_event';
+  startAt: string;
+  endAt: string;
+  room: number | Room;
+  shortDescription?: string | null;
+  presenters?:
+    | {
+        name: string;
+        role?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  tracks?:
+    | ('Recovery' | 'Service' | 'Unity' | 'Accessibility' | 'LGBTQ+' | 'BIPOC' | 'Al-Anon' | 'Spanish / bilingual')[]
+    | null;
+  language: string;
+  audience?: string | null;
+  /**
+   * Public accessibility details, such as ASL, captions, or step-free access.
+   */
+  accessibility?: string | null;
+  image?: (number | null) | Media;
+  featured?: boolean | null;
+  status: 'draft' | 'published' | 'cancelled';
+  /**
+   * Committee-only notes; never displayed publicly.
+   */
+  internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Upload a hotel floor plan here. Room markers use the X/Y positions stored on each Room.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "venue-maps".
+ */
+export interface VenueMap {
+  id: number;
+  title: string;
+  floor: string;
+  image?: (number | null) | Media;
+  altText: string;
+  description?: string | null;
+  status: 'draft' | 'published';
+  displayOrder: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -745,6 +845,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'breakfast-tickets';
         value: number | BreakfastTicket;
+      } | null)
+    | ({
+        relationTo: 'rooms';
+        value: number | Room;
+      } | null)
+    | ({
+        relationTo: 'program-sessions';
+        value: number | ProgramSession;
+      } | null)
+    | ({
+        relationTo: 'venue-maps';
+        value: number | VenueMap;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -982,6 +1094,14 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        ProgramSchedule?:
+          | T
+          | {
+              heading?: T;
+              introduction?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   meta?:
     | T
@@ -1146,6 +1266,70 @@ export interface BreakfastTicketsSelect<T extends boolean = true> {
   stripeCustomerId?: T;
   cashTransaction?: T;
   rawMetadata?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rooms_select".
+ */
+export interface RoomsSelect<T extends boolean = true> {
+  name?: T;
+  shortLabel?: T;
+  floor?: T;
+  capacity?: T;
+  accessible?: T;
+  directions?: T;
+  displayOrder?: T;
+  mapX?: T;
+  mapY?: T;
+  color?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "program-sessions_select".
+ */
+export interface ProgramSessionsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  sessionType?: T;
+  startAt?: T;
+  endAt?: T;
+  room?: T;
+  shortDescription?: T;
+  presenters?:
+    | T
+    | {
+        name?: T;
+        role?: T;
+        id?: T;
+      };
+  tracks?: T;
+  language?: T;
+  audience?: T;
+  accessibility?: T;
+  image?: T;
+  featured?: T;
+  status?: T;
+  internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "venue-maps_select".
+ */
+export interface VenueMapsSelect<T extends boolean = true> {
+  title?: T;
+  floor?: T;
+  image?: T;
+  altText?: T;
+  description?: T;
+  status?: T;
+  displayOrder?: T;
   updatedAt?: T;
   createdAt?: T;
 }

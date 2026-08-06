@@ -18,6 +18,7 @@ const COMPONENT_TYPES = new Set([
   "Image",
   "RichText",
   "FreeText",
+  "ProgramSchedule",
 ]);
 
 const STYLE_SUFFIXES = ["Color", "FontSize", "FontWeight", "TextAlign"];

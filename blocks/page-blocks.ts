@@ -276,6 +276,16 @@ export const RichTextBlock: Block = {
   ],
 };
 
+export const ProgramScheduleBlock: Block = {
+  slug: "ProgramSchedule",
+  labels: { singular: "Live program", plural: "Live program blocks" },
+  admin: { group: "Convention sections" },
+  fields: [
+    { name: "heading", type: "text", defaultValue: "Your weekend, mapped out" },
+    { name: "introduction", type: "textarea", defaultValue: "Search the live convention schedule by day, room, or session type." },
+  ],
+};
+
 export const PAGE_LAYOUT_BLOCKS: Block[] = [
   HeroCountdownBlock,
   AboutBlock,
@@ -286,4 +296,5 @@ export const PAGE_LAYOUT_BLOCKS: Block[] = [
   ImageBlock,
   RichTextBlock,
   FreeTextBlock,
+  ProgramScheduleBlock,
 ];
