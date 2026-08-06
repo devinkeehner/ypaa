@@ -110,7 +110,7 @@ export function ProgramExplorer({ initialData, heading = "Your weekend, mapped o
   const [day, setDay] = useState("");
   const [type, setType] = useState("all");
   const [room, setRoom] = useState("all");
-  const [view, setView] = useState<"agenda" | "grid">("agenda");
+  const [view, setView] = useState<"agenda" | "grid">("grid");
   const [selected, setSelected] = useState<ProgramSession | null>(null);
 
   useEffect(() => {

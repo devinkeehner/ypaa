@@ -1,6 +1,7 @@
-import type { Access, CollectionConfig } from "payload";
+import type { Access, CollectionConfig, FieldAccess } from "payload";
 
 const authenticated: Access = ({ req }) => Boolean(req.user);
+const fieldAuthenticated: FieldAccess = ({ req }) => Boolean(req.user);
 
 function formatSlug(value: unknown) {
   return String(value || "")
@@ -80,7 +81,7 @@ export const ProgramSessions: CollectionConfig = {
     { name: "image", type: "upload", relationTo: "media" },
     { name: "featured", type: "checkbox", defaultValue: false },
     { name: "status", type: "select", required: true, defaultValue: "published", index: true, options: ["draft", "published", "cancelled"] },
-    { name: "internalNotes", type: "textarea", access: { read: authenticated, create: authenticated, update: authenticated }, admin: { description: "Committee-only notes; never displayed publicly." } },
+    { name: "internalNotes", type: "textarea", access: { read: fieldAuthenticated, create: fieldAuthenticated, update: fieldAuthenticated }, admin: { description: "Committee-only notes; never displayed publicly." } },
   ],
   hooks: {
     beforeValidate: [({ data }) => {

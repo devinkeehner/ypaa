@@ -1,6 +1,7 @@
-import type { Access, CollectionConfig } from "payload";
+import type { Access, CollectionConfig, FieldAccess } from "payload";
 
 const authenticated: Access = ({ req }) => Boolean(req.user);
+const fieldAuthenticated: FieldAccess = ({ req }) => Boolean(req.user);
 
 export const Rooms: CollectionConfig = {
   slug: "rooms",
@@ -32,6 +33,6 @@ export const Rooms: CollectionConfig = {
       ],
     },
     { name: "color", type: "text", defaultValue: "#E85E27", admin: { description: "Six-digit hex color used on the planning board." } },
-    { name: "notes", type: "textarea", access: { read: authenticated, create: authenticated, update: authenticated }, admin: { description: "Internal notes; never displayed publicly." } },
+    { name: "notes", type: "textarea", access: { read: fieldAuthenticated, create: fieldAuthenticated, update: fieldAuthenticated }, admin: { description: "Internal notes; never displayed publicly." } },
   ],
 };
