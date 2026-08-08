@@ -407,9 +407,9 @@
 .archive > span { color: var(--ember-bright); font: 800 .7rem/1 var(--font-geist-mono), monospace; letter-spacing: .14em; text-transform: uppercase; }
 .archive > div { display: grid; gap: 18px; grid-template-columns: repeat(4, 1fr); margin-top: 22px; overflow-x: auto; padding-bottom: 18px; scroll-snap-type: x mandatory; }
 .archive article { min-width: 210px; scroll-snap-align: start; }
-.archive article > div { align-items: flex-end; aspect-ratio: 4 / 3; background: linear-gradient(145deg, #d3a569, #214445); border: 1px solid var(--line-dark); color: #fff9eb; display: flex; font: 800 .62rem/1 var(--font-geist-mono), monospace; justify-content: center; letter-spacing: .1em; margin-bottom: 13px; overflow: hidden; padding: 15px; position: relative; text-transform: uppercase; }
+.archive article > div { align-items: flex-end; aspect-ratio: 3 / 4; background: linear-gradient(145deg, #d3a569, #214445); border: 1px solid var(--line-dark); color: #fff9eb; display: flex; font: 800 .62rem/1 var(--font-geist-mono), monospace; justify-content: center; letter-spacing: .1em; margin-bottom: 13px; overflow: hidden; padding: 15px; position: relative; text-transform: uppercase; }
 .archive article > div::before { background: radial-gradient(circle at 60% 35%, #e75f2c 0 13%, transparent 14%), linear-gradient(145deg, transparent 45%, #0b0d0eaa 46%); content: ""; inset: 0; position: absolute; }
-.archive article > div > img { height: 100%; inset: 0; object-fit: cover; position: absolute; width: 100%; }
+.archive article > div > img { background: #0b0d0e; height: 100%; inset: 0; object-fit: contain; position: absolute; width: 100%; }
 .archive article > div[data-has-image="true"]::before { background: linear-gradient(180deg, transparent 68%, rgba(11, 13, 14, .34)); z-index: 1; }
 .archive article:nth-child(2) > div { background: linear-gradient(145deg, #3a2047, #96709b); }
 .archive article:nth-child(3) > div { background: linear-gradient(145deg, #163c3c, #b45b2c); }

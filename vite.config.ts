@@ -33,7 +33,7 @@ function payloadWorkerModuleUrlCompatibility() {
       ) {
         transformed = transformed.replace(
           "from 'next/og.js'",
-          `from '${process.cwd()}/server/next-og-stub.ts'`,
+          `from '${process.cwd().replaceAll("\\", "/")}/server/next-og-stub.ts'`,
         );
       }
 
