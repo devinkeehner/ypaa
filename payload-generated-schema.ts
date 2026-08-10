@@ -1652,6 +1652,144 @@ export const venue_maps = sqliteTable(
   ],
 );
 
+export const payload_mcp_api_keys = sqliteTable(
+  "payload_mcp_api_keys",
+  {
+    id: integer("id").primaryKey(),
+    user: integer("user_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "set null",
+      }),
+    label: text("label"),
+    description: text("description"),
+    users_find: integer("users_find", { mode: "boolean" }).default(false),
+    users_create: integer("users_create", { mode: "boolean" }).default(false),
+    users_update: integer("users_update", { mode: "boolean" }).default(false),
+    users_delete: integer("users_delete", { mode: "boolean" }).default(false),
+    media_find: integer("media_find", { mode: "boolean" }).default(false),
+    media_create: integer("media_create", { mode: "boolean" }).default(false),
+    media_update: integer("media_update", { mode: "boolean" }).default(false),
+    media_delete: integer("media_delete", { mode: "boolean" }).default(false),
+    pages_find: integer("pages_find", { mode: "boolean" }).default(false),
+    pages_create: integer("pages_create", { mode: "boolean" }).default(false),
+    pages_update: integer("pages_update", { mode: "boolean" }).default(false),
+    pages_delete: integer("pages_delete", { mode: "boolean" }).default(false),
+    merchandise_find: integer("merchandise_find", { mode: "boolean" }).default(
+      false,
+    ),
+    merchandise_create: integer("merchandise_create", {
+      mode: "boolean",
+    }).default(false),
+    merchandise_update: integer("merchandise_update", {
+      mode: "boolean",
+    }).default(false),
+    merchandise_delete: integer("merchandise_delete", {
+      mode: "boolean",
+    }).default(false),
+    tenants_find: integer("tenants_find", { mode: "boolean" }).default(false),
+    tenants_create: integer("tenants_create", { mode: "boolean" }).default(
+      false,
+    ),
+    tenants_update: integer("tenants_update", { mode: "boolean" }).default(
+      false,
+    ),
+    tenants_delete: integer("tenants_delete", { mode: "boolean" }).default(
+      false,
+    ),
+    accessCodes_find: integer("access_codes_find", { mode: "boolean" }).default(
+      false,
+    ),
+    accessCodes_create: integer("access_codes_create", {
+      mode: "boolean",
+    }).default(false),
+    accessCodes_update: integer("access_codes_update", {
+      mode: "boolean",
+    }).default(false),
+    accessCodes_delete: integer("access_codes_delete", {
+      mode: "boolean",
+    }).default(false),
+    cashTransactions_find: integer("cash_transactions_find", {
+      mode: "boolean",
+    }).default(false),
+    cashTransactions_create: integer("cash_transactions_create", {
+      mode: "boolean",
+    }).default(false),
+    cashTransactions_update: integer("cash_transactions_update", {
+      mode: "boolean",
+    }).default(false),
+    cashTransactions_delete: integer("cash_transactions_delete", {
+      mode: "boolean",
+    }).default(false),
+    attendees_find: integer("attendees_find", { mode: "boolean" }).default(
+      false,
+    ),
+    attendees_create: integer("attendees_create", { mode: "boolean" }).default(
+      false,
+    ),
+    attendees_update: integer("attendees_update", { mode: "boolean" }).default(
+      false,
+    ),
+    attendees_delete: integer("attendees_delete", { mode: "boolean" }).default(
+      false,
+    ),
+    breakfastTickets_find: integer("breakfast_tickets_find", {
+      mode: "boolean",
+    }).default(false),
+    breakfastTickets_create: integer("breakfast_tickets_create", {
+      mode: "boolean",
+    }).default(false),
+    breakfastTickets_update: integer("breakfast_tickets_update", {
+      mode: "boolean",
+    }).default(false),
+    breakfastTickets_delete: integer("breakfast_tickets_delete", {
+      mode: "boolean",
+    }).default(false),
+    rooms_find: integer("rooms_find", { mode: "boolean" }).default(false),
+    rooms_create: integer("rooms_create", { mode: "boolean" }).default(false),
+    rooms_update: integer("rooms_update", { mode: "boolean" }).default(false),
+    rooms_delete: integer("rooms_delete", { mode: "boolean" }).default(false),
+    programSessions_find: integer("program_sessions_find", {
+      mode: "boolean",
+    }).default(false),
+    programSessions_create: integer("program_sessions_create", {
+      mode: "boolean",
+    }).default(false),
+    programSessions_update: integer("program_sessions_update", {
+      mode: "boolean",
+    }).default(false),
+    programSessions_delete: integer("program_sessions_delete", {
+      mode: "boolean",
+    }).default(false),
+    venueMaps_find: integer("venue_maps_find", { mode: "boolean" }).default(
+      false,
+    ),
+    venueMaps_create: integer("venue_maps_create", { mode: "boolean" }).default(
+      false,
+    ),
+    venueMaps_update: integer("venue_maps_update", { mode: "boolean" }).default(
+      false,
+    ),
+    venueMaps_delete: integer("venue_maps_delete", { mode: "boolean" }).default(
+      false,
+    ),
+    updatedAt: text("updated_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`),
+    enableAPIKey: integer("enable_a_p_i_key", { mode: "boolean" }),
+    apiKey: text("api_key"),
+    apiKeyIndex: text("api_key_index"),
+  },
+  (columns) => [
+    index("payload_mcp_api_keys_user_idx").on(columns.user),
+    index("payload_mcp_api_keys_updated_at_idx").on(columns.updatedAt),
+    index("payload_mcp_api_keys_created_at_idx").on(columns.createdAt),
+  ],
+);
+
 export const payload_kv = sqliteTable(
   "payload_kv",
   {
@@ -1700,6 +1838,7 @@ export const payload_locked_documents_rels = sqliteTable(
     roomsID: integer("rooms_id"),
     "program-sessionsID": integer("program_sessions_id"),
     "venue-mapsID": integer("venue_maps_id"),
+    "payload-mcp-api-keysID": integer("payload_mcp_api_keys_id"),
   },
   (columns) => [
     index("payload_locked_documents_rels_order_idx").on(columns.order),
@@ -1730,6 +1869,9 @@ export const payload_locked_documents_rels = sqliteTable(
     ),
     index("payload_locked_documents_rels_venue_maps_id_idx").on(
       columns["venue-mapsID"],
+    ),
+    index("payload_locked_documents_rels_payload_mcp_api_keys_id_idx").on(
+      columns["payload-mcp-api-keysID"],
     ),
     foreignKey({
       columns: [columns["parent"]],
@@ -1796,6 +1938,11 @@ export const payload_locked_documents_rels = sqliteTable(
       foreignColumns: [venue_maps.id],
       name: "payload_locked_documents_rels_venue_maps_fk",
     }).onDelete("cascade"),
+    foreignKey({
+      columns: [columns["payload-mcp-api-keysID"]],
+      foreignColumns: [payload_mcp_api_keys.id],
+      name: "payload_locked_documents_rels_payload_mcp_api_keys_fk",
+    }).onDelete("cascade"),
   ],
 );
 
@@ -1827,12 +1974,16 @@ export const payload_preferences_rels = sqliteTable(
     parent: integer("parent_id").notNull(),
     path: text("path").notNull(),
     usersID: integer("users_id"),
+    "payload-mcp-api-keysID": integer("payload_mcp_api_keys_id"),
   },
   (columns) => [
     index("payload_preferences_rels_order_idx").on(columns.order),
     index("payload_preferences_rels_parent_idx").on(columns.parent),
     index("payload_preferences_rels_path_idx").on(columns.path),
     index("payload_preferences_rels_users_id_idx").on(columns.usersID),
+    index("payload_preferences_rels_payload_mcp_api_keys_id_idx").on(
+      columns["payload-mcp-api-keysID"],
+    ),
     foreignKey({
       columns: [columns["parent"]],
       foreignColumns: [payload_preferences.id],
@@ -1842,6 +1993,11 @@ export const payload_preferences_rels = sqliteTable(
       columns: [columns["usersID"]],
       foreignColumns: [users.id],
       name: "payload_preferences_rels_users_fk",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [columns["payload-mcp-api-keysID"]],
+      foreignColumns: [payload_mcp_api_keys.id],
+      name: "payload_preferences_rels_payload_mcp_api_keys_fk",
     }).onDelete("cascade"),
   ],
 );
@@ -2458,6 +2614,16 @@ export const relations_venue_maps = relations(venue_maps, ({ one }) => ({
     relationName: "image",
   }),
 }));
+export const relations_payload_mcp_api_keys = relations(
+  payload_mcp_api_keys,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [payload_mcp_api_keys.user],
+      references: [users.id],
+      relationName: "user",
+    }),
+  }),
+);
 export const relations_payload_kv = relations(payload_kv, () => ({}));
 export const relations_payload_locked_documents_rels = relations(
   payload_locked_documents_rels,
@@ -2527,6 +2693,11 @@ export const relations_payload_locked_documents_rels = relations(
       references: [venue_maps.id],
       relationName: "venue-maps",
     }),
+    "payload-mcp-api-keysID": one(payload_mcp_api_keys, {
+      fields: [payload_locked_documents_rels["payload-mcp-api-keysID"]],
+      references: [payload_mcp_api_keys.id],
+      relationName: "payload-mcp-api-keys",
+    }),
   }),
 );
 export const relations_payload_locked_documents = relations(
@@ -2549,6 +2720,11 @@ export const relations_payload_preferences_rels = relations(
       fields: [payload_preferences_rels.usersID],
       references: [users.id],
       relationName: "users",
+    }),
+    "payload-mcp-api-keysID": one(payload_mcp_api_keys, {
+      fields: [payload_preferences_rels["payload-mcp-api-keysID"]],
+      references: [payload_mcp_api_keys.id],
+      relationName: "payload-mcp-api-keys",
     }),
   }),
 );
@@ -2611,6 +2787,7 @@ type DatabaseSchema = {
   program_sessions_tracks: typeof program_sessions_tracks;
   program_sessions: typeof program_sessions;
   venue_maps: typeof venue_maps;
+  payload_mcp_api_keys: typeof payload_mcp_api_keys;
   payload_kv: typeof payload_kv;
   payload_locked_documents: typeof payload_locked_documents;
   payload_locked_documents_rels: typeof payload_locked_documents_rels;
@@ -2662,6 +2839,7 @@ type DatabaseSchema = {
   relations_program_sessions_tracks: typeof relations_program_sessions_tracks;
   relations_program_sessions: typeof relations_program_sessions;
   relations_venue_maps: typeof relations_venue_maps;
+  relations_payload_mcp_api_keys: typeof relations_payload_mcp_api_keys;
   relations_payload_kv: typeof relations_payload_kv;
   relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels;
   relations_payload_locked_documents: typeof relations_payload_locked_documents;
