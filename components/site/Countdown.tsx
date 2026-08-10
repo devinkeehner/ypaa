@@ -12,9 +12,12 @@ function remaining(target: string) {
   };
 }
 
+const initialTime = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+
 export function Countdown({ target }: { target: string }) {
-  const [time, setTime] = useState(() => remaining(target));
+  const [time, setTime] = useState(initialTime);
   useEffect(() => {
+    setTime(remaining(target));
     const timer = window.setInterval(() => setTime(remaining(target)), 1000);
     return () => window.clearInterval(timer);
   }, [target]);

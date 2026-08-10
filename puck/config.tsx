@@ -1,8 +1,8 @@
 "use client";
 
-import type { Config, Field } from "@puckeditor/core";
+import { Render, type Config, type Field } from "@puckeditor/core";
 import { RichText as PayloadRichText } from "@payloadcms/richtext-lexical/react";
-import { Fragment, type CSSProperties, type ElementType, type ReactNode } from "react";
+import { Fragment, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { Countdown } from "@/components/site/Countdown";
 import { ProgramExplorer } from "@/components/site/ProgramExplorer";
@@ -45,8 +45,24 @@ type ImageBlock = Base & { image?: MediaValue | null; caption: string; aspectRat
 type FreeText = Base & { text: string; fontSize: string; color: string; fontWeight: string; alignment: "left" | "center" | "right" };
 type RichTextSection = Base & { content: unknown; fontSize: string; color: string; fontWeight: string; alignment: "left" | "center" | "right" };
 type ProgramSchedule = Base & { heading: string; introduction: string };
+type ButtonRow = Base & { primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; alignment: "left" | "center" | "right" };
+type Issue = { title: string; body: string; icon: string };
+type IssuesSection = Base & { eyebrow: string; heading: string; body: string; issues: Issue[] };
+type IssueCard = { label: string; heading: string; body: string; image?: MediaValue | null };
+type IssueCards = Base & { heading: string; intro: string; variant: "cards" | "editorial" | "image"; cards: IssueCard[] };
+type Quote = Base & { heading: string; quote: string; attribution: string; role: string; image?: MediaValue | null };
+type ResultStat = { value: string; label: string; detail: string };
+type ResultsStats = Base & { heading: string; intro: string; stats: ResultStat[] };
+type SupporterLogo = { name: string; image?: MediaValue | null };
+type SupporterLogos = Base & { heading: string; intro: string; logos: SupporterLogo[] };
+type ActionTab = { label: string; description: string };
+type ActionTabs = Base & { heading: string; intro: string; tabs: ActionTab[] };
+type GalleryItem = { image?: MediaValue | null; caption: string; size: "small" | "medium" | "large" };
+type MediaGallery = Base & { heading: string; intro: string; items: GalleryItem[] };
+type ContentColumn = { label: string };
+type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[] };
 
-type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; ProgramSchedule: ProgramSchedule };
+type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; ContentRow: ContentRow };
 
 export const editableFieldsByType: Record<keyof Components, string[]> = {
   HeroCountdown: ["eyebrow", "heading", "body", "eventDate", "eventLocation", "registerLabel", "hotelLabel"],
@@ -59,6 +75,15 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   RichText: ["content"],
   FreeText: ["text"],
   ProgramSchedule: ["heading", "introduction"],
+  ButtonRow: ["primaryLabel", "secondaryLabel"],
+  IssuesSection: ["eyebrow", "heading", "body"],
+  IssueCards: ["heading", "intro"],
+  QuoteBlock: ["heading", "quote", "attribution", "role"],
+  ResultsStats: ["heading", "intro"],
+  SupporterLogos: ["heading", "intro"],
+  ActionTabs: ["heading", "intro"],
+  MediaGallery: ["heading", "intro"],
+  ContentRow: [],
 };
 
 const text = (label: string) => ({ type: "text" as const, label, contentEditable: true });
@@ -172,6 +197,80 @@ const meetingsField: Field<MeetingListing[]> = {
   getItemSummary: (item) => item.name || item.location || "Meeting",
 };
 
+const issueField: Field<Issue[]> = {
+  type: "array",
+  label: "Issues",
+  defaultItemProps: { title: "", body: "", icon: "" },
+  arrayFields: { title: plainText("Title"), body: area("Description"), icon: plainText("Icon or short label") },
+  getItemSummary: (item) => item.title || "Issue",
+};
+
+const issueCardsField: Field<IssueCard[]> = {
+  type: "array",
+  label: "Issue cards",
+  defaultItemProps: { label: "", heading: "", body: "", image: null },
+  arrayFields: { label: plainText("Editor label"), heading: plainText("Heading"), body: area("Description"), image: mediaField("Card image") },
+  getItemSummary: (item) => item.heading || item.label || "Issue card",
+};
+
+const statsField: Field<ResultStat[]> = {
+  type: "array",
+  label: "Results",
+  defaultItemProps: { value: "", label: "", detail: "" },
+  arrayFields: { value: plainText("Value"), label: plainText("Label"), detail: area("Detail") },
+  getItemSummary: (item) => item.label || item.value || "Result",
+};
+
+const logosField: Field<SupporterLogo[]> = {
+  type: "array",
+  label: "Supporters",
+  defaultItemProps: { name: "", image: null },
+  arrayFields: { name: plainText("Name"), image: mediaField("Logo") },
+  getItemSummary: (item) => item.name || "Supporter",
+};
+
+const tabsField: Field<ActionTab[]> = {
+  type: "array",
+  label: "Action tabs",
+  defaultItemProps: { label: "", description: "" },
+  arrayFields: { label: plainText("Tab label"), description: area("Description") },
+  getItemSummary: (item) => item.label || "Action tab",
+};
+
+const galleryItemsField: Field<GalleryItem[]> = {
+  type: "array",
+  label: "Gallery items",
+  defaultItemProps: { image: null, caption: "", size: "medium" },
+  arrayFields: { image: mediaField("Image"), caption: plainText("Caption"), size: { type: "select", label: "Tile size", options: [{ label: "Small", value: "small" }, { label: "Medium", value: "medium" }, { label: "Large", value: "large" }] } },
+  getItemSummary: (item) => item.caption || "Gallery item",
+};
+
+const columnsField: Field<ContentColumn[]> = {
+  type: "array",
+  label: "Columns",
+  defaultItemProps: { label: "" },
+  arrayFields: { label: plainText("Editor label") },
+  getItemSummary: (item) => item.label || "Column",
+};
+
+const nestedElementTypes = ["Image", "RichText", "FreeText", "ButtonRow"];
+
+function NestedDropZone({ children, label }: { children: ReactNode; label: string }) {
+  return <div className={styles.nestedDropZone}><span>{label}</span>{children}</div>;
+}
+
+function renderZone(props: Base & { puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } }, zone: string, label: string) {
+  const content = props.puck?.renderDropZone ? props.puck.renderDropZone({ zone, allow: nestedElementTypes, minEmptyHeight: 96 }) : null;
+  return props.puck?.isEditing ? <NestedDropZone label={label}>{content}</NestedDropZone> : <>{content}</>;
+}
+
+function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } }) {
+  const [active, setActive] = useState(0);
+  const tabs = props.tabs?.length ? props.tabs : [];
+  const editing = Boolean(props.puck?.isEditing);
+  return <section className={styles.actionTabs} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.tabList} role="tablist">{tabs.map((tab, index) => <button aria-selected={active === index} key={`${tab.label}-${index}`} onClick={() => setActive(index)} role="tab" type="button">{tab.label || `Tab ${index + 1}`}</button>)}</div><div className={styles.tabPanels}>{tabs.map((tab, index) => (editing || active === index) ? <section aria-label={tab.label || `Tab ${index + 1}`} className={styles.tabPanel} hidden={!editing && active !== index} key={`${tab.label}-${index}`}><Editable as="p" field="intro" props={props}>{tab.description}</Editable>{renderZone(props, `${props.id}:tabs.${index}.blocks`, `Drop elements in ${tab.label || `tab ${index + 1}`}`)}</section> : null)}</div></div></section>;
+}
+
 function styleFor(props: Base, field: string): CSSProperties {
   const values = props as unknown as Record<string, unknown>;
   const cap = `${field.charAt(0).toUpperCase()}${field.slice(1)}`;
@@ -202,8 +301,12 @@ function Button({ href, children, outline = false }: { href: string; children: R
 
 export const puckConfig: Config<Components> = {
   categories: {
-    "NECYPAA sections": { components: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "ProgramSchedule", "CallToAction"] },
-    "Flexible elements": { components: ["Image", "RichText", "FreeText"] },
+    "Home page": { components: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "ProgramSchedule", "CallToAction"] },
+    "Issues & priorities": { components: ["IssuesSection", "IssueCards"] },
+    "Proof & results": { components: ["QuoteBlock", "ResultsStats", "SupporterLogos"] },
+    "Take action": { components: ["ActionTabs", "ButtonRow"] },
+    "Media & layout": { components: ["MediaGallery", "ContentRow"] },
+    "Elements for rows": { components: ["Image", "RichText", "FreeText"] },
   },
   root: {
     fields: {
@@ -326,23 +429,63 @@ export const puckConfig: Config<Components> = {
       fields: { heading: text("Heading"), introduction: area("Introduction") },
       render: (props) => <section id={props.id}><ProgramExplorer embedded heading={props.heading} introduction={props.introduction} /></section>,
     },
+    ButtonRow: {
+      label: "Button row",
+      defaultProps: { primaryLabel: "Learn more", primaryUrl: "#", secondaryLabel: "Get involved", secondaryUrl: "#", alignment: "left" },
+      fields: { primaryLabel: text("Primary label"), primaryUrl: plainText("Primary URL"), secondaryLabel: text("Secondary label"), secondaryUrl: plainText("Secondary URL"), alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } },
+      render: (props) => <div className={styles.buttonRow} data-align={props.alignment} id={props.id}><Button href={props.primaryUrl}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button>{props.secondaryLabel ? <Button href={props.secondaryUrl} outline><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button> : null}</div>,
+    },
+    IssuesSection: {
+      label: "Issues section",
+      defaultProps: { eyebrow: "What matters", heading: "Priorities for a stronger weekend", body: "Give visitors a clear view of the issues and ideas guiding this work.", issues: [{ title: "Connection", body: "Make meaningful recovery connection easier to find.", icon: "01" }, { title: "Service", body: "Create practical ways to be part of the convention.", icon: "02" }, { title: "Accessibility", body: "Build a welcoming weekend for every attendee.", icon: "03" }] },
+      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Introduction"), issues: issueField },
+      render: (props) => <section className={styles.issuesSection} id={props.id}><div className={styles.shell}><Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="body" props={props}>{props.body}</Editable><div className={styles.issuesGrid}>{props.issues.map((issue, index) => <article key={`${issue.title}-${index}`}><span>{issue.icon || String(index + 1).padStart(2, "0")}</span><h3>{issue.title}</h3><p>{issue.body}</p></article>)}</div></div></section>,
+    },
+    IssueCards: {
+      label: "Issues cards",
+      defaultProps: { heading: "The work in focus", intro: "Use cards for detailed priorities, workshops, or ways to help.", variant: "cards", cards: [{ label: "Recovery", heading: "Bring the next person in", body: "Create a convention experience that makes newcomers feel at home.", image: null }, { label: "Fellowship", heading: "Make room for connection", body: "Build spaces where people can meet, laugh, and stay involved.", image: null }, { label: "Service", heading: "Put gratitude into action", body: "Invite people into the work that makes the weekend possible.", image: null }] },
+      fields: { heading: text("Heading"), intro: area("Introduction"), variant: { type: "select", label: "Card style", options: [{ label: "Cards", value: "cards" }, { label: "Editorial", value: "editorial" }, { label: "Image overlay", value: "image" }] }, cards: issueCardsField },
+      render: (props) => <section className={styles.issueCards} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.issueCardGrid}>{props.cards.map((card, index) => { const image = normalizeMedia(card.image); return <article data-has-image={Boolean(image)} key={`${card.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><small>{card.label}</small><h3>{card.heading}</h3><p>{card.body}</p>{renderZone(props, `${props.id}:cards.${index}.blocks`, `Drop elements in ${card.label || `card ${index + 1}`}`)}</div></article>; })}</div></div></section>,
+    },
+    QuoteBlock: {
+      label: "Quote / testimonial",
+      defaultProps: { heading: "In their own words", quote: "Recovery is not something we do alone. It is something we learn to live together.", attribution: "NECYPAA member", role: "Host committee", image: null },
+      fields: { heading: text("Heading"), quote: area("Quote"), attribution: text("Attribution"), role: text("Role"), image: mediaField("Portrait") },
+      render: (props) => { const image = normalizeMedia(props.image); return <section className={styles.quote} id={props.id}><div className={styles.shell}><div>{image ? <img alt={image.alt || ""} src={image.url} /> : <span className={styles.quoteMark}>“</span>}</div><div><Editable as="p" className={styles.eyebrow} field="heading" props={props}>{props.heading}</Editable><Editable as="blockquote" field="quote" props={props}>{props.quote}</Editable><Editable as="strong" field="attribution" props={props}>{props.attribution}</Editable><Editable as="span" field="role" props={props}>{props.role}</Editable></div></div></section>; },
+    },
+    ResultsStats: {
+      label: "Results stats",
+      defaultProps: { heading: "What we are building", intro: "A few concrete markers of a weekend built by and for the fellowship.", stats: [{ value: "4", label: "days together", detail: "Speakers, workshops, dancing, service, and fellowship." }, { value: "9", label: "states represented", detail: "Young people and young-at-heart members across the Northeast." }, { value: "1", label: "shared purpose", detail: "Carry the message and make space for recovery." }] },
+      fields: { heading: text("Heading"), intro: area("Introduction"), stats: statsField },
+      render: (props) => <section className={styles.resultsStats} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div>{props.stats.map((stat, index) => <article key={`${stat.label}-${index}`}><strong>{stat.value}</strong><span>{stat.label}</span><p>{stat.detail}</p></article>)}</div></div></section>,
+    },
+    SupporterLogos: {
+      label: "Supporter logos",
+      defaultProps: { heading: "With support from", intro: "Recognize the groups, committees, and partners helping make the weekend possible.", logos: [{ name: "Connecticut YPAA", image: null }, { name: "New England Area", image: null }, { name: "Host Committee", image: null }, { name: "Recovery Community", image: null }] },
+      fields: { heading: text("Heading"), intro: area("Introduction"), logos: logosField },
+      render: (props) => <section className={styles.supporterLogos} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div>{props.logos.map((logo, index) => { const image = normalizeMedia(logo.image); return <article key={`${logo.name}-${index}`}>{image ? <img alt={image.alt || logo.name} src={image.url} /> : <span>{logo.name.slice(0, 2).toUpperCase()}</span>}<strong>{logo.name}</strong></article>; })}</div></div></section>,
+    },
+    ActionTabs: {
+      label: "Action tabs",
+      defaultProps: { heading: "Choose how to join in", intro: "Give visitors a clear next step and add richer content inside each action tab.", tabs: [{ label: "Register", description: "Save your place for NECYPAA XXXVI." }, { label: "Volunteer", description: "Join the committee work that brings the convention to life." }, { label: "Stay connected", description: "Follow announcements, meetings, and upcoming events." }] },
+      fields: { heading: text("Heading"), intro: area("Introduction"), tabs: tabsField },
+      render: ActionTabsRender,
+    },
+    MediaGallery: {
+      label: "Media gallery",
+      defaultProps: { heading: "From the fellowship", intro: "Add flyers, event moments, and artwork from Payload Media.", items: [{ image: null, caption: "Add a gallery image", size: "large" }, { image: null, caption: "Add a gallery image", size: "medium" }, { image: null, caption: "Add a gallery image", size: "small" }] },
+      fields: { heading: text("Heading"), intro: area("Introduction"), items: galleryItemsField },
+      render: (props) => <section className={styles.mediaGallery} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div>{props.items.map((item, index) => { const image = normalizeMedia(item.image); return <figure data-size={item.size} key={`${item.caption}-${index}`}>{image ? <img alt={image.alt || item.caption} src={image.url} /> : <div>Choose media</div>}<Editable as="figcaption" field="intro" props={props}>{item.caption}</Editable></figure>; })}</div></div></section>,
+    },
+    ContentRow: {
+      label: "Content row",
+      defaultProps: { layout: "two", columns: [{ label: "Column 1" }, { label: "Column 2" }] },
+      fields: { layout: { type: "select", label: "Columns", options: [{ label: "One column", value: "one" }, { label: "Two equal", value: "two" }, { label: "Left wide", value: "leftWide" }, { label: "Right wide", value: "rightWide" }, { label: "Three equal", value: "three" }, { label: "Four equal", value: "four" }] }, columns: columnsField },
+      render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section>,
+    },
   },
 };
 
 export function PublicPuckRender({ data }: { data: NECYPAAData }) {
-  const renderers = puckConfig.components as unknown as Record<
-    string,
-    { render: (props: Base) => ReactNode }
-  >;
-
-  return (
-    <main className={styles.canvas}>
-      {data.content.map((item, index) => {
-        const renderer = renderers[item.type];
-        if (!renderer) return null;
-        const key = typeof item.props.id === "string" ? item.props.id : `${item.type}-${index}`;
-        return <Fragment key={key}>{renderer.render(item.props as Base)}</Fragment>;
-      })}
-    </main>
-  );
+  return <Render config={puckConfig as unknown as Config} data={data} />;
 }

@@ -64,6 +64,7 @@ export type SupportedTimezones =
 export interface Config {
   auth: {
     users: UserAuthOperations;
+    'payload-mcp-api-keys': PayloadMcpApiKeyAuthOperations;
   };
   blocks: {};
   collections: {
@@ -79,6 +80,7 @@ export interface Config {
     rooms: Room;
     'program-sessions': ProgramSession;
     'venue-maps': VenueMap;
+    'payload-mcp-api-keys': PayloadMcpApiKey;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -98,13 +100,14 @@ export interface Config {
     rooms: RoomsSelect<false> | RoomsSelect<true>;
     'program-sessions': ProgramSessionsSelect<false> | ProgramSessionsSelect<true>;
     'venue-maps': VenueMapsSelect<false> | VenueMapsSelect<true>;
+    'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: number;
+    defaultIDType: string;
   };
   fallbackLocale: null;
   globals: {};
@@ -113,7 +116,7 @@ export interface Config {
   widgets: {
     collections: CollectionsWidget;
   };
-  user: User;
+  user: User | PayloadMcpApiKey;
   jobs: {
     tasks: unknown;
     workflows: unknown;
@@ -137,12 +140,30 @@ export interface UserAuthOperations {
     password: string;
   };
 }
+export interface PayloadMcpApiKeyAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
+  };
+}
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: number;
+  id: string;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -167,7 +188,7 @@ export interface User {
  * via the `definition` "media".
  */
 export interface Media {
-  id: number;
+  id: string;
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -188,7 +209,7 @@ export interface Media {
  * via the `definition` "pages".
  */
 export interface Page {
-  id: number;
+  id: string;
   title: string;
   slug: string;
   /**
@@ -213,20 +234,20 @@ export interface Page {
             /**
              * The transparent artwork layered in front of the hero.
              */
-            foregroundImage?: (number | null) | Media;
+            foregroundImage?: (string | null) | Media;
             /**
              * Optional full-bleed image or muted looping video behind the hero.
              */
-            backgroundImage?: (number | null) | Media;
+            backgroundImage?: (string | null) | Media;
             /**
              * Optional still image shown while a background video loads and when reduced motion is preferred.
              */
-            backgroundPosterImage?: (number | null) | Media;
+            backgroundPosterImage?: (string | null) | Media;
             /**
              * 0 leaves the background untouched; 100 applies the strongest readability overlay.
              */
             backgroundDarkness?: number | null;
-            image?: (number | null) | Media;
+            image?: (string | null) | Media;
             textStyles?:
               | {
                   [k: string]: unknown;
@@ -246,7 +267,7 @@ export interface Page {
             body?: string | null;
             advisoryHeading?: string | null;
             advisoryBody?: string | null;
-            image?: (number | null) | Media;
+            image?: (string | null) | Media;
             textStyles?:
               | {
                   [k: string]: unknown;
@@ -297,12 +318,12 @@ export interface Page {
             upcomingBody?: string | null;
             upcomingDate?: string | null;
             upcomingLocation?: string | null;
-            upcomingImage?: (number | null) | Media;
+            upcomingImage?: (string | null) | Media;
             pastEvents?:
               | {
                   title?: string | null;
                   date?: string | null;
-                  image?: (number | null) | Media;
+                  image?: (string | null) | Media;
                   id?: string | null;
                 }[]
               | null;
@@ -351,7 +372,7 @@ export interface Page {
             primaryUrl?: string | null;
             secondaryLabel?: string | null;
             secondaryUrl?: string | null;
-            image?: (number | null) | Media;
+            image?: (string | null) | Media;
             textStyles?:
               | {
                   [k: string]: unknown;
@@ -366,7 +387,7 @@ export interface Page {
             blockType: 'CallToAction';
           }
         | {
-            image: number | Media;
+            image: string | Media;
             caption?: string | null;
             aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
             width?: ('full' | 'wide' | 'content') | null;
@@ -412,6 +433,309 @@ export interface Page {
             blockType: 'FreeText';
           }
         | {
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            alignment?: ('left' | 'center' | 'right') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'ButtonRow';
+          }
+        | {
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            issues?:
+              | {
+                  title?: string | null;
+                  body?: string | null;
+                  icon?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'IssuesSection';
+          }
+        | {
+            heading?: string | null;
+            intro?: string | null;
+            variant?: ('cards' | 'editorial' | 'image') | null;
+            cards?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  body?: string | null;
+                  image?: (string | null) | Media;
+                  blocks?:
+                    | (
+                        | {
+                            image: string | Media;
+                            caption?: string | null;
+                            aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                            width?: ('full' | 'wide' | 'content') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Image';
+                          }
+                        | {
+                            /**
+                             * Headings, links, lists, quotes, alignment, and inline formatting.
+                             */
+                            content?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            fontWeight?: ('400' | '700') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'RichText';
+                          }
+                        | {
+                            text?: string | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            fontWeight?: ('400' | '700') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'FreeText';
+                          }
+                        | {
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ButtonRow';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'IssueCards';
+          }
+        | {
+            heading?: string | null;
+            quote?: string | null;
+            attribution?: string | null;
+            role?: string | null;
+            image?: (string | null) | Media;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'QuoteBlock';
+          }
+        | {
+            heading?: string | null;
+            intro?: string | null;
+            stats?:
+              | {
+                  value?: string | null;
+                  label?: string | null;
+                  detail?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'ResultsStats';
+          }
+        | {
+            heading?: string | null;
+            intro?: string | null;
+            logos?:
+              | {
+                  name?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'SupporterLogos';
+          }
+        | {
+            heading?: string | null;
+            intro?: string | null;
+            tabs?:
+              | {
+                  label?: string | null;
+                  description?: string | null;
+                  blocks?:
+                    | (
+                        | {
+                            image: string | Media;
+                            caption?: string | null;
+                            aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                            width?: ('full' | 'wide' | 'content') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Image';
+                          }
+                        | {
+                            /**
+                             * Headings, links, lists, quotes, alignment, and inline formatting.
+                             */
+                            content?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            fontWeight?: ('400' | '700') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'RichText';
+                          }
+                        | {
+                            text?: string | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            fontWeight?: ('400' | '700') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'FreeText';
+                          }
+                        | {
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ButtonRow';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'ActionTabs';
+          }
+        | {
+            heading?: string | null;
+            intro?: string | null;
+            items?:
+              | {
+                  image?: (string | null) | Media;
+                  caption?: string | null;
+                  size?: ('small' | 'medium' | 'large') | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'MediaGallery';
+          }
+        | {
+            layout?: ('one' | 'two' | 'leftWide' | 'rightWide' | 'three' | 'four') | null;
+            columns?:
+              | {
+                  label?: string | null;
+                  blocks?:
+                    | (
+                        | {
+                            image: string | Media;
+                            caption?: string | null;
+                            aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                            width?: ('full' | 'wide' | 'content') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Image';
+                          }
+                        | {
+                            /**
+                             * Headings, links, lists, quotes, alignment, and inline formatting.
+                             */
+                            content?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            fontWeight?: ('400' | '700') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'RichText';
+                          }
+                        | {
+                            text?: string | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            fontWeight?: ('400' | '700') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'FreeText';
+                          }
+                        | {
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ButtonRow';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'ContentRow';
+          }
+        | {
             heading?: string | null;
             introduction?: string | null;
             id?: string | null;
@@ -447,7 +771,7 @@ export interface Page {
  * via the `definition` "merchandise".
  */
 export interface Merchandise {
-  id: number;
+  id: string;
   name: string;
   /**
    * Used in links. Example: escaping-the-mad-realm
@@ -456,7 +780,7 @@ export interface Merchandise {
   /**
    * Main product image shown in the merchandise portal.
    */
-  image: number | Media;
+  image: string | Media;
   /**
    * A short description of the design. This text is searchable.
    */
@@ -505,44 +829,44 @@ export interface Merchandise {
  * via the `definition` "tenants".
  */
 export interface Tenant {
-  id: number;
+  id: string;
   name: string;
   /**
    * Header logo. Leave blank to use the NECYPAA 36 fallback mark.
    */
-  logo?: (number | null) | Media;
+  logo?: (string | null) | Media;
   logoAlt?: string | null;
   theme: {
     /**
-     * Six-digit hex code, including the #.
+     * Choose a color or paste an exact six-digit hex code.
      */
     primary: string;
     /**
-     * Six-digit hex code, including the #.
+     * Choose a color or paste an exact six-digit hex code.
      */
     secondary: string;
     /**
-     * Six-digit hex code, including the #.
+     * Choose a color or paste an exact six-digit hex code.
      */
     accent: string;
     /**
-     * Six-digit hex code, including the #.
+     * Choose a color or paste an exact six-digit hex code.
      */
     background: string;
     /**
-     * Six-digit hex code, including the #.
+     * Choose a color or paste an exact six-digit hex code.
      */
     surface: string;
     /**
-     * Six-digit hex code, including the #.
+     * Choose a color or paste an exact six-digit hex code.
      */
     lightBackground: string;
     /**
-     * Six-digit hex code, including the #.
+     * Choose a color or paste an exact six-digit hex code.
      */
     darkText: string;
     /**
-     * Six-digit hex code, including the #.
+     * Choose a color or paste an exact six-digit hex code.
      */
     lightText: string;
   };
@@ -556,7 +880,7 @@ export interface Tenant {
  * via the `definition` "access-codes".
  */
 export interface AccessCode {
-  id: number;
+  id: string;
   code: string;
   active: boolean;
   maxRedemptions: number;
@@ -574,13 +898,13 @@ export interface AccessCode {
  * via the `definition` "cash-transactions".
  */
 export interface CashTransaction {
-  id: number;
+  id: string;
   purchaserName: string;
   purchaserEmail: string;
   recordedValueCents: number;
   status: 'recorded' | 'voided';
   stripeCustomerId?: string | null;
-  accessCode: number | AccessCode;
+  accessCode: string | AccessCode;
   order:
     | {
         [k: string]: unknown;
@@ -610,7 +934,7 @@ export interface CashTransaction {
  * via the `definition` "attendees".
  */
 export interface Attendee {
-  id: number;
+  id: string;
   sourceKey: string;
   attendeeName: string;
   attendeeEmail: string;
@@ -633,7 +957,7 @@ export interface Attendee {
   stripePaymentIntentId?: string | null;
   stripeChargeId?: string | null;
   stripeCustomerId?: string | null;
-  cashTransaction?: (number | null) | CashTransaction;
+  cashTransaction?: (string | null) | CashTransaction;
   policyAcknowledgments: {
     status: 'pending' | 'signed' | 'waived';
     signatureName?: string | null;
@@ -669,7 +993,7 @@ export interface Attendee {
  * via the `definition` "breakfast-tickets".
  */
 export interface BreakfastTicket {
-  id: number;
+  id: string;
   sourceKey: string;
   ticketCode: string;
   breakfastDay: 'friday' | 'saturday' | 'sunday';
@@ -677,7 +1001,7 @@ export interface BreakfastTicket {
   unitPriceCents: number;
   purchaserName: string;
   purchaserEmail: string;
-  attendee?: (number | null) | Attendee;
+  attendee?: (string | null) | Attendee;
   paymentSource: 'stripe' | 'cash';
   paymentStatus: 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
   dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout';
@@ -686,7 +1010,7 @@ export interface BreakfastTicket {
   stripePaymentIntentId?: string | null;
   stripeChargeId?: string | null;
   stripeCustomerId?: string | null;
-  cashTransaction?: (number | null) | CashTransaction;
+  cashTransaction?: (string | null) | CashTransaction;
   rawMetadata?:
     | {
         [k: string]: unknown;
@@ -706,7 +1030,7 @@ export interface BreakfastTicket {
  * via the `definition` "rooms".
  */
 export interface Room {
-  id: number;
+  id: string;
   name: string;
   shortLabel: string;
   floor?: string | null;
@@ -734,13 +1058,13 @@ export interface Room {
  * via the `definition` "program-sessions".
  */
 export interface ProgramSession {
-  id: number;
+  id: string;
   title: string;
   slug: string;
   sessionType: 'main_meeting' | 'panel' | 'workshop' | 'dance' | 'marathon' | 'affinity' | 'special_event';
   startAt: string;
   endAt: string;
-  room: number | Room;
+  room: string | Room;
   shortDescription?: string | null;
   presenters?:
     | {
@@ -758,7 +1082,7 @@ export interface ProgramSession {
    * Public accessibility details, such as ASL, captions, or step-free access.
    */
   accessibility?: string | null;
-  image?: (number | null) | Media;
+  image?: (string | null) | Media;
   featured?: boolean | null;
   status: 'draft' | 'published' | 'cancelled';
   /**
@@ -775,10 +1099,10 @@ export interface ProgramSession {
  * via the `definition` "venue-maps".
  */
 export interface VenueMap {
-  id: number;
+  id: string;
   title: string;
   floor: string;
-  image?: (number | null) | Media;
+  image?: (string | null) | Media;
   altText: string;
   description?: string | null;
   status: 'draft' | 'published';
@@ -787,11 +1111,254 @@ export interface VenueMap {
   createdAt: string;
 }
 /**
+ * API keys control which collections, resources, tools, and prompts MCP clients can access
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-mcp-api-keys".
+ */
+export interface PayloadMcpApiKey {
+  id: string;
+  /**
+   * The user that the API key is associated with.
+   */
+  user: string | User;
+  /**
+   * A useful label for the API key.
+   */
+  label?: string | null;
+  /**
+   * The purpose of the API key.
+   */
+  description?: string | null;
+  users?: {
+    /**
+     * Allow clients to find users.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create users.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update users.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete users.
+     */
+    delete?: boolean | null;
+  };
+  media?: {
+    /**
+     * Allow clients to find media.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create media.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update media.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete media.
+     */
+    delete?: boolean | null;
+  };
+  pages?: {
+    /**
+     * Allow clients to find pages.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create pages.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update pages.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete pages.
+     */
+    delete?: boolean | null;
+  };
+  merchandise?: {
+    /**
+     * Allow clients to find merchandise.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create merchandise.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update merchandise.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete merchandise.
+     */
+    delete?: boolean | null;
+  };
+  tenants?: {
+    /**
+     * Allow clients to find tenants.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create tenants.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update tenants.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete tenants.
+     */
+    delete?: boolean | null;
+  };
+  accessCodes?: {
+    /**
+     * Allow clients to find access-codes.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create access-codes.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update access-codes.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete access-codes.
+     */
+    delete?: boolean | null;
+  };
+  cashTransactions?: {
+    /**
+     * Allow clients to find cash-transactions.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create cash-transactions.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update cash-transactions.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete cash-transactions.
+     */
+    delete?: boolean | null;
+  };
+  attendees?: {
+    /**
+     * Allow clients to find attendees.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create attendees.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update attendees.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete attendees.
+     */
+    delete?: boolean | null;
+  };
+  breakfastTickets?: {
+    /**
+     * Allow clients to find breakfast-tickets.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create breakfast-tickets.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update breakfast-tickets.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete breakfast-tickets.
+     */
+    delete?: boolean | null;
+  };
+  rooms?: {
+    /**
+     * Allow clients to find rooms.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create rooms.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update rooms.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete rooms.
+     */
+    delete?: boolean | null;
+  };
+  programSessions?: {
+    /**
+     * Allow clients to find program-sessions.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create program-sessions.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update program-sessions.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete program-sessions.
+     */
+    delete?: boolean | null;
+  };
+  venueMaps?: {
+    /**
+     * Allow clients to find venue-maps.
+     */
+    find?: boolean | null;
+    /**
+     * Allow clients to create venue-maps.
+     */
+    create?: boolean | null;
+    /**
+     * Allow clients to update venue-maps.
+     */
+    update?: boolean | null;
+    /**
+     * Allow clients to delete venue-maps.
+     */
+    delete?: boolean | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  enableAPIKey?: boolean | null;
+  apiKey?: string | null;
+  apiKeyIndex?: string | null;
+  collection: 'payload-mcp-api-keys';
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: number;
+  id: string;
   key: string;
   data:
     | {
@@ -808,61 +1375,70 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number;
+  id: string;
   document?:
     | ({
         relationTo: 'users';
-        value: number | User;
+        value: string | User;
       } | null)
     | ({
         relationTo: 'media';
-        value: number | Media;
+        value: string | Media;
       } | null)
     | ({
         relationTo: 'pages';
-        value: number | Page;
+        value: string | Page;
       } | null)
     | ({
         relationTo: 'merchandise';
-        value: number | Merchandise;
+        value: string | Merchandise;
       } | null)
     | ({
         relationTo: 'tenants';
-        value: number | Tenant;
+        value: string | Tenant;
       } | null)
     | ({
         relationTo: 'access-codes';
-        value: number | AccessCode;
+        value: string | AccessCode;
       } | null)
     | ({
         relationTo: 'cash-transactions';
-        value: number | CashTransaction;
+        value: string | CashTransaction;
       } | null)
     | ({
         relationTo: 'attendees';
-        value: number | Attendee;
+        value: string | Attendee;
       } | null)
     | ({
         relationTo: 'breakfast-tickets';
-        value: number | BreakfastTicket;
+        value: string | BreakfastTicket;
       } | null)
     | ({
         relationTo: 'rooms';
-        value: number | Room;
+        value: string | Room;
       } | null)
     | ({
         relationTo: 'program-sessions';
-        value: number | ProgramSession;
+        value: string | ProgramSession;
       } | null)
     | ({
         relationTo: 'venue-maps';
-        value: number | VenueMap;
+        value: string | VenueMap;
+      } | null)
+    | ({
+        relationTo: 'payload-mcp-api-keys';
+        value: string | PayloadMcpApiKey;
       } | null);
   globalSlug?: string | null;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: string | User;
+      }
+    | {
+        relationTo: 'payload-mcp-api-keys';
+        value: string | PayloadMcpApiKey;
+      };
   updatedAt: string;
   createdAt: string;
 }
@@ -871,11 +1447,16 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  id: string;
+  user:
+    | {
+        relationTo: 'users';
+        value: string | User;
+      }
+    | {
+        relationTo: 'payload-mcp-api-keys';
+        value: string | PayloadMcpApiKey;
+      };
   key?: string | null;
   value?:
     | {
@@ -894,7 +1475,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number;
+  id: string;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -1091,6 +1672,279 @@ export interface PagesSelect<T extends boolean = true> {
               color?: T;
               fontWeight?: T;
               alignment?: T;
+              id?: T;
+              blockName?: T;
+            };
+        ButtonRow?:
+          | T
+          | {
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              alignment?: T;
+              id?: T;
+              blockName?: T;
+            };
+        IssuesSection?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              issues?:
+                | T
+                | {
+                    title?: T;
+                    body?: T;
+                    icon?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        IssueCards?:
+          | T
+          | {
+              heading?: T;
+              intro?: T;
+              variant?: T;
+              cards?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    body?: T;
+                    image?: T;
+                    blocks?:
+                      | T
+                      | {
+                          Image?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                aspectRatio?: T;
+                                width?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          RichText?:
+                            | T
+                            | {
+                                content?: T;
+                                fontSize?: T;
+                                color?: T;
+                                fontWeight?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          FreeText?:
+                            | T
+                            | {
+                                text?: T;
+                                fontSize?: T;
+                                color?: T;
+                                fontWeight?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ButtonRow?:
+                            | T
+                            | {
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        QuoteBlock?:
+          | T
+          | {
+              heading?: T;
+              quote?: T;
+              attribution?: T;
+              role?: T;
+              image?: T;
+              id?: T;
+              blockName?: T;
+            };
+        ResultsStats?:
+          | T
+          | {
+              heading?: T;
+              intro?: T;
+              stats?:
+                | T
+                | {
+                    value?: T;
+                    label?: T;
+                    detail?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        SupporterLogos?:
+          | T
+          | {
+              heading?: T;
+              intro?: T;
+              logos?:
+                | T
+                | {
+                    name?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        ActionTabs?:
+          | T
+          | {
+              heading?: T;
+              intro?: T;
+              tabs?:
+                | T
+                | {
+                    label?: T;
+                    description?: T;
+                    blocks?:
+                      | T
+                      | {
+                          Image?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                aspectRatio?: T;
+                                width?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          RichText?:
+                            | T
+                            | {
+                                content?: T;
+                                fontSize?: T;
+                                color?: T;
+                                fontWeight?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          FreeText?:
+                            | T
+                            | {
+                                text?: T;
+                                fontSize?: T;
+                                color?: T;
+                                fontWeight?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ButtonRow?:
+                            | T
+                            | {
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        MediaGallery?:
+          | T
+          | {
+              heading?: T;
+              intro?: T;
+              items?:
+                | T
+                | {
+                    image?: T;
+                    caption?: T;
+                    size?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        ContentRow?:
+          | T
+          | {
+              layout?: T;
+              columns?:
+                | T
+                | {
+                    label?: T;
+                    blocks?:
+                      | T
+                      | {
+                          Image?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                aspectRatio?: T;
+                                width?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          RichText?:
+                            | T
+                            | {
+                                content?: T;
+                                fontSize?: T;
+                                color?: T;
+                                fontWeight?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          FreeText?:
+                            | T
+                            | {
+                                text?: T;
+                                fontSize?: T;
+                                color?: T;
+                                fontWeight?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ButtonRow?:
+                            | T
+                            | {
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                  };
               id?: T;
               blockName?: T;
             };
@@ -1332,6 +2186,116 @@ export interface VenueMapsSelect<T extends boolean = true> {
   displayOrder?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-mcp-api-keys_select".
+ */
+export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
+  user?: T;
+  label?: T;
+  description?: T;
+  users?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  media?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  pages?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  merchandise?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  tenants?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  accessCodes?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  cashTransactions?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  attendees?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  breakfastTickets?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  rooms?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  programSessions?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  venueMaps?:
+    | T
+    | {
+        find?: T;
+        create?: T;
+        update?: T;
+        delete?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  enableAPIKey?: T;
+  apiKey?: T;
+  apiKeyIndex?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -61,7 +61,7 @@ const SESSION_SEEDS: SeedSession[] = [
 
 export async function ensureProgramSeed(payload: Payload) {
   const existingRooms = await payload.find({ collection: "rooms", limit: 100, overrideAccess: true });
-  const roomIDs = new Map<string, number>();
+  const roomIDs = new Map<string, string>();
 
   for (const seed of ROOM_SEEDS) {
     const existing = existingRooms.docs.find((room) => room.name === seed.name);

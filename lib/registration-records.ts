@@ -20,7 +20,7 @@ type RecordContext = {
   stripePaymentIntentId?: string;
   stripeChargeId?: string;
   stripeCustomerId?: string;
-  cashTransactionId?: number;
+  cashTransactionId?: string;
   rawMetadata?: Record<string, string>;
   breakfastUnitPriceCents?: number;
 };
@@ -30,13 +30,13 @@ const count = (value: string | undefined) => Math.max(0, Math.min(20, Math.floor
 const cents = (value: string | undefined) => Math.max(0, Math.min(100000, Math.floor(Number(value) || 0)));
 const useful = (value: string | undefined, fallback = "") => value && !["none", "not applicable", "not_applicable"].includes(value.toLowerCase()) ? value : fallback;
 
-async function findBySourceKey(payload: Payload, collection: "attendees" | "breakfast-tickets", sourceKey: string) {
+async function findBySourceKey(payload: Payload, collection: "attendees" | "breakfast-tickets", sourceKey: string): Promise<{ id: string } | undefined> {
   const result = await payload.find({ collection, overrideAccess: true, limit: 1, where: { sourceKey: { equals: sourceKey } } });
-  return result.docs[0];
+  return result.docs[0] as { id: string } | undefined;
 }
 
 export async function recordRegistrationOrder(payload: Payload, order: RegistrationOrder, context: RecordContext) {
-  let attendeeId: number | undefined;
+  let attendeeId: string | undefined;
   if (order.selfRegistration) {
     const sourceKey = `${context.sourceKey}:registration:1`;
     const data = {

@@ -18,8 +18,23 @@ const COMPONENT_TYPES = new Set([
   "Image",
   "RichText",
   "FreeText",
+  "ButtonRow",
+  "IssuesSection",
+  "IssueCards",
+  "QuoteBlock",
+  "ResultsStats",
+  "SupporterLogos",
+  "ActionTabs",
+  "MediaGallery",
+  "ContentRow",
   "ProgramSchedule",
 ]);
+
+const NESTED_ZONES: Partial<Record<string, "cards" | "columns" | "tabs">> = {
+  IssueCards: "cards",
+  ContentRow: "columns",
+  ActionTabs: "tabs",
+};
 
 const STYLE_SUFFIXES = ["Color", "FontSize", "FontWeight", "TextAlign"];
 
@@ -132,26 +147,62 @@ function packMedia(type: string, props: Record<string, unknown>) {
       );
     }
   }
+  if (type === "IssueCards" && Array.isArray(packed.cards)) {
+    packed.cards = packed.cards.map((card) => isRecord(card) ? { ...card, image: mediaID(card.image) } : card);
+  }
+  if (type === "QuoteBlock") packed.image = mediaID(packed.image);
+  if (type === "SupporterLogos" && Array.isArray(packed.logos)) {
+    packed.logos = packed.logos.map((logo) => isRecord(logo) ? { ...logo, image: mediaID(logo.image) } : logo);
+  }
+  if (type === "MediaGallery" && Array.isArray(packed.items)) {
+    packed.items = packed.items.map((item) => isRecord(item) ? { ...item, image: mediaID(item.image) } : item);
+  }
   return packed;
 }
 
-function layoutToContent(layout: unknown): ComponentData<Record<string, unknown>>[] {
-  if (!Array.isArray(layout)) return [];
+function zoneID(parentID: string, collection: "cards" | "columns" | "tabs", index: number) {
+  return `${parentID}:${collection}.${index}.blocks`;
+}
 
-  return layout.flatMap((block, index) => {
+function nestedLayoutToContent(value: unknown): ComponentData<Record<string, unknown>>[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((block, index) => {
+    if (!isRecord(block) || typeof block.blockType !== "string" || !COMPONENT_TYPES.has(block.blockType)) return [];
+    const { blockType, ...storedProps } = block;
+    const id = typeof block.id === "string" ? block.id : `${blockType}-nested-${index}`;
+    return [{ type: blockType, props: { ...normalizeProps(blockType, expandTextStyles(storedProps)), id } } as ComponentData<Record<string, unknown>>];
+  });
+}
+
+function layoutToContent(layout: unknown): { content: ComponentData<Record<string, unknown>>[]; zones: Record<string, ComponentData<Record<string, unknown>>[]> } {
+  if (!Array.isArray(layout)) return { content: [], zones: {} };
+  const zones: Record<string, ComponentData<Record<string, unknown>>[]> = {};
+
+  const content = layout.flatMap((block, index) => {
     if (!isRecord(block) || typeof block.blockType !== "string") return [];
     if (!COMPONENT_TYPES.has(block.blockType)) return [];
     const { blockType, ...storedProps } = block;
     delete storedProps.blockName;
     const id = typeof block.id === "string" ? block.id : `${blockType}-${index}`;
+    const nestedCollection = NESTED_ZONES[blockType];
+    if (nestedCollection && Array.isArray(storedProps[nestedCollection])) {
+      storedProps[nestedCollection] = storedProps[nestedCollection].map((item, nestedIndex) => {
+        if (!isRecord(item)) return item;
+        const { blocks, ...itemProps } = item;
+        zones[zoneID(id, nestedCollection, nestedIndex)] = nestedLayoutToContent(blocks);
+        return itemProps;
+      });
+    }
 
     const props = normalizeProps(blockType, {
-          ...expandTextStyles(storedProps),
-          id,
-        });
+      ...expandTextStyles(storedProps),
+      id,
+    });
 
     return [{ type: blockType, props: { ...props, id } } as ComponentData<Record<string, unknown>>];
   });
+
+  return { content, zones };
 }
 
 export function isPuckData(value: unknown): value is NECYPAAData {
@@ -188,20 +239,43 @@ export function pageDocumentToPuckData(page: PageDocument): NECYPAAData {
 }
 
 export function pageLayoutToPuckData(page: PageDocument): NECYPAAData {
+  const converted = layoutToContent(page.layout);
   return {
     root: pageRoot(page),
-    content: layoutToContent(page.layout),
-    zones: {},
+    content: converted.content,
+    zones: converted.zones,
   } as NECYPAAData;
+}
+
+function contentToNestedLayout(value: unknown): Array<Record<string, unknown>> {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item, index) => {
+    if (!isRecord(item) || typeof item.type !== "string" || !COMPONENT_TYPES.has(item.type)) return [];
+    const props = isRecord(item.props) ? normalizeProps(item.type, item.props) : {};
+    const id = typeof props.id === "string" ? props.id : `${item.type}-nested-${index}`;
+    return [{ ...packMedia(item.type, packTextStyles({ ...props, id })), id, blockType: item.type }];
+  });
+}
+
+function packNestedZones(type: string, id: string, props: Record<string, unknown>, zones: Record<string, unknown>) {
+  const collection = NESTED_ZONES[type];
+  if (!collection || !Array.isArray(props[collection])) return props;
+  return {
+    ...props,
+    [collection]: props[collection].map((item, index) => isRecord(item)
+      ? { ...item, blocks: contentToNestedLayout(zones[zoneID(id, collection, index)]) }
+      : item),
+  };
 }
 
 export function puckDataToLayout(value: unknown): Array<Record<string, unknown>> {
   const data = normalizePuckData(value);
+  const zones = isRecord(data.zones) ? data.zones : {};
   return data.content.flatMap((item, index) => {
     if (!COMPONENT_TYPES.has(item.type)) return [];
     const props = isRecord(item.props) ? normalizeProps(item.type, item.props) : {};
     const id = typeof props.id === "string" ? props.id : `${item.type}-${index}`;
-    const packed = packMedia(item.type, packTextStyles({ ...props, id }));
+    const packed = packMedia(item.type, packTextStyles(packNestedZones(item.type, id, { ...props, id }, zones)));
     return [{ ...packed, id, blockType: item.type }];
   });
 }

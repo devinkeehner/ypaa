@@ -286,6 +286,163 @@ export const ProgramScheduleBlock: Block = {
   ],
 };
 
+const nestedElementBlocks: Block[] = [ImageBlock, RichTextBlock, FreeTextBlock];
+
+export const ButtonRowBlock: Block = {
+  slug: "ButtonRow",
+  labels: { singular: "Button row", plural: "Button rows" },
+  admin: { group: "Flexible content" },
+  fields: [
+    { name: "primaryLabel", type: "text" },
+    { name: "primaryUrl", type: "text" },
+    { name: "secondaryLabel", type: "text" },
+    { name: "secondaryUrl", type: "text" },
+    { name: "alignment", type: "select", defaultValue: "left", options: ["left", "center", "right"] },
+  ],
+};
+
+nestedElementBlocks.push(ButtonRowBlock);
+
+export const IssuesSectionBlock: Block = {
+  slug: "IssuesSection",
+  labels: { singular: "Issues section", plural: "Issues sections" },
+  admin: { group: "Campaign-inspired sections" },
+  fields: [
+    { name: "eyebrow", type: "text" },
+    { name: "heading", type: "text" },
+    { name: "body", type: "textarea" },
+    {
+      name: "issues",
+      type: "array",
+      labels: { singular: "Issue", plural: "Issues" },
+      fields: [{ name: "title", type: "text" }, { name: "body", type: "textarea" }, { name: "icon", type: "text" }],
+    },
+  ],
+};
+
+export const IssueCardsBlock: Block = {
+  slug: "IssueCards",
+  labels: { singular: "Issue cards", plural: "Issue card sections" },
+  admin: { group: "Campaign-inspired sections" },
+  fields: [
+    { name: "heading", type: "text" },
+    { name: "intro", type: "textarea" },
+    { name: "variant", type: "select", defaultValue: "cards", options: ["cards", "editorial", "image"] },
+    {
+      name: "cards",
+      type: "array",
+      labels: { singular: "Issue card", plural: "Issue cards" },
+      fields: [
+        { name: "label", type: "text" },
+        { name: "heading", type: "text" },
+        { name: "body", type: "textarea" },
+        { name: "image", type: "upload", relationTo: "media" },
+        { name: "blocks", type: "blocks", blocks: nestedElementBlocks },
+      ],
+    },
+  ],
+};
+
+export const QuoteBlock: Block = {
+  slug: "QuoteBlock",
+  labels: { singular: "Quote", plural: "Quotes" },
+  admin: { group: "Campaign-inspired sections" },
+  fields: [
+    { name: "heading", type: "text" },
+    { name: "quote", type: "textarea" },
+    { name: "attribution", type: "text" },
+    { name: "role", type: "text" },
+    { name: "image", type: "upload", relationTo: "media" },
+  ],
+};
+
+export const ResultsStatsBlock: Block = {
+  slug: "ResultsStats",
+  labels: { singular: "Results stats", plural: "Results stat sections" },
+  admin: { group: "Campaign-inspired sections" },
+  fields: [
+    { name: "heading", type: "text" },
+    { name: "intro", type: "textarea" },
+    {
+      name: "stats",
+      type: "array",
+      labels: { singular: "Result", plural: "Results" },
+      fields: [{ name: "value", type: "text" }, { name: "label", type: "text" }, { name: "detail", type: "textarea" }],
+    },
+  ],
+};
+
+export const SupporterLogosBlock: Block = {
+  slug: "SupporterLogos",
+  labels: { singular: "Supporter logos", plural: "Supporter logo sections" },
+  admin: { group: "Campaign-inspired sections" },
+  fields: [
+    { name: "heading", type: "text" },
+    { name: "intro", type: "textarea" },
+    {
+      name: "logos",
+      type: "array",
+      labels: { singular: "Supporter", plural: "Supporters" },
+      fields: [{ name: "name", type: "text" }, { name: "image", type: "upload", relationTo: "media" }],
+    },
+  ],
+};
+
+export const ActionTabsBlock: Block = {
+  slug: "ActionTabs",
+  labels: { singular: "Action tabs", plural: "Action tab sections" },
+  admin: { group: "Campaign-inspired sections" },
+  fields: [
+    { name: "heading", type: "text" },
+    { name: "intro", type: "textarea" },
+    {
+      name: "tabs",
+      type: "array",
+      labels: { singular: "Action tab", plural: "Action tabs" },
+      fields: [
+        { name: "label", type: "text" },
+        { name: "description", type: "textarea" },
+        { name: "blocks", type: "blocks", blocks: nestedElementBlocks },
+      ],
+    },
+  ],
+};
+
+export const MediaGalleryBlock: Block = {
+  slug: "MediaGallery",
+  labels: { singular: "Media gallery", plural: "Media galleries" },
+  admin: { group: "Campaign-inspired sections" },
+  fields: [
+    { name: "heading", type: "text" },
+    { name: "intro", type: "textarea" },
+    {
+      name: "items",
+      type: "array",
+      labels: { singular: "Gallery item", plural: "Gallery items" },
+      fields: [
+        { name: "image", type: "upload", relationTo: "media" },
+        { name: "caption", type: "text" },
+        { name: "size", type: "select", defaultValue: "medium", options: ["small", "medium", "large"] },
+      ],
+    },
+  ],
+};
+
+export const ContentRowBlock: Block = {
+  slug: "ContentRow",
+  labels: { singular: "Content row", plural: "Content rows" },
+  admin: { group: "Layout rows" },
+  fields: [
+    { name: "layout", type: "select", defaultValue: "two", options: ["one", "two", "leftWide", "rightWide", "three", "four"] },
+    {
+      name: "columns",
+      type: "array",
+      labels: { singular: "Column", plural: "Columns" },
+      fields: [{ name: "label", type: "text" }, { name: "blocks", type: "blocks", blocks: nestedElementBlocks }],
+    },
+  ],
+};
+
 export const PAGE_LAYOUT_BLOCKS: Block[] = [
   HeroCountdownBlock,
   AboutBlock,
@@ -296,5 +453,14 @@ export const PAGE_LAYOUT_BLOCKS: Block[] = [
   ImageBlock,
   RichTextBlock,
   FreeTextBlock,
+  ButtonRowBlock,
+  IssuesSectionBlock,
+  IssueCardsBlock,
+  QuoteBlock,
+  ResultsStatsBlock,
+  SupporterLogosBlock,
+  ActionTabsBlock,
+  MediaGalleryBlock,
+  ContentRowBlock,
   ProgramScheduleBlock,
 ];
