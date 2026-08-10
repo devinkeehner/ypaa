@@ -1,6 +1,5 @@
 import { sqliteD1Adapter } from "@payloadcms/db-d1-sqlite";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
-import { mcpPlugin, type MCPPluginConfig } from "@payloadcms/plugin-mcp";
 import { r2Storage } from "@payloadcms/storage-r2";
 import { buildConfig } from "payload";
 
@@ -19,71 +18,6 @@ import { VenueMaps } from "./collections/VenueMaps";
 import { ensureProgramSeed } from "./lib/program-seed";
 import { payloadBucket, payloadD1 } from "./server/cloudflare-bindings";
 
-const payloadCollections = [
-  Users,
-  Media,
-  Pages,
-  Merchandise,
-  Tenants,
-  AccessCodes,
-  CashTransactions,
-  Attendees,
-  BreakfastTickets,
-  Rooms,
-  ProgramSessions,
-  VenueMaps,
-];
-
-type McpResponse = { content: Array<{ text: string; type: string }> };
-
-const mcpSensitiveKeys = new Set([
-  "apiKey",
-  "apiKeyIndex",
-  "hash",
-  "password",
-  "resetPasswordExpiration",
-  "resetPasswordToken",
-  "salt",
-]);
-
-function redactMcpValue(value: unknown, key?: string): unknown {
-  if (key && mcpSensitiveKeys.has(key)) return "[redacted]";
-  if (Array.isArray(value)) return value.map((entry) => redactMcpValue(entry));
-  if (value && typeof value === "object") {
-    return Object.fromEntries(
-      Object.entries(value).map(([entryKey, entryValue]) => [entryKey, redactMcpValue(entryValue, entryKey)]),
-    );
-  }
-  return value;
-}
-
-function redactMcpResponse(response: McpResponse): McpResponse {
-  return {
-    ...response,
-    content: response.content.map((item) => {
-      try {
-        return { ...item, text: JSON.stringify(redactMcpValue(JSON.parse(item.text)), null, 2) };
-      } catch {
-        return item;
-      }
-    }),
-  };
-}
-
-const mcpCollections = Object.fromEntries(
-  payloadCollections.map((collection) => [
-    collection.slug,
-    {
-      enabled: { find: true, create: true, update: true, delete: true },
-      description:
-        typeof collection.admin?.description === "string"
-          ? collection.admin.description
-          : `Manage ${collection.slug} records for NECYPAA XXXVI.`,
-      ...(collection.slug === Users.slug ? { overrideResponse: redactMcpResponse } : {}),
-    },
-  ]),
-) as NonNullable<MCPPluginConfig["collections"]>;
-
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -101,7 +35,7 @@ export default buildConfig({
       },
     },
   },
-  collections: payloadCollections,
+  collections: [Users, Media, Pages, Merchandise, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, Rooms, ProgramSessions, VenueMaps],
   db: sqliteD1Adapter({ binding: payloadD1, push: false }),
   editor: lexicalEditor(),
   plugins: [
@@ -109,7 +43,6 @@ export default buildConfig({
       bucket: payloadBucket,
       collections: { media: true },
     }),
-    mcpPlugin({ collections: mcpCollections }),
   ],
   secret: process.env.PAYLOAD_SECRET || "local-preview-secret-change-me",
   telemetry: false,

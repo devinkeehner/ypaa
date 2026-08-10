@@ -11,36 +11,6 @@
 - Attendee records include attendance/payment source, accessibility information, all policy acknowledgments and signature status, Stripe or cash references, and editable internal notes.
 - Every breakfast admission gets its own **Breakfast Tickets** record, so individual tickets can later be marked used, refunded, or voided.
 
-## MCP content management
-
-The official Payload MCP plugin is enabled at `/api/mcp` for every collection in this project:
-
-- Users
-- Media
-- Pages
-- Merchandise
-- Tenant / site settings
-- Access Codes
-- Cash Transactions
-- Attendees
-- Breakfast Tickets
-- Rooms
-- Program Sessions
-- Venue Maps
-
-After deployment, create an MCP API key from **Admin → MCP → API Keys**. The key’s capability checklist controls which collection operations an MCP client may use, even though all collection capabilities are available in the project configuration. Start with `find` and `update`; enable `create` or `delete` only when the connected client needs them. Existing Payload access rules and hooks still apply, and user authentication secrets are redacted from MCP responses.
-
-The MCP endpoint requires an API key as a bearer token and uses the standard streamable HTTP transport:
-
-```text
-POST /api/mcp
-Authorization: Bearer <MCP API key>
-Content-Type: application/json
-Accept: application/json, text/event-stream
-```
-
-Keep the API key outside Git, prompts, and site content. The D1 migration `drizzle/0016_unusual_gamma_corps.sql` creates the plugin’s API-key storage table.
-
 ## Registration and Stripe
 
 `/register` provides one checkout for a $40 self-registration, $25 breakfast tickets for Friday, Saturday, or Sunday, a named $40 registration scholarship, or a general scholarship contribution starting at $40. The policy and its seven acknowledgments appear only when the purchaser registers themself. A named scholarship collects recipient contact, state, homegroup, and accessibility details and creates an expected attendee whose policy status remains pending until personally completed.
