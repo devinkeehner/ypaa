@@ -1,7 +1,7 @@
-import { sqliteD1Adapter } from "@payloadcms/db-d1-sqlite";
+import { mongooseAdapter } from "@payloadcms/db-mongodb";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { mcpPlugin, type MCPPluginConfig } from "@payloadcms/plugin-mcp";
-import { r2Storage } from "@payloadcms/storage-r2";
+import { s3Storage } from "@payloadcms/storage-s3";
 import { buildConfig } from "payload";
 
 import { Users } from "./collections/Users";
@@ -17,7 +17,6 @@ import { Rooms } from "./collections/Rooms";
 import { ProgramSessions } from "./collections/ProgramSessions";
 import { VenueMaps } from "./collections/VenueMaps";
 import { ensureProgramSeed } from "./lib/program-seed";
-import { payloadBucket, payloadD1 } from "./server/cloudflare-bindings";
 
 const payloadCollections = [
   Users,
@@ -102,14 +101,37 @@ export default buildConfig({
     },
   },
   collections: payloadCollections,
-  db: sqliteD1Adapter({ binding: payloadD1, push: false }),
+  db: mongooseAdapter({
+    url: process.env.DATABASE_URI || process.env.MONGODB_URI || "",
+  }),
   editor: lexicalEditor(),
   plugins: [
-    r2Storage({
-      bucket: payloadBucket,
-      collections: { media: true },
+    s3Storage({
+      enabled: process.env.ENABLE_R2 === "true",
+      collections: {
+        media: {
+          generateFileURL: ({ filename }) => {
+            const baseURL = (process.env.R2_PUBLIC_BASE_URL || "").replace(/\/$/, "");
+            return baseURL ? `${baseURL}/${encodeURIComponent(filename)}` : filename;
+          },
+        },
+      },
+      config: {
+        endpoint: process.env.R2_ENDPOINT || "",
+        region: "auto",
+        forcePathStyle: true,
+        credentials: {
+          accessKeyId: process.env.R2_ACCESS_KEY_ID || "",
+          secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || "",
+        },
+      },
+      bucket: process.env.R2_BUCKET || "",
+      acl: "public-read",
     }),
-    mcpPlugin({ collections: mcpCollections }),
+    mcpPlugin({
+      disabled: process.env.PAYLOAD_ENABLE_MCP !== "true",
+      collections: mcpCollections,
+    }),
   ],
   secret: process.env.PAYLOAD_SECRET || "local-preview-secret-change-me",
   telemetry: false,

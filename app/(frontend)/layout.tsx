@@ -1,20 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import config from "@payload-config";
 import { getPayload } from "payload";
 
 import { FrontendStyles } from "./frontend-styles";
 import { defaultTenantTheme, TenantThemeProvider, type TenantTheme } from "@/components/site/TenantThemeProvider";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "NECYPAA XXXVI | Hartford, Connecticut",
@@ -66,9 +55,7 @@ export default async function FrontendLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className="antialiased">
         <FrontendStyles />
         <TenantThemeProvider settings={tenant}>{children}</TenantThemeProvider>
       </body>
