@@ -2,8 +2,8 @@
 
 import "@puckeditor/core/puck.css";
 
-import { createUsePuck, Puck, type Config, type Data, type Plugin } from "@puckeditor/core";
-import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, Bold, Palette, Redo2, Save, Undo2 } from "lucide-react";
+import { createUsePuck, Drawer, fieldsPlugin, Puck, type Config, type Data, type Plugin } from "@puckeditor/core";
+import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, BarChart3, Bold, Box, Columns2, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, MousePointerClick, Palette, Quote, Redo2, Save, Search, TextQuote, Type, Undo2 } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 import { editableFieldsByType, puckConfig } from "@/puck/config";
@@ -153,6 +153,103 @@ function BuilderHeader({ actions, pageId, pageTitle }: { actions: React.ReactNod
   return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerActions}><button disabled={!history.hasPast} aria-label="Undo" onClick={() => history.back()} type="button"><Undo2 /></button><button disabled={!history.hasFuture} aria-label="Redo" onClick={() => history.forward()} type="button"><Redo2 /></button>{actions}</div></div><FormattingBar /></header>;
 }
 
+type BlockPalette = "sections" | "rows" | "elements";
+
+const BLOCK_LIBRARY: Record<string, { icon?: React.ReactNode; label: string; rowColumns?: number[] }> = {
+  HeroCountdown: { icon: <LayoutTemplate />, label: "Countdown Hero" },
+  About: { icon: <FileText />, label: "Introduction" },
+  MeetingInfo: { icon: <ListTree />, label: "Meeting Details" },
+  Events: { icon: <GalleryHorizontal />, label: "Events" },
+  MeetingDirectory: { icon: <ListTree />, label: "Meeting Directory" },
+  ProgramSchedule: { icon: <ListTree />, label: "Program Schedule" },
+  CallToAction: { icon: <MousePointerClick />, label: "Action Banner" },
+  IssuesSection: { icon: <HandHeart />, label: "Feature Section" },
+  IssueCards: { icon: <Columns2 />, label: "Feature Cards" },
+  QuoteBlock: { icon: <Quote />, label: "Quote" },
+  ResultsStats: { icon: <BarChart3 />, label: "Statistics" },
+  SupporterLogos: { icon: <HandHeart />, label: "Partner Logos" },
+  ActionTabs: { icon: <ListTree />, label: "Content Tabs" },
+  MediaGallery: { icon: <GalleryHorizontal />, label: "Media Gallery" },
+  ContentRow: { icon: <Columns2 />, label: "Custom Row" },
+  RowOneColumn: { label: "1 Column", rowColumns: [1] },
+  RowTwoColumns: { label: "2 Columns", rowColumns: [1, 1] },
+  RowLeftWide: { label: "Left Wide", rowColumns: [2, 1] },
+  RowRightWide: { label: "Right Wide", rowColumns: [1, 2] },
+  RowThreeColumns: { label: "3 Columns", rowColumns: [1, 1, 1] },
+  RowFourColumns: { label: "4 Columns", rowColumns: [1, 1, 1, 1] },
+  ButtonRow: { icon: <MousePointerClick />, label: "Button Row" },
+  Image: { icon: <ImageIcon />, label: "Image" },
+  RichText: { icon: <TextQuote />, label: "Rich Text" },
+  FreeText: { icon: <Type />, label: "Text Snippet" },
+};
+
+const BLOCK_PALETTES: Array<{ blocks: string[]; description: string; id: BlockPalette; label: string }> = [
+  {
+    id: "sections",
+    label: "Sections",
+    description: "Complete, ready-to-customize page sections.",
+    blocks: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "ProgramSchedule", "CallToAction", "IssuesSection", "IssueCards", "QuoteBlock", "ResultsStats", "SupporterLogos", "ActionTabs", "MediaGallery"],
+  },
+  {
+    id: "rows",
+    label: "Rows",
+    description: "Flexible column layouts for custom page compositions.",
+    blocks: ["RowOneColumn", "RowTwoColumns", "RowLeftWide", "RowRightWide", "RowThreeColumns", "RowFourColumns"],
+  },
+  {
+    id: "elements",
+    label: "Elements",
+    description: "Smaller building blocks for rows, cards, and tabs.",
+    blocks: ["ButtonRow", "Image", "RichText", "FreeText"],
+  },
+];
+
+function PaletteTabIcon({ palette }: { palette: BlockPalette }) {
+  const Icon = palette === "sections" ? LayoutTemplate : palette === "rows" ? Columns2 : Box;
+  return <span className={styles.blockPaletteTabIcon}><Icon aria-hidden="true" /></span>;
+}
+
+function RowSkeleton({ columns }: { columns: number[] }) {
+  return <span className={styles.blockPaletteRowSkeleton}>{columns.map((column, index) => <span key={index} style={{ flex: column }} />)}</span>;
+}
+
+function BlockPaletteItem({ name }: { children?: React.ReactNode; name: string }) {
+  const item = BLOCK_LIBRARY[name] || { icon: <Box />, label: name.replace(/([A-Z])/g, " $1").trim() };
+  return <div className={styles.blockPaletteItem} data-kind={item.rowColumns ? "row" : "standard"}>
+    {item.rowColumns ? <RowSkeleton columns={item.rowColumns} /> : <span className={styles.blockPaletteIcon}>{item.icon}</span>}
+    <span className={styles.blockPaletteLabel}>{item.label}</span>
+  </div>;
+}
+
+function BlockDrawerPanel({ palette }: { palette: (typeof BLOCK_PALETTES)[number] }) {
+  const [query, setQuery] = useState("");
+  const matchingBlocks = palette.blocks.filter((name) => BLOCK_LIBRARY[name]?.label.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
+
+  return <div aria-label={`${palette.label}. ${palette.description}`} className={styles.blockDrawerPanel} data-palette={palette.id}>
+    <div className={styles.blockDrawerHeader}><strong>{palette.label}</strong><span>{matchingBlocks.length}</span></div>
+    <label className={styles.blockDrawerSearch}>
+      <Search aria-hidden="true" />
+      <input aria-label={`Search ${palette.label.toLocaleLowerCase()}`} onChange={(event) => setQuery(event.target.value)} placeholder="Search blocks" type="search" value={query} />
+    </label>
+    {matchingBlocks.length ? <Drawer>{matchingBlocks.map((name) => <Drawer.Item key={name} label={BLOCK_LIBRARY[name]?.label || name} name={name}>{BlockPaletteItem}</Drawer.Item>)}</Drawer> : <p className={styles.blockDrawerEmpty}>No matching blocks.</p>}
+  </div>;
+}
+
+function BlockLibraryPanel() {
+  const [activePalette, setActivePalette] = useState<BlockPalette>("sections");
+  const active = BLOCK_PALETTES.find((palette) => palette.id === activePalette) || BLOCK_PALETTES[0];
+  return <div className={styles.blockLibraryPanel}>
+    <div aria-label="Block categories" className={styles.blockLibraryTabs} role="tablist">
+      {BLOCK_PALETTES.map((palette) => <button aria-selected={palette.id === active.id} key={palette.id} onClick={() => setActivePalette(palette.id)} role="tab" title={palette.label} type="button"><PaletteTabIcon palette={palette.id} /><span>{palette.label}</span></button>)}
+    </div>
+    <BlockDrawerPanel key={active.id} palette={active} />
+  </div>;
+}
+
+function createBlockLibraryPlugin(): Plugin {
+  return { name: "blocks", label: "Blocks", icon: <PaletteTabIcon palette="sections" />, render: () => <BlockLibraryPanel /> };
+}
+
 export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle, tenantId, tenantTheme }: { initialData: NECYPAAData; pageId: string; pageSlug: string; pageTitle: string; tenantId?: string; tenantTheme: TenantTheme }) {
   const [data, setData] = useState(initialData);
   const [previewTheme, setPreviewTheme] = useState<ThemeColors>(() => themeColors(tenantTheme));
@@ -183,7 +280,11 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
     header: ({ actions }: { actions: React.ReactNode }) => <BuilderHeader actions={actions} pageId={pageId} pageTitle={pageTitle} />,
     ...(pageSlug === "home" ? { iframe: ThemePreviewFrame } : {}),
   }), [pageId, pageSlug, pageTitle]);
-  const plugins = useMemo<Plugin[]>(() => pageSlug === "home" ? [{ name: "theme", label: "Theme", icon: <Palette />, render: () => <ThemePanel initialTenantId={tenantId} initialTheme={tenantTheme} onPreviewTheme={setPreviewTheme} /> }] : [], [pageSlug, tenantId, tenantTheme]);
+  const plugins = useMemo<Plugin[]>(() => [
+    createBlockLibraryPlugin(),
+    fieldsPlugin({ desktopSideBar: "left" }),
+    ...(pageSlug === "home" ? [{ name: "theme", label: "Theme", icon: <Palette />, render: () => <ThemePanel initialTenantId={tenantId} initialTheme={tenantTheme} onPreviewTheme={setPreviewTheme} /> }] : []),
+  ], [pageSlug, tenantId, tenantTheme]);
   const editorConfig = useMemo(() => {
     const richText = puckConfig.components.RichText;
     return {

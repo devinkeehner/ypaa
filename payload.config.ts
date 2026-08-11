@@ -1,6 +1,7 @@
 import { mongooseAdapter } from "@payloadcms/db-mongodb";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { mcpPlugin, type MCPPluginConfig } from "@payloadcms/plugin-mcp";
+import { formBuilderPlugin } from "@payloadcms/plugin-form-builder";
 import { s3Storage } from "@payloadcms/storage-s3";
 import { buildConfig } from "payload";
 
@@ -106,6 +107,11 @@ export default buildConfig({
   }),
   editor: lexicalEditor(),
   plugins: [
+    formBuilderPlugin({
+      fields: {
+        payment: false,
+      },
+    }),
     s3Storage({
       enabled: process.env.ENABLE_R2 === "true",
       collections: {

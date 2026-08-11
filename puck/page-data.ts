@@ -27,14 +27,30 @@ const COMPONENT_TYPES = new Set([
   "ActionTabs",
   "MediaGallery",
   "ContentRow",
+  "RowOneColumn",
+  "RowTwoColumns",
+  "RowLeftWide",
+  "RowRightWide",
+  "RowThreeColumns",
+  "RowFourColumns",
   "ProgramSchedule",
 ]);
 
 const NESTED_ZONES: Partial<Record<string, "cards" | "columns" | "tabs">> = {
   IssueCards: "cards",
   ContentRow: "columns",
+  RowOneColumn: "columns",
+  RowTwoColumns: "columns",
+  RowLeftWide: "columns",
+  RowRightWide: "columns",
+  RowThreeColumns: "columns",
+  RowFourColumns: "columns",
   ActionTabs: "tabs",
 };
+
+function payloadBlockType(type: string) {
+  return type.startsWith("Row") ? "ContentRow" : type;
+}
 
 const STYLE_SUFFIXES = ["Color", "FontSize", "FontWeight", "TextAlign"];
 
@@ -253,7 +269,7 @@ function contentToNestedLayout(value: unknown): Array<Record<string, unknown>> {
     if (!isRecord(item) || typeof item.type !== "string" || !COMPONENT_TYPES.has(item.type)) return [];
     const props = isRecord(item.props) ? normalizeProps(item.type, item.props) : {};
     const id = typeof props.id === "string" ? props.id : `${item.type}-nested-${index}`;
-    return [{ ...packMedia(item.type, packTextStyles({ ...props, id })), id, blockType: item.type }];
+    return [{ ...packMedia(item.type, packTextStyles({ ...props, id })), id, blockType: payloadBlockType(item.type) }];
   });
 }
 

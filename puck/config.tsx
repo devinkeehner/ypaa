@@ -62,7 +62,7 @@ type MediaGallery = Base & { heading: string; intro: string; items: GalleryItem[
 type ContentColumn = { label: string };
 type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[] };
 
-type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; ContentRow: ContentRow };
+type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; ContentRow: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow };
 
 export const editableFieldsByType: Record<keyof Components, string[]> = {
   HeroCountdown: ["eyebrow", "heading", "body", "eventDate", "eventLocation", "registerLabel", "hotelLabel"],
@@ -84,6 +84,12 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   ActionTabs: ["heading", "intro"],
   MediaGallery: ["heading", "intro"],
   ContentRow: [],
+  RowOneColumn: [],
+  RowTwoColumns: [],
+  RowLeftWide: [],
+  RowRightWide: [],
+  RowThreeColumns: [],
+  RowFourColumns: [],
 };
 
 const text = (label: string) => ({ type: "text" as const, label, contentEditable: true });
@@ -199,7 +205,7 @@ const meetingsField: Field<MeetingListing[]> = {
 
 const issueField: Field<Issue[]> = {
   type: "array",
-  label: "Issues",
+  label: "Features",
   defaultItemProps: { title: "", body: "", icon: "" },
   arrayFields: { title: plainText("Title"), body: area("Description"), icon: plainText("Icon or short label") },
   getItemSummary: (item) => item.title || "Issue",
@@ -207,7 +213,7 @@ const issueField: Field<Issue[]> = {
 
 const issueCardsField: Field<IssueCard[]> = {
   type: "array",
-  label: "Issue cards",
+  label: "Feature cards",
   defaultItemProps: { label: "", heading: "", body: "", image: null },
   arrayFields: { label: plainText("Editor label"), heading: plainText("Heading"), body: area("Description"), image: mediaField("Card image") },
   getItemSummary: (item) => item.heading || item.label || "Issue card",
@@ -215,7 +221,7 @@ const issueCardsField: Field<IssueCard[]> = {
 
 const statsField: Field<ResultStat[]> = {
   type: "array",
-  label: "Results",
+  label: "Statistics",
   defaultItemProps: { value: "", label: "", detail: "" },
   arrayFields: { value: plainText("Value"), label: plainText("Label"), detail: area("Detail") },
   getItemSummary: (item) => item.label || item.value || "Result",
@@ -223,7 +229,7 @@ const statsField: Field<ResultStat[]> = {
 
 const logosField: Field<SupporterLogo[]> = {
   type: "array",
-  label: "Supporters",
+  label: "Partners",
   defaultItemProps: { name: "", image: null },
   arrayFields: { name: plainText("Name"), image: mediaField("Logo") },
   getItemSummary: (item) => item.name || "Supporter",
@@ -231,7 +237,7 @@ const logosField: Field<SupporterLogo[]> = {
 
 const tabsField: Field<ActionTab[]> = {
   type: "array",
-  label: "Action tabs",
+  label: "Content tabs",
   defaultItemProps: { label: "", description: "" },
   arrayFields: { label: plainText("Tab label"), description: area("Description") },
   getItemSummary: (item) => item.label || "Action tab",
@@ -254,6 +260,7 @@ const columnsField: Field<ContentColumn[]> = {
 };
 
 const nestedElementTypes = ["Image", "RichText", "FreeText", "ButtonRow"];
+const contentRowFields = { layout: { type: "select" as const, label: "Columns", options: [{ label: "One column", value: "one" }, { label: "Two equal", value: "two" }, { label: "Left wide", value: "leftWide" }, { label: "Right wide", value: "rightWide" }, { label: "Three equal", value: "three" }, { label: "Four equal", value: "four" }] }, columns: columnsField };
 
 function NestedDropZone({ children, label }: { children: ReactNode; label: string }) {
   return <div className={styles.nestedDropZone}><span>{label}</span>{children}</div>;
@@ -302,9 +309,9 @@ function Button({ href, children, outline = false }: { href: string; children: R
 export const puckConfig: Config<Components> = {
   categories: {
     "Home page": { components: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "ProgramSchedule", "CallToAction"] },
-    "Issues & priorities": { components: ["IssuesSection", "IssueCards"] },
-    "Proof & results": { components: ["QuoteBlock", "ResultsStats", "SupporterLogos"] },
-    "Take action": { components: ["ActionTabs", "ButtonRow"] },
+    "Features & content": { components: ["IssuesSection", "IssueCards"] },
+    "Quotes & highlights": { components: ["QuoteBlock", "ResultsStats", "SupporterLogos"] },
+    "Actions & tabs": { components: ["ActionTabs", "ButtonRow"] },
     "Media & layout": { components: ["MediaGallery", "ContentRow"] },
     "Elements for rows": { components: ["Image", "RichText", "FreeText"] },
   },
@@ -436,13 +443,13 @@ export const puckConfig: Config<Components> = {
       render: (props) => <div className={styles.buttonRow} data-align={props.alignment} id={props.id}><Button href={props.primaryUrl}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button>{props.secondaryLabel ? <Button href={props.secondaryUrl} outline><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button> : null}</div>,
     },
     IssuesSection: {
-      label: "Issues section",
+      label: "Feature section",
       defaultProps: { eyebrow: "What matters", heading: "Priorities for a stronger weekend", body: "Give visitors a clear view of the issues and ideas guiding this work.", issues: [{ title: "Connection", body: "Make meaningful recovery connection easier to find.", icon: "01" }, { title: "Service", body: "Create practical ways to be part of the convention.", icon: "02" }, { title: "Accessibility", body: "Build a welcoming weekend for every attendee.", icon: "03" }] },
       fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Introduction"), issues: issueField },
       render: (props) => <section className={styles.issuesSection} id={props.id}><div className={styles.shell}><Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="body" props={props}>{props.body}</Editable><div className={styles.issuesGrid}>{props.issues.map((issue, index) => <article key={`${issue.title}-${index}`}><span>{issue.icon || String(index + 1).padStart(2, "0")}</span><h3>{issue.title}</h3><p>{issue.body}</p></article>)}</div></div></section>,
     },
     IssueCards: {
-      label: "Issues cards",
+      label: "Feature cards",
       defaultProps: { heading: "The work in focus", intro: "Use cards for detailed priorities, workshops, or ways to help.", variant: "cards", cards: [{ label: "Recovery", heading: "Bring the next person in", body: "Create a convention experience that makes newcomers feel at home.", image: null }, { label: "Fellowship", heading: "Make room for connection", body: "Build spaces where people can meet, laugh, and stay involved.", image: null }, { label: "Service", heading: "Put gratitude into action", body: "Invite people into the work that makes the weekend possible.", image: null }] },
       fields: { heading: text("Heading"), intro: area("Introduction"), variant: { type: "select", label: "Card style", options: [{ label: "Cards", value: "cards" }, { label: "Editorial", value: "editorial" }, { label: "Image overlay", value: "image" }] }, cards: issueCardsField },
       render: (props) => <section className={styles.issueCards} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.issueCardGrid}>{props.cards.map((card, index) => { const image = normalizeMedia(card.image); return <article data-has-image={Boolean(image)} key={`${card.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><small>{card.label}</small><h3>{card.heading}</h3><p>{card.body}</p>{renderZone(props, `${props.id}:cards.${index}.blocks`, `Drop elements in ${card.label || `card ${index + 1}`}`)}</div></article>; })}</div></div></section>,
@@ -454,19 +461,19 @@ export const puckConfig: Config<Components> = {
       render: (props) => { const image = normalizeMedia(props.image); return <section className={styles.quote} id={props.id}><div className={styles.shell}><div>{image ? <img alt={image.alt || ""} src={image.url} /> : <span className={styles.quoteMark}>“</span>}</div><div><Editable as="p" className={styles.eyebrow} field="heading" props={props}>{props.heading}</Editable><Editable as="blockquote" field="quote" props={props}>{props.quote}</Editable><Editable as="strong" field="attribution" props={props}>{props.attribution}</Editable><Editable as="span" field="role" props={props}>{props.role}</Editable></div></div></section>; },
     },
     ResultsStats: {
-      label: "Results stats",
+      label: "Statistics",
       defaultProps: { heading: "What we are building", intro: "A few concrete markers of a weekend built by and for the fellowship.", stats: [{ value: "4", label: "days together", detail: "Speakers, workshops, dancing, service, and fellowship." }, { value: "9", label: "states represented", detail: "Young people and young-at-heart members across the Northeast." }, { value: "1", label: "shared purpose", detail: "Carry the message and make space for recovery." }] },
       fields: { heading: text("Heading"), intro: area("Introduction"), stats: statsField },
       render: (props) => <section className={styles.resultsStats} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div>{props.stats.map((stat, index) => <article key={`${stat.label}-${index}`}><strong>{stat.value}</strong><span>{stat.label}</span><p>{stat.detail}</p></article>)}</div></div></section>,
     },
     SupporterLogos: {
-      label: "Supporter logos",
+      label: "Partner logos",
       defaultProps: { heading: "With support from", intro: "Recognize the groups, committees, and partners helping make the weekend possible.", logos: [{ name: "Connecticut YPAA", image: null }, { name: "New England Area", image: null }, { name: "Host Committee", image: null }, { name: "Recovery Community", image: null }] },
       fields: { heading: text("Heading"), intro: area("Introduction"), logos: logosField },
       render: (props) => <section className={styles.supporterLogos} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div>{props.logos.map((logo, index) => { const image = normalizeMedia(logo.image); return <article key={`${logo.name}-${index}`}>{image ? <img alt={image.alt || logo.name} src={image.url} /> : <span>{logo.name.slice(0, 2).toUpperCase()}</span>}<strong>{logo.name}</strong></article>; })}</div></div></section>,
     },
     ActionTabs: {
-      label: "Action tabs",
+      label: "Content tabs",
       defaultProps: { heading: "Choose how to join in", intro: "Give visitors a clear next step and add richer content inside each action tab.", tabs: [{ label: "Register", description: "Save your place for NECYPAA XXXVI." }, { label: "Volunteer", description: "Join the committee work that brings the convention to life." }, { label: "Stay connected", description: "Follow announcements, meetings, and upcoming events." }] },
       fields: { heading: text("Heading"), intro: area("Introduction"), tabs: tabsField },
       render: ActionTabsRender,
@@ -480,9 +487,15 @@ export const puckConfig: Config<Components> = {
     ContentRow: {
       label: "Content row",
       defaultProps: { layout: "two", columns: [{ label: "Column 1" }, { label: "Column 2" }] },
-      fields: { layout: { type: "select", label: "Columns", options: [{ label: "One column", value: "one" }, { label: "Two equal", value: "two" }, { label: "Left wide", value: "leftWide" }, { label: "Right wide", value: "rightWide" }, { label: "Three equal", value: "three" }, { label: "Four equal", value: "four" }] }, columns: columnsField },
+      fields: contentRowFields,
       render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section>,
     },
+    RowOneColumn: { label: "1 column row", defaultProps: { layout: "one", columns: [{ label: "Column 1" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
+    RowTwoColumns: { label: "2 column row", defaultProps: { layout: "two", columns: [{ label: "Column 1" }, { label: "Column 2" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
+    RowLeftWide: { label: "left wide row", defaultProps: { layout: "leftWide", columns: [{ label: "Main column" }, { label: "Side column" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
+    RowRightWide: { label: "right wide row", defaultProps: { layout: "rightWide", columns: [{ label: "Side column" }, { label: "Main column" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
+    RowThreeColumns: { label: "3 column row", defaultProps: { layout: "three", columns: [{ label: "Column 1" }, { label: "Column 2" }, { label: "Column 3" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
+    RowFourColumns: { label: "4 column row", defaultProps: { layout: "four", columns: [{ label: "Column 1" }, { label: "Column 2" }, { label: "Column 3" }, { label: "Column 4" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
   },
 };
 
