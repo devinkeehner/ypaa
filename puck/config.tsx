@@ -48,7 +48,7 @@ type ProgramSchedule = Base & { heading: string; introduction: string };
 type ButtonRow = Base & { primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; alignment: "left" | "center" | "right" };
 type Issue = { title: string; body: string; icon: string };
 type IssuesSection = Base & { eyebrow: string; heading: string; body: string; issues: Issue[] };
-type IssueCard = { label: string; heading: string; body: string; image?: MediaValue | null };
+type IssueCard = { label: string; heading: string; body: string; image?: MediaValue | null; linkLabel?: string; linkUrl?: string };
 type IssueCards = Base & { heading: string; intro: string; variant: "cards" | "editorial" | "image"; cards: IssueCard[] };
 type Quote = Base & { heading: string; quote: string; attribution: string; role: string; image?: MediaValue | null };
 type ResultStat = { value: string; label: string; detail: string };
@@ -214,8 +214,8 @@ const issueField: Field<Issue[]> = {
 const issueCardsField: Field<IssueCard[]> = {
   type: "array",
   label: "Feature cards",
-  defaultItemProps: { label: "", heading: "", body: "", image: null },
-  arrayFields: { label: plainText("Editor label"), heading: plainText("Heading"), body: area("Description"), image: mediaField("Card image") },
+  defaultItemProps: { label: "", heading: "", body: "", image: null, linkLabel: "", linkUrl: "" },
+  arrayFields: { label: plainText("Editor label"), heading: plainText("Heading"), body: area("Description"), image: mediaField("Card image"), linkLabel: plainText("Link label"), linkUrl: plainText("Link URL") },
   getItemSummary: (item) => item.heading || item.label || "Issue card",
 };
 
@@ -452,7 +452,7 @@ export const puckConfig: Config<Components> = {
       label: "Feature cards",
       defaultProps: { heading: "The work in focus", intro: "Use cards for detailed priorities, workshops, or ways to help.", variant: "cards", cards: [{ label: "Recovery", heading: "Bring the next person in", body: "Create a convention experience that makes newcomers feel at home.", image: null }, { label: "Fellowship", heading: "Make room for connection", body: "Build spaces where people can meet, laugh, and stay involved.", image: null }, { label: "Service", heading: "Put gratitude into action", body: "Invite people into the work that makes the weekend possible.", image: null }] },
       fields: { heading: text("Heading"), intro: area("Introduction"), variant: { type: "select", label: "Card style", options: [{ label: "Cards", value: "cards" }, { label: "Editorial", value: "editorial" }, { label: "Image overlay", value: "image" }] }, cards: issueCardsField },
-      render: (props) => <section className={styles.issueCards} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.issueCardGrid}>{props.cards.map((card, index) => { const image = normalizeMedia(card.image); return <article data-has-image={Boolean(image)} key={`${card.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><small>{card.label}</small><h3>{card.heading}</h3><p>{card.body}</p>{renderZone(props, `${props.id}:cards.${index}.blocks`, `Drop elements in ${card.label || `card ${index + 1}`}`)}</div></article>; })}</div></div></section>,
+      render: (props) => <section className={styles.issueCards} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.issueCardGrid}>{props.cards.map((card, index) => { const image = normalizeMedia(card.image); return <article data-has-image={Boolean(image)} key={`${card.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><small>{card.label}</small><h3>{card.heading}</h3><p>{card.body}</p>{card.linkLabel && card.linkUrl ? <a className={styles.cardLink} href={card.linkUrl}>{card.linkLabel}</a> : null}{renderZone(props, `${props.id}:cards.${index}.blocks`, `Drop elements in ${card.label || `card ${index + 1}`}`)}</div></article>; })}</div></div></section>,
     },
     QuoteBlock: {
       label: "Quote / testimonial",

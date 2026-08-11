@@ -622,6 +622,8 @@
 .issueCardGrid small { color: #a53d1c; font: 800 .65rem/1 var(--font-geist-mono), monospace; letter-spacing: .1em; text-transform: uppercase; }
 .issueCardGrid h3 { font-size: clamp(1.5rem, 2.2vw, 2rem); margin: 18px 0 10px; }
 .issueCardGrid p { color: #5b554c; line-height: 1.65; margin: 0; }
+.cardLink { align-self: flex-start; color: #a53d1c; font: 800 .7rem/1 var(--font-geist-mono), monospace; letter-spacing: .08em; margin-top: auto; padding-top: 22px; text-transform: uppercase; }
+.cardLink:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
 .issueCards[data-variant="editorial"] .issueCardGrid article:first-child { grid-column: span 2; }
 .issueCards[data-variant="image"] .issueCardGrid article { background: var(--night); color: var(--cream); }
 .issueCards[data-variant="image"] .issueCardGrid article > div { background: linear-gradient(180deg, transparent, rgba(10,12,13,.93)); margin-top: auto; }

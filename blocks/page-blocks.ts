@@ -337,6 +337,8 @@ export const IssueCardsBlock: Block = {
         { name: "heading", type: "text" },
         { name: "body", type: "textarea" },
         { name: "image", type: "upload", relationTo: "media" },
+        { name: "linkLabel", type: "text" },
+        { name: "linkUrl", type: "text" },
         { name: "blocks", type: "blocks", blocks: nestedElementBlocks },
       ],
     },

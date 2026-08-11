@@ -472,6 +472,8 @@ export interface Page {
                   heading?: string | null;
                   body?: string | null;
                   image?: (string | null) | Media;
+                  linkLabel?: string | null;
+                  linkUrl?: string | null;
                   blocks?:
                     | (
                         | {
@@ -1910,6 +1912,8 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     body?: T;
                     image?: T;
+                    linkLabel?: T;
+                    linkUrl?: T;
                     blocks?:
                       | T
                       | {
