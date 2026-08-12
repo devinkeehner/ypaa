@@ -156,6 +156,7 @@ function BuilderHeader({ actions, pageId, pageTitle }: { actions: React.ReactNod
 type SelectedLocation = { index: number; zone?: string } | null;
 type ClipboardState = { data: Data; ui: { itemSelector?: SelectedLocation } };
 type ClipboardDispatch = (action: { type: "setData"; data: Partial<Data> }) => void;
+type ClipboardPayload = { item: Data["content"][number]; zones: Record<string, unknown> };
 
 function zoneContent(data: Data, zone?: string) {
   return zone && data.zones?.[zone] ? data.zones[zone] : data.content;
@@ -163,17 +164,20 @@ function zoneContent(data: Data, zone?: string) {
 
 function freshCopy<T>(value: T): T {
   const source = JSON.parse(JSON.stringify(value)) as unknown;
-  const ids = new Map<string, string>();
   const visit = (item: unknown): unknown => {
     if (Array.isArray(item)) return item.map(visit);
     if (!item || typeof item !== "object") return item;
     const record = item as Record<string, unknown>;
+    if (typeof record.type === "string" && record.props && typeof record.props === "object") {
+      const nextId = `${record.type}-${crypto.randomUUID()}`;
+      const next = Object.fromEntries(Object.entries(record).map(([key, entry]) => [key, visit(entry)]));
+      next.id = nextId;
+      next.props = { ...(next.props as Record<string, unknown>), id: nextId };
+      return next;
+    }
     const next = Object.fromEntries(Object.entries(record).map(([key, entry]) => [key, visit(entry)]));
     if (typeof record.id === "string") {
-      const nextId = `${record.type || "block"}-${crypto.randomUUID()}`;
-      ids.set(record.id, nextId);
-      next.id = nextId;
-      if (next.props && typeof next.props === "object") next.props = { ...(next.props as Record<string, unknown>), id: nextId };
+      next.id = `${record.type || "item"}-${crypto.randomUUID()}`;
     }
     return next;
   };
@@ -183,23 +187,39 @@ function freshCopy<T>(value: T): T {
 function ClipboardActions({ state, dispatch }: { state: ClipboardState; dispatch: ClipboardDispatch }) {
   const selection = state.ui.itemSelector;
   const source = selection ? zoneContent(state.data, selection.zone)?.[selection.index] : null;
-  const copy = () => {
+  const copy = useCallback(() => {
     if (!source) return;
-    sessionStorage.setItem("necypaa:puck-clipboard", JSON.stringify(source));
-  };
-  const paste = () => {
+    const sourceId = typeof source.props?.id === "string" ? source.props.id : "";
+    const zones = Object.fromEntries(Object.entries(state.data.zones || {}).filter(([key]) => sourceId && key.startsWith(`${sourceId}:`)));
+    sessionStorage.setItem("necypaa:puck-clipboard", JSON.stringify({ item: source, zones } satisfies ClipboardPayload));
+  }, [source, state.data.zones]);
+  const paste = useCallback(() => {
     const stored = sessionStorage.getItem("necypaa:puck-clipboard");
     if (!stored) return;
     try {
-      const item = freshCopy(JSON.parse(stored)) as Data["content"][number];
+      const parsed = JSON.parse(stored) as ClipboardPayload | Data["content"][number];
+      const payload = "item" in parsed ? parsed : { item: parsed, zones: {} };
+      const item = freshCopy(payload.item) as Data["content"][number];
       const zone = selection?.zone;
       const current = [...zoneContent(state.data, zone)];
       current.splice(selection ? selection.index + 1 : current.length, 0, item);
-      dispatch({ type: "setData", data: zone ? { ...state.data, zones: { ...state.data.zones, [zone]: current } } : { ...state.data, content: current } });
+      const oldId = typeof payload.item.props?.id === "string" ? payload.item.props.id : "";
+      const newId = typeof item.props?.id === "string" ? item.props.id : "";
+      const copiedZones = Object.fromEntries(Object.entries(payload.zones).map(([key, value]) => [newId && oldId ? `${newId}${key.slice(oldId.length)}` : key, freshCopy(value) as Data["content"]])) as Record<string, Data["content"]>;
+      dispatch({ type: "setData", data: zone ? { ...state.data, zones: { ...state.data.zones, ...copiedZones, [zone]: current } } : { ...state.data, zones: { ...state.data.zones, ...copiedZones }, content: current } });
     } catch {
       sessionStorage.removeItem("necypaa:puck-clipboard");
     }
-  };
+  }, [dispatch, selection, state.data]);
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (!(event.ctrlKey || event.metaKey) || (event.target instanceof HTMLElement && (event.target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName)))) return;
+      if (event.key.toLowerCase() === "c") { event.preventDefault(); copy(); }
+      if (event.key.toLowerCase() === "v") { event.preventDefault(); paste(); }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [copy, paste]);
   return <><button aria-label="Copy selected block" disabled={!source} onClick={copy} title="Copy selected block" type="button"><Clipboard /></button><button aria-label="Paste block" onClick={paste} title="Paste block after selection" type="button"><ClipboardPaste /></button></>;
 }
 
@@ -371,5 +391,5 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
       },
     };
   }, []);
-  return <ThemePreviewContext.Provider value={previewTheme}><div className={styles.wrapper}><Puck config={editorConfig as unknown as Config} data={data} height="100dvh" onChange={(next) => setData(next as NECYPAAData)} onPublish={(next) => save(next, true)} overrides={overrides} plugins={plugins} renderHeaderActions={({ state, dispatch }) => <div className={styles.publish}><ClipboardActions dispatch={dispatch} state={state} /><span aria-live="polite">{message}</span><button onClick={() => void save(state.data, true)} type="button">Publish</button></div>} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></ThemePreviewContext.Provider>;
+  return <ThemePreviewContext.Provider value={previewTheme}><div className={styles.wrapper}><Puck config={editorConfig as unknown as Config} data={data} height="100dvh" onChange={(next) => setData(next as NECYPAAData)} onPublish={(next) => save(next, true)} overrides={overrides} permissions={{ delete: true, drag: true, duplicate: true, edit: true, insert: true }} plugins={plugins} renderHeaderActions={({ state, dispatch }) => <div className={styles.publish}><ClipboardActions dispatch={dispatch} state={state} /><span aria-live="polite">{message}</span><button onClick={() => void save(state.data, true)} type="button">Publish</button></div>} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></ThemePreviewContext.Provider>;
 }
