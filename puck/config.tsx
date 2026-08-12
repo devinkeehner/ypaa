@@ -296,6 +296,10 @@ const columnsField: Field<ContentColumn[]> = {
 
 const contentRowFields = { layout: { type: "select" as const, label: "Columns", options: [{ label: "One column", value: "one" }, { label: "Two equal", value: "two" }, { label: "Left wide", value: "leftWide" }, { label: "Right wide", value: "rightWide" }, { label: "Three equal", value: "three" }, { label: "Four equal", value: "four" }] }, columns: columnsField };
 
+function visibleColumnCount(layout: ContentRow["layout"]) {
+  return layout === "one" ? 1 : layout === "three" ? 3 : layout === "four" ? 4 : 2;
+}
+
 function NestedDropZone({ children, label }: { children: ReactNode; label: string }) {
   return <div className={styles.nestedDropZone}><span>{label}</span>{children}</div>;
 }
@@ -314,7 +318,8 @@ function SlotContent({ content, label, fallback }: { content?: NestedSlot; label
 }
 
 function contentRowRender(props: ContentRow) {
-  return <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{(props.columns || []).map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}<SlotContent content={column.blocks} label={column.label || `column ${index + 1}`} fallback={renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)} /></article>)}</div></div></section>;
+  const columns = (props.columns || []).slice(0, visibleColumnCount(props.layout));
+  return <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}<SlotContent content={column.blocks} label={column.label || `column ${index + 1}`} fallback={renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)} /></article>)}</div></div></section>;
 }
 
 function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } }) {

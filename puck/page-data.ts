@@ -84,6 +84,19 @@ function cloneDefaultData(): NECYPAAData {
 function normalizeProps(type: string, value: unknown): Record<string, unknown> {
   const props = isRecord(value) ? { ...value } : {};
 
+  if (["ContentRow", "Row", "RowOneColumn", "RowTwoColumns", "RowLeftWide", "RowRightWide", "RowThreeColumns", "RowFourColumns"].includes(type)) {
+    const layout = typeof props.layout === "string"
+      ? props.layout
+      : type === "RowOneColumn" ? "one"
+        : type === "RowThreeColumns" ? "three"
+          : type === "RowFourColumns" ? "four"
+            : "two";
+    const requiredColumns = layout === "one" ? 1 : layout === "three" ? 3 : layout === "four" ? 4 : 2;
+    const columns = Array.isArray(props.columns) ? [...props.columns] : [];
+    while (columns.length < requiredColumns) columns.push({ label: `Column ${columns.length + 1}` });
+    props.columns = columns;
+  }
+
   if (type === "MeetingInfo") {
     props.importantDates = normalizeImportantDates(props.importantDates);
   }
