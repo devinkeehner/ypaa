@@ -7,6 +7,7 @@ import { Fragment, useState, type CSSProperties, type ElementType, type ReactNod
 import { Countdown } from "@/components/site/Countdown";
 import { ProgramExplorer } from "@/components/site/ProgramExplorer";
 import { normalizeLexicalValue } from "@/puck/lexical-value";
+import { layoutColumnCount } from "@/puck/layout-utils.mjs";
 import {
   normalizeImportantDates,
   normalizeMeetings,
@@ -297,7 +298,7 @@ const columnsField: Field<ContentColumn[]> = {
 const contentRowFields = { layout: { type: "select" as const, label: "Columns", options: [{ label: "One column", value: "one" }, { label: "Two equal", value: "two" }, { label: "Left wide", value: "leftWide" }, { label: "Right wide", value: "rightWide" }, { label: "Three equal", value: "three" }, { label: "Four equal", value: "four" }] }, columns: columnsField };
 
 function visibleColumnCount(layout: ContentRow["layout"]) {
-  return layout === "one" ? 1 : layout === "three" ? 3 : layout === "four" ? 4 : 2;
+  return layoutColumnCount(layout);
 }
 
 function NestedDropZone({ children, label }: { children: ReactNode; label: string }) {

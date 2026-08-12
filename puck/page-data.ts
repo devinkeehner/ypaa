@@ -7,6 +7,7 @@ import {
   normalizePastEvents,
 } from "./list-values";
 import type { NECYPAAData, PageDocument } from "./types";
+import { normalizeLayoutColumns } from "./layout-utils.mjs";
 
 const COMPONENT_TYPES = new Set([
   "HeroCountdown",
@@ -91,10 +92,7 @@ function normalizeProps(type: string, value: unknown): Record<string, unknown> {
         : type === "RowThreeColumns" ? "three"
           : type === "RowFourColumns" ? "four"
             : "two";
-    const requiredColumns = layout === "one" ? 1 : layout === "three" ? 3 : layout === "four" ? 4 : 2;
-    const columns = Array.isArray(props.columns) ? [...props.columns] : [];
-    while (columns.length < requiredColumns) columns.push({ label: `Column ${columns.length + 1}` });
-    props.columns = columns;
+    props.columns = normalizeLayoutColumns(layout, props.columns);
   }
 
   if (type === "MeetingInfo") {
