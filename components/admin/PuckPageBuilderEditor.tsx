@@ -148,9 +148,9 @@ function ThemePanel({ initialTheme, initialTenantId, onPreviewTheme }: { initial
   return <div className={styles.themePlugin}><section aria-label="Site theme defaults" className={styles.themePanel}><div className={styles.themePanelHeading}><strong>Theme colors</strong><span>Changes preview instantly. Save when you want them applied across the entire site.</span></div><div className={styles.themeFields}>{THEME_FIELDS.map(({ key, label }) => <label key={key}><span>{label}</span><div><input aria-label={`${label} color picker`} onChange={(event) => updateColor(key, event.target.value)} type="color" value={colorPickerValue(colors[key])} /><input aria-invalid={!HEX_COLOR.test(colors[key])} aria-label={`${label} hex code`} maxLength={7} onChange={(event) => updateColor(key, event.target.value)} value={colors[key]} /></div></label>)}</div><footer><span aria-live="polite">{status}</span><button onClick={() => void saveTheme()} type="button"><Save /> Save theme</button></footer></section></div>;
 }
 
-function BuilderHeader({ actions, pageId, pageTitle }: { actions: React.ReactNode; pageId: string; pageTitle: string }) {
+function BuilderHeader({ actions, children, pageId, pageTitle }: { actions: React.ReactNode; children: React.ReactNode; pageId: string; pageTitle: string }) {
   const history = usePuck((state) => state.history);
-  return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerActions}><button disabled={!history.hasPast} aria-label="Undo" onClick={() => history.back()} type="button"><Undo2 /></button><button disabled={!history.hasFuture} aria-label="Redo" onClick={() => history.forward()} type="button"><Redo2 /></button>{actions}</div></div><FormattingBar /></header>;
+  return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerControls}>{children}</div><div className={styles.headerActions}><button disabled={!history.hasPast} aria-label="Undo" onClick={() => history.back()} type="button"><Undo2 /></button><button disabled={!history.hasFuture} aria-label="Redo" onClick={() => history.forward()} type="button"><Redo2 /></button>{actions}</div></div><FormattingBar /></header>;
 }
 
 type SelectedLocation = { index: number; zone?: string } | null;
@@ -363,7 +363,7 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
   }, [data, save]);
 
   const overrides = useMemo(() => ({
-    header: ({ actions }: { actions: React.ReactNode }) => <BuilderHeader actions={actions} pageId={pageId} pageTitle={pageTitle} />,
+    header: ({ actions, children }: { actions: React.ReactNode; children: React.ReactNode }) => <BuilderHeader actions={actions} children={children} pageId={pageId} pageTitle={pageTitle} />,
     ...(pageSlug === "home" ? { iframe: ThemePreviewFrame } : {}),
   }), [pageId, pageSlug, pageTitle]);
   const plugins = useMemo<Plugin[]>(() => [
