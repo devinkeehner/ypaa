@@ -1,6 +1,6 @@
 "use client";
 
-import { Render, type Config, type Field } from "@puckeditor/core";
+import { Render, type Config, type Field, type Slot } from "@puckeditor/core";
 import { RichText as PayloadRichText } from "@payloadcms/richtext-lexical/react";
 import { Fragment, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
 
@@ -48,19 +48,19 @@ type ProgramSchedule = Base & { heading: string; introduction: string };
 type ButtonRow = Base & { primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; alignment: "left" | "center" | "right" };
 type Issue = { title: string; body: string; icon: string };
 type IssuesSection = Base & { eyebrow: string; heading: string; body: string; issues: Issue[] };
-type IssueCard = { label: string; heading: string; body: string; image?: MediaValue | null; linkLabel?: string; linkUrl?: string };
+type IssueCard = { label: string; heading: string; body: string; image?: MediaValue | null; linkLabel?: string; linkUrl?: string; blocks?: Slot };
 type IssueCards = Base & { heading: string; intro: string; variant: "cards" | "editorial" | "image"; cards: IssueCard[] };
 type Quote = Base & { heading: string; quote: string; attribution: string; role: string; image?: MediaValue | null };
 type ResultStat = { value: string; label: string; detail: string };
 type ResultsStats = Base & { heading: string; intro: string; stats: ResultStat[] };
 type SupporterLogo = { name: string; image?: MediaValue | null };
 type SupporterLogos = Base & { heading: string; intro: string; logos: SupporterLogo[] };
-type ActionTab = { label: string; description: string };
+type ActionTab = { label: string; description: string; blocks?: Slot };
 type ActionTabs = Base & { heading: string; intro: string; tabs: ActionTab[] };
 type GalleryItem = { image?: MediaValue | null; caption: string; size: "small" | "medium" | "large" };
 type MediaGallery = Base & { heading: string; intro: string; items: GalleryItem[] };
-type ContentColumn = { label: string };
-type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[] };
+type ContentColumn = { label: string; blocks?: Slot };
+type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[]; column1?: Slot; column2?: Slot; column3?: Slot; column4?: Slot; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
 
 type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; ContentRow: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow };
 
@@ -211,11 +211,13 @@ const issueField: Field<Issue[]> = {
   getItemSummary: (item) => item.title || "Issue",
 };
 
+const nestedElementTypes = ["Image", "RichText", "FreeText", "ButtonRow"];
+
 const issueCardsField: Field<IssueCard[]> = {
   type: "array",
   label: "Feature cards",
   defaultItemProps: { label: "", heading: "", body: "", image: null, linkLabel: "", linkUrl: "" },
-  arrayFields: { label: plainText("Editor label"), heading: plainText("Heading"), body: area("Description"), image: mediaField("Card image"), linkLabel: plainText("Link label"), linkUrl: plainText("Link URL") },
+  arrayFields: { label: plainText("Editor label"), heading: plainText("Heading"), body: area("Description"), image: mediaField("Card image"), linkLabel: plainText("Link label"), linkUrl: plainText("Link URL"), blocks: { type: "slot", allow: nestedElementTypes } },
   getItemSummary: (item) => item.heading || item.label || "Issue card",
 };
 
@@ -239,7 +241,7 @@ const tabsField: Field<ActionTab[]> = {
   type: "array",
   label: "Content tabs",
   defaultItemProps: { label: "", description: "" },
-  arrayFields: { label: plainText("Tab label"), description: area("Description") },
+  arrayFields: { label: plainText("Tab label"), description: area("Description"), blocks: { type: "slot", allow: nestedElementTypes } },
   getItemSummary: (item) => item.label || "Action tab",
 };
 
@@ -255,11 +257,10 @@ const columnsField: Field<ContentColumn[]> = {
   type: "array",
   label: "Columns",
   defaultItemProps: { label: "" },
-  arrayFields: { label: plainText("Editor label") },
+  arrayFields: { label: plainText("Editor label"), blocks: { type: "slot", allow: nestedElementTypes } },
   getItemSummary: (item) => item.label || "Column",
 };
 
-const nestedElementTypes = ["Image", "RichText", "FreeText", "ButtonRow"];
 const contentRowFields = { layout: { type: "select" as const, label: "Columns", options: [{ label: "One column", value: "one" }, { label: "Two equal", value: "two" }, { label: "Left wide", value: "leftWide" }, { label: "Right wide", value: "rightWide" }, { label: "Three equal", value: "three" }, { label: "Four equal", value: "four" }] }, columns: columnsField };
 
 function NestedDropZone({ children, label }: { children: ReactNode; label: string }) {
@@ -271,11 +272,23 @@ function renderZone(props: Base & { puck?: { isEditing?: boolean; renderDropZone
   return props.puck?.isEditing ? <NestedDropZone label={label}>{content}</NestedDropZone> : <>{content}</>;
 }
 
+function SlotContent({ content, label, fallback }: { content?: Slot; label: string; fallback: ReactNode }) {
+  if (typeof content === "function") {
+    const Content = content;
+    return <Content className={styles.nestedSlot} minEmptyHeight={96} allow={nestedElementTypes} />;
+  }
+  return <>{fallback}</>;
+}
+
+function contentRowRender(props: ContentRow) {
+  return <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{(props.columns || []).map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}<SlotContent content={column.blocks} label={column.label || `column ${index + 1}`} fallback={renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)} /></article>)}</div></div></section>;
+}
+
 function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } }) {
   const [active, setActive] = useState(0);
   const tabs = props.tabs?.length ? props.tabs : [];
   const editing = Boolean(props.puck?.isEditing);
-  return <section className={styles.actionTabs} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.tabList} role="tablist">{tabs.map((tab, index) => <button aria-selected={active === index} key={`${tab.label}-${index}`} onClick={() => setActive(index)} role="tab" type="button">{tab.label || `Tab ${index + 1}`}</button>)}</div><div className={styles.tabPanels}>{tabs.map((tab, index) => (editing || active === index) ? <section aria-label={tab.label || `Tab ${index + 1}`} className={styles.tabPanel} hidden={!editing && active !== index} key={`${tab.label}-${index}`}><Editable as="p" field="intro" props={props}>{tab.description}</Editable>{renderZone(props, `${props.id}:tabs.${index}.blocks`, `Drop elements in ${tab.label || `tab ${index + 1}`}`)}</section> : null)}</div></div></section>;
+  return <section className={styles.actionTabs} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.tabList} role="tablist">{tabs.map((tab, index) => <button aria-selected={active === index} key={`${tab.label}-${index}`} onClick={() => setActive(index)} role="tab" type="button">{tab.label || `Tab ${index + 1}`}</button>)}</div><div className={styles.tabPanels}>{tabs.map((tab, index) => (editing || active === index) ? <section aria-label={tab.label || `Tab ${index + 1}`} className={styles.tabPanel} hidden={!editing && active !== index} key={`${tab.label}-${index}`}><Editable as="p" field="intro" props={props}>{tab.description}</Editable><SlotContent content={tab.blocks} label={tab.label || `tab ${index + 1}`} fallback={renderZone(props, `${props.id}:tabs.${index}.blocks`, `Drop elements in ${tab.label || `tab ${index + 1}`}`)} /></section> : null)}</div></div></section>;
 }
 
 function styleFor(props: Base, field: string): CSSProperties {
@@ -452,7 +465,7 @@ export const puckConfig: Config<Components> = {
       label: "Feature cards",
       defaultProps: { heading: "The work in focus", intro: "Use cards for detailed priorities, workshops, or ways to help.", variant: "cards", cards: [{ label: "Recovery", heading: "Bring the next person in", body: "Create a convention experience that makes newcomers feel at home.", image: null }, { label: "Fellowship", heading: "Make room for connection", body: "Build spaces where people can meet, laugh, and stay involved.", image: null }, { label: "Service", heading: "Put gratitude into action", body: "Invite people into the work that makes the weekend possible.", image: null }] },
       fields: { heading: text("Heading"), intro: area("Introduction"), variant: { type: "select", label: "Card style", options: [{ label: "Cards", value: "cards" }, { label: "Editorial", value: "editorial" }, { label: "Image overlay", value: "image" }] }, cards: issueCardsField },
-      render: (props) => <section className={styles.issueCards} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.issueCardGrid}>{props.cards.map((card, index) => { const image = normalizeMedia(card.image); return <article data-has-image={Boolean(image)} key={`${card.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><small>{card.label}</small><h3>{card.heading}</h3><p>{card.body}</p>{card.linkLabel && card.linkUrl ? <a className={styles.cardLink} href={card.linkUrl}>{card.linkLabel}</a> : null}{renderZone(props, `${props.id}:cards.${index}.blocks`, `Drop elements in ${card.label || `card ${index + 1}`}`)}</div></article>; })}</div></div></section>,
+      render: (props) => <section className={styles.issueCards} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.issueCardGrid}>{props.cards.map((card, index) => { const image = normalizeMedia(card.image); return <article data-has-image={Boolean(image)} key={`${card.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><small>{card.label}</small><h3>{card.heading}</h3><p>{card.body}</p>{card.linkLabel && card.linkUrl ? <a className={styles.cardLink} href={card.linkUrl}>{card.linkLabel}</a> : null}<SlotContent content={card.blocks} label={card.label || `card ${index + 1}`} fallback={renderZone(props, `${props.id}:cards.${index}.blocks`, `Drop elements in ${card.label || `card ${index + 1}`}`)} /></div></article>; })}</div></div></section>,
     },
     QuoteBlock: {
       label: "Quote / testimonial",
@@ -488,7 +501,7 @@ export const puckConfig: Config<Components> = {
       label: "Content row",
       defaultProps: { layout: "two", columns: [{ label: "Column 1" }, { label: "Column 2" }] },
       fields: contentRowFields,
-      render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section>,
+      render: contentRowRender,
     },
     RowOneColumn: { label: "1 column row", defaultProps: { layout: "one", columns: [{ label: "Column 1" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
     RowTwoColumns: { label: "2 column row", defaultProps: { layout: "two", columns: [{ label: "Column 1" }, { label: "Column 2" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
