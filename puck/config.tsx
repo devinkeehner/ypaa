@@ -1,6 +1,6 @@
 "use client";
 
-import { Render, type Config, type Field, type Slot } from "@puckeditor/core";
+import { Render, type Config, type Field } from "@puckeditor/core";
 import { RichText as PayloadRichText } from "@payloadcms/richtext-lexical/react";
 import { Fragment, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
 
@@ -18,6 +18,7 @@ import type { NECYPAAData } from "@/puck/types";
 import styles from "./puck.module.css";
 
 type Base = { id?: string };
+type NestedSlot = (options?: { allow?: string[]; className?: string; minEmptyHeight?: number }) => ReactNode;
 type Hero = Base & {
   eyebrow: string;
   heading: string;
@@ -48,19 +49,19 @@ type ProgramSchedule = Base & { heading: string; introduction: string };
 type ButtonRow = Base & { primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; alignment: "left" | "center" | "right" };
 type Issue = { title: string; body: string; icon: string };
 type IssuesSection = Base & { eyebrow: string; heading: string; body: string; issues: Issue[] };
-type IssueCard = { label: string; heading: string; body: string; image?: MediaValue | null; linkLabel?: string; linkUrl?: string; blocks?: Slot };
+type IssueCard = { label: string; heading: string; body: string; image?: MediaValue | null; linkLabel?: string; linkUrl?: string; blocks?: NestedSlot };
 type IssueCards = Base & { heading: string; intro: string; variant: "cards" | "editorial" | "image"; cards: IssueCard[] };
 type Quote = Base & { heading: string; quote: string; attribution: string; role: string; image?: MediaValue | null };
 type ResultStat = { value: string; label: string; detail: string };
 type ResultsStats = Base & { heading: string; intro: string; stats: ResultStat[] };
 type SupporterLogo = { name: string; image?: MediaValue | null };
 type SupporterLogos = Base & { heading: string; intro: string; logos: SupporterLogo[] };
-type ActionTab = { label: string; description: string; blocks?: Slot };
+type ActionTab = { label: string; description: string; blocks?: NestedSlot };
 type ActionTabs = Base & { heading: string; intro: string; tabs: ActionTab[] };
 type GalleryItem = { image?: MediaValue | null; caption: string; size: "small" | "medium" | "large" };
 type MediaGallery = Base & { heading: string; intro: string; items: GalleryItem[] };
-type ContentColumn = { label: string; blocks?: Slot };
-type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[]; column1?: Slot; column2?: Slot; column3?: Slot; column4?: Slot; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
+type ContentColumn = { label: string; blocks?: NestedSlot };
+type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[]; column1?: NestedSlot; column2?: NestedSlot; column3?: NestedSlot; column4?: NestedSlot; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
 
 type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; ContentRow: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow };
 
@@ -272,7 +273,7 @@ function renderZone(props: Base & { puck?: { isEditing?: boolean; renderDropZone
   return props.puck?.isEditing ? <NestedDropZone label={label}>{content}</NestedDropZone> : <>{content}</>;
 }
 
-function SlotContent({ content, label, fallback }: { content?: Slot; label: string; fallback: ReactNode }) {
+function SlotContent({ content, label, fallback }: { content?: NestedSlot; label: string; fallback: ReactNode }) {
   if (typeof content === "function") {
     const Content = content;
     return <Content className={styles.nestedSlot} minEmptyHeight={96} allow={nestedElementTypes} />;
@@ -503,12 +504,12 @@ export const puckConfig: Config<Components> = {
       fields: contentRowFields,
       render: contentRowRender,
     },
-    RowOneColumn: { label: "1 column row", defaultProps: { layout: "one", columns: [{ label: "Column 1" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
-    RowTwoColumns: { label: "2 column row", defaultProps: { layout: "two", columns: [{ label: "Column 1" }, { label: "Column 2" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
-    RowLeftWide: { label: "left wide row", defaultProps: { layout: "leftWide", columns: [{ label: "Main column" }, { label: "Side column" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
-    RowRightWide: { label: "right wide row", defaultProps: { layout: "rightWide", columns: [{ label: "Side column" }, { label: "Main column" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
-    RowThreeColumns: { label: "3 column row", defaultProps: { layout: "three", columns: [{ label: "Column 1" }, { label: "Column 2" }, { label: "Column 3" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
-    RowFourColumns: { label: "4 column row", defaultProps: { layout: "four", columns: [{ label: "Column 1" }, { label: "Column 2" }, { label: "Column 3" }, { label: "Column 4" }] }, fields: contentRowFields, render: (props) => <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{props.columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}{renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)}</article>)}</div></div></section> },
+    RowOneColumn: { label: "1 column row", defaultProps: { layout: "one", columns: [{ label: "Column 1" }] }, fields: contentRowFields, render: contentRowRender },
+    RowTwoColumns: { label: "2 column row", defaultProps: { layout: "two", columns: [{ label: "Column 1" }, { label: "Column 2" }] }, fields: contentRowFields, render: contentRowRender },
+    RowLeftWide: { label: "left wide row", defaultProps: { layout: "leftWide", columns: [{ label: "Main column" }, { label: "Side column" }] }, fields: contentRowFields, render: contentRowRender },
+    RowRightWide: { label: "right wide row", defaultProps: { layout: "rightWide", columns: [{ label: "Side column" }, { label: "Main column" }] }, fields: contentRowFields, render: contentRowRender },
+    RowThreeColumns: { label: "3 column row", defaultProps: { layout: "three", columns: [{ label: "Column 1" }, { label: "Column 2" }, { label: "Column 3" }] }, fields: contentRowFields, render: contentRowRender },
+    RowFourColumns: { label: "4 column row", defaultProps: { layout: "four", columns: [{ label: "Column 1" }, { label: "Column 2" }, { label: "Column 3" }, { label: "Column 4" }] }, fields: contentRowFields, render: contentRowRender },
   },
 };
 

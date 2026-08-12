@@ -205,8 +205,9 @@ function layoutToContent(layout: unknown): { content: ComponentData<Record<strin
       storedProps[nestedCollection] = storedProps[nestedCollection].map((item, nestedIndex) => {
         if (!isRecord(item)) return item;
         const { blocks, ...itemProps } = item;
-        zones[zoneID(id, nestedCollection, nestedIndex)] = nestedLayoutToContent(blocks);
-        return itemProps;
+        const nestedContent = nestedLayoutToContent(blocks);
+        zones[zoneID(id, nestedCollection, nestedIndex)] = nestedContent;
+        return { ...itemProps, blocks: nestedContent };
       });
     }
 
@@ -279,7 +280,7 @@ function packNestedZones(type: string, id: string, props: Record<string, unknown
   return {
     ...props,
     [collection]: props[collection].map((item, index) => isRecord(item)
-      ? { ...item, blocks: contentToNestedLayout(zones[zoneID(id, collection, index)]) }
+      ? { ...item, blocks: contentToNestedLayout(Array.isArray(item.blocks) ? item.blocks : zones[zoneID(id, collection, index)]) }
       : item),
   };
 }
