@@ -685,6 +685,24 @@
 .buttonRow { align-items: center; display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0; }
 .buttonRow[data-align="center"] { justify-content: center; }
 .buttonRow[data-align="right"] { justify-content: flex-end; }
+.navigation { align-items: center; background: var(--night-soft); color: var(--cream); display: flex; gap: 28px; justify-content: space-between; padding: 18px clamp(20px, 5vw, 72px); }
+.navigation > div, .followLinks > div { display: flex; flex-wrap: wrap; gap: 18px; }
+.navigation a, .followLinks a { color: inherit; text-decoration: none; }
+.headline { margin: 36px auto 18px; max-width: 1100px; padding: 0 24px; }
+.divider { border: 0; border-top: 1px solid; margin: 32px auto; max-width: 1100px; }
+.followLinks { align-items: center; display: flex; gap: 24px; justify-content: space-between; margin: 28px auto; max-width: 1100px; padding: 0 24px; }
+.bulletedList { margin: 24px auto; max-width: 760px; padding-inline-start: 44px; }
+.inlineForm { background: #fffaf1; border: 1px solid color-mix(in srgb, var(--ink), transparent 78%); display: grid; gap: 12px; margin: 28px auto; max-width: 760px; padding: 28px; }
+.inlineForm h2, .inlineForm p { margin: 0; }
+.inlineForm label { display: grid; font-weight: 700; gap: 6px; }
+.inlineForm input { border: 1px solid #c8c0b3; min-height: 40px; padding: 8px 10px; }
+.imageCaption, .video { margin: 28px auto; max-width: 1100px; }
+.imageCaption img, .video video { display: block; max-height: 620px; object-fit: contain; width: 100%; }
+.imageCaption > div, .video > div { align-items: center; background: #eee8dc; display: flex; min-height: 180px; justify-content: center; }
+.imageCaption figcaption, .video figcaption { color: #5b554c; font-size: .85rem; padding-top: 8px; }
+.embed { border: 1px solid #d8d0c4; display: block; height: 420px; margin: 28px auto; max-width: 1100px; width: calc(100% - 48px); }
+.payPal { align-items: center; display: flex; gap: 14px; margin: 24px auto; max-width: 1100px; }
+.payPal > span { color: #5b554c; font-size: .9rem; }
 
 @media (max-width: 760px) {
   .issuesGrid,

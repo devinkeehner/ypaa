@@ -286,7 +286,20 @@ export const ProgramScheduleBlock: Block = {
   ],
 };
 
-const nestedElementBlocks: Block[] = [ImageBlock, RichTextBlock, FreeTextBlock];
+const linkFields = [{ name: "label", type: "text" as const }, { name: "url", type: "text" as const }];
+
+export const NavigationBlock: Block = { slug: "Navigation", labels: { singular: "Navigation", plural: "Navigations" }, admin: { group: "Page blocks" }, fields: [{ name: "brand", type: "text" }, { name: "links", type: "array", fields: linkFields }] };
+export const HeadlineBlock: Block = { slug: "Headline", labels: { singular: "Headline", plural: "Headlines" }, admin: { group: "Page blocks" }, fields: [{ name: "text", type: "text" }, { name: "level", type: "select", defaultValue: "h2", options: ["h1", "h2", "h3"] }, { name: "alignment", type: "select", defaultValue: "left", options: ["left", "center", "right"] }] };
+export const DividerBlock: Block = { slug: "Divider", labels: { singular: "Divider", plural: "Dividers" }, admin: { group: "Page blocks" }, fields: [{ name: "style", type: "select", defaultValue: "solid", options: ["solid", "dashed", "dotted"] }, { name: "color", type: "text", defaultValue: "#d8d0c4" }] };
+export const FollowLinksBlock: Block = { slug: "FollowLinks", labels: { singular: "Follow links", plural: "Follow links" }, admin: { group: "Page blocks" }, fields: [{ name: "heading", type: "text", defaultValue: "Follow along" }, { name: "links", type: "array", fields: linkFields }] };
+export const BulletedListBlock: Block = { slug: "BulletedList", labels: { singular: "Bulleted list", plural: "Bulleted lists" }, admin: { group: "Page blocks" }, fields: [{ name: "items", type: "array", fields: [{ name: "text", type: "text" }] }] };
+export const InlineFormBlock: Block = { slug: "InlineForm", labels: { singular: "Inline form", plural: "Inline forms" }, admin: { group: "Page blocks" }, fields: [{ name: "heading", type: "text" }, { name: "intro", type: "textarea" }, { name: "submitLabel", type: "text", defaultValue: "Submit" }, { name: "actionUrl", type: "text" }, { name: "fields", type: "array", fields: [{ name: "label", type: "text" }, { name: "name", type: "text" }, { name: "type", type: "select", defaultValue: "text", options: ["text", "email"] }] }] };
+export const ImageCaptionBlock: Block = { slug: "ImageCaption", labels: { singular: "Image + caption", plural: "Images + captions" }, admin: { group: "Page blocks" }, fields: [{ name: "image", type: "upload", relationTo: "media", required: true }, { name: "caption", type: "text" }] };
+export const VideoBlock: Block = { slug: "Video", labels: { singular: "Video", plural: "Videos" }, admin: { group: "Page blocks" }, fields: [{ name: "video", type: "upload", relationTo: "media" }, { name: "url", type: "text" }, { name: "caption", type: "text" }] };
+export const EmbedBlock: Block = { slug: "Embed", labels: { singular: "Embed", plural: "Embeds" }, admin: { group: "Page blocks" }, fields: [{ name: "url", type: "text" }, { name: "title", type: "text" }] };
+export const PayPalBlock: Block = { slug: "PayPal", labels: { singular: "PayPal button", plural: "PayPal buttons" }, admin: { group: "Page blocks" }, fields: [{ name: "label", type: "text", defaultValue: "Donate with PayPal" }, { name: "url", type: "text" }, { name: "amount", type: "text" }] };
+
+const nestedElementBlocks: Block[] = [ImageBlock, RichTextBlock, FreeTextBlock, NavigationBlock, HeadlineBlock, DividerBlock, FollowLinksBlock, BulletedListBlock, InlineFormBlock, ImageCaptionBlock, VideoBlock, EmbedBlock, PayPalBlock];
 
 export const ButtonRowBlock: Block = {
   slug: "ButtonRow",
@@ -465,4 +478,14 @@ export const PAGE_LAYOUT_BLOCKS: Block[] = [
   MediaGalleryBlock,
   ContentRowBlock,
   ProgramScheduleBlock,
+  NavigationBlock,
+  HeadlineBlock,
+  DividerBlock,
+  FollowLinksBlock,
+  BulletedListBlock,
+  InlineFormBlock,
+  ImageCaptionBlock,
+  VideoBlock,
+  EmbedBlock,
+  PayPalBlock,
 ];

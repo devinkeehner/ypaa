@@ -61,9 +61,20 @@ type ActionTabs = Base & { heading: string; intro: string; tabs: ActionTab[] };
 type GalleryItem = { image?: MediaValue | null; caption: string; size: "small" | "medium" | "large" };
 type MediaGallery = Base & { heading: string; intro: string; items: GalleryItem[] };
 type ContentColumn = { label: string; blocks?: NestedSlot };
+type LinkItem = { label: string; url: string };
+type Navigation = Base & { brand: string; links: LinkItem[] };
+type Headline = Base & { text: string; level: "h1" | "h2" | "h3"; alignment: "left" | "center" | "right" };
+type Divider = Base & { style: "solid" | "dashed" | "dotted"; color: string };
+type FollowLinks = Base & { heading: string; links: LinkItem[] };
+type BulletedList = Base & { items: { text: string }[] };
+type InlineForm = Base & { heading: string; intro: string; submitLabel: string; actionUrl: string; fields: { label: string; name: string; type: "text" | "email" }[] };
+type ImageCaption = Base & { image?: MediaValue | null; caption: string };
+type Video = Base & { video?: MediaValue | null; url: string; caption: string };
+type Embed = Base & { url: string; title: string };
+type PayPal = Base & { label: string; url: string; amount: string };
 type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[]; column1?: NestedSlot; column2?: NestedSlot; column3?: NestedSlot; column4?: NestedSlot; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
 
-type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; ContentRow: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow };
+type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; Navigation: Navigation; Headline: Headline; Divider: Divider; FollowLinks: FollowLinks; BulletedList: BulletedList; InlineForm: InlineForm; ImageCaption: ImageCaption; Video: Video; Embed: Embed; PayPal: PayPal; ContentRow: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow };
 
 export const editableFieldsByType: Record<keyof Components, string[]> = {
   HeroCountdown: ["eyebrow", "heading", "body", "eventDate", "eventLocation", "registerLabel", "hotelLabel"],
@@ -84,6 +95,16 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   SupporterLogos: ["heading", "intro"],
   ActionTabs: ["heading", "intro"],
   MediaGallery: ["heading", "intro"],
+  Navigation: ["brand"],
+  Headline: ["text"],
+  Divider: [],
+  FollowLinks: ["heading"],
+  BulletedList: [],
+  InlineForm: ["heading", "intro", "submitLabel"],
+  ImageCaption: ["caption"],
+  Video: ["caption"],
+  Embed: ["title"],
+  PayPal: ["label", "amount"],
   ContentRow: [],
   RowOneColumn: [],
   RowTwoColumns: [],
@@ -212,7 +233,7 @@ const issueField: Field<Issue[]> = {
   getItemSummary: (item) => item.title || "Issue",
 };
 
-const nestedElementTypes = ["Image", "RichText", "FreeText", "ButtonRow"];
+const nestedElementTypes = ["Image", "RichText", "FreeText", "ButtonRow", "Headline", "Divider", "BulletedList", "ImageCaption", "Video", "Embed", "FollowLinks"];
 
 const issueCardsField: Field<IssueCard[]> = {
   type: "array",
@@ -326,8 +347,8 @@ export const puckConfig: Config<Components> = {
     "Features & content": { components: ["IssuesSection", "IssueCards"] },
     "Quotes & highlights": { components: ["QuoteBlock", "ResultsStats", "SupporterLogos"] },
     "Actions & tabs": { components: ["ActionTabs", "ButtonRow"] },
-    "Media & layout": { components: ["MediaGallery", "ContentRow"] },
-    "Elements for rows": { components: ["Image", "RichText", "FreeText"] },
+    "Media & layout": { components: ["MediaGallery", "ContentRow", "Navigation", "ImageCaption", "Video", "Embed"] },
+    "Elements for rows": { components: ["Headline", "Image", "RichText", "FreeText", "Divider", "BulletedList", "FollowLinks", "InlineForm", "PayPal"] },
   },
   root: {
     fields: {
@@ -492,6 +513,16 @@ export const puckConfig: Config<Components> = {
       fields: { heading: text("Heading"), intro: area("Introduction"), tabs: tabsField },
       render: ActionTabsRender,
     },
+    Navigation: { label: "Navigation", defaultProps: { brand: "NECYPAA XXXVI", links: [{ label: "About", url: "#about" }, { label: "Register", url: "#register" }] }, fields: { brand: text("Brand"), links: { type: "array", label: "Links", arrayFields: { label: plainText("Label"), url: plainText("URL") } } }, render: (props) => <nav className={styles.navigation} id={props.id}><strong>{props.brand}</strong><div>{props.links.map((link, index) => <a href={link.url || "#"} key={`${link.label}-${index}`}>{link.label}</a>)}</div></nav> },
+    Headline: { label: "Headline", defaultProps: { text: "Add a headline", level: "h2", alignment: "left" }, fields: { text: text("Headline"), level: { type: "select", label: "Level", options: [{ label: "Heading 1", value: "h1" }, { label: "Heading 2", value: "h2" }, { label: "Heading 3", value: "h3" }] }, alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => { const Tag = props.level; return <Tag className={styles.headline} id={props.id} style={{ textAlign: props.alignment }}>{props.text}</Tag>; } },
+    Divider: { label: "Divider", defaultProps: { style: "solid", color: "#d8d0c4" }, fields: { style: { type: "select", label: "Style", options: [{ label: "Solid", value: "solid" }, { label: "Dashed", value: "dashed" }, { label: "Dotted", value: "dotted" }] }, color: { type: "text", label: "Color" } }, render: (props) => <hr className={styles.divider} id={props.id} style={{ borderTopStyle: props.style, borderTopColor: props.color }} /> },
+    FollowLinks: { label: "Follow links", defaultProps: { heading: "Follow along", links: [{ label: "Instagram", url: "#" }, { label: "Facebook", url: "#" }] }, fields: { heading: text("Heading"), links: { type: "array", label: "Links", arrayFields: { label: plainText("Label"), url: plainText("URL") } } }, render: (props) => <section className={styles.followLinks} id={props.id}><strong>{props.heading}</strong><div>{props.links.map((link, index) => <a href={link.url || "#"} key={`${link.label}-${index}`}>{link.label}</a>)}</div></section> },
+    BulletedList: { label: "Bulleted list", defaultProps: { items: [{ text: "Add a list item" }] }, fields: { items: { type: "array", label: "Items", arrayFields: { text: plainText("Item") } } }, render: (props) => <ul className={styles.bulletedList} id={props.id}>{props.items.map((item, index) => <li key={`${item.text}-${index}`}>{item.text}</li>)}</ul> },
+    InlineForm: { label: "Inline form", defaultProps: { heading: "Stay in the loop", intro: "Get updates from the campaign.", submitLabel: "Submit", actionUrl: "#", fields: [{ label: "Email", name: "email", type: "email" }] }, fields: { heading: text("Heading"), intro: area("Introduction"), submitLabel: text("Submit label"), actionUrl: plainText("Action URL"), fields: { type: "array", label: "Fields", arrayFields: { label: plainText("Label"), name: plainText("Name"), type: { type: "select", label: "Type", options: [{ label: "Text", value: "text" }, { label: "Email", value: "email" }] } } } }, render: (props) => <form action={props.actionUrl || "#"} className={styles.inlineForm} id={props.id} method="post"><h2>{props.heading}</h2><p>{props.intro}</p>{props.fields.map((field, index) => <label key={`${field.name}-${index}`}>{field.label}<input name={field.name || `field-${index}`} type={field.type} /></label>)}<button className={styles.button} type="submit">{props.submitLabel}</button></form> },
+    ImageCaption: { label: "Image + caption", defaultProps: { image: null, caption: "Add an image caption" }, fields: { image: mediaField("Image"), caption: text("Caption") }, render: (props) => { const image = normalizeMedia(props.image); return <figure className={styles.imageCaption} id={props.id}>{image ? <img alt={image.alt || props.caption} src={image.url} /> : <div>Choose media</div>}<figcaption>{props.caption}</figcaption></figure>; } },
+    Video: { label: "Video", defaultProps: { video: null, url: "", caption: "" }, fields: { video: mediaField("Video", true), url: plainText("Video URL"), caption: text("Caption") }, render: (props) => { const video = normalizeMedia(props.video); const source = video?.url || props.url; return <figure className={styles.video} id={props.id}>{source ? <video controls src={source} /> : <div>Choose a video</div>}{props.caption ? <figcaption>{props.caption}</figcaption> : null}</figure>; } },
+    Embed: { label: "Embed", defaultProps: { url: "https://example.com", title: "Embedded content" }, fields: { url: plainText("Embed URL"), title: text("Title") }, render: (props) => <iframe className={styles.embed} id={props.id} src={props.url} title={props.title} /> },
+    PayPal: { label: "PayPal button", defaultProps: { label: "Donate with PayPal", url: "#", amount: "" }, fields: { label: text("Button label"), url: plainText("PayPal URL"), amount: plainText("Amount") }, render: (props) => <div className={styles.payPal} id={props.id}><a className={styles.button} href={props.url || "#"}>{props.label}</a>{props.amount ? <span>{props.amount}</span> : null}</div> },
     MediaGallery: {
       label: "Media gallery",
       defaultProps: { heading: "From the fellowship", intro: "Add flyers, event moments, and artwork from Payload Media.", items: [{ image: null, caption: "Add a gallery image", size: "large" }, { image: null, caption: "Add a gallery image", size: "medium" }, { image: null, caption: "Add a gallery image", size: "small" }] },

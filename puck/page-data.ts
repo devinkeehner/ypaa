@@ -34,6 +34,16 @@ const COMPONENT_TYPES = new Set([
   "RowThreeColumns",
   "RowFourColumns",
   "ProgramSchedule",
+  "Navigation",
+  "Headline",
+  "Divider",
+  "FollowLinks",
+  "BulletedList",
+  "InlineForm",
+  "ImageCaption",
+  "Video",
+  "Embed",
+  "PayPal",
 ]);
 
 const NESTED_ZONES: Partial<Record<string, "cards" | "columns" | "tabs">> = {
@@ -152,9 +162,10 @@ function packMedia(type: string, props: Record<string, unknown>) {
     packed.backgroundPosterImage = mediaID(packed.backgroundPosterImage);
     packed.image = mediaID(packed.image);
   }
-  if (type === "About" || type === "CallToAction" || type === "Image") {
+  if (type === "About" || type === "CallToAction" || type === "Image" || type === "ImageCaption") {
     packed.image = mediaID(packed.image);
   }
+  if (type === "Video") packed.video = mediaID(packed.video);
   if (type === "Events") {
     packed.upcomingImage = mediaID(packed.upcomingImage);
     if (Array.isArray(packed.pastEvents)) {
