@@ -18,6 +18,11 @@ const COMPONENT_TYPES = new Set([
   "Image",
   "RichText",
   "FreeText",
+  "Text",
+  "Button",
+  "Countdown",
+  "Section",
+  "Column",
   "ButtonRow",
   "IssuesSection",
   "IssueCards",
@@ -27,6 +32,7 @@ const COMPONENT_TYPES = new Set([
   "ActionTabs",
   "MediaGallery",
   "ContentRow",
+  "Row",
   "RowOneColumn",
   "RowTwoColumns",
   "RowLeftWide",
@@ -57,9 +63,12 @@ const NESTED_ZONES: Partial<Record<string, "cards" | "columns" | "tabs">> = {
   RowFourColumns: "columns",
   ActionTabs: "tabs",
 };
+const DIRECT_NESTED_TYPES = new Set(["Section", "Column"]);
 
 function payloadBlockType(type: string) {
-  return type.startsWith("Row") ? "ContentRow" : type;
+  if (type.startsWith("Row")) return "ContentRow";
+  if (type === "Text") return "FreeText";
+  return type;
 }
 
 const STYLE_SUFFIXES = ["Color", "FontSize", "FontWeight", "TextAlign"];
@@ -211,6 +220,9 @@ function layoutToContent(layout: unknown): { content: ComponentData<Record<strin
     const { blockType, ...storedProps } = block;
     delete storedProps.blockName;
     const id = typeof block.id === "string" ? block.id : `${blockType}-${index}`;
+    if (DIRECT_NESTED_TYPES.has(blockType) && Array.isArray(storedProps.blocks)) {
+      storedProps.blocks = nestedLayoutToContent(storedProps.blocks);
+    }
     const nestedCollection = NESTED_ZONES[blockType];
     if (nestedCollection && Array.isArray(storedProps[nestedCollection])) {
       storedProps[nestedCollection] = storedProps[nestedCollection].map((item, nestedIndex) => {
@@ -281,7 +293,11 @@ function contentToNestedLayout(value: unknown): Array<Record<string, unknown>> {
     if (!isRecord(item) || typeof item.type !== "string" || !COMPONENT_TYPES.has(item.type)) return [];
     const props = isRecord(item.props) ? normalizeProps(item.type, item.props) : {};
     const id = typeof props.id === "string" ? props.id : `${item.type}-nested-${index}`;
-    return [{ ...packMedia(item.type, packTextStyles({ ...props, id })), id, blockType: payloadBlockType(item.type) }];
+    const packedProps = packMedia(item.type, packTextStyles({ ...props, id }));
+    if (DIRECT_NESTED_TYPES.has(item.type) && Array.isArray(packedProps.blocks)) {
+      packedProps.blocks = contentToNestedLayout(packedProps.blocks);
+    }
+    return [{ ...packedProps, id, blockType: payloadBlockType(item.type) }];
   });
 }
 
@@ -303,7 +319,11 @@ export function puckDataToLayout(value: unknown): Array<Record<string, unknown>>
     if (!COMPONENT_TYPES.has(item.type)) return [];
     const props = isRecord(item.props) ? normalizeProps(item.type, item.props) : {};
     const id = typeof props.id === "string" ? props.id : `${item.type}-${index}`;
-    const packed = packMedia(item.type, packTextStyles(packNestedZones(item.type, id, { ...props, id }, zones)));
+    const withNested = packNestedZones(item.type, id, { ...props, id }, zones);
+    if (DIRECT_NESTED_TYPES.has(item.type) && Array.isArray(withNested.blocks)) {
+      withNested.blocks = contentToNestedLayout(withNested.blocks);
+    }
+    const packed = packMedia(item.type, packTextStyles(withNested));
     return [{ ...packed, id, blockType: item.type }];
   });
 }

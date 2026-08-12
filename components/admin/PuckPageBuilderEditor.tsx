@@ -3,7 +3,7 @@
 import "@puckeditor/core/puck.css";
 
 import { createUsePuck, Drawer, fieldsPlugin, Puck, type Config, type Data, type Plugin } from "@puckeditor/core";
-import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, BarChart3, Bold, Box, Columns2, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, MousePointerClick, Palette, Quote, Redo2, Save, Search, TextQuote, Type, Undo2 } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, BarChart3, Bold, Box, Clipboard, ClipboardPaste, Columns2, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, MousePointerClick, Palette, Quote, Redo2, Save, Search, TextQuote, Type, Undo2 } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 import { editableFieldsByType, puckConfig } from "@/puck/config";
@@ -153,6 +153,56 @@ function BuilderHeader({ actions, pageId, pageTitle }: { actions: React.ReactNod
   return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerActions}><button disabled={!history.hasPast} aria-label="Undo" onClick={() => history.back()} type="button"><Undo2 /></button><button disabled={!history.hasFuture} aria-label="Redo" onClick={() => history.forward()} type="button"><Redo2 /></button>{actions}</div></div><FormattingBar /></header>;
 }
 
+type SelectedLocation = { index: number; zone?: string } | null;
+type ClipboardState = { data: Data; ui: { itemSelector?: SelectedLocation } };
+type ClipboardDispatch = (action: { type: "setData"; data: Partial<Data> }) => void;
+
+function zoneContent(data: Data, zone?: string) {
+  return zone && data.zones?.[zone] ? data.zones[zone] : data.content;
+}
+
+function freshCopy<T>(value: T): T {
+  const source = JSON.parse(JSON.stringify(value)) as unknown;
+  const ids = new Map<string, string>();
+  const visit = (item: unknown): unknown => {
+    if (Array.isArray(item)) return item.map(visit);
+    if (!item || typeof item !== "object") return item;
+    const record = item as Record<string, unknown>;
+    const next = Object.fromEntries(Object.entries(record).map(([key, entry]) => [key, visit(entry)]));
+    if (typeof record.id === "string") {
+      const nextId = `${record.type || "block"}-${crypto.randomUUID()}`;
+      ids.set(record.id, nextId);
+      next.id = nextId;
+      if (next.props && typeof next.props === "object") next.props = { ...(next.props as Record<string, unknown>), id: nextId };
+    }
+    return next;
+  };
+  return visit(source) as T;
+}
+
+function ClipboardActions({ state, dispatch }: { state: ClipboardState; dispatch: ClipboardDispatch }) {
+  const selection = state.ui.itemSelector;
+  const source = selection ? zoneContent(state.data, selection.zone)?.[selection.index] : null;
+  const copy = () => {
+    if (!source) return;
+    sessionStorage.setItem("necypaa:puck-clipboard", JSON.stringify(source));
+  };
+  const paste = () => {
+    const stored = sessionStorage.getItem("necypaa:puck-clipboard");
+    if (!stored) return;
+    try {
+      const item = freshCopy(JSON.parse(stored)) as Data["content"][number];
+      const zone = selection?.zone;
+      const current = [...zoneContent(state.data, zone)];
+      current.splice(selection ? selection.index + 1 : current.length, 0, item);
+      dispatch({ type: "setData", data: zone ? { ...state.data, zones: { ...state.data.zones, [zone]: current } } : { ...state.data, content: current } });
+    } catch {
+      sessionStorage.removeItem("necypaa:puck-clipboard");
+    }
+  };
+  return <><button aria-label="Copy selected block" disabled={!source} onClick={copy} title="Copy selected block" type="button"><Clipboard /></button><button aria-label="Paste block" onClick={paste} title="Paste block after selection" type="button"><ClipboardPaste /></button></>;
+}
+
 type BlockPalette = "sections" | "rows" | "elements";
 
 const BLOCK_LIBRARY: Record<string, { icon?: React.ReactNode; label: string; rowColumns?: number[] }> = {
@@ -171,6 +221,12 @@ const BLOCK_LIBRARY: Record<string, { icon?: React.ReactNode; label: string; row
   ActionTabs: { icon: <ListTree />, label: "Content Tabs" },
   MediaGallery: { icon: <GalleryHorizontal />, label: "Media Gallery" },
   Navigation: { icon: <ListTree />, label: "Navigation" },
+  Section: { icon: <LayoutTemplate />, label: "Section" },
+  Column: { icon: <Columns2 />, label: "Column" },
+  Row: { icon: <Columns2 />, label: "Row" },
+  Text: { icon: <Type />, label: "Text" },
+  Button: { icon: <MousePointerClick />, label: "Button" },
+  Countdown: { icon: <LayoutTemplate />, label: "Countdown" },
   Headline: { icon: <Type />, label: "Headline" },
   Divider: { icon: <Box />, label: "Divider" },
   FollowLinks: { icon: <MousePointerClick />, label: "Follow Links" },
@@ -198,19 +254,19 @@ const BLOCK_PALETTES: Array<{ blocks: string[]; description: string; id: BlockPa
     id: "sections",
     label: "Sections",
     description: "Complete, ready-to-customize page sections.",
-    blocks: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "ProgramSchedule", "CallToAction", "Navigation", "Headline", "InlineForm", "FollowLinks", "MediaGallery", "ImageCaption", "Video", "Embed", "PayPal", "Divider", "BulletedList", "IssuesSection", "IssueCards", "QuoteBlock", "ResultsStats", "SupporterLogos", "ActionTabs"],
+    blocks: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "ProgramSchedule", "CallToAction", "Section", "Navigation", "Headline", "Countdown", "InlineForm", "FollowLinks", "MediaGallery", "ImageCaption", "Video", "Embed", "PayPal", "Divider", "BulletedList", "IssuesSection", "IssueCards", "QuoteBlock", "ResultsStats", "SupporterLogos", "ActionTabs"],
   },
   {
     id: "rows",
     label: "Rows",
     description: "Flexible column layouts for custom page compositions.",
-    blocks: ["RowOneColumn", "RowTwoColumns", "RowLeftWide", "RowRightWide", "RowThreeColumns", "RowFourColumns"],
+    blocks: ["Row", "RowOneColumn", "RowTwoColumns", "RowLeftWide", "RowRightWide", "RowThreeColumns", "RowFourColumns", "Column"],
   },
   {
     id: "elements",
     label: "Elements",
     description: "Smaller building blocks for rows, cards, and tabs.",
-    blocks: ["ButtonRow", "Headline", "Image", "ImageCaption", "Video", "RichText", "FreeText", "Divider", "BulletedList", "FollowLinks", "InlineForm", "Embed", "PayPal"],
+    blocks: ["ButtonRow", "Button", "Headline", "Text", "Countdown", "Image", "ImageCaption", "Video", "RichText", "FreeText", "Divider", "BulletedList", "FollowLinks", "InlineForm", "Embed", "PayPal"],
   },
 ];
 
@@ -315,5 +371,5 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
       },
     };
   }, []);
-  return <ThemePreviewContext.Provider value={previewTheme}><div className={styles.wrapper}><Puck config={editorConfig as unknown as Config} data={data} height="100dvh" onChange={(next) => setData(next as NECYPAAData)} onPublish={(next) => save(next, true)} overrides={overrides} plugins={plugins} renderHeaderActions={({ state }) => <div className={styles.publish}><span aria-live="polite">{message}</span><button onClick={() => void save(state.data, true)} type="button">Publish</button></div>} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></ThemePreviewContext.Provider>;
+  return <ThemePreviewContext.Provider value={previewTheme}><div className={styles.wrapper}><Puck config={editorConfig as unknown as Config} data={data} height="100dvh" onChange={(next) => setData(next as NECYPAAData)} onPublish={(next) => save(next, true)} overrides={overrides} plugins={plugins} renderHeaderActions={({ state, dispatch }) => <div className={styles.publish}><ClipboardActions dispatch={dispatch} state={state} /><span aria-live="polite">{message}</span><button onClick={() => void save(state.data, true)} type="button">Publish</button></div>} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></ThemePreviewContext.Provider>;
 }

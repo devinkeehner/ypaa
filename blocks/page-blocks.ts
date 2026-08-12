@@ -286,6 +286,10 @@ export const ProgramScheduleBlock: Block = {
   ],
 };
 
+export const TextBlock: Block = { slug: "Text", labels: { singular: "Text", plural: "Text blocks" }, admin: { group: "Flexible content" }, fields: [{ name: "text", type: "textarea" }, { name: "fontSize", type: "text", defaultValue: "1rem" }, { name: "color", type: "text", defaultValue: "#171b20" }, { name: "alignment", type: "select", defaultValue: "left", options: ["left", "center", "right"] }] };
+export const ButtonBlock: Block = { slug: "Button", labels: { singular: "Button", plural: "Buttons" }, admin: { group: "Flexible content" }, fields: [{ name: "label", type: "text" }, { name: "url", type: "text" }, { name: "style", type: "select", defaultValue: "solid", options: ["solid", "outline"] }] };
+export const CountdownBlock: Block = { slug: "Countdown", labels: { singular: "Countdown", plural: "Countdowns" }, admin: { group: "Flexible content" }, fields: [{ name: "target", type: "text" }, { name: "label", type: "text" }] };
+
 const linkFields = [{ name: "label", type: "text" as const }, { name: "url", type: "text" as const }];
 
 export const NavigationBlock: Block = { slug: "Navigation", labels: { singular: "Navigation", plural: "Navigations" }, admin: { group: "Page blocks" }, fields: [{ name: "brand", type: "text" }, { name: "links", type: "array", fields: linkFields }] };
@@ -299,7 +303,10 @@ export const VideoBlock: Block = { slug: "Video", labels: { singular: "Video", p
 export const EmbedBlock: Block = { slug: "Embed", labels: { singular: "Embed", plural: "Embeds" }, admin: { group: "Page blocks" }, fields: [{ name: "url", type: "text" }, { name: "title", type: "text" }] };
 export const PayPalBlock: Block = { slug: "PayPal", labels: { singular: "PayPal button", plural: "PayPal buttons" }, admin: { group: "Page blocks" }, fields: [{ name: "label", type: "text", defaultValue: "Donate with PayPal" }, { name: "url", type: "text" }, { name: "amount", type: "text" }] };
 
-const nestedElementBlocks: Block[] = [ImageBlock, RichTextBlock, FreeTextBlock, NavigationBlock, HeadlineBlock, DividerBlock, FollowLinksBlock, BulletedListBlock, InlineFormBlock, ImageCaptionBlock, VideoBlock, EmbedBlock, PayPalBlock];
+const nestedElementBlocks: Block[] = [ImageBlock, RichTextBlock, FreeTextBlock, TextBlock, ButtonBlock, CountdownBlock, NavigationBlock, HeadlineBlock, DividerBlock, FollowLinksBlock, BulletedListBlock, InlineFormBlock, ImageCaptionBlock, VideoBlock, EmbedBlock, PayPalBlock];
+
+export const SectionBlock: Block = { slug: "Section", labels: { singular: "Section", plural: "Sections" }, admin: { group: "Layout" }, fields: [{ name: "heading", type: "text" }, { name: "background", type: "select", defaultValue: "light", options: ["light", "dark", "muted"] }, { name: "blocks", type: "blocks", blocks: nestedElementBlocks }] };
+export const ColumnBlock: Block = { slug: "Column", labels: { singular: "Column", plural: "Columns" }, admin: { group: "Layout" }, fields: [{ name: "label", type: "text" }, { name: "blocks", type: "blocks", blocks: nestedElementBlocks }] };
 
 export const ButtonRowBlock: Block = {
   slug: "ButtonRow",
@@ -479,6 +486,11 @@ export const PAGE_LAYOUT_BLOCKS: Block[] = [
   ContentRowBlock,
   ProgramScheduleBlock,
   NavigationBlock,
+  TextBlock,
+  ButtonBlock,
+  CountdownBlock,
+  SectionBlock,
+  ColumnBlock,
   HeadlineBlock,
   DividerBlock,
   FollowLinksBlock,

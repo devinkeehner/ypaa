@@ -44,6 +44,9 @@ type Directory = Base & { eyebrow: string; heading: string; body: string; meetin
 type CTA = Base & { eyebrow: string; heading: string; body: string; primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; image?: MediaValue | null };
 type ImageBlock = Base & { image?: MediaValue | null; caption: string; aspectRatio: "natural" | "landscape" | "portrait" | "square"; width: "full" | "wide" | "content" };
 type FreeText = Base & { text: string; fontSize: string; color: string; fontWeight: string; alignment: "left" | "center" | "right" };
+type TextBlockProps = Base & { text: string; fontSize: string; color: string; alignment: "left" | "center" | "right" };
+type ButtonBlockProps = Base & { label: string; url: string; style: "solid" | "outline" };
+type CountdownBlockProps = Base & { target: string; label: string };
 type RichTextSection = Base & { content: unknown; fontSize: string; color: string; fontWeight: string; alignment: "left" | "center" | "right" };
 type ProgramSchedule = Base & { heading: string; introduction: string };
 type ButtonRow = Base & { primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; alignment: "left" | "center" | "right" };
@@ -61,6 +64,8 @@ type ActionTabs = Base & { heading: string; intro: string; tabs: ActionTab[] };
 type GalleryItem = { image?: MediaValue | null; caption: string; size: "small" | "medium" | "large" };
 type MediaGallery = Base & { heading: string; intro: string; items: GalleryItem[] };
 type ContentColumn = { label: string; blocks?: NestedSlot };
+type Section = Base & { heading: string; background: "light" | "dark" | "muted"; blocks?: NestedSlot };
+type Column = Base & { label: string; blocks?: NestedSlot };
 type LinkItem = { label: string; url: string };
 type Navigation = Base & { brand: string; links: LinkItem[] };
 type Headline = Base & { text: string; level: "h1" | "h2" | "h3"; alignment: "left" | "center" | "right" };
@@ -74,7 +79,7 @@ type Embed = Base & { url: string; title: string };
 type PayPal = Base & { label: string; url: string; amount: string };
 type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[]; column1?: NestedSlot; column2?: NestedSlot; column3?: NestedSlot; column4?: NestedSlot; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
 
-type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; Navigation: Navigation; Headline: Headline; Divider: Divider; FollowLinks: FollowLinks; BulletedList: BulletedList; InlineForm: InlineForm; ImageCaption: ImageCaption; Video: Video; Embed: Embed; PayPal: PayPal; ContentRow: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow };
+type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; Text: TextBlockProps; Button: ButtonBlockProps; Countdown: CountdownBlockProps; Section: Section; Column: Column; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; Navigation: Navigation; Headline: Headline; Divider: Divider; FollowLinks: FollowLinks; BulletedList: BulletedList; InlineForm: InlineForm; ImageCaption: ImageCaption; Video: Video; Embed: Embed; PayPal: PayPal; ContentRow: ContentRow; Row: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow };
 
 export const editableFieldsByType: Record<keyof Components, string[]> = {
   HeroCountdown: ["eyebrow", "heading", "body", "eventDate", "eventLocation", "registerLabel", "hotelLabel"],
@@ -86,6 +91,11 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   Image: ["caption"],
   RichText: ["content"],
   FreeText: ["text"],
+  Text: ["text"],
+  Button: ["label"],
+  Countdown: ["label"],
+  Section: ["heading"],
+  Column: ["label"],
   ProgramSchedule: ["heading", "introduction"],
   ButtonRow: ["primaryLabel", "secondaryLabel"],
   IssuesSection: ["eyebrow", "heading", "body"],
@@ -106,6 +116,7 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   Embed: ["title"],
   PayPal: ["label", "amount"],
   ContentRow: [],
+  Row: [],
   RowOneColumn: [],
   RowTwoColumns: [],
   RowLeftWide: [],
@@ -233,7 +244,7 @@ const issueField: Field<Issue[]> = {
   getItemSummary: (item) => item.title || "Issue",
 };
 
-const nestedElementTypes = ["Image", "RichText", "FreeText", "ButtonRow", "Headline", "Divider", "BulletedList", "ImageCaption", "Video", "Embed", "FollowLinks"];
+const nestedElementTypes = ["Image", "RichText", "FreeText", "Text", "Button", "Countdown", "ButtonRow", "Headline", "Divider", "BulletedList", "ImageCaption", "Video", "Embed", "FollowLinks", "Column"];
 
 const issueCardsField: Field<IssueCard[]> = {
   type: "array",
@@ -347,8 +358,8 @@ export const puckConfig: Config<Components> = {
     "Features & content": { components: ["IssuesSection", "IssueCards"] },
     "Quotes & highlights": { components: ["QuoteBlock", "ResultsStats", "SupporterLogos"] },
     "Actions & tabs": { components: ["ActionTabs", "ButtonRow"] },
-    "Media & layout": { components: ["MediaGallery", "ContentRow", "Navigation", "ImageCaption", "Video", "Embed"] },
-    "Elements for rows": { components: ["Headline", "Image", "RichText", "FreeText", "Divider", "BulletedList", "FollowLinks", "InlineForm", "PayPal"] },
+    "Media & layout": { components: ["MediaGallery", "ContentRow", "Row", "Section", "Column", "Navigation", "ImageCaption", "Video", "Embed"] },
+    "Elements for rows": { components: ["Headline", "Text", "Button", "Countdown", "Image", "RichText", "FreeText", "Divider", "BulletedList", "FollowLinks", "InlineForm", "PayPal"] },
   },
   root: {
     fields: {
@@ -514,6 +525,11 @@ export const puckConfig: Config<Components> = {
       render: ActionTabsRender,
     },
     Navigation: { label: "Navigation", defaultProps: { brand: "NECYPAA XXXVI", links: [{ label: "About", url: "#about" }, { label: "Register", url: "#register" }] }, fields: { brand: text("Brand"), links: { type: "array", label: "Links", arrayFields: { label: plainText("Label"), url: plainText("URL") } } }, render: (props) => <nav className={styles.navigation} id={props.id}><strong>{props.brand}</strong><div>{props.links.map((link, index) => <a href={link.url || "#"} key={`${link.label}-${index}`}>{link.label}</a>)}</div></nav> },
+    Text: { label: "Text", defaultProps: { text: "Add text", fontSize: "1rem", color: "#171b20", alignment: "left" }, fields: { text: area("Text"), fontSize: plainText("Font size"), color: plainText("Color"), alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => <p className={styles.freeText} id={props.id} style={{ color: props.color, fontSize: props.fontSize, textAlign: props.alignment }}>{props.text}</p> },
+    Button: { label: "Button", defaultProps: { label: "Learn more", url: "#", style: "solid" }, fields: { label: text("Label"), url: plainText("URL"), style: { type: "select", label: "Style", options: [{ label: "Solid", value: "solid" }, { label: "Outline", value: "outline" }] } }, render: (props) => <a className={styles.button} data-outline={props.style === "outline"} href={props.url || "#"} id={props.id}>{props.label}</a> },
+    Countdown: { label: "Countdown", defaultProps: { target: "2026-12-31T17:00:00-05:00", label: "Time remaining" }, fields: { target: plainText("Target ISO date"), label: text("Label") }, render: (props) => <div className={styles.standaloneCountdown} id={props.id}><span>{props.label}</span><Countdown target={props.target} /></div> },
+    Section: { label: "Section", defaultProps: { heading: "Section heading", background: "light" }, fields: { heading: text("Heading"), background: { type: "select", label: "Background", options: [{ label: "Light", value: "light" }, { label: "Dark", value: "dark" }, { label: "Muted", value: "muted" }] }, blocks: { type: "slot", allow: nestedElementTypes } }, render: (props) => <section className={styles.builderSection} data-background={props.background} id={props.id}><div className={styles.shell}><h2>{props.heading}</h2><SlotContent content={props.blocks} label="section" fallback={<div />}/></div></section> },
+    Column: { label: "Column", defaultProps: { label: "Column" }, fields: { label: plainText("Editor label"), blocks: { type: "slot", allow: nestedElementTypes } }, render: (props) => <div className={styles.builderColumn} data-label={props.label} id={props.id}><SlotContent content={props.blocks} label={props.label} fallback={<div />}/></div> },
     Headline: { label: "Headline", defaultProps: { text: "Add a headline", level: "h2", alignment: "left" }, fields: { text: text("Headline"), level: { type: "select", label: "Level", options: [{ label: "Heading 1", value: "h1" }, { label: "Heading 2", value: "h2" }, { label: "Heading 3", value: "h3" }] }, alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => { const Tag = props.level; return <Tag className={styles.headline} id={props.id} style={{ textAlign: props.alignment }}>{props.text}</Tag>; } },
     Divider: { label: "Divider", defaultProps: { style: "solid", color: "#d8d0c4" }, fields: { style: { type: "select", label: "Style", options: [{ label: "Solid", value: "solid" }, { label: "Dashed", value: "dashed" }, { label: "Dotted", value: "dotted" }] }, color: { type: "text", label: "Color" } }, render: (props) => <hr className={styles.divider} id={props.id} style={{ borderTopStyle: props.style, borderTopColor: props.color }} /> },
     FollowLinks: { label: "Follow links", defaultProps: { heading: "Follow along", links: [{ label: "Instagram", url: "#" }, { label: "Facebook", url: "#" }] }, fields: { heading: text("Heading"), links: { type: "array", label: "Links", arrayFields: { label: plainText("Label"), url: plainText("URL") } } }, render: (props) => <section className={styles.followLinks} id={props.id}><strong>{props.heading}</strong><div>{props.links.map((link, index) => <a href={link.url || "#"} key={`${link.label}-${index}`}>{link.label}</a>)}</div></section> },
@@ -535,6 +551,7 @@ export const puckConfig: Config<Components> = {
       fields: contentRowFields,
       render: contentRowRender,
     },
+    Row: { label: "Row", defaultProps: { layout: "two", columns: [{ label: "Column 1" }, { label: "Column 2" }] }, fields: contentRowFields, render: contentRowRender },
     RowOneColumn: { label: "1 column row", defaultProps: { layout: "one", columns: [{ label: "Column 1" }] }, fields: contentRowFields, render: contentRowRender },
     RowTwoColumns: { label: "2 column row", defaultProps: { layout: "two", columns: [{ label: "Column 1" }, { label: "Column 2" }] }, fields: contentRowFields, render: contentRowRender },
     RowLeftWide: { label: "left wide row", defaultProps: { layout: "leftWide", columns: [{ label: "Main column" }, { label: "Side column" }] }, fields: contentRowFields, render: contentRowRender },

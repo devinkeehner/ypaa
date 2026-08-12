@@ -523,6 +523,129 @@ export interface Page {
                             blockType: 'FreeText';
                           }
                         | {
+                            text?: string | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Text';
+                          }
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            style?: ('solid' | 'outline') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Button';
+                          }
+                        | {
+                            target?: string | null;
+                            label?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Countdown';
+                          }
+                        | {
+                            brand?: string | null;
+                            links?:
+                              | {
+                                  label?: string | null;
+                                  url?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Navigation';
+                          }
+                        | {
+                            text?: string | null;
+                            level?: ('h1' | 'h2' | 'h3') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Headline';
+                          }
+                        | {
+                            style?: ('solid' | 'dashed' | 'dotted') | null;
+                            color?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Divider';
+                          }
+                        | {
+                            heading?: string | null;
+                            links?:
+                              | {
+                                  label?: string | null;
+                                  url?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'FollowLinks';
+                          }
+                        | {
+                            items?:
+                              | {
+                                  text?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'BulletedList';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            submitLabel?: string | null;
+                            actionUrl?: string | null;
+                            fields?:
+                              | {
+                                  label?: string | null;
+                                  name?: string | null;
+                                  type?: ('text' | 'email') | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'InlineForm';
+                          }
+                        | {
+                            image: string | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ImageCaption';
+                          }
+                        | {
+                            video?: (string | null) | Media;
+                            url?: string | null;
+                            caption?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Video';
+                          }
+                        | {
+                            url?: string | null;
+                            title?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Embed';
+                          }
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            amount?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'PayPal';
+                          }
+                        | {
                             primaryLabel?: string | null;
                             primaryUrl?: string | null;
                             secondaryLabel?: string | null;
@@ -636,6 +759,129 @@ export interface Page {
                             blockType: 'FreeText';
                           }
                         | {
+                            text?: string | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Text';
+                          }
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            style?: ('solid' | 'outline') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Button';
+                          }
+                        | {
+                            target?: string | null;
+                            label?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Countdown';
+                          }
+                        | {
+                            brand?: string | null;
+                            links?:
+                              | {
+                                  label?: string | null;
+                                  url?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Navigation';
+                          }
+                        | {
+                            text?: string | null;
+                            level?: ('h1' | 'h2' | 'h3') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Headline';
+                          }
+                        | {
+                            style?: ('solid' | 'dashed' | 'dotted') | null;
+                            color?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Divider';
+                          }
+                        | {
+                            heading?: string | null;
+                            links?:
+                              | {
+                                  label?: string | null;
+                                  url?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'FollowLinks';
+                          }
+                        | {
+                            items?:
+                              | {
+                                  text?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'BulletedList';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            submitLabel?: string | null;
+                            actionUrl?: string | null;
+                            fields?:
+                              | {
+                                  label?: string | null;
+                                  name?: string | null;
+                                  type?: ('text' | 'email') | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'InlineForm';
+                          }
+                        | {
+                            image: string | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ImageCaption';
+                          }
+                        | {
+                            video?: (string | null) | Media;
+                            url?: string | null;
+                            caption?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Video';
+                          }
+                        | {
+                            url?: string | null;
+                            title?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Embed';
+                          }
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            amount?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'PayPal';
+                          }
+                        | {
                             primaryLabel?: string | null;
                             primaryUrl?: string | null;
                             secondaryLabel?: string | null;
@@ -723,6 +969,129 @@ export interface Page {
                             blockType: 'FreeText';
                           }
                         | {
+                            text?: string | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Text';
+                          }
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            style?: ('solid' | 'outline') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Button';
+                          }
+                        | {
+                            target?: string | null;
+                            label?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Countdown';
+                          }
+                        | {
+                            brand?: string | null;
+                            links?:
+                              | {
+                                  label?: string | null;
+                                  url?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Navigation';
+                          }
+                        | {
+                            text?: string | null;
+                            level?: ('h1' | 'h2' | 'h3') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Headline';
+                          }
+                        | {
+                            style?: ('solid' | 'dashed' | 'dotted') | null;
+                            color?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Divider';
+                          }
+                        | {
+                            heading?: string | null;
+                            links?:
+                              | {
+                                  label?: string | null;
+                                  url?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'FollowLinks';
+                          }
+                        | {
+                            items?:
+                              | {
+                                  text?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'BulletedList';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            submitLabel?: string | null;
+                            actionUrl?: string | null;
+                            fields?:
+                              | {
+                                  label?: string | null;
+                                  name?: string | null;
+                                  type?: ('text' | 'email') | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'InlineForm';
+                          }
+                        | {
+                            image: string | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ImageCaption';
+                          }
+                        | {
+                            video?: (string | null) | Media;
+                            url?: string | null;
+                            caption?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Video';
+                          }
+                        | {
+                            url?: string | null;
+                            title?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Embed';
+                          }
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            amount?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'PayPal';
+                          }
+                        | {
                             primaryLabel?: string | null;
                             primaryUrl?: string | null;
                             secondaryLabel?: string | null;
@@ -747,6 +1116,508 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'ProgramSchedule';
+          }
+        | {
+            brand?: string | null;
+            links?:
+              | {
+                  label?: string | null;
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'Navigation';
+          }
+        | {
+            text?: string | null;
+            fontSize?: string | null;
+            color?: string | null;
+            alignment?: ('left' | 'center' | 'right') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'Text';
+          }
+        | {
+            label?: string | null;
+            url?: string | null;
+            style?: ('solid' | 'outline') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'Button';
+          }
+        | {
+            target?: string | null;
+            label?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'Countdown';
+          }
+        | {
+            heading?: string | null;
+            background?: ('light' | 'dark' | 'muted') | null;
+            blocks?:
+              | (
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                      width?: ('full' | 'wide' | 'content') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Image';
+                    }
+                  | {
+                      /**
+                       * Headings, links, lists, quotes, alignment, and inline formatting.
+                       */
+                      content?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RichText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FreeText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Text';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      style?: ('solid' | 'outline') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Button';
+                    }
+                  | {
+                      target?: string | null;
+                      label?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Countdown';
+                    }
+                  | {
+                      brand?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Navigation';
+                    }
+                  | {
+                      text?: string | null;
+                      level?: ('h1' | 'h2' | 'h3') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Headline';
+                    }
+                  | {
+                      style?: ('solid' | 'dashed' | 'dotted') | null;
+                      color?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Divider';
+                    }
+                  | {
+                      heading?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FollowLinks';
+                    }
+                  | {
+                      items?:
+                        | {
+                            text?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'BulletedList';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      submitLabel?: string | null;
+                      actionUrl?: string | null;
+                      fields?:
+                        | {
+                            label?: string | null;
+                            name?: string | null;
+                            type?: ('text' | 'email') | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineForm';
+                    }
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ImageCaption';
+                    }
+                  | {
+                      video?: (string | null) | Media;
+                      url?: string | null;
+                      caption?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Video';
+                    }
+                  | {
+                      url?: string | null;
+                      title?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Embed';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      amount?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'PayPal';
+                    }
+                  | {
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRow';
+                    }
+                )[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'Section';
+          }
+        | {
+            label?: string | null;
+            blocks?:
+              | (
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                      width?: ('full' | 'wide' | 'content') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Image';
+                    }
+                  | {
+                      /**
+                       * Headings, links, lists, quotes, alignment, and inline formatting.
+                       */
+                      content?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RichText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FreeText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Text';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      style?: ('solid' | 'outline') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Button';
+                    }
+                  | {
+                      target?: string | null;
+                      label?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Countdown';
+                    }
+                  | {
+                      brand?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Navigation';
+                    }
+                  | {
+                      text?: string | null;
+                      level?: ('h1' | 'h2' | 'h3') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Headline';
+                    }
+                  | {
+                      style?: ('solid' | 'dashed' | 'dotted') | null;
+                      color?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Divider';
+                    }
+                  | {
+                      heading?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FollowLinks';
+                    }
+                  | {
+                      items?:
+                        | {
+                            text?: string | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'BulletedList';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      submitLabel?: string | null;
+                      actionUrl?: string | null;
+                      fields?:
+                        | {
+                            label?: string | null;
+                            name?: string | null;
+                            type?: ('text' | 'email') | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineForm';
+                    }
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ImageCaption';
+                    }
+                  | {
+                      video?: (string | null) | Media;
+                      url?: string | null;
+                      caption?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Video';
+                    }
+                  | {
+                      url?: string | null;
+                      title?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Embed';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      amount?: string | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'PayPal';
+                    }
+                  | {
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRow';
+                    }
+                )[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'Column';
+          }
+        | {
+            text?: string | null;
+            level?: ('h1' | 'h2' | 'h3') | null;
+            alignment?: ('left' | 'center' | 'right') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'Headline';
+          }
+        | {
+            style?: ('solid' | 'dashed' | 'dotted') | null;
+            color?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'Divider';
+          }
+        | {
+            heading?: string | null;
+            links?:
+              | {
+                  label?: string | null;
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'FollowLinks';
+          }
+        | {
+            items?:
+              | {
+                  text?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'BulletedList';
+          }
+        | {
+            heading?: string | null;
+            intro?: string | null;
+            submitLabel?: string | null;
+            actionUrl?: string | null;
+            fields?:
+              | {
+                  label?: string | null;
+                  name?: string | null;
+                  type?: ('text' | 'email') | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'InlineForm';
+          }
+        | {
+            image: string | Media;
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'ImageCaption';
+          }
+        | {
+            video?: (string | null) | Media;
+            url?: string | null;
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'Video';
+          }
+        | {
+            url?: string | null;
+            title?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'Embed';
+          }
+        | {
+            label?: string | null;
+            url?: string | null;
+            amount?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'PayPal';
           }
       )[]
     | null;
@@ -1949,6 +2820,142 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          Text?:
+                            | T
+                            | {
+                                text?: T;
+                                fontSize?: T;
+                                color?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Button?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                style?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Countdown?:
+                            | T
+                            | {
+                                target?: T;
+                                label?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Navigation?:
+                            | T
+                            | {
+                                brand?: T;
+                                links?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      url?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Headline?:
+                            | T
+                            | {
+                                text?: T;
+                                level?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Divider?:
+                            | T
+                            | {
+                                style?: T;
+                                color?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          FollowLinks?:
+                            | T
+                            | {
+                                heading?: T;
+                                links?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      url?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          BulletedList?:
+                            | T
+                            | {
+                                items?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          InlineForm?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                submitLabel?: T;
+                                actionUrl?: T;
+                                fields?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      name?: T;
+                                      type?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ImageCaption?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Video?:
+                            | T
+                            | {
+                                video?: T;
+                                url?: T;
+                                caption?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Embed?:
+                            | T
+                            | {
+                                url?: T;
+                                title?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          PayPal?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                amount?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           ButtonRow?:
                             | T
                             | {
@@ -2053,6 +3060,142 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          Text?:
+                            | T
+                            | {
+                                text?: T;
+                                fontSize?: T;
+                                color?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Button?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                style?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Countdown?:
+                            | T
+                            | {
+                                target?: T;
+                                label?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Navigation?:
+                            | T
+                            | {
+                                brand?: T;
+                                links?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      url?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Headline?:
+                            | T
+                            | {
+                                text?: T;
+                                level?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Divider?:
+                            | T
+                            | {
+                                style?: T;
+                                color?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          FollowLinks?:
+                            | T
+                            | {
+                                heading?: T;
+                                links?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      url?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          BulletedList?:
+                            | T
+                            | {
+                                items?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          InlineForm?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                submitLabel?: T;
+                                actionUrl?: T;
+                                fields?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      name?: T;
+                                      type?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ImageCaption?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Video?:
+                            | T
+                            | {
+                                video?: T;
+                                url?: T;
+                                caption?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Embed?:
+                            | T
+                            | {
+                                url?: T;
+                                title?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          PayPal?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                amount?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           ButtonRow?:
                             | T
                             | {
@@ -2129,6 +3272,142 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          Text?:
+                            | T
+                            | {
+                                text?: T;
+                                fontSize?: T;
+                                color?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Button?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                style?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Countdown?:
+                            | T
+                            | {
+                                target?: T;
+                                label?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Navigation?:
+                            | T
+                            | {
+                                brand?: T;
+                                links?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      url?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Headline?:
+                            | T
+                            | {
+                                text?: T;
+                                level?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Divider?:
+                            | T
+                            | {
+                                style?: T;
+                                color?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          FollowLinks?:
+                            | T
+                            | {
+                                heading?: T;
+                                links?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      url?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          BulletedList?:
+                            | T
+                            | {
+                                items?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          InlineForm?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                submitLabel?: T;
+                                actionUrl?: T;
+                                fields?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      name?: T;
+                                      type?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ImageCaption?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Video?:
+                            | T
+                            | {
+                                video?: T;
+                                url?: T;
+                                caption?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Embed?:
+                            | T
+                            | {
+                                url?: T;
+                                title?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          PayPal?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                amount?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           ButtonRow?:
                             | T
                             | {
@@ -2151,6 +3430,523 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               heading?: T;
               introduction?: T;
+              id?: T;
+              blockName?: T;
+            };
+        Navigation?:
+          | T
+          | {
+              brand?: T;
+              links?:
+                | T
+                | {
+                    label?: T;
+                    url?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        Text?:
+          | T
+          | {
+              text?: T;
+              fontSize?: T;
+              color?: T;
+              alignment?: T;
+              id?: T;
+              blockName?: T;
+            };
+        Button?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+              style?: T;
+              id?: T;
+              blockName?: T;
+            };
+        Countdown?:
+          | T
+          | {
+              target?: T;
+              label?: T;
+              id?: T;
+              blockName?: T;
+            };
+        Section?:
+          | T
+          | {
+              heading?: T;
+              background?: T;
+              blocks?:
+                | T
+                | {
+                    Image?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          aspectRatio?: T;
+                          width?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RichText?:
+                      | T
+                      | {
+                          content?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FreeText?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Text?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          alignment?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Button?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          style?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Countdown?:
+                      | T
+                      | {
+                          target?: T;
+                          label?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Navigation?:
+                      | T
+                      | {
+                          brand?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Headline?:
+                      | T
+                      | {
+                          text?: T;
+                          level?: T;
+                          alignment?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Divider?:
+                      | T
+                      | {
+                          style?: T;
+                          color?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FollowLinks?:
+                      | T
+                      | {
+                          heading?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    BulletedList?:
+                      | T
+                      | {
+                          items?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineForm?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          submitLabel?: T;
+                          actionUrl?: T;
+                          fields?:
+                            | T
+                            | {
+                                label?: T;
+                                name?: T;
+                                type?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ImageCaption?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Video?:
+                      | T
+                      | {
+                          video?: T;
+                          url?: T;
+                          caption?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Embed?:
+                      | T
+                      | {
+                          url?: T;
+                          title?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    PayPal?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          amount?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRow?:
+                      | T
+                      | {
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          alignment?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        Column?:
+          | T
+          | {
+              label?: T;
+              blocks?:
+                | T
+                | {
+                    Image?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          aspectRatio?: T;
+                          width?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RichText?:
+                      | T
+                      | {
+                          content?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FreeText?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Text?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          alignment?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Button?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          style?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Countdown?:
+                      | T
+                      | {
+                          target?: T;
+                          label?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Navigation?:
+                      | T
+                      | {
+                          brand?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Headline?:
+                      | T
+                      | {
+                          text?: T;
+                          level?: T;
+                          alignment?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Divider?:
+                      | T
+                      | {
+                          style?: T;
+                          color?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FollowLinks?:
+                      | T
+                      | {
+                          heading?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    BulletedList?:
+                      | T
+                      | {
+                          items?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineForm?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          submitLabel?: T;
+                          actionUrl?: T;
+                          fields?:
+                            | T
+                            | {
+                                label?: T;
+                                name?: T;
+                                type?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ImageCaption?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Video?:
+                      | T
+                      | {
+                          video?: T;
+                          url?: T;
+                          caption?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Embed?:
+                      | T
+                      | {
+                          url?: T;
+                          title?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    PayPal?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          amount?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRow?:
+                      | T
+                      | {
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          alignment?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        Headline?:
+          | T
+          | {
+              text?: T;
+              level?: T;
+              alignment?: T;
+              id?: T;
+              blockName?: T;
+            };
+        Divider?:
+          | T
+          | {
+              style?: T;
+              color?: T;
+              id?: T;
+              blockName?: T;
+            };
+        FollowLinks?:
+          | T
+          | {
+              heading?: T;
+              links?:
+                | T
+                | {
+                    label?: T;
+                    url?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        BulletedList?:
+          | T
+          | {
+              items?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        InlineForm?:
+          | T
+          | {
+              heading?: T;
+              intro?: T;
+              submitLabel?: T;
+              actionUrl?: T;
+              fields?:
+                | T
+                | {
+                    label?: T;
+                    name?: T;
+                    type?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        ImageCaption?:
+          | T
+          | {
+              image?: T;
+              caption?: T;
+              id?: T;
+              blockName?: T;
+            };
+        Video?:
+          | T
+          | {
+              video?: T;
+              url?: T;
+              caption?: T;
+              id?: T;
+              blockName?: T;
+            };
+        Embed?:
+          | T
+          | {
+              url?: T;
+              title?: T;
+              id?: T;
+              blockName?: T;
+            };
+        PayPal?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+              amount?: T;
               id?: T;
               blockName?: T;
             };
