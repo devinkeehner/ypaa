@@ -16,6 +16,8 @@ import {
 } from "@payloadcms/richtext-lexical";
 import type { Block, Field } from "payload";
 
+import { campaignAltDefinitions } from "@/puck/campaign-alt-definitions";
+
 const textStyles: Field = {
   name: "textStyles",
   type: "json",
@@ -360,6 +362,61 @@ export const ButtonRowBlock: Block = {
 
 nestedElementBlocks.push(ButtonRowBlock);
 
+const campaignItemFields: Field[] = [
+  { name: "label", type: "text" },
+  { name: "heading", type: "text" },
+  { name: "text", type: "textarea" },
+  { name: "value", type: "text" },
+  { name: "url", type: "text" },
+  { name: "image", type: "upload", relationTo: "media" },
+];
+
+function campaignNestedField(collection: "cards" | "columns" | "tabs"): Field {
+  return {
+    name: collection,
+    type: "array",
+    labels: { singular: collection === "columns" ? "Column" : collection === "tabs" ? "Tab" : "Card", plural: collection },
+    fields: [
+      { name: "label", type: "text" },
+      { name: "heading", type: "text" },
+      { name: "text", type: "textarea" },
+      { name: "image", type: "upload", relationTo: "media" },
+      { name: "blocks", type: "blocks", blocks: nestedElementBlocks },
+    ],
+  };
+}
+
+function createCampaignAltBlock(definition: (typeof campaignAltDefinitions)[number]): Block {
+  return {
+    slug: definition.type,
+    labels: { singular: definition.label, plural: `${definition.label} blocks` },
+    admin: { group: definition.palette === "elements" ? "Campaign elements" : definition.palette === "rows" ? "Campaign rows" : "Campaign sections" },
+    fields: [
+      { name: "variant", type: "select", defaultValue: definition.variants[0], options: [...definition.variants] },
+      ...(definition.presentations ? [{ name: "presentation", type: "select" as const, defaultValue: definition.presentations[0], options: [...definition.presentations] }] : []),
+      { name: "eyebrow", type: "text" },
+      { name: "heading", type: "textarea" },
+      { name: "body", type: "textarea" },
+      { name: "media", type: "upload", relationTo: "media" },
+      { name: "backgroundMedia", type: "upload", relationTo: "media" },
+      { name: "primaryLabel", type: "text" },
+      { name: "primaryUrl", type: "text" },
+      { name: "secondaryLabel", type: "text" },
+      { name: "secondaryUrl", type: "text" },
+      { name: "items", type: "array", labels: { singular: "Item", plural: "Items" }, fields: campaignItemFields },
+      ...(definition.nestedCollection ? [campaignNestedField(definition.nestedCollection)] : []),
+    ],
+  };
+}
+
+const CAMPAIGN_ALT_ELEMENT_BLOCKS = campaignAltDefinitions.filter((definition) => definition.palette === "elements").map(createCampaignAltBlock);
+nestedElementBlocks.push(...CAMPAIGN_ALT_ELEMENT_BLOCKS);
+
+export const CAMPAIGN_ALT_BLOCKS: Block[] = [
+  ...CAMPAIGN_ALT_ELEMENT_BLOCKS,
+  ...campaignAltDefinitions.filter((definition) => definition.palette !== "elements").map(createCampaignAltBlock),
+];
+
 export const IssuesSectionBlock: Block = {
   slug: "IssuesSection",
   labels: { singular: "Issues section", plural: "Issues sections" },
@@ -538,4 +595,5 @@ export const PAGE_LAYOUT_BLOCKS: Block[] = [
   VideoBlock,
   EmbedBlock,
   PayPalBlock,
+  ...CAMPAIGN_ALT_BLOCKS,
 ];

@@ -685,6 +685,111 @@ export interface Page {
                             blockName?: string | null;
                             blockType: 'ButtonRow';
                           }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'MediaBlockAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ButtonRowAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'InlineRichTextAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'TextElementAlt';
+                          }
                       )[]
                     | null;
                   id?: string | null;
@@ -921,6 +1026,111 @@ export interface Page {
                             blockName?: string | null;
                             blockType: 'ButtonRow';
                           }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'MediaBlockAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ButtonRowAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'InlineRichTextAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'TextElementAlt';
+                          }
                       )[]
                     | null;
                   id?: string | null;
@@ -1130,6 +1340,111 @@ export interface Page {
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'ButtonRow';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'MediaBlockAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ButtonRowAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'InlineRichTextAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'TextElementAlt';
                           }
                       )[]
                     | null;
@@ -1368,6 +1683,111 @@ export interface Page {
                       blockName?: string | null;
                       blockType: 'ButtonRow';
                     }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            url?: string | null;
+                            image?: (string | null) | Media;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'MediaBlockAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            url?: string | null;
+                            image?: (string | null) | Media;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRowAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            url?: string | null;
+                            image?: (string | null) | Media;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineRichTextAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            url?: string | null;
+                            image?: (string | null) | Media;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'TextElementAlt';
+                    }
                 )[]
               | null;
             id?: string | null;
@@ -1557,6 +1977,111 @@ export interface Page {
                       blockName?: string | null;
                       blockType: 'ButtonRow';
                     }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            url?: string | null;
+                            image?: (string | null) | Media;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'MediaBlockAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            url?: string | null;
+                            image?: (string | null) | Media;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRowAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            url?: string | null;
+                            image?: (string | null) | Media;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineRichTextAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            url?: string | null;
+                            image?: (string | null) | Media;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'TextElementAlt';
+                    }
                 )[]
               | null;
             id?: string | null;
@@ -1648,6 +2173,1710 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'PayPal';
+          }
+        | {
+            variant?: 'default' | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'MediaBlockAlt';
+          }
+        | {
+            variant?: 'default' | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'ButtonRowAlt';
+          }
+        | {
+            variant?: 'default' | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'InlineRichTextAlt';
+          }
+        | {
+            variant?: 'default' | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'TextElementAlt';
+          }
+        | {
+            variant?:
+              | (
+                  | 'splitSpotlight'
+                  | 'centeredStatement'
+                  | 'ribbonOverlay'
+                  | 'mediaFocus'
+                  | 'campaignPoster'
+                  | 'photoOverlay'
+                  | 'splitCandidate'
+                  | 'officialMasthead'
+                  | 'grassrootsAction'
+                  | 'civicOutdoors'
+                  | 'civicOutdoorsPanel'
+                )
+              | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'HeroAlt';
+          }
+        | {
+            variant?: ('splitProfile' | 'storyStack' | 'checklist') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'AboutAlt';
+          }
+        | {
+            variant?: ('poster' | 'namePlate' | 'photoSplit') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'PalmCardMastheadAlt';
+          }
+        | {
+            variant?: ('checklist' | 'iconCards' | 'twoColumn') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'PalmCardPointsAlt';
+          }
+        | {
+            variant?: ('shortBio' | 'profileSplit' | 'quoteBio') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'PalmCardBioAlt';
+          }
+        | {
+            variant?: ('photoStrip' | 'featureCollage' | 'storyPanel') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'PalmCardGalleryAlt';
+          }
+        | {
+            variant?: ('contactPanel' | 'footerBand' | 'splitAction') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'PalmCardContactAlt';
+          }
+        | {
+            variant?: ('compactList' | 'splitProfile' | 'issueBriefs') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'PalmCardAlt';
+          }
+        | {
+            variant?: ('cards' | 'editorial' | 'tabs' | 'stacked' | 'alternatingBand') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'FeatureFamilyAlt';
+          }
+        | {
+            variant?: ('imageOverlay' | 'infoCards' | 'iconCards' | 'editorialGrid') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'CardsGridAlt';
+          }
+        | {
+            variant?: ('imageOverlay' | 'infoCards' | 'iconCards' | 'editorialGrid') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            cards?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  image?: (string | null) | Media;
+                  blocks?:
+                    | (
+                        | {
+                            image: string | Media;
+                            caption?: string | null;
+                            aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                            width?: ('full' | 'wide' | 'content') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Image';
+                          }
+                        | {
+                            /**
+                             * Headings, links, lists, quotes, alignment, and inline formatting.
+                             */
+                            content?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            fontWeight?: ('400' | '700') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'RichText';
+                          }
+                        | {
+                            text?: string | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            fontWeight?: ('400' | '700') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'FreeText';
+                          }
+                        | {
+                            text?: string | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Text';
+                          }
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            style?: ('solid' | 'outline') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Button';
+                          }
+                        | {
+                            target?: string | null;
+                            label?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Countdown';
+                          }
+                        | {
+                            brand?: string | null;
+                            links?:
+                              | {
+                                  label?: string | null;
+                                  url?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Navigation';
+                          }
+                        | {
+                            text?: string | null;
+                            level?: ('h1' | 'h2' | 'h3') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Headline';
+                          }
+                        | {
+                            style?: ('solid' | 'dashed' | 'dotted') | null;
+                            color?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Divider';
+                          }
+                        | {
+                            heading?: string | null;
+                            links?:
+                              | {
+                                  label?: string | null;
+                                  url?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'FollowLinks';
+                          }
+                        | {
+                            items?:
+                              | {
+                                  text?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'BulletedList';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            submitLabel?: string | null;
+                            actionUrl?: string | null;
+                            fields?:
+                              | {
+                                  label?: string | null;
+                                  name?: string | null;
+                                  type?: ('text' | 'email') | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'InlineForm';
+                          }
+                        | {
+                            image: string | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ImageCaption';
+                          }
+                        | {
+                            video?: (string | null) | Media;
+                            url?: string | null;
+                            caption?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Video';
+                          }
+                        | {
+                            url?: string | null;
+                            title?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Embed';
+                          }
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            amount?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'PayPal';
+                          }
+                        | {
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ButtonRow';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'MediaBlockAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ButtonRowAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'InlineRichTextAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'TextElementAlt';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'ComposableCardsAlt';
+          }
+        | {
+            variant?: ('contained' | 'editorial' | 'spotlight') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'TestimonialAlt';
+          }
+        | {
+            variant?: ('compact' | 'panel' | 'ranked') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'StatsAlt';
+          }
+        | {
+            variant?: ('grid' | 'officialEndorsement' | 'band') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'LogoCloudAlt';
+          }
+        | {
+            variant?: ('testimonialCards' | 'statsStrip' | 'logoCloud') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'ProofFamilyAlt';
+          }
+        | {
+            variant?: ('boxed' | 'banner' | 'split') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'CTAFamilyAlt';
+          }
+        | {
+            variant?:
+              | ('oneColumn' | 'twoEqual' | 'oneThirdTwoThirds' | 'twoThirdsOneThird' | 'threeEqual' | 'fourEqual')
+              | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            columns?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  image?: (string | null) | Media;
+                  blocks?:
+                    | (
+                        | {
+                            image: string | Media;
+                            caption?: string | null;
+                            aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                            width?: ('full' | 'wide' | 'content') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Image';
+                          }
+                        | {
+                            /**
+                             * Headings, links, lists, quotes, alignment, and inline formatting.
+                             */
+                            content?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            fontWeight?: ('400' | '700') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'RichText';
+                          }
+                        | {
+                            text?: string | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            fontWeight?: ('400' | '700') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'FreeText';
+                          }
+                        | {
+                            text?: string | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Text';
+                          }
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            style?: ('solid' | 'outline') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Button';
+                          }
+                        | {
+                            target?: string | null;
+                            label?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Countdown';
+                          }
+                        | {
+                            brand?: string | null;
+                            links?:
+                              | {
+                                  label?: string | null;
+                                  url?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Navigation';
+                          }
+                        | {
+                            text?: string | null;
+                            level?: ('h1' | 'h2' | 'h3') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Headline';
+                          }
+                        | {
+                            style?: ('solid' | 'dashed' | 'dotted') | null;
+                            color?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Divider';
+                          }
+                        | {
+                            heading?: string | null;
+                            links?:
+                              | {
+                                  label?: string | null;
+                                  url?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'FollowLinks';
+                          }
+                        | {
+                            items?:
+                              | {
+                                  text?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'BulletedList';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            submitLabel?: string | null;
+                            actionUrl?: string | null;
+                            fields?:
+                              | {
+                                  label?: string | null;
+                                  name?: string | null;
+                                  type?: ('text' | 'email') | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'InlineForm';
+                          }
+                        | {
+                            image: string | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ImageCaption';
+                          }
+                        | {
+                            video?: (string | null) | Media;
+                            url?: string | null;
+                            caption?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Video';
+                          }
+                        | {
+                            url?: string | null;
+                            title?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Embed';
+                          }
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            amount?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'PayPal';
+                          }
+                        | {
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ButtonRow';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'MediaBlockAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ButtonRowAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'InlineRichTextAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'TextElementAlt';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'ColumnsAlt';
+          }
+        | {
+            variant?: ('horizontal' | 'sideTabs' | 'accordion') | null;
+            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            tabs?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  image?: (string | null) | Media;
+                  blocks?:
+                    | (
+                        | {
+                            image: string | Media;
+                            caption?: string | null;
+                            aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                            width?: ('full' | 'wide' | 'content') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Image';
+                          }
+                        | {
+                            /**
+                             * Headings, links, lists, quotes, alignment, and inline formatting.
+                             */
+                            content?: {
+                              root: {
+                                type: string;
+                                children: {
+                                  type: any;
+                                  version: number;
+                                  [k: string]: unknown;
+                                }[];
+                                direction: ('ltr' | 'rtl') | null;
+                                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                indent: number;
+                                version: number;
+                              };
+                              [k: string]: unknown;
+                            } | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            fontWeight?: ('400' | '700') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'RichText';
+                          }
+                        | {
+                            text?: string | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            fontWeight?: ('400' | '700') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'FreeText';
+                          }
+                        | {
+                            text?: string | null;
+                            fontSize?: string | null;
+                            color?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Text';
+                          }
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            style?: ('solid' | 'outline') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Button';
+                          }
+                        | {
+                            target?: string | null;
+                            label?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Countdown';
+                          }
+                        | {
+                            brand?: string | null;
+                            links?:
+                              | {
+                                  label?: string | null;
+                                  url?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Navigation';
+                          }
+                        | {
+                            text?: string | null;
+                            level?: ('h1' | 'h2' | 'h3') | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Headline';
+                          }
+                        | {
+                            style?: ('solid' | 'dashed' | 'dotted') | null;
+                            color?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Divider';
+                          }
+                        | {
+                            heading?: string | null;
+                            links?:
+                              | {
+                                  label?: string | null;
+                                  url?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'FollowLinks';
+                          }
+                        | {
+                            items?:
+                              | {
+                                  text?: string | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'BulletedList';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            submitLabel?: string | null;
+                            actionUrl?: string | null;
+                            fields?:
+                              | {
+                                  label?: string | null;
+                                  name?: string | null;
+                                  type?: ('text' | 'email') | null;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'InlineForm';
+                          }
+                        | {
+                            image: string | Media;
+                            caption?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ImageCaption';
+                          }
+                        | {
+                            video?: (string | null) | Media;
+                            url?: string | null;
+                            caption?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Video';
+                          }
+                        | {
+                            url?: string | null;
+                            title?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'Embed';
+                          }
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            amount?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'PayPal';
+                          }
+                        | {
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ButtonRow';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'MediaBlockAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'ButtonRowAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'InlineRichTextAlt';
+                          }
+                        | {
+                            variant?: 'default' | null;
+                            eyebrow?: string | null;
+                            heading?: string | null;
+                            body?: string | null;
+                            media?: (string | null) | Media;
+                            backgroundMedia?: (string | null) | Media;
+                            primaryLabel?: string | null;
+                            primaryUrl?: string | null;
+                            secondaryLabel?: string | null;
+                            secondaryUrl?: string | null;
+                            items?:
+                              | {
+                                  label?: string | null;
+                                  heading?: string | null;
+                                  text?: string | null;
+                                  value?: string | null;
+                                  url?: string | null;
+                                  image?: (string | null) | Media;
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'TextElementAlt';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'TabbedContentAlt';
+          }
+        | {
+            variant?: ('auto' | 'small' | 'medium' | 'large') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'MediaGalleryAlt';
+          }
+        | {
+            variant?: ('standard' | 'campaign' | 'split') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'FormBlockAlt';
+          }
+        | {
+            variant?: 'default' | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'MenuBlockAlt';
+          }
+        | {
+            variant?: 'default' | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'MeetingScheduleAlt';
+          }
+        | {
+            variant?: 'default' | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'ArchiveAlt';
+          }
+        | {
+            variant?: ('cards' | 'mosaic' | 'staggered' | 'carousel' | 'flyerLightbox') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'FacebookFeedAlt';
+          }
+        | {
+            variant?: ('info' | 'warning' | 'error' | 'success') | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'BannerAlt';
+          }
+        | {
+            variant?: 'default' | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            body?: string | null;
+            media?: (string | null) | Media;
+            backgroundMedia?: (string | null) | Media;
+            primaryLabel?: string | null;
+            primaryUrl?: string | null;
+            secondaryLabel?: string | null;
+            secondaryUrl?: string | null;
+            items?:
+              | {
+                  label?: string | null;
+                  heading?: string | null;
+                  text?: string | null;
+                  value?: string | null;
+                  url?: string | null;
+                  image?: (string | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'SimpleFormAlt';
           }
       )[]
     | null;
@@ -3028,6 +5257,115 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          MediaBlockAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ButtonRowAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          InlineRichTextAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                presentation?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          TextElementAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
                         };
                     id?: T;
                   };
@@ -3268,6 +5606,115 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          MediaBlockAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ButtonRowAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          InlineRichTextAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                presentation?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          TextElementAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
                         };
                     id?: T;
                   };
@@ -3477,6 +5924,115 @@ export interface PagesSelect<T extends boolean = true> {
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          MediaBlockAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ButtonRowAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          InlineRichTextAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                presentation?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          TextElementAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
                                 id?: T;
                                 blockName?: T;
                               };
@@ -3722,6 +6278,115 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    MediaBlockAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                url?: T;
+                                image?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRowAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                url?: T;
+                                image?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineRichTextAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          presentation?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                url?: T;
+                                image?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    TextElementAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                url?: T;
+                                image?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
                   };
               id?: T;
               blockName?: T;
@@ -3912,6 +6577,115 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    MediaBlockAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                url?: T;
+                                image?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRowAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                url?: T;
+                                image?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineRichTextAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          presentation?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                url?: T;
+                                image?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
+                    TextElementAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                url?: T;
+                                image?: T;
+                                id?: T;
+                              };
+                          id?: T;
+                          blockName?: T;
+                        };
                   };
               id?: T;
               blockName?: T;
@@ -4008,6 +6782,1736 @@ export interface PagesSelect<T extends boolean = true> {
               label?: T;
               url?: T;
               amount?: T;
+              id?: T;
+              blockName?: T;
+            };
+        MediaBlockAlt?:
+          | T
+          | {
+              variant?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        ButtonRowAlt?:
+          | T
+          | {
+              variant?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        InlineRichTextAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        TextElementAlt?:
+          | T
+          | {
+              variant?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        HeroAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        AboutAlt?:
+          | T
+          | {
+              variant?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        PalmCardMastheadAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        PalmCardPointsAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        PalmCardBioAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        PalmCardGalleryAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        PalmCardContactAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        PalmCardAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        FeatureFamilyAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        CardsGridAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        ComposableCardsAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              cards?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    image?: T;
+                    blocks?:
+                      | T
+                      | {
+                          Image?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                aspectRatio?: T;
+                                width?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          RichText?:
+                            | T
+                            | {
+                                content?: T;
+                                fontSize?: T;
+                                color?: T;
+                                fontWeight?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          FreeText?:
+                            | T
+                            | {
+                                text?: T;
+                                fontSize?: T;
+                                color?: T;
+                                fontWeight?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Text?:
+                            | T
+                            | {
+                                text?: T;
+                                fontSize?: T;
+                                color?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Button?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                style?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Countdown?:
+                            | T
+                            | {
+                                target?: T;
+                                label?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Navigation?:
+                            | T
+                            | {
+                                brand?: T;
+                                links?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      url?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Headline?:
+                            | T
+                            | {
+                                text?: T;
+                                level?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Divider?:
+                            | T
+                            | {
+                                style?: T;
+                                color?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          FollowLinks?:
+                            | T
+                            | {
+                                heading?: T;
+                                links?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      url?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          BulletedList?:
+                            | T
+                            | {
+                                items?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          InlineForm?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                submitLabel?: T;
+                                actionUrl?: T;
+                                fields?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      name?: T;
+                                      type?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ImageCaption?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Video?:
+                            | T
+                            | {
+                                video?: T;
+                                url?: T;
+                                caption?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Embed?:
+                            | T
+                            | {
+                                url?: T;
+                                title?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          PayPal?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                amount?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ButtonRow?:
+                            | T
+                            | {
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          MediaBlockAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ButtonRowAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          InlineRichTextAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                presentation?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          TextElementAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        TestimonialAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        StatsAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        LogoCloudAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        ProofFamilyAlt?:
+          | T
+          | {
+              variant?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        CTAFamilyAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        ColumnsAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              columns?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    image?: T;
+                    blocks?:
+                      | T
+                      | {
+                          Image?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                aspectRatio?: T;
+                                width?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          RichText?:
+                            | T
+                            | {
+                                content?: T;
+                                fontSize?: T;
+                                color?: T;
+                                fontWeight?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          FreeText?:
+                            | T
+                            | {
+                                text?: T;
+                                fontSize?: T;
+                                color?: T;
+                                fontWeight?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Text?:
+                            | T
+                            | {
+                                text?: T;
+                                fontSize?: T;
+                                color?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Button?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                style?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Countdown?:
+                            | T
+                            | {
+                                target?: T;
+                                label?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Navigation?:
+                            | T
+                            | {
+                                brand?: T;
+                                links?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      url?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Headline?:
+                            | T
+                            | {
+                                text?: T;
+                                level?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Divider?:
+                            | T
+                            | {
+                                style?: T;
+                                color?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          FollowLinks?:
+                            | T
+                            | {
+                                heading?: T;
+                                links?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      url?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          BulletedList?:
+                            | T
+                            | {
+                                items?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          InlineForm?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                submitLabel?: T;
+                                actionUrl?: T;
+                                fields?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      name?: T;
+                                      type?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ImageCaption?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Video?:
+                            | T
+                            | {
+                                video?: T;
+                                url?: T;
+                                caption?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Embed?:
+                            | T
+                            | {
+                                url?: T;
+                                title?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          PayPal?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                amount?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ButtonRow?:
+                            | T
+                            | {
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          MediaBlockAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ButtonRowAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          InlineRichTextAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                presentation?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          TextElementAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        TabbedContentAlt?:
+          | T
+          | {
+              variant?: T;
+              presentation?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              tabs?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    image?: T;
+                    blocks?:
+                      | T
+                      | {
+                          Image?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                aspectRatio?: T;
+                                width?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          RichText?:
+                            | T
+                            | {
+                                content?: T;
+                                fontSize?: T;
+                                color?: T;
+                                fontWeight?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          FreeText?:
+                            | T
+                            | {
+                                text?: T;
+                                fontSize?: T;
+                                color?: T;
+                                fontWeight?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Text?:
+                            | T
+                            | {
+                                text?: T;
+                                fontSize?: T;
+                                color?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Button?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                style?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Countdown?:
+                            | T
+                            | {
+                                target?: T;
+                                label?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Navigation?:
+                            | T
+                            | {
+                                brand?: T;
+                                links?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      url?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Headline?:
+                            | T
+                            | {
+                                text?: T;
+                                level?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Divider?:
+                            | T
+                            | {
+                                style?: T;
+                                color?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          FollowLinks?:
+                            | T
+                            | {
+                                heading?: T;
+                                links?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      url?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          BulletedList?:
+                            | T
+                            | {
+                                items?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          InlineForm?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                submitLabel?: T;
+                                actionUrl?: T;
+                                fields?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      name?: T;
+                                      type?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ImageCaption?:
+                            | T
+                            | {
+                                image?: T;
+                                caption?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Video?:
+                            | T
+                            | {
+                                video?: T;
+                                url?: T;
+                                caption?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          Embed?:
+                            | T
+                            | {
+                                url?: T;
+                                title?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          PayPal?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                amount?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ButtonRow?:
+                            | T
+                            | {
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                alignment?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          MediaBlockAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          ButtonRowAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          InlineRichTextAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                presentation?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          TextElementAlt?:
+                            | T
+                            | {
+                                variant?: T;
+                                eyebrow?: T;
+                                heading?: T;
+                                body?: T;
+                                media?: T;
+                                backgroundMedia?: T;
+                                primaryLabel?: T;
+                                primaryUrl?: T;
+                                secondaryLabel?: T;
+                                secondaryUrl?: T;
+                                items?:
+                                  | T
+                                  | {
+                                      label?: T;
+                                      heading?: T;
+                                      text?: T;
+                                      value?: T;
+                                      url?: T;
+                                      image?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        MediaGalleryAlt?:
+          | T
+          | {
+              variant?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        FormBlockAlt?:
+          | T
+          | {
+              variant?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        MenuBlockAlt?:
+          | T
+          | {
+              variant?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        MeetingScheduleAlt?:
+          | T
+          | {
+              variant?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        ArchiveAlt?:
+          | T
+          | {
+              variant?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        FacebookFeedAlt?:
+          | T
+          | {
+              variant?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        BannerAlt?:
+          | T
+          | {
+              variant?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        SimpleFormAlt?:
+          | T
+          | {
+              variant?: T;
+              eyebrow?: T;
+              heading?: T;
+              body?: T;
+              media?: T;
+              backgroundMedia?: T;
+              primaryLabel?: T;
+              primaryUrl?: T;
+              secondaryLabel?: T;
+              secondaryUrl?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    heading?: T;
+                    text?: T;
+                    value?: T;
+                    url?: T;
+                    image?: T;
+                    id?: T;
+                  };
               id?: T;
               blockName?: T;
             };

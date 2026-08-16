@@ -54,11 +54,6 @@
 .align { gap: 3px; }
 
 .blockLibraryPanel { background: var(--builder-panel-muted); display: flex; flex-direction: column; min-height: 100%; }
-.blockLibraryTabs { background: var(--builder-panel); border-bottom: 1px solid var(--builder-border); display: grid; gap: 5px; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 10px 12px; }
-.blockLibraryTabs button { align-items: center; background: var(--builder-panel); border: 1px solid var(--builder-border); border-radius: 6px; color: var(--builder-muted); cursor: pointer; display: flex; font: 800 10px/1.1 system-ui; gap: 6px; justify-content: center; min-height: 42px; min-width: 0; padding: 5px 7px; }
-.blockLibraryTabs button:hover { border-color: color-mix(in srgb, var(--builder-accent) 42%, var(--builder-border)); color: var(--builder-text); }
-.blockLibraryTabs button[aria-selected="true"] { background: var(--builder-accent-soft); border-color: color-mix(in srgb, var(--builder-accent) 68%, var(--builder-border)); color: var(--builder-accent); }
-.blockLibraryTabs button span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .blockPaletteTabIcon { align-items: center; display: inline-flex; flex: 0 0 auto; height: 17px; justify-content: center; width: 17px; }
 .blockPaletteTabIcon svg { height: 100%; width: 100%; }
 .blockDrawerPanel { align-content: start; background: var(--builder-panel-muted); display: grid; flex: 1 1 auto; gap: 12px; min-height: 0; padding: 14px; }

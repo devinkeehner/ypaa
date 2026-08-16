@@ -6,7 +6,8 @@ import { createUsePuck, Drawer, fieldsPlugin, Puck, type Config, type Data, type
 import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, BarChart3, Bold, Box, Clipboard, ClipboardPaste, Columns2, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, MousePointerClick, Palette, Quote, Save, Search, TextQuote, Type } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
-import { editableFieldsByType, puckConfig } from "@/puck/config";
+import { editableFieldsByType, nestedElementTypes, puckConfig } from "@/puck/config";
+import { campaignAltDefinitions, campaignAltTypesByPalette } from "@/puck/campaign-alt-definitions";
 import type { NECYPAAData } from "@/puck/types";
 import type { TenantTheme } from "@/components/site/TenantThemeProvider";
 
@@ -280,21 +281,27 @@ const BLOCK_PALETTES: Array<{ blocks: string[]; description: string; id: BlockPa
     id: "sections",
     label: "Sections",
     description: "Complete, ready-to-customize page sections.",
-    blocks: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "CTMeetingSchedule", "ProgramSchedule", "CallToAction", "Section", "Navigation", "Headline", "Countdown", "InlineForm", "FollowLinks", "MediaGallery", "ImageCaption", "Video", "Embed", "PayPal", "Divider", "BulletedList", "IssuesSection", "IssueCards", "QuoteBlock", "ResultsStats", "SupporterLogos", "ActionTabs"],
+    blocks: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "CTMeetingSchedule", "ProgramSchedule", "CallToAction", "IssuesSection", "IssueCards", "QuoteBlock", "ResultsStats", "SupporterLogos", "ActionTabs", "MediaGallery", ...campaignAltTypesByPalette.sections],
   },
   {
     id: "rows",
     label: "Rows",
     description: "Flexible column layouts for custom page compositions.",
-    blocks: ["Row", "RowOneColumn", "RowTwoColumns", "RowLeftWide", "RowRightWide", "RowThreeColumns", "RowFourColumns", "Column"],
+    blocks: ["Section", "RowOneColumn", "RowTwoColumns", "RowLeftWide", "RowRightWide", "RowThreeColumns", "RowFourColumns", "Column", ...campaignAltTypesByPalette.rows],
   },
   {
     id: "elements",
     label: "Elements",
     description: "Smaller building blocks for rows, cards, and tabs.",
-    blocks: ["ButtonRow", "Button", "Headline", "Text", "Countdown", "Image", "ImageCaption", "Video", "RichText", "FreeText", "Divider", "BulletedList", "FollowLinks", "InlineForm", "Embed", "PayPal"],
+    blocks: [...nestedElementTypes, ...campaignAltTypesByPalette.elements],
   },
 ];
+
+const CAMPAIGN_ALT_LABELS = Object.fromEntries(campaignAltDefinitions.map((definition) => [definition.type, definition.label])) as Record<string, string>;
+
+function blockPaletteLabel(name: string) {
+  return BLOCK_LIBRARY[name]?.label || CAMPAIGN_ALT_LABELS[name] || name.replace(/([A-Z])/g, " $1").trim();
+}
 
 function PaletteTabIcon({ palette }: { palette: BlockPalette }) {
   const Icon = palette === "sections" ? LayoutTemplate : palette === "rows" ? Columns2 : Box;
@@ -306,7 +313,7 @@ function RowSkeleton({ columns }: { columns: number[] }) {
 }
 
 function BlockPaletteItem({ name }: { children?: React.ReactNode; name: string }) {
-  const item = BLOCK_LIBRARY[name] || { icon: <Box />, label: name.replace(/([A-Z])/g, " $1").trim() };
+  const item = BLOCK_LIBRARY[name] || { icon: <Box />, label: blockPaletteLabel(name) };
   return <div className={styles.blockPaletteItem} data-kind={item.rowColumns ? "row" : "standard"}>
     {item.rowColumns ? <RowSkeleton columns={item.rowColumns} /> : <span className={styles.blockPaletteIcon}>{item.icon}</span>}
     <span className={styles.blockPaletteLabel}>{item.label}</span>
@@ -315,7 +322,7 @@ function BlockPaletteItem({ name }: { children?: React.ReactNode; name: string }
 
 function BlockDrawerPanel({ palette }: { palette: (typeof BLOCK_PALETTES)[number] }) {
   const [query, setQuery] = useState("");
-  const matchingBlocks = palette.blocks.filter((name) => BLOCK_LIBRARY[name]?.label.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
+  const matchingBlocks = palette.blocks.filter((name) => blockPaletteLabel(name).toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
 
   return <div aria-label={`${palette.label}. ${palette.description}`} className={styles.blockDrawerPanel} data-palette={palette.id}>
     <div className={styles.blockDrawerHeader}><strong>{palette.label}</strong><span>{matchingBlocks.length}</span></div>
@@ -323,23 +330,18 @@ function BlockDrawerPanel({ palette }: { palette: (typeof BLOCK_PALETTES)[number
       <Search aria-hidden="true" />
       <input aria-label={`Search ${palette.label.toLocaleLowerCase()}`} onChange={(event) => setQuery(event.target.value)} placeholder="Search blocks" type="search" value={query} />
     </label>
-    {matchingBlocks.length ? <Drawer>{matchingBlocks.map((name) => <Drawer.Item key={name} label={BLOCK_LIBRARY[name]?.label || name} name={name}>{BlockPaletteItem}</Drawer.Item>)}</Drawer> : <p className={styles.blockDrawerEmpty}>No matching blocks.</p>}
+    {matchingBlocks.length ? <Drawer>{matchingBlocks.map((name) => <Drawer.Item key={name} label={blockPaletteLabel(name)} name={name}>{BlockPaletteItem}</Drawer.Item>)}</Drawer> : <p className={styles.blockDrawerEmpty}>No matching blocks.</p>}
   </div>;
 }
 
-function BlockLibraryPanel() {
-  const [activePalette, setActivePalette] = useState<BlockPalette>("sections");
-  const active = BLOCK_PALETTES.find((palette) => palette.id === activePalette) || BLOCK_PALETTES[0];
-  return <div className={styles.blockLibraryPanel}>
-    <div aria-label="Block categories" className={styles.blockLibraryTabs} role="tablist">
-      {BLOCK_PALETTES.map((palette) => <button aria-selected={palette.id === active.id} key={palette.id} onClick={() => setActivePalette(palette.id)} role="tab" title={palette.label} type="button"><PaletteTabIcon palette={palette.id} /><span>{palette.label}</span></button>)}
-    </div>
-    <BlockDrawerPanel key={active.id} palette={active} />
-  </div>;
+function BlockLibraryPanel({ palette }: { palette: (typeof BLOCK_PALETTES)[number] }) {
+  return <div className={styles.blockLibraryPanel}><BlockDrawerPanel palette={palette} /></div>;
 }
 
-function createBlockLibraryPlugin(): Plugin {
-  return { name: "blocks", label: "Blocks", icon: <PaletteTabIcon palette="sections" />, render: () => <BlockLibraryPanel /> };
+function createBlockLibraryPlugin(palette: (typeof BLOCK_PALETTES)[number]): Plugin {
+  // Reuse Puck's built-in key for Sections so the catch-all Blocks tab is replaced.
+  const name = palette.id === "sections" ? "blocks" : `library-${palette.id}`;
+  return { name, label: palette.label, icon: <PaletteTabIcon palette={palette.id} />, render: () => <BlockLibraryPanel palette={palette} /> };
 }
 
 export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle, tenantId, tenantTheme }: { initialData: NECYPAAData; pageId: string; pageSlug: string; pageTitle: string; tenantId?: string; tenantTheme: TenantTheme }) {
@@ -374,7 +376,7 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
     ...(pageSlug === "home" ? { iframe: ThemePreviewFrame } : {}),
   }), [message, pageId, pageSlug, pageTitle, save]);
   const plugins = useMemo<Plugin[]>(() => [
-    createBlockLibraryPlugin(),
+    ...BLOCK_PALETTES.map(createBlockLibraryPlugin),
     fieldsPlugin({ desktopSideBar: "left" }),
     ...(pageSlug === "home" ? [{ name: "theme", label: "Theme", icon: <Palette />, render: () => <ThemePanel initialTenantId={tenantId} initialTheme={tenantTheme} onPreviewTheme={setPreviewTheme} /> }] : []),
   ], [pageSlug, tenantId, tenantTheme]);

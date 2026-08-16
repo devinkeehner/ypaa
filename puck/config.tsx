@@ -1,6 +1,6 @@
 "use client";
 
-import { Render, type Config, type Field } from "@puckeditor/core";
+import { Render, type ComponentConfig, type Config, type Field } from "@puckeditor/core";
 import { RichText as PayloadRichText } from "@payloadcms/richtext-lexical/react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { Fragment, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
@@ -18,6 +18,7 @@ import {
 } from "@/puck/list-values";
 import type { ImportantDate, MediaValue, MeetingListing, PastEvent, ScheduleMeeting, UpcomingEvent } from "@/puck/list-values";
 import { ctMeetingSchedule } from "@/puck/ct-meeting-schedule-data";
+import { campaignAltDefinitions, campaignAltTypes, campaignAltTypesByPalette, type CampaignAltDefinition, type CampaignAltType } from "@/puck/campaign-alt-definitions";
 import type { NECYPAAData } from "@/puck/types";
 
 import styles from "./puck.module.css";
@@ -84,8 +85,14 @@ type Video = Base & { video?: MediaValue | null; url: string; caption: string };
 type Embed = Base & { url: string; title: string };
 type PayPal = Base & { label: string; url: string; amount: string };
 type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[]; column1?: NestedSlot; column2?: NestedSlot; column3?: NestedSlot; column4?: NestedSlot; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
+type CampaignAltItem = { label?: string; heading?: string; text?: string; value?: string; url?: string; image?: MediaValue | null };
+type CampaignAltSlotItem = CampaignAltItem & { blocks?: NestedSlot };
+type CampaignAltProps = Base & { variant: string; presentation: string; eyebrow: string; heading: string; body: string; media?: MediaValue | null; backgroundMedia?: MediaValue | null; primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; items: CampaignAltItem[]; cards: CampaignAltSlotItem[]; columns: CampaignAltSlotItem[]; tabs: CampaignAltSlotItem[]; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
+type CampaignAltComponents = { [K in CampaignAltType]: CampaignAltProps };
 
-type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CTMeetingSchedule: CTMeetingSchedule; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; Text: TextBlockProps; Button: ButtonBlockProps; Countdown: CountdownBlockProps; Section: Section; Column: Column; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; Navigation: Navigation; Headline: Headline; Divider: Divider; FollowLinks: FollowLinks; BulletedList: BulletedList; InlineForm: InlineForm; ImageCaption: ImageCaption; Video: Video; Embed: Embed; PayPal: PayPal; ContentRow: ContentRow; Row: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow };
+type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CTMeetingSchedule: CTMeetingSchedule; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; Text: TextBlockProps; Button: ButtonBlockProps; Countdown: CountdownBlockProps; Section: Section; Column: Column; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; Navigation: Navigation; Headline: Headline; Divider: Divider; FollowLinks: FollowLinks; BulletedList: BulletedList; InlineForm: InlineForm; ImageCaption: ImageCaption; Video: Video; Embed: Embed; PayPal: PayPal; ContentRow: ContentRow; Row: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow } & CampaignAltComponents;
+
+const campaignAltEditableFields = Object.fromEntries(campaignAltDefinitions.map((definition) => [definition.type, ["eyebrow", "heading", "body", "primaryLabel", "secondaryLabel"]])) as Record<CampaignAltType, string[]>;
 
 export const editableFieldsByType: Record<keyof Components, string[]> = {
   HeroCountdown: ["eyebrow", "heading", "body", "eventDate", "eventLocation", "registerLabel", "hotelLabel"],
@@ -130,6 +137,7 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   RowRightWide: [],
   RowThreeColumns: [],
   RowFourColumns: [],
+  ...campaignAltEditableFields,
 };
 
 const text = (label: string) => ({ type: "text" as const, label, contentEditable: true });
@@ -276,7 +284,7 @@ const issueField: Field<Issue[]> = {
   getItemSummary: (item) => item.title || "Issue",
 };
 
-const nestedElementTypes = ["Image", "RichText", "FreeText", "Text", "Button", "Countdown", "ButtonRow", "Headline", "Divider", "BulletedList", "ImageCaption", "Video", "Embed", "FollowLinks", "Column"];
+export const nestedElementTypes = ["Image", "RichText", "FreeText", "Text", "Button", "Countdown", "ButtonRow", "Headline", "Divider", "BulletedList", "ImageCaption", "Video", "Embed", "FollowLinks", "InlineForm", "PayPal", "Navigation", ...campaignAltTypesByPalette.elements];
 
 const issueCardsField: Field<IssueCard[]> = {
   type: "array",
@@ -351,14 +359,14 @@ function SlotContent({ content, label, fallback }: { content?: NestedSlot; label
 
 function contentRowRender(props: ContentRow) {
   const columns = (props.columns || []).slice(0, visibleColumnCount(props.layout));
-  return <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}<SlotContent content={column.blocks} label={column.label || `column ${index + 1}`} fallback={renderZone(props, `${props.id}:columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)} /></article>)}</div></div></section>;
+  return <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}<SlotContent content={column.blocks} label={column.label || `column ${index + 1}`} fallback={renderZone(props, `columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)} /></article>)}</div></div></section>;
 }
 
 function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } }) {
   const [active, setActive] = useState(0);
   const tabs = props.tabs?.length ? props.tabs : [];
   const editing = Boolean(props.puck?.isEditing);
-  return <section className={styles.actionTabs} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.tabList} role="tablist">{tabs.map((tab, index) => <button aria-selected={active === index} key={`${tab.label}-${index}`} onClick={() => setActive(index)} role="tab" type="button">{tab.label || `Tab ${index + 1}`}</button>)}</div><div className={styles.tabPanels}>{tabs.map((tab, index) => (editing || active === index) ? <section aria-label={tab.label || `Tab ${index + 1}`} className={styles.tabPanel} hidden={!editing && active !== index} key={`${tab.label}-${index}`}><Editable as="p" field="intro" props={props}>{tab.description}</Editable><SlotContent content={tab.blocks} label={tab.label || `tab ${index + 1}`} fallback={renderZone(props, `${props.id}:tabs.${index}.blocks`, `Drop elements in ${tab.label || `tab ${index + 1}`}`)} /></section> : null)}</div></div></section>;
+  return <section className={styles.actionTabs} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.tabList} role="tablist">{tabs.map((tab, index) => <button aria-selected={active === index} key={`${tab.label}-${index}`} onClick={() => setActive(index)} role="tab" type="button">{tab.label || `Tab ${index + 1}`}</button>)}</div><div className={styles.tabPanels}>{tabs.map((tab, index) => (editing || active === index) ? <section aria-label={tab.label || `Tab ${index + 1}`} className={styles.tabPanel} hidden={!editing && active !== index} key={`${tab.label}-${index}`}><Editable as="p" field="intro" props={props}>{tab.description}</Editable><SlotContent content={tab.blocks} label={tab.label || `tab ${index + 1}`} fallback={renderZone(props, `tabs.${index}.blocks`, `Drop elements in ${tab.label || `tab ${index + 1}`}`)} /></section> : null)}</div></div></section>;
 }
 
 function styleFor(props: Base, field: string): CSSProperties {
@@ -416,14 +424,72 @@ function CTMeetingScheduleBlock(props: CTMeetingSchedule) {
   </div></section>;
 }
 
+const campaignItemsField: Field<CampaignAltItem[]> = {
+  type: "array",
+  label: "Items",
+  defaultItemProps: { label: "", heading: "New item", text: "Add details", value: "", url: "", image: null },
+  arrayFields: { label: plainText("Label"), heading: plainText("Heading"), text: area("Text"), value: plainText("Value"), url: plainText("URL"), image: mediaField("Image") },
+  getItemSummary: (item) => item.heading || item.label || item.value || "Item",
+};
+
+const campaignNestedField: Field<CampaignAltSlotItem[]> = {
+  type: "array",
+  label: "Nested content",
+  defaultItemProps: { label: "", heading: "New item", text: "Add details", image: null },
+  arrayFields: { label: plainText("Editor label"), heading: plainText("Heading"), text: area("Text"), image: mediaField("Image"), blocks: { type: "slot", allow: nestedElementTypes } },
+  getItemSummary: (item) => item.heading || item.label || "Item",
+};
+
+function campaignOptionLabel(value: string) {
+  return value.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (letter) => letter.toUpperCase());
+}
+
+function CampaignAltTabs({ props }: { props: CampaignAltProps }) {
+  const [active, setActive] = useState(0);
+  return <div className={styles.campaignAltTabs} data-variant={props.variant}><div role="tablist">{props.tabs.map((tab, index) => <button aria-selected={active === index} key={`${tab.label}-${index}`} onClick={() => setActive(index)} role="tab" type="button">{tab.label || tab.heading || `Tab ${index + 1}`}</button>)}</div>{props.tabs.map((tab, index) => <section hidden={!props.puck?.isEditing && active !== index} key={`${tab.heading}-${index}`}><h3>{tab.heading}</h3>{tab.text ? <p>{tab.text}</p> : null}<SlotContent content={tab.blocks} label={tab.label || `tab ${index + 1}`} fallback={renderZone(props, `tabs.${index}.blocks`, `Drop elements in ${tab.label || `tab ${index + 1}`}`)} /></section>)}</div>;
+}
+
+function CampaignAltRender({ definition, props }: { definition: CampaignAltDefinition; props: CampaignAltProps }) {
+  const media = normalizeMedia(props.media);
+  const background = normalizeMedia(props.backgroundMedia);
+  const nestedItems = definition.nestedCollection === "cards" ? props.cards : definition.nestedCollection === "columns" ? props.columns : [];
+
+  if (definition.kind === "tabs") return <section className={styles.campaignAlt} data-kind="tabs" data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable><CampaignAltTabs props={props} /></div></section>;
+
+  if (definition.kind === "columns" || definition.nestedCollection === "cards") {
+    return <section className={styles.campaignAlt} data-kind={definition.kind} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable><div className={styles.campaignAltGrid}>{nestedItems.map((item, index) => <article key={`${item.heading}-${index}`}><span>{item.label || `${definition.nestedCollection === "columns" ? "Column" : "Card"} ${index + 1}`}</span><h3>{item.heading}</h3>{item.text ? <p>{item.text}</p> : null}<SlotContent content={item.blocks} label={item.label || `item ${index + 1}`} fallback={renderZone(props, `${definition.nestedCollection}.${index}.blocks`, `Drop elements in ${item.label || `item ${index + 1}`}`)} /></article>)}</div></div></section>;
+  }
+
+  const isHero = definition.kind === "hero";
+  return <section className={styles.campaignAlt} data-kind={definition.kind} data-presentation={props.presentation} data-variant={props.variant} id={props.id}>{background ? <img aria-hidden="true" alt="" className={styles.campaignAltBackground} src={background.url} /> : null}<div className={styles.shell}><div className={styles.campaignAltCopy}>{props.eyebrow ? <Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable> : null}<Editable as={isHero ? "h1" : "h2"} field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable>{props.primaryLabel || props.secondaryLabel ? <div className={styles.actions}>{props.primaryLabel ? <Button href={props.primaryUrl || "#"}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button> : null}{props.secondaryLabel ? <Button href={props.secondaryUrl || "#"} outline><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button> : null}</div> : null}</div>{media ? <figure><img alt={media.alt || ""} src={media.url} /></figure> : null}{props.items.length ? <div className={styles.campaignAltItems}>{props.items.map((item, index) => <article key={`${item.heading}-${item.label}-${index}`}>{item.image && normalizeMedia(item.image) ? <img alt={normalizeMedia(item.image)?.alt || ""} src={normalizeMedia(item.image)?.url} /> : null}{item.label ? <small>{item.label}</small> : null}<h3>{item.heading || item.value}</h3>{item.text ? <p>{item.text}</p> : null}{item.url ? <a href={item.url}>Learn more</a> : null}</article>)}</div> : null}</div></section>;
+}
+
+const campaignAltComponents = Object.fromEntries(campaignAltDefinitions.map((definition) => {
+  const nestedDefaults = definition.nestedCollection === "columns"
+    ? [{ label: "Column 1", heading: "", text: "" }, { label: "Column 2", heading: "", text: "" }]
+    : definition.nestedCollection === "tabs"
+      ? [{ label: "First tab", heading: "First tab", text: "Add tab content" }, { label: "Second tab", heading: "Second tab", text: "Add tab content" }]
+      : definition.nestedCollection === "cards"
+        ? [{ label: "Card 1", heading: "First card", text: "Add card content" }, { label: "Card 2", heading: "Second card", text: "Add card content" }]
+        : [];
+  const nestedFields = definition.nestedCollection ? { [definition.nestedCollection]: campaignNestedField } : {};
+  return [definition.type, {
+    label: definition.label,
+    defaultProps: { variant: definition.variants[0], presentation: definition.presentations?.[0] || "contained", eyebrow: definition.type === "HeroAlt" ? "A different opening" : "", heading: definition.label, body: "Add campaign-facing content here.", media: null, backgroundMedia: null, primaryLabel: "Learn more", primaryUrl: "#", secondaryLabel: "", secondaryUrl: "#", items: [{ label: "", heading: "First item", text: "Add details", value: "", url: "", image: null }], cards: definition.nestedCollection === "cards" ? nestedDefaults : [], columns: definition.nestedCollection === "columns" ? nestedDefaults : [], tabs: definition.nestedCollection === "tabs" ? nestedDefaults : [] },
+    fields: { variant: { type: "select", label: "Variant", options: definition.variants.map((value) => ({ label: campaignOptionLabel(value), value })) }, presentation: { type: "select", label: "Presentation", options: (definition.presentations || ["contained"]).map((value) => ({ label: campaignOptionLabel(value), value })) }, eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Body"), media: mediaField("Primary media"), backgroundMedia: mediaField("Background media"), primaryLabel: text("Primary action label"), primaryUrl: plainText("Primary action URL"), secondaryLabel: text("Secondary action label"), secondaryUrl: plainText("Secondary action URL"), items: campaignItemsField, ...nestedFields },
+    render: (props: CampaignAltProps) => <CampaignAltRender definition={definition} props={props} />,
+  }];
+})) as unknown as Record<CampaignAltType, ComponentConfig<CampaignAltProps>>;
+
 export const puckConfig: Config<Components> = {
   categories: {
     "Home page": { components: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "CTMeetingSchedule", "ProgramSchedule", "CallToAction"] },
     "Features & content": { components: ["IssuesSection", "IssueCards"] },
     "Quotes & highlights": { components: ["QuoteBlock", "ResultsStats", "SupporterLogos"] },
     "Actions & tabs": { components: ["ActionTabs", "ButtonRow"] },
-    "Media & layout": { components: ["MediaGallery", "ContentRow", "Row", "Section", "Column", "Navigation", "ImageCaption", "Video", "Embed"] },
-    "Elements for rows": { components: ["Headline", "Text", "Button", "Countdown", "Image", "RichText", "FreeText", "Divider", "BulletedList", "FollowLinks", "InlineForm", "PayPal"] },
+    "Media & layout": { components: ["MediaGallery", "ContentRow", "Row", "RowOneColumn", "RowTwoColumns", "RowLeftWide", "RowRightWide", "RowThreeColumns", "RowFourColumns", "Section", "Column"] },
+    "Elements for rows": { components: ["Headline", "Text", "Button", "Countdown", "Image", "RichText", "FreeText", "Divider", "BulletedList", "FollowLinks", "InlineForm", "PayPal", "Navigation", "ImageCaption", "Video", "Embed"] },
+    "Campaign alternatives": { components: campaignAltTypes },
   },
   root: {
     fields: {
@@ -568,7 +634,7 @@ export const puckConfig: Config<Components> = {
       label: "Feature cards",
       defaultProps: { heading: "The work in focus", intro: "Use cards for detailed priorities, workshops, or ways to help.", variant: "cards", cards: [{ label: "Recovery", heading: "Bring the next person in", body: "Create a convention experience that makes newcomers feel at home.", image: null }, { label: "Fellowship", heading: "Make room for connection", body: "Build spaces where people can meet, laugh, and stay involved.", image: null }, { label: "Service", heading: "Put gratitude into action", body: "Invite people into the work that makes the weekend possible.", image: null }] },
       fields: { heading: text("Heading"), intro: area("Introduction"), variant: { type: "select", label: "Card style", options: [{ label: "Cards", value: "cards" }, { label: "Editorial", value: "editorial" }, { label: "Image overlay", value: "image" }] }, cards: issueCardsField },
-      render: (props) => <section className={styles.issueCards} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.issueCardGrid}>{props.cards.map((card, index) => { const image = normalizeMedia(card.image); return <article data-has-image={Boolean(image)} key={`${card.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><small>{card.label}</small><h3>{card.heading}</h3><p>{card.body}</p>{card.linkLabel && card.linkUrl ? <a className={styles.cardLink} href={card.linkUrl}>{card.linkLabel}</a> : null}<SlotContent content={card.blocks} label={card.label || `card ${index + 1}`} fallback={renderZone(props, `${props.id}:cards.${index}.blocks`, `Drop elements in ${card.label || `card ${index + 1}`}`)} /></div></article>; })}</div></div></section>,
+      render: (props) => <section className={styles.issueCards} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.issueCardGrid}>{props.cards.map((card, index) => { const image = normalizeMedia(card.image); return <article data-has-image={Boolean(image)} key={`${card.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><small>{card.label}</small><h3>{card.heading}</h3><p>{card.body}</p>{card.linkLabel && card.linkUrl ? <a className={styles.cardLink} href={card.linkUrl}>{card.linkLabel}</a> : null}<SlotContent content={card.blocks} label={card.label || `card ${index + 1}`} fallback={renderZone(props, `cards.${index}.blocks`, `Drop elements in ${card.label || `card ${index + 1}`}`)} /></div></article>; })}</div></div></section>,
     },
     QuoteBlock: {
       label: "Quote / testimonial",
@@ -628,6 +694,7 @@ export const puckConfig: Config<Components> = {
     RowRightWide: { label: "right wide row", defaultProps: { layout: "rightWide", columns: [{ label: "Side column" }, { label: "Main column" }] }, fields: contentRowFields, render: contentRowRender },
     RowThreeColumns: { label: "3 column row", defaultProps: { layout: "three", columns: [{ label: "Column 1" }, { label: "Column 2" }, { label: "Column 3" }] }, fields: contentRowFields, render: contentRowRender },
     RowFourColumns: { label: "4 column row", defaultProps: { layout: "four", columns: [{ label: "Column 1" }, { label: "Column 2" }, { label: "Column 3" }, { label: "Column 4" }] }, fields: contentRowFields, render: contentRowRender },
+    ...campaignAltComponents,
   },
 };
 

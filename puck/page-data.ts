@@ -11,6 +11,7 @@ import {
 } from "./list-values";
 import type { NECYPAAData, PageDocument } from "./types";
 import { normalizeLayoutColumns } from "./layout-utils.mjs";
+import { campaignAltDefinitions, campaignAltTypes } from "./campaign-alt-definitions";
 
 const COMPONENT_TYPES = new Set([
   "HeroCountdown",
@@ -55,11 +56,13 @@ const COMPONENT_TYPES = new Set([
   "Video",
   "Embed",
   "PayPal",
+  ...campaignAltTypes,
 ]);
 
 const NESTED_ZONES: Partial<Record<string, "cards" | "columns" | "tabs">> = {
   IssueCards: "cards",
   ContentRow: "columns",
+  Row: "columns",
   RowOneColumn: "columns",
   RowTwoColumns: "columns",
   RowLeftWide: "columns",
@@ -67,6 +70,7 @@ const NESTED_ZONES: Partial<Record<string, "cards" | "columns" | "tabs">> = {
   RowThreeColumns: "columns",
   RowFourColumns: "columns",
   ActionTabs: "tabs",
+  ...Object.fromEntries(campaignAltDefinitions.flatMap((definition) => definition.nestedCollection ? [[definition.type, definition.nestedCollection]] : [])),
 };
 const DIRECT_NESTED_TYPES = new Set(["Section", "Column"]);
 
@@ -185,6 +189,12 @@ function mediaID(value: unknown) {
 
 function packMedia(type: string, props: Record<string, unknown>) {
   const packed = { ...props };
+  if (campaignAltTypes.includes(type as (typeof campaignAltTypes)[number])) {
+    packed.media = mediaID(packed.media);
+    packed.backgroundMedia = mediaID(packed.backgroundMedia);
+    if (Array.isArray(packed.items)) packed.items = packed.items.map((item) => isRecord(item) ? { ...item, image: mediaID(item.image) } : item);
+    if (Array.isArray(packed.cards)) packed.cards = packed.cards.map((item) => isRecord(item) ? { ...item, image: mediaID(item.image) } : item);
+  }
   if (type === "HeroCountdown") {
     packed.foregroundImage = mediaID(packed.foregroundImage);
     packed.backgroundImage = mediaID(packed.backgroundImage);
