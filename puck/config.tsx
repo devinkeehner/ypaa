@@ -2,7 +2,7 @@
 
 import { Render, type ComponentConfig, type Config, type Field } from "@puckeditor/core";
 import { RichText as PayloadRichText } from "@payloadcms/richtext-lexical/react";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { BadgeDollarSign, BriefcaseBusiness, CalendarDays, Check, ChevronDown, ChevronRight, HeartHandshake, Landmark, MapPin, Megaphone, ShieldCheck, Users, Vote } from "lucide-react";
 import { Fragment, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { Countdown } from "@/components/site/Countdown";
@@ -85,14 +85,21 @@ type Video = Base & { video?: MediaValue | null; url: string; caption: string };
 type Embed = Base & { url: string; title: string };
 type PayPal = Base & { label: string; url: string; amount: string };
 type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[]; column1?: NestedSlot; column2?: NestedSlot; column3?: NestedSlot; column4?: NestedSlot; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
-type CampaignAltItem = { label?: string; heading?: string; text?: string; value?: string; url?: string; image?: MediaValue | null };
+type CampaignAltItem = { label?: string; heading?: string; text?: string; value?: string; url?: string; icon?: string; attribution?: string; role?: string; image?: MediaValue | null };
 type CampaignAltSlotItem = CampaignAltItem & { blocks?: NestedSlot };
-type CampaignAltProps = Base & { variant: string; presentation: string; eyebrow: string; heading: string; body: string; media?: MediaValue | null; backgroundMedia?: MediaValue | null; primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; items: CampaignAltItem[]; cards: CampaignAltSlotItem[]; columns: CampaignAltSlotItem[]; tabs: CampaignAltSlotItem[]; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
+type CampaignAltProps = Base & { variant: string; presentation: string; eyebrow: string; heading: string; intro: string; body: string; media?: MediaValue | null; backgroundMedia?: MediaValue | null; headingLogo?: MediaValue | null; qrImage?: MediaValue | null; highlightTitle: string; highlightText: string; backgroundOverlay: string; textPanelColor: string; textPanelOpacity: string; primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; quote: string; quoteAttribution: string; electionDay: string; earlyVote: string; phone: string; email: string; website: string; qrCaption: string; disclaimer: string; items: CampaignAltItem[]; cards: CampaignAltSlotItem[]; columns: CampaignAltSlotItem[]; tabs: CampaignAltSlotItem[]; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
 type CampaignAltComponents = { [K in CampaignAltType]: CampaignAltProps };
 
 type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CTMeetingSchedule: CTMeetingSchedule; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; Text: TextBlockProps; Button: ButtonBlockProps; Countdown: CountdownBlockProps; Section: Section; Column: Column; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; Navigation: Navigation; Headline: Headline; Divider: Divider; FollowLinks: FollowLinks; BulletedList: BulletedList; InlineForm: InlineForm; ImageCaption: ImageCaption; Video: Video; Embed: Embed; PayPal: PayPal; ContentRow: ContentRow; Row: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow } & CampaignAltComponents;
 
-const campaignAltEditableFields = Object.fromEntries(campaignAltDefinitions.map((definition) => [definition.type, ["eyebrow", "heading", "body", "primaryLabel", "secondaryLabel"]])) as Record<CampaignAltType, string[]>;
+const campaignAltEditableFields = Object.fromEntries(campaignAltDefinitions.map((definition) => {
+  const fields = ["eyebrow", "heading", "body", "primaryLabel", "secondaryLabel"];
+  if (["AboutAlt", "CardsGridAlt", "PalmCardPointsAlt", "TestimonialAlt", "PalmCardAlt", "PalmCardContactAlt"].includes(definition.type)) fields.push("intro");
+  if (["PalmCardBioAlt", "PalmCardAlt"].includes(definition.type)) fields.push("quote", "quoteAttribution");
+  if (definition.type === "HeroAlt") fields.push("highlightTitle", "highlightText");
+  if (definition.type === "PalmCardContactAlt") fields.push("disclaimer");
+  return [definition.type, fields];
+})) as Record<CampaignAltType, string[]>;
 
 export const editableFieldsByType: Record<keyof Components, string[]> = {
   HeroCountdown: ["eyebrow", "heading", "body", "eventDate", "eventLocation", "registerLabel", "hotelLabel"],
@@ -427,10 +434,31 @@ function CTMeetingScheduleBlock(props: CTMeetingSchedule) {
 const campaignItemsField: Field<CampaignAltItem[]> = {
   type: "array",
   label: "Items",
-  defaultItemProps: { label: "", heading: "New item", text: "Add details", value: "", url: "", image: null },
-  arrayFields: { label: plainText("Label"), heading: plainText("Heading"), text: area("Text"), value: plainText("Value"), url: plainText("URL"), image: mediaField("Image") },
+  defaultItemProps: { label: "", heading: "New item", text: "Add details", value: "", url: "", icon: "check", attribution: "", role: "", image: null },
+  arrayFields: { label: plainText("Label"), heading: plainText("Heading"), text: area("Text"), value: plainText("Value"), url: plainText("URL"), icon: plainText("Icon"), attribution: plainText("Attribution"), role: plainText("Role"), image: mediaField("Image") },
   getItemSummary: (item) => item.heading || item.label || item.value || "Item",
 };
+
+const campaignIconOptions = ["none", "check", "people", "family", "mapPin", "dollar", "shieldCheck", "landmark", "briefcase", "vote", "handshake", "megaphone", "calendar"].map((value) => ({ label: campaignOptionLabel(value), value }));
+
+type CampaignItemArrayField = Extract<Field<CampaignAltItem[]>, { type: "array" }>;
+
+function campaignItems(label: string, fields: CampaignItemArrayField["arrayFields"], defaults: CampaignAltItem): Field<CampaignAltItem[]> {
+  return {
+    type: "array",
+    label,
+    defaultItemProps: defaults,
+    arrayFields: fields,
+    getItemSummary: (item) => item.heading || item.attribution || item.label || item.text || label.replace(/s$/, ""),
+  };
+}
+
+const bioHighlightsField = campaignItems("Highlights", { text: area("Highlight") }, { text: "A concise proof point" });
+const issueCardsAltField = campaignItems("Issue cards", { heading: plainText("Heading"), icon: { type: "select", label: "Icon", options: campaignIconOptions }, text: area("Description"), image: mediaField("Background image"), url: plainText("Link URL") }, { heading: "Community priority", icon: "check", text: "Explain the practical outcome.", image: null, url: "" });
+const palmPointsField = campaignItems("Palm card points", { icon: { type: "select", label: "Icon", options: campaignIconOptions }, text: area("Point") }, { icon: "check", text: "Palm card point" });
+const palmContentField = campaignItems("Palm card points", { icon: { type: "select", label: "Icon", options: campaignIconOptions }, heading: plainText("Heading"), text: area("Text") }, { icon: "check", heading: "Palm card point", text: "" });
+const testimonialsField = campaignItems("Testimonials", { text: area("Quote"), attribution: plainText("Attribution"), role: plainText("Role"), image: mediaField("Photo") }, { text: "This work is rooted in what our community needs.", attribution: "Community supporter", role: "Resident", image: null });
+const contactLinksField = campaignItems("Contact links", { label: plainText("Label"), value: plainText("Display value"), url: plainText("URL") }, { label: "Website", value: "example.org", url: "https://example.org" });
 
 const campaignNestedField: Field<CampaignAltSlotItem[]> = {
   type: "array",
@@ -444,12 +472,84 @@ function campaignOptionLabel(value: string) {
   return value.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (letter) => letter.toUpperCase());
 }
 
+function CampaignIcon({ name }: { name?: string }) {
+  const icons: Record<string, ElementType> = { briefcase: BriefcaseBusiness, calendar: CalendarDays, check: Check, dollar: BadgeDollarSign, family: HeartHandshake, handshake: HeartHandshake, landmark: Landmark, mapPin: MapPin, megaphone: Megaphone, people: Users, shieldCheck: ShieldCheck, vote: Vote };
+  const Icon = name && name !== "none" ? icons[name] || Check : null;
+  return Icon ? <span className={styles.campaignAltIcon}><Icon aria-hidden="true" /></span> : null;
+}
+
+function CampaignSectionHeader({ props, centered = false }: { props: CampaignAltProps; centered?: boolean }) {
+  const intro = props.intro || props.body;
+  return <header className={styles.campaignAltHeader} data-centered={centered}>{props.eyebrow ? <Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable> : null}<Editable as="h2" field="heading" props={props}>{props.heading}</Editable>{intro ? <Editable as="p" field={props.intro ? "intro" : "body"} props={props}>{intro}</Editable> : null}</header>;
+}
+
+function CampaignActions({ props }: { props: CampaignAltProps }) {
+  if (!props.primaryLabel && !props.secondaryLabel) return null;
+  return <div className={styles.actions}>{props.primaryLabel ? <Button href={props.primaryUrl || "#"}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button> : null}{props.secondaryLabel ? <Button href={props.secondaryUrl || "#"} outline><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button> : null}</div>;
+}
+
+function CampaignImage({ media, className }: { media?: MediaValue | null; className?: string }) {
+  const image = normalizeMedia(media);
+  return image ? <figure className={className}><img alt={image.alt || ""} src={image.url} /></figure> : null;
+}
+
+function HeroAltRender({ props }: { props: CampaignAltProps }) {
+  const background = normalizeMedia(props.backgroundMedia);
+  const headingLogo = normalizeMedia(props.headingLogo);
+  return <section className={`${styles.campaignAlt} ${styles.heroAlt}`} data-overlay={props.backgroundOverlay || "standard"} data-panel-color={props.textPanelColor || "primary"} data-panel-opacity={props.textPanelOpacity || "translucent"} data-presentation={props.presentation} data-variant={props.variant} id={props.id}>
+    {background ? <img aria-hidden="true" alt="" className={styles.campaignAltBackground} src={background.url} /> : null}
+    <div className={styles.shell}>
+      <div className={styles.campaignAltCopy}>{props.eyebrow ? <Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable> : null}{headingLogo ? <img alt={props.heading || headingLogo.alt || "Heading"} className={styles.heroAltLogo} src={headingLogo.url} /> : <Editable as="h1" field="heading" props={props}>{props.heading}</Editable>}<Editable as="p" field="body" props={props}>{props.body}</Editable>{props.highlightTitle || props.highlightText ? <aside className={styles.heroAltHighlight}>{props.highlightTitle ? <Editable as="strong" field="highlightTitle" props={props}>{props.highlightTitle}</Editable> : null}{props.highlightText ? <Editable as="span" field="highlightText" props={props}>{props.highlightText}</Editable> : null}</aside> : null}<CampaignActions props={props} /></div>
+      <CampaignImage className={styles.heroAltMedia} media={props.media} />
+    </div>
+  </section>;
+}
+
+function BioSectionRender({ props }: { props: CampaignAltProps }) {
+  return <section className={`${styles.campaignAlt} ${styles.bioSectionAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div className={styles.bioSectionCopy}><CampaignSectionHeader props={props} />{props.body && props.intro ? <Editable as="p" className={styles.campaignAltLongCopy} field="body" props={props}>{props.body}</Editable> : null}{props.items.length ? <div className={styles.bioHighlights}>{props.items.map((item, index) => <div key={`${item.text}-${index}`}><CampaignIcon name={item.icon} /><span>{item.text || item.heading}</span></div>)}</div> : null}</div></div></section>;
+}
+
+function IssuesCardsRender({ props }: { props: CampaignAltProps }) {
+  return <section className={`${styles.campaignAlt} ${styles.issuesCardsAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignSectionHeader centered={props.variant !== "editorialGrid"} props={props} /><div className={styles.issuesCardsAltGrid}>{props.items.map((item, index) => { const image = normalizeMedia(item.image); return <article data-featured={index === 0} key={`${item.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><CampaignIcon name={item.icon} /><h3>{item.heading}</h3>{item.text ? <p>{item.text}</p> : null}{item.url ? <a href={item.url}>Learn more</a> : null}</div></article>; })}</div></div></section>;
+}
+
+function PalmCardPointsRender({ props }: { props: CampaignAltProps }) {
+  return <section className={`${styles.campaignAlt} ${styles.palmPointsAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignSectionHeader centered props={props} /><div className={styles.palmPointsGrid}>{props.items.map((item, index) => <article key={`${item.text}-${index}`}><CampaignIcon name={item.icon} /><p>{item.text || item.heading}</p></article>)}</div></div></section>;
+}
+
+function PalmCardBioRender({ props }: { props: CampaignAltProps }) {
+  return <section className={`${styles.campaignAlt} ${styles.palmBioAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div><CampaignSectionHeader props={props} />{props.quote ? <figure className={styles.campaignAltQuote}><Editable as="blockquote" field="quote" props={props}>{props.quote}</Editable>{props.quoteAttribution ? <Editable as="figcaption" field="quoteAttribution" props={props}>{props.quoteAttribution}</Editable> : null}</figure> : null}</div></div></section>;
+}
+
+function TestimonialAltRender({ props }: { props: CampaignAltProps }) {
+  return <section className={`${styles.campaignAlt} ${styles.testimonialsAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignSectionHeader centered={props.variant === "contained"} props={props} /><div className={styles.testimonialsAltGrid}>{props.items.map((item, index) => { const image = normalizeMedia(item.image); return <figure data-lead={index === 0} key={`${item.attribution}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<blockquote>{item.text}</blockquote><figcaption><strong>{item.attribution || item.heading}</strong>{item.role || item.label ? <span>{item.role || item.label}</span> : null}</figcaption></figure>; })}</div></div></section>;
+}
+
+function PalmCardContentRender({ props }: { props: CampaignAltProps }) {
+  return <section className={`${styles.campaignAlt} ${styles.palmContentAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><div className={styles.palmContentIntro}><CampaignSectionHeader props={props} />{props.quote ? <figure className={styles.campaignAltQuote}><Editable as="blockquote" field="quote" props={props}>{props.quote}</Editable>{props.quoteAttribution ? <Editable as="figcaption" field="quoteAttribution" props={props}>{props.quoteAttribution}</Editable> : null}</figure> : null}</div><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div className={styles.palmContentGrid}>{props.items.map((item, index) => <article key={`${item.heading}-${index}`}><CampaignIcon name={item.icon} /><div><h3>{item.heading}</h3>{item.text ? <p>{item.text}</p> : null}</div></article>)}</div></div></section>;
+}
+
+function PalmCardContactRender({ props }: { props: CampaignAltProps }) {
+  const qr = normalizeMedia(props.qrImage);
+  const details = [{ label: "Election day", value: props.electionDay }, { label: "Early vote", value: props.earlyVote }, { label: "Phone", value: props.phone }, { label: "Email", value: props.email }, { label: "Website", value: props.website }].filter((item) => item.value);
+  return <section className={`${styles.campaignAlt} ${styles.palmContactAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><div><CampaignSectionHeader props={props} /><div className={styles.palmContactDetails}>{details.map((item) => <div key={item.label}><small>{item.label}</small><strong>{item.value}</strong></div>)}</div>{props.items.length ? <nav className={styles.palmContactLinks}>{props.items.map((item, index) => item.url ? <a href={item.url} key={`${item.label}-${index}`}>{item.label || item.value}</a> : <span key={`${item.label}-${index}`}>{item.label || item.value}</span>)}</nav> : null}</div>{qr ? <figure className={styles.palmContactQr}><img alt={qr.alt || props.qrCaption || "QR code"} src={qr.url} />{props.qrCaption ? <figcaption>{props.qrCaption}</figcaption> : null}</figure> : null}{props.disclaimer ? <Editable as="small" className={styles.palmContactDisclaimer} field="disclaimer" props={props}>{props.disclaimer}</Editable> : null}</div></section>;
+}
+
 function CampaignAltTabs({ props }: { props: CampaignAltProps }) {
   const [active, setActive] = useState(0);
   return <div className={styles.campaignAltTabs} data-variant={props.variant}><div role="tablist">{props.tabs.map((tab, index) => <button aria-selected={active === index} key={`${tab.label}-${index}`} onClick={() => setActive(index)} role="tab" type="button">{tab.label || tab.heading || `Tab ${index + 1}`}</button>)}</div>{props.tabs.map((tab, index) => <section hidden={!props.puck?.isEditing && active !== index} key={`${tab.heading}-${index}`}><h3>{tab.heading}</h3>{tab.text ? <p>{tab.text}</p> : null}<SlotContent content={tab.blocks} label={tab.label || `tab ${index + 1}`} fallback={renderZone(props, `tabs.${index}.blocks`, `Drop elements in ${tab.label || `tab ${index + 1}`}`)} /></section>)}</div>;
 }
 
 function CampaignAltRender({ definition, props }: { definition: CampaignAltDefinition; props: CampaignAltProps }) {
+  if (definition.type === "HeroAlt") return <HeroAltRender props={props} />;
+  if (definition.type === "AboutAlt") return <BioSectionRender props={props} />;
+  if (definition.type === "CardsGridAlt") return <IssuesCardsRender props={props} />;
+  if (definition.type === "PalmCardPointsAlt") return <PalmCardPointsRender props={props} />;
+  if (definition.type === "PalmCardBioAlt") return <PalmCardBioRender props={props} />;
+  if (definition.type === "TestimonialAlt") return <TestimonialAltRender props={props} />;
+  if (definition.type === "PalmCardAlt") return <PalmCardContentRender props={props} />;
+  if (definition.type === "PalmCardContactAlt") return <PalmCardContactRender props={props} />;
+
   const media = normalizeMedia(props.media);
   const background = normalizeMedia(props.backgroundMedia);
   const nestedItems = definition.nestedCollection === "cards" ? props.cards : definition.nestedCollection === "columns" ? props.columns : [];
@@ -464,6 +564,35 @@ function CampaignAltRender({ definition, props }: { definition: CampaignAltDefin
   return <section className={styles.campaignAlt} data-kind={definition.kind} data-presentation={props.presentation} data-variant={props.variant} id={props.id}>{background ? <img aria-hidden="true" alt="" className={styles.campaignAltBackground} src={background.url} /> : null}<div className={styles.shell}><div className={styles.campaignAltCopy}>{props.eyebrow ? <Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable> : null}<Editable as={isHero ? "h1" : "h2"} field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable>{props.primaryLabel || props.secondaryLabel ? <div className={styles.actions}>{props.primaryLabel ? <Button href={props.primaryUrl || "#"}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button> : null}{props.secondaryLabel ? <Button href={props.secondaryUrl || "#"} outline><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button> : null}</div> : null}</div>{media ? <figure><img alt={media.alt || ""} src={media.url} /></figure> : null}{props.items.length ? <div className={styles.campaignAltItems}>{props.items.map((item, index) => <article key={`${item.heading}-${item.label}-${index}`}>{item.image && normalizeMedia(item.image) ? <img alt={normalizeMedia(item.image)?.alt || ""} src={normalizeMedia(item.image)?.url} /> : null}{item.label ? <small>{item.label}</small> : null}<h3>{item.heading || item.value}</h3>{item.text ? <p>{item.text}</p> : null}{item.url ? <a href={item.url}>Learn more</a> : null}</article>)}</div> : null}</div></section>;
 }
 
+function campaignAltDefaults(definition: CampaignAltDefinition): Omit<CampaignAltProps, "id"> {
+  const base = { variant: definition.variants[0], presentation: definition.presentations?.[0] || "contained", eyebrow: "", heading: definition.label, intro: "", body: "Add campaign-facing content here.", media: null, backgroundMedia: null, headingLogo: null, qrImage: null, highlightTitle: "", highlightText: "", backgroundOverlay: "standard", textPanelColor: "primary", textPanelOpacity: "translucent", primaryLabel: "Learn more", primaryUrl: "#", secondaryLabel: "", secondaryUrl: "#", quote: "", quoteAttribution: "", electionDay: "", earlyVote: "", phone: "", email: "", website: "", qrCaption: "", disclaimer: "", items: [{ label: "", heading: "First item", text: "Add details", value: "", url: "", icon: "check", attribution: "", role: "", image: null }], cards: [], columns: [], tabs: [] };
+
+  if (definition.type === "HeroAlt") return { ...base, variant: "civicOutdoors", eyebrow: "NECYPAA XXXVI", heading: "A bold alternate opening", body: "Use the hero variant that best fits the message, media, and call to action.", highlightTitle: "Hartford, Connecticut", highlightText: "Connection, service, and recovery.", primaryLabel: "Register", secondaryLabel: "Learn more" };
+  if (definition.type === "AboutAlt") return { ...base, heading: "Our story", intro: "A clear introduction to the people and purpose behind the work.", body: "Use this space for the fuller biography or organizational story.", items: [{ text: "Built through service", icon: "check" }, { text: "Rooted in community", icon: "check" }, { text: "Focused on the next person", icon: "check" }] };
+  if (definition.type === "CardsGridAlt") return { ...base, variant: "iconCards", presentation: "wide", heading: "Priorities", intro: "Use these cards for issues, services, promises, or voter actions.", body: "", items: [{ heading: "Public safety", icon: "shieldCheck", text: "A short, specific priority with a credible outcome.", image: null }, { heading: "Local opportunity", icon: "handshake", text: "Explain how the work improves life in the community.", image: null }, { heading: "Responsive service", icon: "mapPin", text: "Keep each card focused and easy to scan.", image: null }] };
+  if (definition.type === "PalmCardPointsAlt") return { ...base, presentation: "wide", heading: "Working for you", intro: "", body: "", items: [{ icon: "check", text: "Palm card point" }, { icon: "check", text: "Palm card point" }, { icon: "check", text: "Palm card point" }] };
+  if (definition.type === "PalmCardBioAlt") return { ...base, presentation: "wide", eyebrow: "About", heading: "Candidate name", body: "Use this short biography to introduce experience, values, and community ties.", quote: "Leadership starts by listening.", quoteAttribution: "Candidate name", items: [] };
+  if (definition.type === "TestimonialAlt") return { ...base, heading: "What people are saying", intro: "Use quotes for social proof, endorsements, or community voices.", body: "", items: [{ text: "This work is focused on what our community needs right now.", attribution: "Community supporter", role: "Resident", image: null }, { text: "The message is clear, practical, and rooted in local priorities.", attribution: "Local leader", role: "Endorser", image: null }] };
+  if (definition.type === "PalmCardAlt") return { ...base, presentation: "wide", heading: "Palm card content", intro: "", body: "", items: [{ icon: "check", heading: "Palm card point", text: "" }, { icon: "check", heading: "Palm card point", text: "" }, { icon: "check", heading: "Palm card point", text: "" }] };
+  if (definition.type === "PalmCardContactAlt") return { ...base, presentation: "wide", eyebrow: "Voting information", heading: "Everything you need to take action", intro: "Keep essential dates and contact details together.", body: "", electionDay: "Election Day: Nov. 3", earlyVote: "Vote early: Oct. 19 - Nov. 1", website: "example.org", disclaimer: "Paid for by the campaign. Approved by the candidate.", items: [{ label: "Website", value: "example.org", url: "https://example.org" }, { label: "Facebook", value: "Follow the campaign", url: "#" }] };
+  return base;
+}
+
+function campaignAltFields(definition: CampaignAltDefinition) {
+  const common = { variant: { type: "select" as const, label: "Variant", options: definition.variants.map((value) => ({ label: campaignOptionLabel(value), value })) }, presentation: { type: "select" as const, label: "Presentation", options: (definition.presentations || ["contained"]).map((value) => ({ label: campaignOptionLabel(value), value })) } };
+  const header = { eyebrow: text("Eyebrow"), heading: text("Heading"), intro: area("Introduction") };
+
+  if (definition.type === "HeroAlt") return { ...common, eyebrow: text("Eyebrow"), heading: text("Heading"), headingLogo: mediaField("Heading logo"), body: area("Body"), highlightTitle: text("Highlight title"), highlightText: area("Highlight text"), media: mediaField("Primary media"), backgroundMedia: mediaField("Background media"), backgroundOverlay: { type: "select", label: "Background overlay", options: ["none", "off", "subtle", "standard", "strong"].map((value) => ({ label: campaignOptionLabel(value), value })) }, textPanelColor: { type: "select", label: "Panel color", options: ["primary", "accent", "foreground", "background", "white"].map((value) => ({ label: campaignOptionLabel(value), value })) }, textPanelOpacity: { type: "select", label: "Panel opacity", options: ["translucent", "solid"].map((value) => ({ label: campaignOptionLabel(value), value })) }, primaryLabel: text("Primary action label"), primaryUrl: plainText("Primary action URL"), secondaryLabel: text("Secondary action label"), secondaryUrl: plainText("Secondary action URL") };
+  if (definition.type === "AboutAlt") return { ...common, ...header, body: area("Body"), media: mediaField("Portrait or feature image"), items: bioHighlightsField };
+  if (definition.type === "CardsGridAlt") return { ...common, heading: text("Heading"), intro: area("Introduction"), items: issueCardsAltField };
+  if (definition.type === "PalmCardPointsAlt") return { ...common, ...header, items: palmPointsField };
+  if (definition.type === "PalmCardBioAlt") return { ...common, eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Biography"), quote: area("Quote"), quoteAttribution: text("Quote attribution"), media: mediaField("Photo") };
+  if (definition.type === "TestimonialAlt") return { ...common, heading: text("Heading"), intro: area("Introduction"), items: testimonialsField };
+  if (definition.type === "PalmCardAlt") return { ...common, ...header, media: mediaField("Photo"), items: palmContentField, quote: area("Quote"), quoteAttribution: text("Quote attribution") };
+  if (definition.type === "PalmCardContactAlt") return { ...common, ...header, electionDay: text("Election day"), earlyVote: text("Early vote"), phone: text("Phone"), email: text("Email"), website: text("Website"), items: contactLinksField, qrImage: mediaField("QR image"), qrCaption: text("QR caption"), disclaimer: text("Paid for / disclaimer") };
+  return { ...common, eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Body"), media: mediaField("Primary media"), backgroundMedia: mediaField("Background media"), primaryLabel: text("Primary action label"), primaryUrl: plainText("Primary action URL"), secondaryLabel: text("Secondary action label"), secondaryUrl: plainText("Secondary action URL"), items: campaignItemsField };
+}
+
 const campaignAltComponents = Object.fromEntries(campaignAltDefinitions.map((definition) => {
   const nestedDefaults = definition.nestedCollection === "columns"
     ? [{ label: "Column 1", heading: "", text: "" }, { label: "Column 2", heading: "", text: "" }]
@@ -475,8 +604,8 @@ const campaignAltComponents = Object.fromEntries(campaignAltDefinitions.map((def
   const nestedFields = definition.nestedCollection ? { [definition.nestedCollection]: campaignNestedField } : {};
   return [definition.type, {
     label: definition.label,
-    defaultProps: { variant: definition.variants[0], presentation: definition.presentations?.[0] || "contained", eyebrow: definition.type === "HeroAlt" ? "A different opening" : "", heading: definition.label, body: "Add campaign-facing content here.", media: null, backgroundMedia: null, primaryLabel: "Learn more", primaryUrl: "#", secondaryLabel: "", secondaryUrl: "#", items: [{ label: "", heading: "First item", text: "Add details", value: "", url: "", image: null }], cards: definition.nestedCollection === "cards" ? nestedDefaults : [], columns: definition.nestedCollection === "columns" ? nestedDefaults : [], tabs: definition.nestedCollection === "tabs" ? nestedDefaults : [] },
-    fields: { variant: { type: "select", label: "Variant", options: definition.variants.map((value) => ({ label: campaignOptionLabel(value), value })) }, presentation: { type: "select", label: "Presentation", options: (definition.presentations || ["contained"]).map((value) => ({ label: campaignOptionLabel(value), value })) }, eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Body"), media: mediaField("Primary media"), backgroundMedia: mediaField("Background media"), primaryLabel: text("Primary action label"), primaryUrl: plainText("Primary action URL"), secondaryLabel: text("Secondary action label"), secondaryUrl: plainText("Secondary action URL"), items: campaignItemsField, ...nestedFields },
+    defaultProps: { ...campaignAltDefaults(definition), cards: definition.nestedCollection === "cards" ? nestedDefaults : [], columns: definition.nestedCollection === "columns" ? nestedDefaults : [], tabs: definition.nestedCollection === "tabs" ? nestedDefaults : [] },
+    fields: { ...campaignAltFields(definition), ...nestedFields },
     render: (props: CampaignAltProps) => <CampaignAltRender definition={definition} props={props} />,
   }];
 })) as unknown as Record<CampaignAltType, ComponentConfig<CampaignAltProps>>;

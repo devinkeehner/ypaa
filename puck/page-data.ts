@@ -192,6 +192,8 @@ function packMedia(type: string, props: Record<string, unknown>) {
   if (campaignAltTypes.includes(type as (typeof campaignAltTypes)[number])) {
     packed.media = mediaID(packed.media);
     packed.backgroundMedia = mediaID(packed.backgroundMedia);
+    packed.headingLogo = mediaID(packed.headingLogo);
+    packed.qrImage = mediaID(packed.qrImage);
     if (Array.isArray(packed.items)) packed.items = packed.items.map((item) => isRecord(item) ? { ...item, image: mediaID(item.image) } : item);
     if (Array.isArray(packed.cards)) packed.cards = packed.cards.map((item) => isRecord(item) ? { ...item, image: mediaID(item.image) } : item);
   }

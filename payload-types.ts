@@ -703,6 +703,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -729,6 +732,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -756,6 +762,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -782,6 +791,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -1044,6 +1056,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -1070,6 +1085,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -1097,6 +1115,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -1123,6 +1144,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -1359,6 +1383,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -1385,6 +1412,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -1412,6 +1442,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -1438,6 +1471,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -1701,6 +1737,9 @@ export interface Page {
                             text?: string | null;
                             value?: string | null;
                             url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
                             image?: (string | null) | Media;
                             id?: string | null;
                           }[]
@@ -1727,6 +1766,9 @@ export interface Page {
                             text?: string | null;
                             value?: string | null;
                             url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
                             image?: (string | null) | Media;
                             id?: string | null;
                           }[]
@@ -1754,6 +1796,9 @@ export interface Page {
                             text?: string | null;
                             value?: string | null;
                             url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
                             image?: (string | null) | Media;
                             id?: string | null;
                           }[]
@@ -1780,6 +1825,9 @@ export interface Page {
                             text?: string | null;
                             value?: string | null;
                             url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
                             image?: (string | null) | Media;
                             id?: string | null;
                           }[]
@@ -1995,6 +2043,9 @@ export interface Page {
                             text?: string | null;
                             value?: string | null;
                             url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
                             image?: (string | null) | Media;
                             id?: string | null;
                           }[]
@@ -2021,6 +2072,9 @@ export interface Page {
                             text?: string | null;
                             value?: string | null;
                             url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
                             image?: (string | null) | Media;
                             id?: string | null;
                           }[]
@@ -2048,6 +2102,9 @@ export interface Page {
                             text?: string | null;
                             value?: string | null;
                             url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
                             image?: (string | null) | Media;
                             id?: string | null;
                           }[]
@@ -2074,6 +2131,9 @@ export interface Page {
                             text?: string | null;
                             value?: string | null;
                             url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
                             image?: (string | null) | Media;
                             id?: string | null;
                           }[]
@@ -2192,6 +2252,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -2218,6 +2281,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -2245,6 +2311,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -2271,6 +2340,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -2312,10 +2384,19 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
               | null;
+            headingLogo?: (string | null) | Media;
+            highlightTitle?: string | null;
+            highlightText?: string | null;
+            backgroundOverlay?: ('none' | 'off' | 'subtle' | 'standard' | 'strong') | null;
+            textPanelColor?: ('primary' | 'accent' | 'foreground' | 'background' | 'white') | null;
+            textPanelOpacity?: ('translucent' | 'solid') | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'HeroAlt';
@@ -2338,10 +2419,14 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
               | null;
+            intro?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'AboutAlt';
@@ -2365,6 +2450,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -2392,10 +2480,14 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
               | null;
+            intro?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'PalmCardPointsAlt';
@@ -2419,10 +2511,15 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
               | null;
+            quote?: string | null;
+            quoteAttribution?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'PalmCardBioAlt';
@@ -2446,6 +2543,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -2473,10 +2573,22 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
               | null;
+            intro?: string | null;
+            electionDay?: string | null;
+            earlyVote?: string | null;
+            phone?: string | null;
+            email?: string | null;
+            website?: string | null;
+            qrImage?: (string | null) | Media;
+            qrCaption?: string | null;
+            disclaimer?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'PalmCardContactAlt';
@@ -2500,10 +2612,16 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
               | null;
+            intro?: string | null;
+            quote?: string | null;
+            quoteAttribution?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'PalmCardAlt';
@@ -2527,6 +2645,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -2554,10 +2675,14 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
               | null;
+            intro?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'CardsGridAlt';
@@ -2581,6 +2706,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -2790,6 +2918,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -2816,6 +2947,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -2843,6 +2977,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -2869,6 +3006,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -2905,10 +3045,14 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
               | null;
+            intro?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'TestimonialAlt';
@@ -2932,6 +3076,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -2959,6 +3106,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -2985,6 +3135,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -3012,6 +3165,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -3041,6 +3197,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -3250,6 +3409,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -3276,6 +3438,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -3303,6 +3468,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -3329,6 +3497,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -3365,6 +3536,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -3574,6 +3748,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -3600,6 +3777,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -3627,6 +3807,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -3653,6 +3836,9 @@ export interface Page {
                                   text?: string | null;
                                   value?: string | null;
                                   url?: string | null;
+                                  icon?: string | null;
+                                  attribution?: string | null;
+                                  role?: string | null;
                                   image?: (string | null) | Media;
                                   id?: string | null;
                                 }[]
@@ -3688,6 +3874,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -3714,6 +3903,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -3740,6 +3932,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -3766,6 +3961,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -3792,6 +3990,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -3818,6 +4019,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -3844,6 +4048,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -3870,6 +4077,9 @@ export interface Page {
                   text?: string | null;
                   value?: string | null;
                   url?: string | null;
+                  icon?: string | null;
+                  attribution?: string | null;
+                  role?: string | null;
                   image?: (string | null) | Media;
                   id?: string | null;
                 }[]
@@ -5278,6 +5488,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -5305,6 +5518,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -5333,6 +5549,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -5360,6 +5579,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -5627,6 +5849,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -5654,6 +5879,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -5682,6 +5910,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -5709,6 +5940,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -5948,6 +6182,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -5975,6 +6212,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -6003,6 +6243,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -6030,6 +6273,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -6299,6 +6545,9 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 value?: T;
                                 url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
                                 image?: T;
                                 id?: T;
                               };
@@ -6326,6 +6575,9 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 value?: T;
                                 url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
                                 image?: T;
                                 id?: T;
                               };
@@ -6354,6 +6606,9 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 value?: T;
                                 url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
                                 image?: T;
                                 id?: T;
                               };
@@ -6381,6 +6636,9 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 value?: T;
                                 url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
                                 image?: T;
                                 id?: T;
                               };
@@ -6598,6 +6856,9 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 value?: T;
                                 url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
                                 image?: T;
                                 id?: T;
                               };
@@ -6625,6 +6886,9 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 value?: T;
                                 url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
                                 image?: T;
                                 id?: T;
                               };
@@ -6653,6 +6917,9 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 value?: T;
                                 url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
                                 image?: T;
                                 id?: T;
                               };
@@ -6680,6 +6947,9 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 value?: T;
                                 url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
                                 image?: T;
                                 id?: T;
                               };
@@ -6806,6 +7076,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -6833,6 +7106,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -6861,6 +7137,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -6888,6 +7167,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -6916,9 +7198,18 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
+              headingLogo?: T;
+              highlightTitle?: T;
+              highlightText?: T;
+              backgroundOverlay?: T;
+              textPanelColor?: T;
+              textPanelOpacity?: T;
               id?: T;
               blockName?: T;
             };
@@ -6943,9 +7234,13 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
+              intro?: T;
               id?: T;
               blockName?: T;
             };
@@ -6971,6 +7266,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -6999,9 +7297,13 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
+              intro?: T;
               id?: T;
               blockName?: T;
             };
@@ -7027,9 +7329,14 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
+              quote?: T;
+              quoteAttribution?: T;
               id?: T;
               blockName?: T;
             };
@@ -7055,6 +7362,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -7083,9 +7393,21 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
+              intro?: T;
+              electionDay?: T;
+              earlyVote?: T;
+              phone?: T;
+              email?: T;
+              website?: T;
+              qrImage?: T;
+              qrCaption?: T;
+              disclaimer?: T;
               id?: T;
               blockName?: T;
             };
@@ -7111,9 +7433,15 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
+              intro?: T;
+              quote?: T;
+              quoteAttribution?: T;
               id?: T;
               blockName?: T;
             };
@@ -7139,6 +7467,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -7167,9 +7498,13 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
+              intro?: T;
               id?: T;
               blockName?: T;
             };
@@ -7195,6 +7530,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -7408,6 +7746,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -7435,6 +7776,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -7463,6 +7807,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -7490,6 +7837,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -7524,9 +7874,13 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
+              intro?: T;
               id?: T;
               blockName?: T;
             };
@@ -7552,6 +7906,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -7580,6 +7937,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -7607,6 +7967,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -7635,6 +7998,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -7663,6 +8029,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -7876,6 +8245,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -7903,6 +8275,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -7931,6 +8306,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -7958,6 +8336,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -7992,6 +8373,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -8205,6 +8589,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -8232,6 +8619,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -8260,6 +8650,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -8287,6 +8680,9 @@ export interface PagesSelect<T extends boolean = true> {
                                       text?: T;
                                       value?: T;
                                       url?: T;
+                                      icon?: T;
+                                      attribution?: T;
+                                      role?: T;
                                       image?: T;
                                       id?: T;
                                     };
@@ -8320,6 +8716,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -8347,6 +8746,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -8374,6 +8776,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -8401,6 +8806,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -8428,6 +8836,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -8455,6 +8866,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -8482,6 +8896,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };
@@ -8509,6 +8926,9 @@ export interface PagesSelect<T extends boolean = true> {
                     text?: T;
                     value?: T;
                     url?: T;
+                    icon?: T;
+                    attribution?: T;
+                    role?: T;
                     image?: T;
                     id?: T;
                   };

@@ -368,8 +368,48 @@ const campaignItemFields: Field[] = [
   { name: "text", type: "textarea" },
   { name: "value", type: "text" },
   { name: "url", type: "text" },
+  { name: "icon", type: "text" },
+  { name: "attribution", type: "text" },
+  { name: "role", type: "text" },
   { name: "image", type: "upload", relationTo: "media" },
 ];
+
+function campaignSourceFields(type: string): Field[] {
+  if (type === "HeroAlt") {
+    return [
+      { name: "headingLogo", type: "upload", relationTo: "media" },
+      { name: "highlightTitle", type: "text" },
+      { name: "highlightText", type: "textarea" },
+      { name: "backgroundOverlay", type: "select", defaultValue: "standard", options: ["none", "off", "subtle", "standard", "strong"] },
+      { name: "textPanelColor", type: "select", defaultValue: "primary", options: ["primary", "accent", "foreground", "background", "white"] },
+      { name: "textPanelOpacity", type: "select", defaultValue: "translucent", options: ["translucent", "solid"] },
+    ];
+  }
+
+  if (["AboutAlt", "CardsGridAlt", "PalmCardPointsAlt", "TestimonialAlt", "PalmCardAlt", "PalmCardContactAlt"].includes(type)) {
+    const fields: Field[] = [{ name: "intro", type: "textarea" }];
+    if (type === "PalmCardAlt") fields.push({ name: "quote", type: "textarea" }, { name: "quoteAttribution", type: "text" });
+    if (type === "PalmCardContactAlt") {
+      fields.push(
+        { name: "electionDay", type: "text" },
+        { name: "earlyVote", type: "text" },
+        { name: "phone", type: "text" },
+        { name: "email", type: "email" },
+        { name: "website", type: "text" },
+        { name: "qrImage", type: "upload", relationTo: "media" },
+        { name: "qrCaption", type: "text" },
+        { name: "disclaimer", type: "text" },
+      );
+    }
+    return fields;
+  }
+
+  if (type === "PalmCardBioAlt") {
+    return [{ name: "quote", type: "textarea" }, { name: "quoteAttribution", type: "text" }];
+  }
+
+  return [];
+}
 
 function campaignNestedField(collection: "cards" | "columns" | "tabs"): Field {
   return {
@@ -404,6 +444,7 @@ function createCampaignAltBlock(definition: (typeof campaignAltDefinitions)[numb
       { name: "secondaryLabel", type: "text" },
       { name: "secondaryUrl", type: "text" },
       { name: "items", type: "array", labels: { singular: "Item", plural: "Items" }, fields: campaignItemFields },
+      ...campaignSourceFields(definition.type),
       ...(definition.nestedCollection ? [campaignNestedField(definition.nestedCollection)] : []),
     ],
   };
