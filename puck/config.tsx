@@ -2,6 +2,7 @@
 
 import { Render, type Config, type Field } from "@puckeditor/core";
 import { RichText as PayloadRichText } from "@payloadcms/richtext-lexical/react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { Fragment, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { Countdown } from "@/components/site/Countdown";
@@ -12,8 +13,10 @@ import {
   normalizeImportantDates,
   normalizeMeetings,
   normalizePastEvents,
+  normalizeScheduleMeetings,
 } from "@/puck/list-values";
-import type { ImportantDate, MediaValue, MeetingListing, PastEvent } from "@/puck/list-values";
+import type { ImportantDate, MediaValue, MeetingListing, PastEvent, ScheduleMeeting } from "@/puck/list-values";
+import { ctMeetingSchedule } from "@/puck/ct-meeting-schedule-data";
 import type { NECYPAAData } from "@/puck/types";
 
 import styles from "./puck.module.css";
@@ -42,6 +45,7 @@ type About = Base & { eyebrow: string; heading: string; body: string; advisoryHe
 type Meeting = Base & { eyebrow: string; heading: string; body: string; date: string; time: string; location: string; actionLabel: string; actionUrl: string; importantDates: ImportantDate[] };
 type Events = Base & { eyebrow: string; heading: string; upcomingLabel: string; upcomingTitle: string; upcomingBody: string; upcomingDate: string; upcomingLocation: string; upcomingImage?: MediaValue | null; pastEvents: PastEvent[] };
 type Directory = Base & { eyebrow: string; heading: string; body: string; meetings: MeetingListing[] };
+type CTMeetingSchedule = Base & { heading: string; introduction: string; meetings: ScheduleMeeting[] };
 type CTA = Base & { eyebrow: string; heading: string; body: string; primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; image?: MediaValue | null };
 type ImageBlock = Base & { image?: MediaValue | null; caption: string; aspectRatio: "natural" | "landscape" | "portrait" | "square"; width: "full" | "wide" | "content" };
 type FreeText = Base & { text: string; fontSize: string; color: string; fontWeight: string; alignment: "left" | "center" | "right" };
@@ -80,7 +84,7 @@ type Embed = Base & { url: string; title: string };
 type PayPal = Base & { label: string; url: string; amount: string };
 type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[]; column1?: NestedSlot; column2?: NestedSlot; column3?: NestedSlot; column4?: NestedSlot; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
 
-type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; Text: TextBlockProps; Button: ButtonBlockProps; Countdown: CountdownBlockProps; Section: Section; Column: Column; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; Navigation: Navigation; Headline: Headline; Divider: Divider; FollowLinks: FollowLinks; BulletedList: BulletedList; InlineForm: InlineForm; ImageCaption: ImageCaption; Video: Video; Embed: Embed; PayPal: PayPal; ContentRow: ContentRow; Row: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow };
+type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CTMeetingSchedule: CTMeetingSchedule; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; Text: TextBlockProps; Button: ButtonBlockProps; Countdown: CountdownBlockProps; Section: Section; Column: Column; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; Navigation: Navigation; Headline: Headline; Divider: Divider; FollowLinks: FollowLinks; BulletedList: BulletedList; InlineForm: InlineForm; ImageCaption: ImageCaption; Video: Video; Embed: Embed; PayPal: PayPal; ContentRow: ContentRow; Row: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow };
 
 export const editableFieldsByType: Record<keyof Components, string[]> = {
   HeroCountdown: ["eyebrow", "heading", "body", "eventDate", "eventLocation", "registerLabel", "hotelLabel"],
@@ -88,6 +92,7 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   MeetingInfo: ["eyebrow", "heading", "body", "date", "time", "location", "actionLabel"],
   Events: ["eyebrow", "heading", "upcomingLabel", "upcomingTitle", "upcomingBody", "upcomingDate", "upcomingLocation"],
   MeetingDirectory: ["eyebrow", "heading", "body"],
+  CTMeetingSchedule: ["heading", "introduction"],
   CallToAction: ["eyebrow", "heading", "body", "primaryLabel", "secondaryLabel"],
   Image: ["caption"],
   RichText: ["content"],
@@ -232,9 +237,27 @@ const pastEventsField: Field<PastEvent[]> = {
 const meetingsField: Field<MeetingListing[]> = {
   type: "array",
   label: "Meetings",
-  defaultItemProps: { name: "", location: "" },
-  arrayFields: { name: plainText("Name"), location: plainText("Location") },
+  defaultItemProps: { name: "", location: "", date: "", url: "" },
+  arrayFields: { name: plainText("Name"), location: plainText("Location"), date: plainText("Date"), url: plainText("Name URL") },
   getItemSummary: (item) => item.name || item.location || "Meeting",
+};
+
+const scheduleMeetingsField: Field<ScheduleMeeting[]> = {
+  type: "array",
+  label: "Meetings",
+  defaultItemProps: { day: "", time: "", name: "", url: "", location: "", city: "", attendance: "", address: "", types: "" },
+  arrayFields: {
+    day: plainText("Day"),
+    time: plainText("Time"),
+    name: plainText("Meeting name"),
+    url: plainText("Meeting URL"),
+    location: plainText("Location"),
+    city: plainText("City"),
+    attendance: plainText("Attendance"),
+    address: plainText("Address"),
+    types: plainText("Meeting types"),
+  },
+  getItemSummary: (item) => item.name || item.day || "Meeting",
 };
 
 const issueField: Field<Issue[]> = {
@@ -358,9 +381,36 @@ function Button({ href, children, outline = false }: { href: string; children: R
   return <a className={styles.button} data-outline={outline} href={href || "#"}>{children}</a>;
 }
 
+function CTMeetingScheduleBlock(props: CTMeetingSchedule) {
+  const meetings = normalizeScheduleMeetings(props.meetings);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  return <section className={styles.schedule} id={props.id}><div className={styles.shell}>
+    <Editable as="h2" field="heading" props={props}>{props.heading}</Editable>
+    <Editable as="p" className={styles.scheduleIntroduction} field="introduction" props={props}>{props.introduction}</Editable>
+    <div aria-label="CT meeting schedule" className={styles.scheduleTable} role="table">
+      <div className={styles.scheduleHeader} role="row"><span role="columnheader">Day</span><span role="columnheader">Time</span><span role="columnheader">Meeting</span><span role="columnheader">Location</span><span role="columnheader">City</span><span role="columnheader">Attendance</span><span aria-label="Details" role="columnheader" /> </div>
+      {meetings.map((item, index) => {
+        const isOpen = openIndex === index;
+        return <Fragment key={`${item.day}-${item.time}-${item.name}-${index}`}>
+          <div className={styles.scheduleRow} role="row">
+            <span data-label="Day" role="cell">{item.day}</span>
+            <span data-label="Time" role="cell">{item.time}</span>
+            <span className={styles.scheduleName} data-label="Meeting" role="cell">{item.url ? <a href={item.url} rel="noreferrer" target="_blank">{item.name}</a> : item.name}</span>
+            <span data-label="Location" role="cell">{item.location}</span>
+            <span data-label="City" role="cell">{item.city}</span>
+            <span data-label="Attendance" role="cell">{item.attendance}</span>
+            <span className={styles.scheduleDetailsToggle} role="cell"><button aria-expanded={isOpen} aria-label={`${isOpen ? "Collapse" : "Expand"} details for ${item.name}`} onClick={() => setOpenIndex(isOpen ? null : index)} type="button">{isOpen ? <ChevronDown aria-hidden="true" /> : <ChevronRight aria-hidden="true" />}</button></span>
+          </div>
+          {isOpen ? <div className={styles.scheduleDetails} role="row"><div role="cell"><strong>Address</strong><span>{item.address || "Not listed"}</span></div><div role="cell"><strong>Meeting types</strong><span>{item.types || "Not listed"}</span></div></div> : null}
+        </Fragment>;
+      })}
+    </div>
+  </div></section>;
+}
+
 export const puckConfig: Config<Components> = {
   categories: {
-    "Home page": { components: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "ProgramSchedule", "CallToAction"] },
+    "Home page": { components: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "CTMeetingSchedule", "ProgramSchedule", "CallToAction"] },
     "Features & content": { components: ["IssuesSection", "IssueCards"] },
     "Quotes & highlights": { components: ["QuoteBlock", "ResultsStats", "SupporterLogos"] },
     "Actions & tabs": { components: ["ActionTabs", "ButtonRow"] },
@@ -456,7 +506,13 @@ export const puckConfig: Config<Components> = {
       label: "YPAA directory",
       defaultProps: { eyebrow: "Across the Northeast", heading: "YPAA meetings near you", body: "Find fellowship near you.", meetings: [{ name: "Connecticut YPAA", location: "Connecticut" }] },
       fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Body"), meetings: meetingsField },
-      render: (props) => <section className={styles.directory} id={props.id}><div className={`${styles.shell} ${styles.twoCol}`}><div><Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable></div><ul>{normalizeMeetings(props.meetings).map((item, index) => <li key={`${item.name}-${item.location}-${index}`}><strong>{item.name}</strong><span>{item.location}</span></li>)}</ul></div></section>,
+      render: (props) => <section className={styles.directory} id={props.id}><div className={`${styles.shell} ${styles.twoCol}`}><div><Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable></div><ul>{normalizeMeetings(props.meetings).map((item, index) => <li key={`${item.name}-${item.location}-${index}`}><div>{item.url ? <a href={item.url} rel="noreferrer" target="_blank">{item.name}</a> : <strong>{item.name}</strong>}<span>{item.location}</span>{item.date ? <small>{item.date}</small> : null}</div></li>)}</ul></div></section>,
+    },
+    CTMeetingSchedule: {
+      label: "CT Meeting schedule",
+      defaultProps: { heading: "Young People's Meetings in Connecticut", introduction: "Click any meeting name for the CT-AA details. Use the arrow to expand the address and meeting types.", meetings: ctMeetingSchedule },
+      fields: { heading: text("Heading"), introduction: area("Introduction"), meetings: scheduleMeetingsField },
+      render: (props) => <CTMeetingScheduleBlock {...props} />,
     },
     CallToAction: {
       label: "Call to action",

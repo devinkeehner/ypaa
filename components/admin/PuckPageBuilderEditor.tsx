@@ -236,6 +236,7 @@ const BLOCK_LIBRARY: Record<string, { icon?: React.ReactNode; label: string; row
   MeetingInfo: { icon: <ListTree />, label: "Meeting Details" },
   Events: { icon: <GalleryHorizontal />, label: "Events" },
   MeetingDirectory: { icon: <ListTree />, label: "Meeting Directory" },
+  CTMeetingSchedule: { icon: <ListTree />, label: "CT Meeting schedule" },
   ProgramSchedule: { icon: <ListTree />, label: "Program Schedule" },
   CallToAction: { icon: <MousePointerClick />, label: "Action Banner" },
   IssuesSection: { icon: <HandHeart />, label: "Feature Section" },
@@ -279,7 +280,7 @@ const BLOCK_PALETTES: Array<{ blocks: string[]; description: string; id: BlockPa
     id: "sections",
     label: "Sections",
     description: "Complete, ready-to-customize page sections.",
-    blocks: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "ProgramSchedule", "CallToAction", "Section", "Navigation", "Headline", "Countdown", "InlineForm", "FollowLinks", "MediaGallery", "ImageCaption", "Video", "Embed", "PayPal", "Divider", "BulletedList", "IssuesSection", "IssueCards", "QuoteBlock", "ResultsStats", "SupporterLogos", "ActionTabs"],
+    blocks: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "CTMeetingSchedule", "ProgramSchedule", "CallToAction", "Section", "Navigation", "Headline", "Countdown", "InlineForm", "FollowLinks", "MediaGallery", "ImageCaption", "Video", "Embed", "PayPal", "Divider", "BulletedList", "IssuesSection", "IssueCards", "QuoteBlock", "ResultsStats", "SupporterLogos", "ActionTabs"],
   },
   {
     id: "rows",

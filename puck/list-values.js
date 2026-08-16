@@ -70,12 +70,34 @@ export function normalizeMeetings(value) {
     .map((item) => {
       if (typeof item === "string") {
         const [name, location] = pair(item);
-        return { name, location };
+        return { name, location, date: "", url: "" };
       }
       if (!item || typeof item !== "object" || Array.isArray(item)) return null;
       return {
         name: text(item, ["name", "title", "label", "value"]),
         location: text(item, ["location", "place", "state", "region"]),
+        date: text(item, ["date", "when"]),
+        url: text(item, ["url", "href", "link"]),
+      };
+    })
+    .filter((item) => item && (item.name || item.location));
+}
+
+/** @param {unknown} value */
+export function normalizeScheduleMeetings(value) {
+  return lines(value)
+    .map((item) => {
+      if (!item || typeof item !== "object" || Array.isArray(item)) return null;
+      return {
+        day: text(item, ["day", "date"]),
+        time: text(item, ["time"]),
+        name: text(item, ["name", "title", "label"]),
+        url: text(item, ["url", "href", "link"]),
+        location: text(item, ["location", "venue", "place"]),
+        city: text(item, ["city", "town"]),
+        attendance: text(item, ["attendance", "format"]),
+        address: text(item, ["address"]),
+        types: text(item, ["types", "meetingTypes"]),
       };
     })
     .filter((item) => item && (item.name || item.location));

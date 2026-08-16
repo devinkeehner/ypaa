@@ -5,6 +5,7 @@ import {
   normalizeImportantDates,
   normalizeMeetings,
   normalizePastEvents,
+  normalizeScheduleMeetings,
 } from "./list-values";
 import type { NECYPAAData, PageDocument } from "./types";
 import { normalizeLayoutColumns } from "./layout-utils.mjs";
@@ -15,6 +16,7 @@ const COMPONENT_TYPES = new Set([
   "MeetingInfo",
   "Events",
   "MeetingDirectory",
+  "CTMeetingSchedule",
   "CallToAction",
   "Image",
   "RichText",
@@ -103,6 +105,9 @@ function normalizeProps(type: string, value: unknown): Record<string, unknown> {
   }
   if (type === "MeetingDirectory") {
     props.meetings = normalizeMeetings(props.meetings);
+  }
+  if (type === "CTMeetingSchedule") {
+    props.meetings = normalizeScheduleMeetings(props.meetings);
   }
 
   return props;
