@@ -1,4 +1,5 @@
 import type { NECYPAAData } from "./types";
+import { ctMeetingSchedule } from "./ct-meeting-schedule-data";
 
 export const defaultPageData: NECYPAAData = {
   root: { props: { title: "NECYPAA XXXVI" } },
@@ -87,6 +88,15 @@ export const defaultPageData: NECYPAAData = {
           { name: "Rhode Island YPAA", location: "Rhode Island" },
           { name: "Vermont YPAA", location: "Vermont" },
         ],
+      },
+    },
+    {
+      type: "CTMeetingSchedule",
+      props: {
+        id: "ct-meeting-schedule",
+        heading: "Young People's Meetings in Connecticut",
+        introduction: "Click any meeting name for the CT-AA details. Use the arrow to expand the address and meeting types.",
+        meetings: ctMeetingSchedule,
       },
     },
     {

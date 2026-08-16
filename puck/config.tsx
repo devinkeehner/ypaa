@@ -383,7 +383,7 @@ function Button({ href, children, outline = false }: { href: string; children: R
 
 function CTMeetingScheduleBlock(props: CTMeetingSchedule) {
   const meetings = normalizeScheduleMeetings(props.meetings);
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   return <section className={styles.schedule} id={props.id}><div className={styles.shell}>
     <Editable as="h2" field="heading" props={props}>{props.heading}</Editable>
     <Editable as="p" className={styles.scheduleIntroduction} field="introduction" props={props}>{props.introduction}</Editable>

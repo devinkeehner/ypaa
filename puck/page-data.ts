@@ -1,6 +1,7 @@
 import type { ComponentData } from "@puckeditor/core";
 
 import { defaultPageData } from "./default-data";
+import { ctMeetingSchedule } from "./ct-meeting-schedule-data";
 import {
   normalizeImportantDates,
   normalizeMeetings,
@@ -107,7 +108,8 @@ function normalizeProps(type: string, value: unknown): Record<string, unknown> {
     props.meetings = normalizeMeetings(props.meetings);
   }
   if (type === "CTMeetingSchedule") {
-    props.meetings = normalizeScheduleMeetings(props.meetings);
+    const meetings = normalizeScheduleMeetings(props.meetings);
+    props.meetings = meetings.length || Array.isArray(props.meetings) ? meetings : ctMeetingSchedule;
   }
 
   return props;
