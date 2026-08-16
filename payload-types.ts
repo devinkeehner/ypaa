@@ -4250,7 +4250,8 @@ export interface CashTransaction {
   recordedValueCents: number;
   status: 'recorded' | 'voided';
   stripeCustomerId?: string | null;
-  accessCode: string | AccessCode;
+  accessCode?: (string | null) | AccessCode;
+  sourceKey?: string | null;
   order:
     | {
         [k: string]: unknown;
@@ -9023,6 +9024,7 @@ export interface CashTransactionsSelect<T extends boolean = true> {
   status?: T;
   stripeCustomerId?: T;
   accessCode?: T;
+  sourceKey?: T;
   order?: T;
   metadata?: T;
   notificationStatus?: T;
