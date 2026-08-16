@@ -6,6 +6,9 @@ import { defaultPageData } from "@/puck/default-data";
 import { pageDocumentToPuckData } from "@/puck/page-data";
 import type { PageDocument } from "@/puck/types";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function Home() {
   let data = defaultPageData;
   try {
