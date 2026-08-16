@@ -3,7 +3,7 @@
 import "@puckeditor/core/puck.css";
 
 import { createUsePuck, Drawer, fieldsPlugin, Puck, type Config, type Data, type Plugin } from "@puckeditor/core";
-import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, BarChart3, Bold, Box, Clipboard, ClipboardPaste, Columns2, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, MousePointerClick, Palette, Quote, Redo2, Save, Search, TextQuote, Type, Undo2 } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, BarChart3, Bold, Box, Clipboard, ClipboardPaste, Columns2, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, MousePointerClick, Palette, Quote, Save, Search, TextQuote, Type } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 import { editableFieldsByType, puckConfig } from "@/puck/config";
@@ -148,9 +148,8 @@ function ThemePanel({ initialTheme, initialTenantId, onPreviewTheme }: { initial
   return <div className={styles.themePlugin}><section aria-label="Site theme defaults" className={styles.themePanel}><div className={styles.themePanelHeading}><strong>Theme colors</strong><span>Changes preview instantly. Save when you want them applied across the entire site.</span></div><div className={styles.themeFields}>{THEME_FIELDS.map(({ key, label }) => <label key={key}><span>{label}</span><div><input aria-label={`${label} color picker`} onChange={(event) => updateColor(key, event.target.value)} type="color" value={colorPickerValue(colors[key])} /><input aria-invalid={!HEX_COLOR.test(colors[key])} aria-label={`${label} hex code`} maxLength={7} onChange={(event) => updateColor(key, event.target.value)} value={colors[key]} /></div></label>)}</div><footer><span aria-live="polite">{status}</span><button onClick={() => void saveTheme()} type="button"><Save /> Save theme</button></footer></section></div>;
 }
 
-function BuilderHeader({ actions, children, pageId, pageTitle }: { actions: React.ReactNode; children: React.ReactNode; pageId: string; pageTitle: string }) {
-  const history = usePuck((state) => state.history);
-  return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerControls}>{children}</div><div className={styles.headerActions}><button disabled={!history.hasPast} aria-label="Undo" onClick={() => history.back()} type="button"><Undo2 /></button><button disabled={!history.hasFuture} aria-label="Redo" onClick={() => history.forward()} type="button"><Redo2 /></button>{actions}</div></div><FormattingBar /></header>;
+function BuilderHeader({ children, pageId, pageTitle }: { children: React.ReactNode; pageId: string; pageTitle: string }) {
+  return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerControls}>{children}</div></div><FormattingBar /></header>;
 }
 
 type SelectedLocation = { index: number; zone?: string } | null;
@@ -221,6 +220,12 @@ function ClipboardActions({ state, dispatch }: { state: ClipboardState; dispatch
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [copy, paste]);
   return <><button aria-label="Copy selected block" disabled={!source} onClick={copy} title="Copy selected block" type="button"><Clipboard /></button><button aria-label="Paste block" onClick={paste} title="Paste block after selection" type="button"><ClipboardPaste /></button></>;
+}
+
+function BuilderHeaderActions({ message, onPublish }: { message: string; onPublish: (data: Data) => void }) {
+  const appState = usePuck((state) => state.appState) as ClipboardState;
+  const dispatch = usePuck((state) => state.dispatch) as ClipboardDispatch;
+  return <div className={styles.publish}><ClipboardActions dispatch={dispatch} state={appState} /><span aria-live="polite">{message}</span><button onClick={() => onPublish(appState.data)} type="button">Publish</button></div>;
 }
 
 type BlockPalette = "sections" | "rows" | "elements";
@@ -363,9 +368,10 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
   }, [data, save]);
 
   const overrides = useMemo(() => ({
-    header: ({ actions, children }: { actions: React.ReactNode; children: React.ReactNode }) => <BuilderHeader actions={actions} children={children} pageId={pageId} pageTitle={pageTitle} />,
+    header: ({ children }: { children: React.ReactNode }) => <BuilderHeader pageId={pageId} pageTitle={pageTitle}>{children}</BuilderHeader>,
+    headerActions: () => <BuilderHeaderActions message={message} onPublish={(next) => void save(next, true)} />,
     ...(pageSlug === "home" ? { iframe: ThemePreviewFrame } : {}),
-  }), [pageId, pageSlug, pageTitle]);
+  }), [message, pageId, pageSlug, pageTitle, save]);
   const plugins = useMemo<Plugin[]>(() => [
     createBlockLibraryPlugin(),
     fieldsPlugin({ desktopSideBar: "left" }),
@@ -391,5 +397,5 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
       },
     };
   }, []);
-  return <ThemePreviewContext.Provider value={previewTheme}><div className={styles.wrapper}><Puck config={editorConfig as unknown as Config} data={data} height="100dvh" onChange={(next) => setData(next as NECYPAAData)} onPublish={(next) => save(next, true)} overrides={overrides} permissions={{ delete: true, drag: true, duplicate: true, edit: true, insert: true }} plugins={plugins} renderHeaderActions={({ state, dispatch }) => <div className={styles.publish}><ClipboardActions dispatch={dispatch} state={state} /><span aria-live="polite">{message}</span><button onClick={() => void save(state.data, true)} type="button">Publish</button></div>} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></ThemePreviewContext.Provider>;
+  return <ThemePreviewContext.Provider value={previewTheme}><div className={styles.wrapper}><Puck config={editorConfig as unknown as Config} data={data} height="100dvh" onChange={(next) => setData(next as NECYPAAData)} onPublish={(next) => save(next, true)} overrides={overrides} permissions={{ delete: true, drag: true, duplicate: true, edit: true, insert: true }} plugins={plugins} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></ThemePreviewContext.Provider>;
 }
