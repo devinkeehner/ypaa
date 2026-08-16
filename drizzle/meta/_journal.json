@@ -113,13 +113,6 @@
       "when": 1786055000000,
       "tag": "0015_repair_page_version_parents_after_rebuild",
       "breakpoints": true
-    },
-    {
-      "idx": 16,
-      "version": "6",
-      "when": 1786366480232,
-      "tag": "0016_unusual_gamma_corps",
-      "breakpoints": true
     }
   ]
 }
