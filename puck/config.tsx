@@ -14,8 +14,9 @@ import {
   normalizeMeetings,
   normalizePastEvents,
   normalizeScheduleMeetings,
+  normalizeUpcomingEvents,
 } from "@/puck/list-values";
-import type { ImportantDate, MediaValue, MeetingListing, PastEvent, ScheduleMeeting } from "@/puck/list-values";
+import type { ImportantDate, MediaValue, MeetingListing, PastEvent, ScheduleMeeting, UpcomingEvent } from "@/puck/list-values";
 import { ctMeetingSchedule } from "@/puck/ct-meeting-schedule-data";
 import type { NECYPAAData } from "@/puck/types";
 
@@ -43,7 +44,7 @@ type Hero = Base & {
 };
 type About = Base & { eyebrow: string; heading: string; body: string; advisoryHeading: string; advisoryBody: string; image?: MediaValue | null };
 type Meeting = Base & { eyebrow: string; heading: string; body: string; date: string; time: string; location: string; actionLabel: string; actionUrl: string; importantDates: ImportantDate[] };
-type Events = Base & { eyebrow: string; heading: string; upcomingLabel: string; upcomingTitle: string; upcomingBody: string; upcomingDate: string; upcomingLocation: string; upcomingImage?: MediaValue | null; pastEvents: PastEvent[] };
+type Events = Base & { eyebrow: string; heading: string; upcomingLabel: string; upcomingTitle: string; upcomingBody: string; upcomingDate: string; upcomingLocation: string; upcomingImage?: MediaValue | null; upcomingEvents: UpcomingEvent[]; pastEvents: PastEvent[] };
 type Directory = Base & { eyebrow: string; heading: string; body: string; meetings: MeetingListing[] };
 type CTMeetingSchedule = Base & { heading: string; introduction: string; meetings: ScheduleMeeting[] };
 type CTA = Base & { eyebrow: string; heading: string; body: string; primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; image?: MediaValue | null };
@@ -240,6 +241,13 @@ const meetingsField: Field<MeetingListing[]> = {
   defaultItemProps: { name: "", location: "", date: "", url: "" },
   arrayFields: { name: plainText("Name"), location: plainText("Location"), date: plainText("Date"), url: plainText("Name URL") },
   getItemSummary: (item) => item.name || item.location || "Meeting",
+};
+const upcomingEventsField: Field<UpcomingEvent[]> = {
+  type: "array",
+  label: "More upcoming events",
+  defaultItemProps: { title: "", date: "" },
+  arrayFields: { title: plainText("Event name"), date: plainText("Date") },
+  getItemSummary: (item) => item.title || item.date || "Upcoming event",
 };
 
 const scheduleMeetingsField: Field<ScheduleMeeting[]> = {
@@ -498,9 +506,9 @@ export const puckConfig: Config<Components> = {
     },
     Events: {
       label: "Upcoming + past events",
-      defaultProps: { eyebrow: "Gather with us", heading: "Upcoming and past events", upcomingLabel: "Next up", upcomingTitle: "Upcoming event", upcomingBody: "Event details", upcomingDate: "Date", upcomingLocation: "Location", upcomingImage: null, pastEvents: [{ title: "Past event", date: "Date", image: null }] },
-      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), upcomingLabel: text("Upcoming label"), upcomingTitle: text("Upcoming title"), upcomingBody: area("Upcoming description"), upcomingDate: text("Upcoming date"), upcomingLocation: text("Upcoming location"), upcomingImage: mediaField("Upcoming flyer"), pastEvents: pastEventsField },
-      render: (props) => { const upcomingImage = normalizeMedia(props.upcomingImage); return <section className={styles.events} id={props.id}><div className={styles.shell}><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><div className={styles.eventBlend}><article className={styles.upcoming}><div className={styles.flyer} data-has-image={Boolean(upcomingImage)}>{upcomingImage ? <img alt={upcomingImage.alt || ""} src={upcomingImage.url} /> : "Upcoming flyer"}</div><div><Editable as="p" className={styles.eventLabel} field="upcomingLabel" props={props}>{props.upcomingLabel}</Editable><Editable as="h3" field="upcomingTitle" props={props}>{props.upcomingTitle}</Editable><Editable as="p" field="upcomingBody" props={props}>{props.upcomingBody}</Editable><Editable as="strong" field="upcomingDate" props={props}>{props.upcomingDate}</Editable><Editable as="span" field="upcomingLocation" props={props}>{props.upcomingLocation}</Editable></div></article><div className={styles.archive}><span>From the archive</span><div>{normalizePastEvents(props.pastEvents).map((item, index) => { const image = normalizeMedia(item.image); return <article key={`${item.title}-${item.date}-${index}`}><div data-has-image={Boolean(image)}>{image ? <img alt={image.alt || ""} src={image.url} /> : "Event flyer"}</div><small>{item.date}</small><strong>{item.title}</strong></article>; })}</div></div></div></div></section>; },
+      defaultProps: { eyebrow: "Gather with us", heading: "Upcoming and past events", upcomingLabel: "Next up", upcomingTitle: "Upcoming event", upcomingBody: "Event details", upcomingDate: "Date", upcomingLocation: "Location", upcomingImage: null, upcomingEvents: [], pastEvents: [{ title: "Past event", date: "Date", image: null }] },
+      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), upcomingLabel: text("Upcoming label"), upcomingTitle: text("Upcoming title"), upcomingBody: area("Upcoming description"), upcomingDate: text("Upcoming date"), upcomingLocation: text("Upcoming location"), upcomingImage: mediaField("Upcoming flyer"), upcomingEvents: upcomingEventsField, pastEvents: pastEventsField },
+      render: (props) => { const upcomingImage = normalizeMedia(props.upcomingImage); const upcomingEvents = normalizeUpcomingEvents(props.upcomingEvents); return <section className={styles.events} id={props.id}><div className={styles.shell}><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><div className={styles.eventBlend}><article className={styles.upcoming}><div className={styles.flyer} data-has-image={Boolean(upcomingImage)}>{upcomingImage ? <img alt={upcomingImage.alt || ""} src={upcomingImage.url} /> : "Upcoming flyer"}</div><div><Editable as="p" className={styles.eventLabel} field="upcomingLabel" props={props}>{props.upcomingLabel}</Editable><Editable as="h3" field="upcomingTitle" props={props}>{props.upcomingTitle}</Editable><Editable as="p" field="upcomingBody" props={props}>{props.upcomingBody}</Editable><Editable as="strong" field="upcomingDate" props={props}>{props.upcomingDate}</Editable><Editable as="span" field="upcomingLocation" props={props}>{props.upcomingLocation}</Editable></div></article>{upcomingEvents.length ? <div className={styles.futureEvents}><span>More upcoming events</span><ul>{upcomingEvents.map((item, index) => <li key={`${item.title}-${item.date}-${index}`}><strong>{item.title}</strong><time>{item.date}</time></li>)}</ul></div> : null}<div className={styles.archive}><span>From the archive</span><div>{normalizePastEvents(props.pastEvents).map((item, index) => { const image = normalizeMedia(item.image); return <article key={`${item.title}-${item.date}-${index}`}><div data-has-image={Boolean(image)}>{image ? <img alt={image.alt || ""} src={image.url} /> : "Event flyer"}</div><small>{item.date}</small><strong>{item.title}</strong></article>; })}</div></div></div></div></section>; },
     },
     MeetingDirectory: {
       label: "YPAA directory",

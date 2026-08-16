@@ -323,6 +323,13 @@ export interface Page {
             upcomingDate?: string | null;
             upcomingLocation?: string | null;
             upcomingImage?: (string | null) | Media;
+            upcomingEvents?:
+              | {
+                  title?: string | null;
+                  date?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
             pastEvents?:
               | {
                   title?: string | null;
@@ -2689,6 +2696,13 @@ export interface PagesSelect<T extends boolean = true> {
               upcomingDate?: T;
               upcomingLocation?: T;
               upcomingImage?: T;
+              upcomingEvents?:
+                | T
+                | {
+                    title?: T;
+                    date?: T;
+                    id?: T;
+                  };
               pastEvents?:
                 | T
                 | {

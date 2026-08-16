@@ -403,6 +403,12 @@
 .upcoming span { border-top: 1px solid var(--line-dark); display: block; padding: 16px 0; }
 .upcoming strong { margin-top: 28px; }
 .upcoming span { color: var(--teal); }
+.futureEvents { border: 1px solid var(--gold); margin: 0 0 34px; padding: 24px clamp(20px, 4vw, 42px); }
+.futureEvents > span { color: var(--ember-bright); font: 800 .7rem/1 var(--font-geist-mono), monospace; letter-spacing: .14em; text-transform: uppercase; }
+.futureEvents ul { list-style: none; margin: 16px 0 0; padding: 0; }
+.futureEvents li { align-items: baseline; border-top: 1px solid color-mix(in srgb, var(--gold), transparent 48%); display: flex; gap: 22px; justify-content: space-between; padding: 14px 0; }
+.futureEvents li strong { color: var(--cream); font: 500 1.15rem/1.3 Georgia, "Times New Roman", serif; }
+.futureEvents li time { color: var(--cream-muted); font: 700 .72rem/1.3 var(--font-geist-mono), monospace; text-align: right; }
 .archive { border-top: 1px solid var(--line-dark); padding: 30px 0 0; }
 .archive > span { color: var(--ember-bright); font: 800 .7rem/1 var(--font-geist-mono), monospace; letter-spacing: .14em; text-transform: uppercase; }
 .archive > div { display: grid; gap: 18px; grid-template-columns: repeat(4, 1fr); margin-top: 22px; overflow-x: auto; padding-bottom: 18px; scroll-snap-type: x mandatory; }
@@ -585,6 +591,8 @@
   .flyer { margin: 0 auto; max-width: 420px; width: 100%; }
   .upcoming h3 { font-size: clamp(2.45rem, 13vw, 4rem); }
   .archive > div { grid-template-columns: repeat(4, minmax(220px, 72vw)); }
+  .futureEvents li { align-items: flex-start; flex-direction: column; gap: 6px; }
+  .futureEvents li time { text-align: left; }
   .directory ul { grid-template-columns: 1fr; }
   .directory li:nth-child(odd) { border-right: 0; padding-right: 8px; }
   .directory li:nth-child(even) { padding-left: 8px; }

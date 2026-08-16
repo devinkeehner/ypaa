@@ -7,6 +7,7 @@ import {
   normalizeMeetings,
   normalizePastEvents,
   normalizeScheduleMeetings,
+  normalizeUpcomingEvents,
 } from "./list-values";
 import type { NECYPAAData, PageDocument } from "./types";
 import { normalizeLayoutColumns } from "./layout-utils.mjs";
@@ -103,6 +104,7 @@ function normalizeProps(type: string, value: unknown): Record<string, unknown> {
   }
   if (type === "Events") {
     props.pastEvents = normalizePastEvents(props.pastEvents);
+    props.upcomingEvents = normalizeUpcomingEvents(props.upcomingEvents);
   }
   if (type === "MeetingDirectory") {
     props.meetings = normalizeMeetings(props.meetings);

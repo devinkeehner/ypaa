@@ -85,6 +85,23 @@ export function normalizeMeetings(value) {
 }
 
 /** @param {unknown} value */
+export function normalizeUpcomingEvents(value) {
+  return lines(value)
+    .map((item) => {
+      if (typeof item === "string") {
+        const [title, date] = pair(item);
+        return { title, date };
+      }
+      if (!item || typeof item !== "object" || Array.isArray(item)) return null;
+      return {
+        title: text(item, ["title", "name", "label", "value"]),
+        date: text(item, ["date", "when"]),
+      };
+    })
+    .filter((item) => item && (item.title || item.date));
+}
+
+/** @param {unknown} value */
 export function normalizeScheduleMeetings(value) {
   return lines(value)
     .map((item) => {

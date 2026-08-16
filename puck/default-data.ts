@@ -62,6 +62,7 @@ export const defaultPageData: NECYPAAData = {
         upcomingBody: "A Step Two and Three workshop with four mini-speakers and a live Q&A.",
         upcomingDate: "Saturday, August 22, 2026",
         upcomingLocation: "Online via Zoom",
+        upcomingEvents: [],
         pastEvents: [
           { title: "The Ultimate Cool Down", date: "April 25, 2026" },
           { title: "Zombie Prom", date: "February 13, 2026" },

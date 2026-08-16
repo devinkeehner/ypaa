@@ -146,6 +146,15 @@ export const EventsBlock: Block = {
     { name: "upcomingLocation", type: "text" },
     { name: "upcomingImage", type: "upload", relationTo: "media" },
     {
+      name: "upcomingEvents",
+      type: "array",
+      labels: { singular: "More upcoming event", plural: "More upcoming events" },
+      fields: [
+        { name: "title", type: "text" },
+        { name: "date", type: "text" },
+      ],
+    },
+    {
       name: "pastEvents",
       type: "array",
       labels: { singular: "Past event", plural: "Past events" },
