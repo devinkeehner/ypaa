@@ -352,6 +352,8 @@ export interface Page {
               | {
                   name?: string | null;
                   location?: string | null;
+                  date?: string | null;
+                  url?: string | null;
                   id?: string | null;
                 }[]
               | null;
@@ -367,6 +369,27 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'MeetingDirectory';
+          }
+        | {
+            heading?: string | null;
+            introduction?: string | null;
+            meetings?:
+              | {
+                  day?: string | null;
+                  time?: string | null;
+                  name?: string | null;
+                  url?: string | null;
+                  location?: string | null;
+                  city?: string | null;
+                  attendance?: string | null;
+                  address?: string | null;
+                  types?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'CTMeetingSchedule';
           }
         | {
             eyebrow?: string | null;
@@ -2689,9 +2712,33 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     name?: T;
                     location?: T;
+                    date?: T;
+                    url?: T;
                     id?: T;
                   };
               textStyles?: T;
+              id?: T;
+              blockName?: T;
+            };
+        CTMeetingSchedule?:
+          | T
+          | {
+              heading?: T;
+              introduction?: T;
+              meetings?:
+                | T
+                | {
+                    day?: T;
+                    time?: T;
+                    name?: T;
+                    url?: T;
+                    location?: T;
+                    city?: T;
+                    attendance?: T;
+                    address?: T;
+                    types?: T;
+                    id?: T;
+                  };
               id?: T;
               blockName?: T;
             };

@@ -70,15 +70,16 @@ export function normalizeMeetings(value) {
     .map((item) => {
       if (typeof item === "string") {
         const [name, location] = pair(item);
-        return { name, location, date: "", url: "" };
+        return { name, location };
       }
       if (!item || typeof item !== "object" || Array.isArray(item)) return null;
-      return {
+      const meeting = {
         name: text(item, ["name", "title", "label", "value"]),
         location: text(item, ["location", "place", "state", "region"]),
-        date: text(item, ["date", "when"]),
-        url: text(item, ["url", "href", "link"]),
       };
+      const date = text(item, ["date", "when"]);
+      const url = text(item, ["url", "href", "link"]);
+      return { ...meeting, ...(date ? { date } : {}), ...(url ? { url } : {}) };
     })
     .filter((item) => item && (item.name || item.location));
 }

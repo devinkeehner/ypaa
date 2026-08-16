@@ -174,9 +174,37 @@ export const MeetingDirectoryBlock: Block = {
       fields: [
         { name: "name", type: "text" },
         { name: "location", type: "text" },
+        { name: "date", type: "text" },
+        { name: "url", type: "text" },
       ],
     },
     textStyles,
+  ],
+};
+
+export const CTMeetingScheduleBlock: Block = {
+  slug: "CTMeetingSchedule",
+  labels: { singular: "CT Meeting schedule", plural: "CT Meeting schedules" },
+  admin: { group: "Convention sections" },
+  fields: [
+    { name: "heading", type: "text", defaultValue: "Young People's Meetings in Connecticut" },
+    { name: "introduction", type: "textarea", defaultValue: "Click any meeting name for the CT-AA details. Use the arrow to expand the address and meeting types." },
+    {
+      name: "meetings",
+      type: "array",
+      labels: { singular: "CT meeting", plural: "CT meetings" },
+      fields: [
+        { name: "day", type: "text" },
+        { name: "time", type: "text" },
+        { name: "name", type: "text" },
+        { name: "url", type: "text" },
+        { name: "location", type: "text" },
+        { name: "city", type: "text" },
+        { name: "attendance", type: "text" },
+        { name: "address", type: "text" },
+        { name: "types", type: "text" },
+      ],
+    },
   ],
 };
 
@@ -471,6 +499,7 @@ export const PAGE_LAYOUT_BLOCKS: Block[] = [
   MeetingInfoBlock,
   EventsBlock,
   MeetingDirectoryBlock,
+  CTMeetingScheduleBlock,
   CallToActionBlock,
   ImageBlock,
   RichTextBlock,
