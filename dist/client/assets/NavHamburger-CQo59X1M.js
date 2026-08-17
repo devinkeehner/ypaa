@@ -1,1 +1,0 @@
-import"./rolldown-runtime-DWdDZTNf.js";import{a as e,i as t,t as n}from"./framework-DKMVHb9K.js";import{Y as r,k as i}from"./client-BfiHFPJ_.js";var a=n(),o=t();e();var s=()=>{let e=(0,a.c)(2),{navOpen:t}=i(),n;return e[0]===t?n=e[1]:(n=(0,o.jsx)(r,{closeIcon:`collapse`,isActive:t}),e[0]=t,e[1]=n),n};export{s as NavHamburger};

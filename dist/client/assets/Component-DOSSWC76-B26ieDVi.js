@@ -1,1 +1,0 @@
-import"./rolldown-runtime-DWdDZTNf.js";import{a as e,i as t}from"./framework-DKMVHb9K.js";var n=t();e();var r=e=>{let{data:t}=e;return(0,n.jsxs)(`div`,{children:[`Unknown converted Slate node: `,(0,n.jsx)(`strong`,{children:t?.nodeType})]})};export{r as UnknownConvertedNodeComponent};

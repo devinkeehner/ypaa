@@ -1,1 +1,0 @@
-import{i as e}from"./rolldown-runtime-DWdDZTNf.js";import{a as t,i as n}from"./framework-DKMVHb9K.js";var r=n(),i=e(t(),1);function a({id:e}){return(0,r.jsx)(i.Fragment,{children:e})}export{a as IDCell};

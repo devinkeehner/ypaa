@@ -36,6 +36,12 @@ local.env
 # vercel
 .vercel
 
+# obsolete local Worker build/cache output
+/.vinext/
+/dist/
+/.wrangler/
+/.sites-runtime/
+
 # typescript
 next-env.d.ts
 /outputs/

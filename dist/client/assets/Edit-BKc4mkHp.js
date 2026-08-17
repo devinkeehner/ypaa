@@ -1,1 +1,0 @@
-import"./rolldown-runtime-DWdDZTNf.js";import{a as e,i as t}from"./framework-DKMVHb9K.js";import{ut as n}from"./client-BfiHFPJ_.js";var r=t();e();var i=e=>(0,r.jsx)(n,{...e});export{i as EditView};
