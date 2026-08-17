@@ -297,6 +297,17 @@ const BLOCK_PALETTES: Array<{ blocks: string[]; description: string; id: BlockPa
   },
 ];
 
+const READY_SECTION_BLOCKS = new Set([
+  "HeroAlt",
+  "AboutAlt",
+  "CardsGridAlt",
+  "PalmCardPointsAlt",
+  "PalmCardBioAlt",
+  "TestimonialAlt",
+  "PalmCardAlt",
+  "PalmCardContactAlt",
+]);
+
 const CAMPAIGN_ALT_LABELS = Object.fromEntries(campaignAltDefinitions.map((definition) => [definition.type, definition.label])) as Record<string, string>;
 
 function blockPaletteLabel(name: string) {
@@ -322,7 +333,11 @@ function BlockPaletteItem({ name }: { children?: React.ReactNode; name: string }
 
 function BlockDrawerPanel({ palette }: { palette: (typeof BLOCK_PALETTES)[number] }) {
   const [query, setQuery] = useState("");
-  const matchingBlocks = palette.blocks.filter((name) => blockPaletteLabel(name).toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
+  const normalizedQuery = query.trim().toLocaleLowerCase();
+  const matchingBlocks = palette.blocks.filter((name) => blockPaletteLabel(name).toLocaleLowerCase().includes(normalizedQuery));
+  const readyBlocks = palette.id === "sections" && !normalizedQuery ? matchingBlocks.filter((name) => READY_SECTION_BLOCKS.has(name)) : [];
+  const remainingBlocks = readyBlocks.length ? matchingBlocks.filter((name) => !READY_SECTION_BLOCKS.has(name)) : matchingBlocks;
+  const renderBlocks = (blocks: string[]) => <Drawer>{blocks.map((name) => <Drawer.Item key={name} label={blockPaletteLabel(name)} name={name}>{BlockPaletteItem}</Drawer.Item>)}</Drawer>;
 
   return <div aria-label={`${palette.label}. ${palette.description}`} className={styles.blockDrawerPanel} data-palette={palette.id}>
     <div className={styles.blockDrawerHeader}><strong>{palette.label}</strong><span>{matchingBlocks.length}</span></div>
@@ -330,7 +345,16 @@ function BlockDrawerPanel({ palette }: { palette: (typeof BLOCK_PALETTES)[number
       <Search aria-hidden="true" />
       <input aria-label={`Search ${palette.label.toLocaleLowerCase()}`} onChange={(event) => setQuery(event.target.value)} placeholder="Search blocks" type="search" value={query} />
     </label>
-    {matchingBlocks.length ? <Drawer>{matchingBlocks.map((name) => <Drawer.Item key={name} label={blockPaletteLabel(name)} name={name}>{BlockPaletteItem}</Drawer.Item>)}</Drawer> : <p className={styles.blockDrawerEmpty}>No matching blocks.</p>}
+    {matchingBlocks.length ? <>
+      {readyBlocks.length ? <section className={styles.blockDrawerGroup}>
+        <h3>Ready to use</h3>
+        {renderBlocks(readyBlocks)}
+      </section> : null}
+      {remainingBlocks.length ? <section className={styles.blockDrawerGroup}>
+        {readyBlocks.length ? <h3>More sections</h3> : null}
+        {renderBlocks(remainingBlocks)}
+      </section> : null}
+    </> : <p className={styles.blockDrawerEmpty}>No matching blocks.</p>}
   </div>;
 }
 

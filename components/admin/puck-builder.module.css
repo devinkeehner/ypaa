@@ -66,6 +66,9 @@
 .blockDrawerSearch input:focus { border-color: var(--builder-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--builder-accent) 16%, transparent); }
 .blockDrawerSearch input::placeholder { color: var(--builder-muted); }
 .blockDrawerEmpty { color: var(--builder-muted); font-size: 12px; margin: 18px 0; text-align: center; }
+.blockDrawerGroup { display: grid; gap: 8px; min-width: 0; }
+.blockDrawerGroup + .blockDrawerGroup { border-top: 1px solid var(--builder-border); margin-top: 4px; padding-top: 14px; }
+.blockDrawerGroup h3 { color: var(--builder-muted); font-size: 11px; font-weight: 850; letter-spacing: 0; margin: 0; text-transform: uppercase; }
 .blockDrawerPanel :global([data-puck-drawer="true"]) { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .blockDrawerPanel :global([class*="Drawer-draggable"]), .blockDrawerPanel :global([class*="Drawer-draggableBg"]), .blockDrawerPanel :global([class*="DrawerItem-draggable"]) { min-width: 0; }
 .blockDrawerPanel :global([class*="DrawerItem-draggable"]) { background: transparent; border: 0; padding: 0; }
