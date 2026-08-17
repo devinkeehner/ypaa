@@ -1,5 +1,19 @@
 # NECYPAA XXXVI
 
+## Cash registration code settings
+
+These are the only settings needed for the cash-code integration. Keep them together in the hosting environment so they are easy to find:
+
+```text
+ISSUER_SERVICE_BASE_URL       External cash-code service URL
+ISSUER_SERVICE_API_KEY        Secret key for the external service
+ISSUER_EVENT_SLUG             Event identifier, normally necypaa-xxxvi
+CASH_ACCESS_CODE              Optional local fallback code
+CASH_ACCESS_CODE_MAX_REDEMPTIONS  Uses allowed for the fallback code
+```
+
+Generated issuer codes are redeemed through the external service. The fallback environment code continues through this site's local cash ledger. External codes cover one registration and do not cover breakfast tickets or additional scholarships.
+
 ## Site administration
 
 - Use **Media** to upload homepage artwork and video.
