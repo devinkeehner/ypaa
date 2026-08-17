@@ -29,6 +29,9 @@ export const Pages: CollectionConfig = {
       },
       views: {
         edit: {
+          default: {
+            Component: "@/components/admin/PageDefaultView",
+          },
           visual: {
             Component: "@/components/admin/PuckPageBuilderView",
             path: "/visual",
