@@ -1,0 +1,1 @@
+import{i as e}from"./rolldown-runtime-DWdDZTNf.js";import{a as t}from"./framework-DKMVHb9K.js";var n=e(t(),1),r=(0,n.createContext)({selectedLocales:[]}),i=()=>(0,n.use)(r);export{i as n,r as t};

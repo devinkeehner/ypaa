@@ -1,0 +1,1 @@
+@layer payload-default{.icon--lock .stroke{stroke:currentColor;stroke-width:1px}.locked{pointer-events:all;justify-content:center;align-items:center;display:inline-flex;position:relative}.locked__tooltip{transform:translate3d(0%, calc(var(--caret-size) * -1), 0);left:0}}

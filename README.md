@@ -46,37 +46,34 @@ Configure the Stripe webhook endpoint as `/api/stripe/webhook` and subscribe it 
 
 Historical Stripe data can be imported into Payload in batches through `POST /api/admin/stripe-backfill`, authenticated with the `x-backfill-secret` header. The request accepts `limit`, optional `createdGte` (a Unix timestamp), and the previous response's `nextStartingAfter` cursor. Stripe remains the source of the historical data. Stable source keys make the import idempotent, so rerunning a batch updates matching records instead of duplicating them.
 
-## Starter and lifecycle notes
+## Runtime and deployment
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+This is a standard Next.js and Payload application deployed on Vercel. Payload
+uses MongoDB for persistent application data and can store media in Cloudflare
+R2 through its S3-compatible API.
 
 ## Prerequisites
 
 - Node.js `>=22.13.0`
-- Linux with `flock`, `curl`, and GNU `timeout`
+- A MongoDB connection string
 
-## Sites Lifecycle
+Configure these values in Vercel for Production, Preview, and Development as
+appropriate:
 
-The Sites lifecycle CLI runs the locked dependency install before returning this checkout. Edit the source under `app/`, then checkpoint when a coherent milestone is ready to inspect or share. The remote Sites builder runs `npm run build` against the pushed commit. Do not repeat install or build as a normal pre-checkpoint step.
+```text
+DATABASE_URI
+PAYLOAD_SECRET
+ENABLE_R2
+R2_ENDPOINT
+R2_BUCKET
+R2_ACCESS_KEY_ID
+R2_SECRET_ACCESS_KEY
+R2_PUBLIC_BASE_URL
+```
 
-This starter does not use `wrangler.jsonc`.
-
-`install:ci` is intentionally a single, non-retrying `npm ci`. It refuses a concurrent install for the same project, consumes a matching image-seeded npm cache with `--prefer-offline` while retaining registry fallback for a missing cache object, otherwise downloads and verifies the complete vinext tarball recorded in `package-lock.json`, limits npm to one socket, and terminates a stalled install. `build` applies a short timeout and then validates the Sites artifact. These helpers target Linux and use GNU `timeout`; they are not native macOS scripts.
-
-Scripts that need writable project-scoped home, npm, XDG, and temporary paths use `scripts/sites-env.sh`. The `dev` and `start` scripts honor the caller's runtime environment and keep Wrangler logs inside the checkout. The generated `.sites-runtime/` directory is disposable and ignored by Git.
-
-## Included Shape
-
-- edit site code under `app/`
-- `app/chatgpt-auth.ts` provides optional dispatch-owned ChatGPT sign-in helpers
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/index.ts` reads the D1 binding from the Cloudflare Worker environment
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+Set `ENABLE_R2=true` to enable remote media storage. `R2_ENDPOINT` should be the
+S3 API endpoint for the account, while `R2_PUBLIC_BASE_URL` should be the public
+bucket or custom-domain URL used to serve uploaded files.
 
 ## Workspace Auth Headers
 
@@ -138,19 +135,14 @@ actions tied to the current ChatGPT user. Leave public content anonymous.
 
 ## Diagnostic Commands
 
-- `npm run install:ci`: perform the one bounded lockfile install
-- `npm run dev`: start the Vite/Vinext development server
-- `npm run build`: build and validate the deployable Sites artifact
-- `npm run start`: start the built Vinext application
-- `npm test`: build, validate, and verify the rendered development-preview metadata
-- `npm run validate:artifact`: recheck an existing artifact's manifest and ESM `default.fetch` export
-- `npm run db:generate`: generate Drizzle migrations after schema changes
-
-Use build and validation commands for targeted diagnosis after a remote failure, not as part of the normal checkpoint path.
-
-The timeout defaults can be overridden for a controlled canary with `SITES_INSTALL_TIMEOUT`, `SITES_INSTALL_KILL_AFTER`, `SITES_BUILD_TIMEOUT`, and `SITES_BUILD_KILL_AFTER`. A timeout fails the command; the helpers never retry an unchanged install or build.
+- `npm run dev`: start the Next.js development server
+- `npm run build`: generate the Payload import map and build the Vercel artifact
+- `npm run start`: start the production Next.js server
+- `npm test`: build and run the focused project tests
+- `npm run generate:types`: regenerate Payload TypeScript definitions
 
 ## Learn More
 
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Payload Documentation](https://payloadcms.com/docs)
+- [Vercel Documentation](https://vercel.com/docs)

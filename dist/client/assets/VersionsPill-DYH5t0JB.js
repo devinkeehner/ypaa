@@ -1,0 +1,1 @@
+import"./rolldown-runtime-DWdDZTNf.js";import{a as e,i as t,t as n}from"./framework-DKMVHb9K.js";import{v as r}from"./client-BfiHFPJ_.js";var i=n(),a=t();e();var o=`pill-version-count`,s=()=>{let e=(0,i.c)(2),{versionCount:t}=r();if(!t)return null;let n;return e[0]===t?n=e[1]:(n=(0,a.jsx)(`span`,{className:o,children:t}),e[0]=t,e[1]=n),n};export{s as VersionsPill};

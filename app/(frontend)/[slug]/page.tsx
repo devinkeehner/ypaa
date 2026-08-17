@@ -29,7 +29,7 @@ export default async function SlugPage({ params }: PageProps) {
       data = pageDocumentToPuckData(page as unknown as PageDocument);
     }
   } catch {
-    // Keep the prototype homepage available while a local D1 binding is absent.
+    // Keep the prototype homepage available while the database is unavailable.
   }
 
   if (data) return <PublicPage data={data} />;

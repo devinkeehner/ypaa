@@ -15,7 +15,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -41,15 +41,6 @@
   ],
   "exclude": [
     "node_modules",
-    "worker",
-    "vite.config.ts",
-    "build",
-    "scripts",
-    "drizzle",
-    "db",
-    "examples",
-    "drizzle.config.ts",
-    "payload-generated-schema.ts",
-    "server/cloudflare-bindings.ts"
+    "scripts"
   ]
 }

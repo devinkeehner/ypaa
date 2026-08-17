@@ -1,6 +1,6 @@
-import { sqliteD1Adapter } from "@payloadcms/db-d1-sqlite";
+import { mongooseAdapter } from "@payloadcms/db-mongodb";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
-import { r2Storage } from "@payloadcms/storage-r2";
+import { s3Storage } from "@payloadcms/storage-s3";
 import { buildConfig } from "payload";
 
 import { Users } from "./collections/Users";
@@ -16,7 +16,14 @@ import { Rooms } from "./collections/Rooms";
 import { ProgramSessions } from "./collections/ProgramSessions";
 import { VenueMaps } from "./collections/VenueMaps";
 import { ensureProgramSeed } from "./lib/program-seed";
-import { payloadBucket, payloadD1 } from "./server/cloudflare-bindings";
+
+const r2PublicBaseUrl = process.env.R2_PUBLIC_BASE_URL?.replace(/\/+$/, "");
+
+function getMediaFileUrl(filename: string) {
+  return r2PublicBaseUrl
+    ? `${r2PublicBaseUrl}/${encodeURIComponent(filename)}`
+    : `/api/media/file/${encodeURIComponent(filename)}`;
+}
 
 export default buildConfig({
   admin: {
@@ -36,13 +43,32 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Pages, Merchandise, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, Rooms, ProgramSessions, VenueMaps],
-  db: sqliteD1Adapter({ binding: payloadD1, push: false }),
+  db: mongooseAdapter({
+    url: process.env.DATABASE_URI || "",
+  }),
   editor: lexicalEditor(),
   plugins: [
-    r2Storage({
-      bucket: payloadBucket,
-      collections: { media: true },
-    }),
+    ...(process.env.ENABLE_R2 === "true"
+      ? [
+          s3Storage({
+            bucket: process.env.R2_BUCKET || "",
+            collections: {
+              media: {
+                generateFileURL: ({ filename }) => getMediaFileUrl(filename),
+              },
+            },
+            config: {
+              credentials: {
+                accessKeyId: process.env.R2_ACCESS_KEY_ID || "",
+                secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || "",
+              },
+              endpoint: process.env.R2_ENDPOINT || "",
+              forcePathStyle: true,
+              region: "auto",
+            },
+          }),
+        ]
+      : []),
   ],
   secret: process.env.PAYLOAD_SECRET || "local-preview-secret-change-me",
   telemetry: false,

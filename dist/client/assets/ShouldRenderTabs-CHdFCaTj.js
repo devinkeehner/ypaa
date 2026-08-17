@@ -1,0 +1,1 @@
+import{v as e}from"./client-BfiHFPJ_.js";var t=t=>{let{children:n}=t,{id:r,collectionSlug:i,globalSlug:a}=e();return i&&r!==`create`&&r||a?n:null};export{t as ShouldRenderTabs};

@@ -17,7 +17,7 @@ export default async function Home() {
     const page = result.docs[0];
     if (page) data = pageDocumentToPuckData(page as unknown as PageDocument);
   } catch {
-    // The initial public view remains available before the first D1 migration/page seed.
+    // Keep the initial public view available before the database is seeded.
   }
   return <PublicPage data={data} />;
 }

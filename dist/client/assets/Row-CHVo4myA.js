@@ -1,0 +1,1 @@
+import"./rolldown-runtime-DWdDZTNf.js";import{a as e,i as t}from"./framework-DKMVHb9K.js";import{RenderVersionFieldsToDiff as n}from"./RenderVersionFieldsToDiff-DMche7sQ.js";var r=t();e();var i=`row-diff`,a=({baseVersionField:e})=>(0,r.jsx)(`div`,{className:i,children:(0,r.jsx)(n,{versionFields:e.fields})});export{a as Row};

@@ -19,7 +19,6 @@ import { default as default_9fae9a50b1c0f53ea5eb1ee9db3c553d } from '@/component
 import { default as default_58e097ffd737c28c33127f4662812319 } from '@/components/admin/HexColorField'
 import { default as default_68d2bb17e1ec48e6755095f938acf95b } from '@/components/admin/ProgramBoardNavLink'
 import { default as default_0a7c9bc9d3a649c77c5308f552f7e134 } from '@/components/admin/AdminRuntimeRecovery'
-import { R2ClientUploadHandler as R2ClientUploadHandler_85cc02ed84006fcc91d3aff39dda669d } from '@payloadcms/storage-r2/client'
 import { default as default_527e3cc5584c179551c753b0bb54551a } from '@/components/admin/ProgramBoardAdminView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -46,7 +45,6 @@ export const importMap = {
   "@/components/admin/HexColorField#default": default_58e097ffd737c28c33127f4662812319,
   "@/components/admin/ProgramBoardNavLink#default": default_68d2bb17e1ec48e6755095f938acf95b,
   "@/components/admin/AdminRuntimeRecovery#default": default_0a7c9bc9d3a649c77c5308f552f7e134,
-  "@payloadcms/storage-r2/client#R2ClientUploadHandler": R2ClientUploadHandler_85cc02ed84006fcc91d3aff39dda669d,
   "@/components/admin/ProgramBoardAdminView#default": default_527e3cc5584c179551c753b0bb54551a,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

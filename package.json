@@ -6,23 +6,21 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "install:ci": "bash scripts/install-ci.sh",
-    "dev": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vite",
-    "build": "bash scripts/build-verified.sh",
-    "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
+    "dev": "next dev",
+    "build": "payload generate:importmap && next build",
+    "start": "next start",
     "test": "npm run build && node --test tests/*.test.mjs",
-    "validate:artifact": "bash scripts/validate-artifact.sh",
-    "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next",
-    "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate"
+    "generate:importmap": "payload generate:importmap",
+    "generate:types": "payload generate:types",
+    "lint": "eslint . --ignore-pattern .next"
   },
   "dependencies": {
-    "@payloadcms/db-d1-sqlite": "3.87.0",
+    "@payloadcms/db-mongodb": "3.87.0",
     "@payloadcms/next": "3.87.0",
     "@payloadcms/richtext-lexical": "3.87.0",
-    "@payloadcms/storage-r2": "3.87.0",
+    "@payloadcms/storage-s3": "3.87.0",
     "@payloadcms/ui": "3.87.0",
     "@puckeditor/core": "^0.21.2",
-    "drizzle-orm": "0.45.2",
     "graphql": "^16.8.1",
     "lucide-react": "^0.468.0",
     "next": "16.2.6",
@@ -32,23 +30,14 @@
     "stripe": "^22.4.0"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "1.37.1",
-    "@cloudflare/workers-types": "4.20260702.1",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "6.0.2",
-    "@vitejs/plugin-rsc": "0.5.26",
-    "drizzle-kit": "0.31.10",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
-    "react-server-dom-webpack": "19.2.6",
     "tailwindcss": "4.2.1",
-    "typescript": "5.9.3",
-    "vinext": "0.0.50",
-    "vite": "8.0.13",
-    "wrangler": "4.92.0"
+    "typescript": "5.9.3"
   },
   "type": "module",
   "displayName": "NECYPAA XXXVI"
