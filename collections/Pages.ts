@@ -6,8 +6,11 @@ import { pageLayoutToPuckData, puckDataToLayout } from "@/puck/page-data";
 import type { PageDocument } from "@/puck/types";
 
 function formatSlug(value: unknown) {
-  return String(value || "")
-    .trim()
+  const input = String(value ?? "").trim();
+
+  if (!input) return undefined;
+
+  return input
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
