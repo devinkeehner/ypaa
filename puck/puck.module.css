@@ -743,6 +743,8 @@
 .bioSectionAlt[data-variant="checklist"] > .shell { grid-template-columns: minmax(0, .9fr) minmax(320px, 1.1fr); }
 
 .issuesCardsAltGrid { display: grid; gap: 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 40px; }
+.issuesCardsAlt[data-count="1"] .issuesCardsAltGrid { grid-template-columns: minmax(0, 1fr); }
+.issuesCardsAlt[data-count="2"] .issuesCardsAltGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .issuesCardsAltGrid article { background: #fff; border: 1px solid #d4cec3; min-height: 280px; overflow: hidden; }
 .issuesCardsAltGrid article > img { aspect-ratio: 16 / 9; object-fit: cover; width: 100%; }
 .issuesCardsAltGrid article > div { padding: 26px; }
@@ -759,6 +761,7 @@
 .issuesCardsAlt[data-variant="editorialGrid"] .campaignAltHeader { margin: 0; text-align: left; }
 .issuesCardsAlt[data-variant="editorialGrid"] .issuesCardsAltGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .issuesCardsAlt[data-variant="editorialGrid"] article[data-featured="true"] { display: grid; grid-column: span 2; grid-template-columns: .9fr 1.1fr; }
+.issuesCardsAlt[data-count="2"][data-variant="editorialGrid"] article[data-featured="true"] { grid-column: auto; grid-template-columns: 1fr; }
 .issuesCardsAlt[data-variant="editorialGrid"] article[data-featured="true"] > img { height: 100%; }
 
 .palmPointsGrid { display: grid; gap: 16px; margin: 38px auto 0; max-width: 960px; }

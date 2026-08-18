@@ -147,8 +147,10 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   ...campaignAltEditableFields,
 };
 
+// Match the reference editor's hybrid fields: strings edit directly on the
+// canvas, while existing Lexical JSON values continue using the rich editor.
 const richCopyLabels = new Set(["Eyebrow", "Heading", "Introduction", "Body", "Description", "Quote", "Biography", "Highlight", "Point", "Text", "Upcoming description", "Details", "Caption"]);
-const richTextField = (label: string) => ({ type: "custom" as const, label, richText: true, render: () => <></> });
+const richTextField = (label: string) => ({ type: "custom" as const, label, richText: true, contentEditable: true, render: () => <></> });
 const text = (label: string) => richCopyLabels.has(label) ? richTextField(label) : ({ type: "text" as const, label, contentEditable: true });
 const area = (label: string) => richTextField(label);
 const plainText = (label: string) => ({ type: "text" as const, label });
@@ -240,7 +242,7 @@ const importantDatesField: Field<ImportantDate[]> = {
   type: "array",
   label: "Important dates",
   defaultItemProps: { date: "", label: "" },
-  arrayFields: { date: plainText("Date"), label: plainText("Details") },
+  arrayFields: { date: text("Date"), label: text("Details") },
   getItemSummary: (item) => item.label || item.date || "Important date",
 };
 
@@ -248,7 +250,7 @@ const pastEventsField: Field<PastEvent[]> = {
   type: "array",
   label: "Past events",
   defaultItemProps: { title: "", date: "", image: null },
-  arrayFields: { title: plainText("Title"), date: plainText("Date"), image: mediaField("Event flyer") },
+  arrayFields: { title: text("Title"), date: text("Date"), image: mediaField("Event flyer") },
   getItemSummary: (item) => item.title || item.date || "Past event",
 };
 
@@ -256,14 +258,14 @@ const meetingsField: Field<MeetingListing[]> = {
   type: "array",
   label: "Meetings",
   defaultItemProps: { name: "", location: "", date: "", url: "" },
-  arrayFields: { name: plainText("Name"), location: plainText("Location"), date: plainText("Date"), url: plainText("Name URL") },
+  arrayFields: { name: text("Name"), location: text("Location"), date: text("Date"), url: plainText("Name URL") },
   getItemSummary: (item) => item.name || item.location || "Meeting",
 };
 const upcomingEventsField: Field<UpcomingEvent[]> = {
   type: "array",
   label: "More upcoming events",
   defaultItemProps: { title: "", date: "" },
-  arrayFields: { title: plainText("Event name"), date: plainText("Date") },
+  arrayFields: { title: text("Event name"), date: text("Date") },
   getItemSummary: (item) => item.title || item.date || "Upcoming event",
 };
 
@@ -272,15 +274,15 @@ const scheduleMeetingsField: Field<ScheduleMeeting[]> = {
   label: "Meetings",
   defaultItemProps: { day: "", time: "", name: "", url: "", location: "", city: "", attendance: "", address: "", types: "" },
   arrayFields: {
-    day: plainText("Day"),
-    time: plainText("Time"),
-    name: plainText("Meeting name"),
+    day: text("Day"),
+    time: text("Time"),
+    name: text("Meeting name"),
     url: plainText("Meeting URL"),
-    location: plainText("Location"),
-    city: plainText("City"),
-    attendance: plainText("Attendance"),
-    address: plainText("Address"),
-    types: plainText("Meeting types"),
+    location: text("Location"),
+    city: text("City"),
+    attendance: text("Attendance"),
+    address: text("Address"),
+    types: text("Meeting types"),
   },
   getItemSummary: (item) => item.name || item.day || "Meeting",
 };
@@ -307,7 +309,7 @@ const statsField: Field<ResultStat[]> = {
   type: "array",
   label: "Statistics",
   defaultItemProps: { value: "", label: "", detail: "" },
-  arrayFields: { value: plainText("Value"), label: plainText("Label"), detail: area("Detail") },
+  arrayFields: { value: text("Value"), label: text("Label"), detail: area("Detail") },
   getItemSummary: (item) => item.label || item.value || "Result",
 };
 
@@ -315,7 +317,7 @@ const logosField: Field<SupporterLogo[]> = {
   type: "array",
   label: "Partners",
   defaultItemProps: { name: "", image: null },
-  arrayFields: { name: plainText("Name"), image: mediaField("Logo") },
+  arrayFields: { name: text("Name"), image: mediaField("Logo") },
   getItemSummary: (item) => item.name || "Supporter",
 };
 
@@ -323,7 +325,7 @@ const tabsField: Field<ActionTab[]> = {
   type: "array",
   label: "Content tabs",
   defaultItemProps: { label: "", description: "" },
-  arrayFields: { label: plainText("Tab label"), description: area("Description"), blocks: { type: "slot", allow: nestedElementTypes } },
+  arrayFields: { label: text("Tab label"), description: area("Description"), blocks: { type: "slot", allow: nestedElementTypes } },
   getItemSummary: (item) => item.label || "Action tab",
 };
 
@@ -331,7 +333,7 @@ const galleryItemsField: Field<GalleryItem[]> = {
   type: "array",
   label: "Gallery items",
   defaultItemProps: { image: null, caption: "", size: "medium" },
-  arrayFields: { image: mediaField("Image"), caption: plainText("Caption"), size: { type: "select", label: "Tile size", options: [{ label: "Small", value: "small" }, { label: "Medium", value: "medium" }, { label: "Large", value: "large" }] } },
+  arrayFields: { image: mediaField("Image"), caption: text("Caption"), size: { type: "select", label: "Tile size", options: [{ label: "Small", value: "small" }, { label: "Medium", value: "medium" }, { label: "Large", value: "large" }] } },
   getItemSummary: (item) => item.caption || "Gallery item",
 };
 
@@ -444,7 +446,7 @@ const campaignItemsField: Field<CampaignAltItem[]> = {
   type: "array",
   label: "Items",
   defaultItemProps: { label: "", heading: "New item", text: "Add details", value: "", url: "", icon: "check", attribution: "", role: "", image: null },
-  arrayFields: { label: plainText("Label"), heading: richTextField("Heading"), text: area("Text"), value: plainText("Value"), url: plainText("URL"), icon: plainText("Icon"), attribution: plainText("Attribution"), role: plainText("Role"), image: mediaField("Image") },
+  arrayFields: { label: text("Label"), heading: richTextField("Heading"), text: area("Text"), value: text("Value"), url: plainText("URL"), icon: plainText("Icon"), attribution: text("Attribution"), role: text("Role"), image: mediaField("Image") },
   getItemSummary: (item) => item.heading || item.label || item.value || "Item",
 };
 
@@ -466,8 +468,8 @@ const bioHighlightsField = campaignItems("Highlights", { text: area("Highlight")
 const issueCardsAltField = campaignItems("Issue cards", { heading: richTextField("Heading"), icon: { type: "select", label: "Icon", options: campaignIconOptions }, text: area("Description"), image: mediaField("Background image"), url: plainText("Link URL") }, { heading: "Community priority", icon: "check", text: "Explain the practical outcome.", image: null, url: "" });
 const palmPointsField = campaignItems("Palm card points", { icon: { type: "select", label: "Icon", options: campaignIconOptions }, text: area("Point") }, { icon: "check", text: "Palm card point" });
 const palmContentField = campaignItems("Palm card points", { icon: { type: "select", label: "Icon", options: campaignIconOptions }, heading: richTextField("Heading"), text: area("Text") }, { icon: "check", heading: "Palm card point", text: "" });
-const testimonialsField = campaignItems("Testimonials", { text: area("Quote"), attribution: plainText("Attribution"), role: plainText("Role"), image: mediaField("Photo") }, { text: "This work is rooted in what our community needs.", attribution: "Community supporter", role: "Resident", image: null });
-const contactLinksField = campaignItems("Contact links", { label: plainText("Label"), value: plainText("Display value"), url: plainText("URL") }, { label: "Website", value: "example.org", url: "https://example.org" });
+const testimonialsField = campaignItems("Testimonials", { text: area("Quote"), attribution: text("Attribution"), role: text("Role"), image: mediaField("Photo") }, { text: "This work is rooted in what our community needs.", attribution: "Community supporter", role: "Resident", image: null });
+const contactLinksField = campaignItems("Contact links", { label: text("Label"), value: text("Display value"), url: plainText("URL") }, { label: "Website", value: "example.org", url: "https://example.org" });
 
 const campaignNestedField: Field<CampaignAltSlotItem[]> = {
   type: "array",
@@ -519,7 +521,7 @@ function BioSectionRender({ props }: { props: CampaignAltProps }) {
 }
 
 function IssuesCardsRender({ props }: { props: CampaignAltProps }) {
-  return <section className={`${styles.campaignAlt} ${styles.issuesCardsAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignSectionHeader centered={props.variant !== "editorialGrid"} props={props} /><div className={styles.issuesCardsAltGrid}>{props.items.map((item, index) => { const image = normalizeMedia(item.image); return <article data-featured={index === 0} key={`${item.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><CampaignIcon name={item.icon} /><RichCopy as="h3" value={item.heading} />{item.text ? <RichCopy value={item.text} /> : null}{item.url ? <a href={item.url}>Learn more</a> : null}</div></article>; })}</div></div></section>;
+  return <section className={`${styles.campaignAlt} ${styles.issuesCardsAlt}`} data-count={props.items.length} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignSectionHeader centered={props.variant !== "editorialGrid"} props={props} /><div className={styles.issuesCardsAltGrid}>{props.items.map((item, index) => { const image = normalizeMedia(item.image); return <article data-featured={index === 0} key={`${item.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><CampaignIcon name={item.icon} /><RichCopy as="h3" value={item.heading} />{item.text ? <RichCopy value={item.text} /> : null}{item.url ? <a href={item.url}>Learn more</a> : null}</div></article>; })}</div></div></section>;
 }
 
 function PalmCardPointsRender({ props }: { props: CampaignAltProps }) {
