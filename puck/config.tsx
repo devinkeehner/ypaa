@@ -23,6 +23,21 @@ import type { NECYPAAData } from "@/puck/types";
 
 import styles from "./puck.module.css";
 
+function summaryText(value: unknown): string {
+  if (typeof value === "string") return value.trim();
+  if (typeof value === "number") return String(value);
+  if (!value || typeof value !== "object") return "";
+  if (Array.isArray(value)) return value.map(summaryText).filter(Boolean).join(" ");
+
+  const record = value as Record<string, unknown>;
+  if (typeof record.text === "string") return record.text.trim();
+  return Object.values(record).map(summaryText).filter(Boolean).join(" ");
+}
+
+function itemSummary(fallback: string, ...values: unknown[]): string {
+  return values.map(summaryText).find(Boolean) || fallback;
+}
+
 type Base = { id?: string };
 type NestedSlot = (options?: { allow?: string[]; className?: string; minEmptyHeight?: number }) => ReactNode;
 type Hero = Base & {
@@ -292,7 +307,7 @@ const issueField: Field<Issue[]> = {
   label: "Features",
   defaultItemProps: { title: "", body: "", icon: "" },
   arrayFields: { title: richTextField("Title"), body: area("Description"), icon: plainText("Icon or short label") },
-  getItemSummary: (item) => item.title || "Issue",
+  getItemSummary: (item) => itemSummary("Issue", item.title),
 };
 
 export const nestedElementTypes = ["Image", "RichText", "FreeText", "Text", "Button", "Countdown", "ButtonRow", "Headline", "Divider", "BulletedList", "ImageCaption", "Video", "Embed", "FollowLinks", "InlineForm", "PayPal", "Navigation", ...campaignAltTypesByPalette.elements];
@@ -302,7 +317,7 @@ const issueCardsField: Field<IssueCard[]> = {
   label: "Feature cards",
   defaultItemProps: { label: "", heading: "", body: "", image: null, linkLabel: "", linkUrl: "" },
   arrayFields: { label: plainText("Editor label"), heading: richTextField("Heading"), body: area("Description"), image: mediaField("Card image"), linkLabel: plainText("Link label"), linkUrl: plainText("Link URL"), blocks: { type: "slot", allow: nestedElementTypes } },
-  getItemSummary: (item) => item.heading || item.label || "Issue card",
+  getItemSummary: (item) => itemSummary("Issue card", item.heading, item.label),
 };
 
 const statsField: Field<ResultStat[]> = {
@@ -447,7 +462,7 @@ const campaignItemsField: Field<CampaignAltItem[]> = {
   label: "Items",
   defaultItemProps: { label: "", heading: "New item", text: "Add details", value: "", url: "", icon: "check", attribution: "", role: "", image: null },
   arrayFields: { label: text("Label"), heading: richTextField("Heading"), text: area("Text"), value: text("Value"), url: plainText("URL"), icon: plainText("Icon"), attribution: text("Attribution"), role: text("Role"), image: mediaField("Image") },
-  getItemSummary: (item) => item.heading || item.label || item.value || "Item",
+  getItemSummary: (item) => itemSummary("Item", item.heading, item.label, item.value),
 };
 
 const campaignIconOptions = ["none", "check", "people", "family", "mapPin", "dollar", "shieldCheck", "landmark", "briefcase", "vote", "handshake", "megaphone", "calendar"].map((value) => ({ label: campaignOptionLabel(value), value }));
@@ -460,7 +475,7 @@ function campaignItems(label: string, fields: CampaignItemArrayField["arrayField
     label,
     defaultItemProps: defaults,
     arrayFields: fields,
-    getItemSummary: (item) => item.heading || item.attribution || item.label || item.text || label.replace(/s$/, ""),
+    getItemSummary: (item) => itemSummary(label.replace(/s$/, ""), item.heading, item.attribution, item.label, item.text),
   };
 }
 
@@ -476,7 +491,7 @@ const campaignNestedField: Field<CampaignAltSlotItem[]> = {
   label: "Nested content",
   defaultItemProps: { label: "", heading: "New item", text: "Add details", image: null },
   arrayFields: { label: plainText("Editor label"), heading: richTextField("Heading"), text: area("Text"), image: mediaField("Image"), blocks: { type: "slot", allow: nestedElementTypes } },
-  getItemSummary: (item) => item.heading || item.label || "Item",
+  getItemSummary: (item) => itemSummary("Item", item.heading, item.label),
 };
 
 function campaignOptionLabel(value: string) {
