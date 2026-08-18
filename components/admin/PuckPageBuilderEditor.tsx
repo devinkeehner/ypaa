@@ -153,6 +153,24 @@ function BuilderHeader({ children, pageId, pageTitle }: { children: React.ReactN
   return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerControls}>{children}</div></div><FormattingBar /></header>;
 }
 
+function richTextEditorField(field: Record<string, unknown>) {
+  return {
+    ...field,
+    type: "custom",
+    render: ({ value, onChange, readOnly }: { value: unknown; onChange: (value: unknown) => void; readOnly?: boolean }) => <PuckLexicalTextEditor value={value} onChange={onChange} readOnly={readOnly} />,
+  };
+}
+
+function enhanceRichTextFields(field: unknown): unknown {
+  if (!field || typeof field !== "object" || Array.isArray(field)) return field;
+  const record = field as Record<string, unknown>;
+  if (record.type === "custom" && (record.richText === true || record.label === "Rich text")) return richTextEditorField(record);
+  if (record.type === "array" && record.arrayFields && typeof record.arrayFields === "object") {
+    return { ...record, arrayFields: Object.fromEntries(Object.entries(record.arrayFields as Record<string, unknown>).map(([key, value]) => [key, enhanceRichTextFields(value)])) };
+  }
+  return record;
+}
+
 type SelectedLocation = { index: number; zone?: string } | null;
 type ClipboardState = { data: Data; ui: { itemSelector?: SelectedLocation } };
 type ClipboardDispatch = (action: { type: "setData"; data: Partial<Data> }) => void;
@@ -406,10 +424,17 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
   ], [pageSlug, tenantId, tenantTheme]);
   const editorConfig = useMemo(() => {
     const richText = puckConfig.components.RichText;
+    const inlineRichTextTypes = ["InlineRichTextAlt", "TextElementAlt"] as const;
+    const inlineRichTextComponents = Object.fromEntries(inlineRichTextTypes.map((type) => {
+      const component = puckConfig.components[type];
+      return [type, { ...component, fields: { ...component.fields, body: { type: "custom", label: "Rich text", render: ({ value, onChange, readOnly }: { value: unknown; onChange: (value: unknown) => void; readOnly?: boolean }) => <PuckLexicalTextEditor value={value} onChange={onChange} readOnly={readOnly} /> } } }];
+    }));
+    const richComponents = Object.fromEntries(Object.entries(puckConfig.components).map(([type, component]) => [type, { ...component, fields: Object.fromEntries(Object.entries(component.fields || {}).map(([fieldName, field]) => [fieldName, enhanceRichTextFields(field)])) }]));
     return {
       ...puckConfig,
       components: {
-        ...puckConfig.components,
+        ...richComponents,
+        ...inlineRichTextComponents,
         RichText: {
           ...richText,
           fields: {

@@ -12,8 +12,10 @@ import {
   type EditorState,
   type ElementFormatType,
   FORMAT_TEXT_COMMAND,
+  REDO_COMMAND,
   type LexicalNode,
   type TextFormatType,
+  UNDO_COMMAND,
 } from "@payloadcms/richtext-lexical/lexical";
 import {
   INSERT_ORDERED_LIST_COMMAND,
@@ -37,7 +39,7 @@ import { HistoryPlugin } from "@payloadcms/richtext-lexical/lexical/react/Lexica
 import { ListPlugin } from "@payloadcms/richtext-lexical/lexical/react/LexicalListPlugin";
 import { OnChangePlugin } from "@payloadcms/richtext-lexical/lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@payloadcms/richtext-lexical/lexical/react/LexicalRichTextPlugin";
-import { AlignCenter, AlignLeft, AlignRight, Bold, Code2, Heading, Italic, Link2, List, ListOrdered, Palette, Quote, Strikethrough, Underline } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, Bold, Code2, Eraser, Heading, Italic, Link2, List, ListOrdered, Palette, Quote, Redo2, Strikethrough, Underline, Undo2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
 
 import { normalizeLexicalValue } from "@/puck/lexical-value";
@@ -149,6 +151,14 @@ function Toolbar({ readOnly }: { readOnly?: boolean }) {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) $patchStyleText(selection, { color: value || null });
   });
+  const clearFormatting = () => editor.update(() => {
+    const selection = $getSelection();
+    if (!$isRangeSelection(selection)) return;
+    selection.getNodes().forEach((node) => {
+      if ("setFormat" in node && typeof node.setFormat === "function") (node as unknown as { setFormat: (format: number) => void }).setFormat(0);
+      if ("setStyle" in node && typeof node.setStyle === "function") (node as unknown as { setStyle: (style: string) => void }).setStyle("");
+    });
+  });
   const setLink = () => {
     const url = window.prompt("Link URL");
     if (url === null) return;
@@ -157,8 +167,9 @@ function Toolbar({ readOnly }: { readOnly?: boolean }) {
 
   return (
     <div className={styles.toolbar} aria-label="Rich text formatting">
-      <label className={styles.toolbarSelect}><Heading /><select aria-label="Text style" disabled={readOnly} onChange={(event) => block(event.target.value as "paragraph" | HeadingTagType)} value={["paragraph", "h2", "h3", "h4", "quote"].includes(active.block) ? active.block : "paragraph"}>
+      <label className={styles.toolbarSelect}><Heading /><select aria-label="Text style" disabled={readOnly} onChange={(event) => block(event.target.value as "paragraph" | HeadingTagType)} value={["paragraph", "h1", "h2", "h3", "h4", "quote"].includes(active.block) ? active.block : "paragraph"}>
         <option value="paragraph">Paragraph</option>
+        <option value="h1">Heading 1</option>
         <option value="h2">Heading 2</option>
         <option value="h3">Heading 3</option>
         <option value="h4">Heading 4</option>
@@ -173,11 +184,15 @@ function Toolbar({ readOnly }: { readOnly?: boolean }) {
       <ToolbarButton active={active.block === "number"} disabled={readOnly} label="Numbered list" onClick={() => editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined)}><ListOrdered /></ToolbarButton>
       <ToolbarButton active={active.block === "quote"} disabled={readOnly} label="Quote" onClick={() => block("quote")}><Quote /></ToolbarButton>
       <ToolbarButton disabled={readOnly} label="Add or remove link" onClick={setLink}><Link2 /></ToolbarButton>
+      <ToolbarButton disabled={readOnly} label="Clear formatting" onClick={clearFormatting}><Eraser /></ToolbarButton>
       <span className={styles.toolbarDivider} />
       <ToolbarButton active={active.alignment === "left"} disabled={readOnly} label="Align left" onClick={() => alignment("left")}><AlignLeft /></ToolbarButton>
       <ToolbarButton active={active.alignment === "center"} disabled={readOnly} label="Align center" onClick={() => alignment("center")}><AlignCenter /></ToolbarButton>
       <ToolbarButton active={active.alignment === "right"} disabled={readOnly} label="Align right" onClick={() => alignment("right")}><AlignRight /></ToolbarButton>
       <label className={styles.colorPicker} title="Text color"><Palette /><input aria-label="Text color" disabled={readOnly} onChange={(event) => color(event.target.value)} type="color" value={/^#[0-9a-f]{6}$/i.test(active.color) ? active.color : "#171b20"} /></label>
+      <span className={styles.toolbarDivider} />
+      <ToolbarButton disabled={readOnly} label="Undo" onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}><Undo2 /></ToolbarButton>
+      <ToolbarButton disabled={readOnly} label="Redo" onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}><Redo2 /></ToolbarButton>
     </div>
   );
 }
