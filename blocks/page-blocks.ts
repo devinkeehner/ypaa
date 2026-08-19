@@ -367,6 +367,7 @@ const campaignItemFields: Field[] = [
   { name: "heading", type: "text" },
   { name: "text", type: "textarea" },
   { name: "value", type: "text" },
+  { name: "linkLabel", type: "text" },
   { name: "url", type: "text" },
   { name: "icon", type: "text" },
   { name: "attribution", type: "text" },
@@ -600,7 +601,7 @@ export const ContentRowBlock: Block = {
   ],
 };
 
-export const PAGE_LAYOUT_BLOCKS: Block[] = [
+const pageLayoutBlocks: Block[] = [
   HeroCountdownBlock,
   AboutBlock,
   MeetingInfoBlock,
@@ -638,3 +639,55 @@ export const PAGE_LAYOUT_BLOCKS: Block[] = [
   PayPalBlock,
   ...CAMPAIGN_ALT_BLOCKS,
 ];
+
+type RichTextReadyField = Record<string, unknown> & {
+  blocks?: Block[];
+  fields?: RichTextReadyField[];
+  tabs?: Array<Record<string, unknown> & { fields?: RichTextReadyField[] }>;
+};
+
+const puckRichTextStorageField: RichTextReadyField = {
+  name: "puckRichText",
+  type: "json",
+  admin: { hidden: true },
+};
+
+function withPuckRichTextStorage(fields: RichTextReadyField[]) {
+  return fields.some((field) => field.name === "puckRichText")
+    ? fields
+    : [...fields, { ...puckRichTextStorageField }];
+}
+
+function makePuckRichTextFieldReady(field: unknown): unknown {
+  if (!field || typeof field !== "object" || Array.isArray(field)) return field;
+  const next = { ...(field as RichTextReadyField) };
+
+  if (Array.isArray(next.fields)) {
+    const children = next.fields.map(makePuckRichTextFieldReady) as RichTextReadyField[];
+    next.fields = next.type === "array" || next.type === "group"
+      ? withPuckRichTextStorage(children)
+      : children;
+  }
+
+  if (Array.isArray(next.tabs)) {
+    next.tabs = next.tabs.map((tab) => ({
+      ...tab,
+      fields: Array.isArray(tab.fields)
+        ? tab.fields.map(makePuckRichTextFieldReady) as RichTextReadyField[]
+        : tab.fields,
+    }));
+  }
+
+  if (Array.isArray(next.blocks)) {
+    next.blocks = next.blocks.map(makePuckRichTextReady);
+  }
+
+  return next;
+}
+
+function makePuckRichTextReady(block: Block): Block {
+  const fields = block.fields.map(makePuckRichTextFieldReady) as RichTextReadyField[];
+  return { ...block, fields: withPuckRichTextStorage(fields) as Block["fields"] };
+}
+
+export const PAGE_LAYOUT_BLOCKS: Block[] = pageLayoutBlocks.map(makePuckRichTextReady);

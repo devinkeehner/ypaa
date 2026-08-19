@@ -40,3 +40,14 @@ test("invalid editor-transformed and empty values are safe", () => {
   assert.deepEqual(normalizePastEvents(null), []);
   assert.deepEqual(normalizeMeetings(undefined), []);
 });
+
+test("preserves only the hidden rich-text map on structured rows", () => {
+  const puckRichText = {
+    date: { enabled: true, value: { root: { children: [] } } },
+  };
+
+  assert.deepEqual(
+    normalizeImportantDates([{ date: "Aug 16", label: "Business meeting", id: "row-1", puckRichText }]),
+    [{ date: "Aug 16", label: "Business meeting", puckRichText }],
+  );
+});

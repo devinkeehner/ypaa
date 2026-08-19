@@ -26,6 +26,13 @@ function text(record, keys) {
   return "";
 }
 
+function richTextStorage(record) {
+  const value = record?.puckRichText;
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? { puckRichText: value }
+    : {};
+}
+
 /** @param {unknown} value */
 export function normalizeImportantDates(value) {
   return lines(value)
@@ -36,6 +43,7 @@ export function normalizeImportantDates(value) {
       }
       if (!item || typeof item !== "object" || Array.isArray(item)) return null;
       return {
+        ...richTextStorage(item),
         date: text(item, ["date", "when"]),
         label: text(item, ["label", "title", "name", "details", "value"]),
       };
@@ -53,6 +61,7 @@ export function normalizePastEvents(value) {
       }
       if (!item || typeof item !== "object" || Array.isArray(item)) return null;
       return {
+        ...richTextStorage(item),
         title: text(item, ["title", "name", "label", "value"]),
         date: text(item, ["date", "when"]),
         image:
@@ -79,7 +88,7 @@ export function normalizeMeetings(value) {
       };
       const date = text(item, ["date", "when"]);
       const url = text(item, ["url", "href", "link"]);
-      return { ...meeting, ...(date ? { date } : {}), ...(url ? { url } : {}) };
+      return { ...richTextStorage(item), ...meeting, ...(date ? { date } : {}), ...(url ? { url } : {}) };
     })
     .filter((item) => item && (item.name || item.location));
 }
@@ -94,6 +103,7 @@ export function normalizeUpcomingEvents(value) {
       }
       if (!item || typeof item !== "object" || Array.isArray(item)) return null;
       return {
+        ...richTextStorage(item),
         title: text(item, ["title", "name", "label", "value"]),
         date: text(item, ["date", "when"]),
       };
@@ -107,6 +117,7 @@ export function normalizeScheduleMeetings(value) {
     .map((item) => {
       if (!item || typeof item !== "object" || Array.isArray(item)) return null;
       return {
+        ...richTextStorage(item),
         day: text(item, ["day", "date"]),
         time: text(item, ["time"]),
         name: text(item, ["name", "title", "label"]),

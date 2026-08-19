@@ -910,6 +910,14 @@
 .richInline { display: block; }
 .richInline :is(h1, h2, h3, h4, p, ul, ol, blockquote) { margin-block: .35em; }
 .richInline :is(ul, ol) { padding-inline-start: 1.35em; }
+.dates li [data-rich-as="strong"] { color: var(--cream); font: 500 1.38rem/1.1 Georgia, "Times New Roman", serif; }
+.futureEvents li [data-rich-as="strong"] { color: var(--cream); font: 500 1.15rem/1.3 Georgia, "Times New Roman", serif; }
+.futureEvents li [data-rich-as="time"] { color: var(--cream-muted); font: 700 .72rem/1.3 var(--font-geist-mono), monospace; text-align: right; }
+.archive [data-rich-as="small"] { color: var(--ember-bright); font: 700 .67rem/1.4 var(--font-geist-mono), monospace; letter-spacing: .04em; }
+.archive [data-rich-as="strong"] { font: 500 1.15rem/1.2 Georgia, "Times New Roman", serif; margin-top: 5px; }
+.resultsStats article [data-rich-as="strong"] { font: 500 clamp(3.4rem, 7vw, 6.4rem)/.9 Georgia, serif; }
+.resultsStats article [data-rich-as="span"] { font: 800 .72rem/1.4 var(--font-geist-mono), monospace; letter-spacing: .1em; margin-top: 16px; text-transform: uppercase; }
+.supporterLogos [data-rich-as="strong"] { font: 750 .71rem/1.4 var(--font-geist-mono), monospace; letter-spacing: .06em; text-transform: uppercase; }
 .nestedDropZone > span { color: #71695e; display: block; font: 800 .64rem/1.3 var(--font-geist-mono), monospace; letter-spacing: .08em; margin: 0 0 8px; text-transform: uppercase; }
 .nestedDropZone :global(.Puck-DropZone) { border: 1px dashed color-mix(in srgb, var(--ember), transparent 35%); min-height: 96px; padding: 12px; }
 

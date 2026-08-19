@@ -1,5 +1,10 @@
 .field { display: grid; gap: 0; overflow: hidden; border: 1px solid #d6dbe1; border-radius: 8px; background: #fff; color: #171b20; }
+.field[data-surface="canvas"] { display: block; min-width: 1ch; overflow: visible; border: 0; border-radius: 3px; background: transparent; color: inherit; }
+.field[data-surface="canvas"]:focus-within { outline: 2px solid #2e8b84; outline-offset: 3px; }
 .toolbar { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid #d6dbe1; padding: 7px; background: #f4f6f8; }
+.canvasToolbar { align-items: center; display: flex; gap: 8px; min-width: 0; width: 100%; }
+.canvasToolbarLabel { flex: 0 0 auto; color: #625e58; font-size: 11px; font-weight: 800; letter-spacing: .04em; max-width: 150px; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+.canvasToolbar .toolbar { flex: 1 1 auto; flex-wrap: nowrap; min-width: 0; overflow-x: auto; border: 0; padding: 0; background: transparent; }
 .toolbar button, .toolbar select { min-height: 32px; border: 1px solid #cbd1d8; border-radius: 5px; background: #fff; color: #171b20; }
 .toolbar button { display: inline-grid; width: 32px; place-items: center; padding: 0; }
 .toolbar button[data-active="true"] { background: #171b20; border-color: #171b20; color: #fff; }
@@ -16,10 +21,15 @@
 .colorPicker { border: 1px solid #cbd1d8; border-radius: 5px; height: 32px; padding: 0 5px; }
 .colorPicker input { border: 0; cursor: pointer; height: 22px; padding: 0; width: 22px; }
 .editor { position: relative; min-height: 180px; }
+.field[data-surface="canvas"] .editor, .field[data-surface="canvas"] .content { min-height: 1em; }
+.field[data-surface="canvas"] .content { padding: 0; color: inherit; font: inherit; line-height: inherit; }
+.field[data-surface="canvas"] .placeholder { top: 0; left: 0; color: currentColor; opacity: .5; }
+:where(.field[data-surface="canvas"] .paragraph, .field[data-surface="canvas"] .h1, .field[data-surface="canvas"] .h2, .field[data-surface="canvas"] .h3, .field[data-surface="canvas"] .h4, .field[data-surface="canvas"] .quote) { color: inherit; font: inherit; margin: 0; }
 .content { min-height: 180px; padding: 14px; outline: none; font-size: 14px; line-height: 1.6; }
 .placeholder { position: absolute; top: 14px; left: 14px; color: #7a838e; pointer-events: none; }
 .paragraph { margin: 0 0 .8em; }
-.h2, .h3, .h4 { margin: .9em 0 .4em; line-height: 1.15; }
+.h1, .h2, .h3, .h4 { margin: .9em 0 .4em; line-height: 1.15; }
+.h1 { font-size: 2rem; }
 .h2 { font-size: 1.6rem; }
 .h3 { font-size: 1.35rem; }
 .h4 { font-size: 1.1rem; }

@@ -2,12 +2,13 @@
 
 import "@puckeditor/core/puck.css";
 
-import { createUsePuck, Drawer, fieldsPlugin, Puck, type Config, type Data, type Plugin } from "@puckeditor/core";
-import { AlignCenter, AlignLeft, AlignRight, ArrowLeft, BarChart3, Bold, Box, Clipboard, ClipboardPaste, Columns2, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, MousePointerClick, Palette, Quote, Save, Search, TextQuote, Type } from "lucide-react";
+import { createUsePuck, Drawer, fieldsPlugin, Puck, registerOverlayPortal, type Config, type Data, type Plugin } from "@puckeditor/core";
+import { ArrowLeft, BarChart3, Box, Clipboard, ClipboardPaste, Columns2, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, MousePointerClick, Palette, Quote, Save, Search, TextQuote, Type } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
-import { editableFieldsByType, nestedElementTypes, puckConfig } from "@/puck/config";
+import { nestedElementTypes, puckConfig } from "@/puck/config";
 import { campaignAltDefinitions, campaignAltTypesByPalette } from "@/puck/campaign-alt-definitions";
+import { emptyLexicalValue, getPlainTextFromLexical, isLexicalValue, type LexicalBlockType } from "@/puck/lexical-value";
 import type { NECYPAAData } from "@/puck/types";
 import type { TenantTheme } from "@/components/site/TenantThemeProvider";
 
@@ -15,7 +16,7 @@ import { PuckLexicalTextEditor } from "./PuckLexicalTextEditor";
 import styles from "./puck-builder.module.css";
 
 const usePuck = createUsePuck();
-const EMPTY_FIELDS: string[] = [];
+const PUCK_RICH_TEXT_FIELD_NAME = "puckRichText";
 type ThemeColors = Omit<TenantTheme, "logoAlt" | "logoUrl">;
 const THEME_FIELDS: Array<{ key: keyof ThemeColors; label: string }> = [
   { key: "primary", label: "Primary" },
@@ -56,64 +57,134 @@ function colorPickerValue(value: string) {
   return HEX_COLOR.test(value) ? value : "#000000";
 }
 
-function property(type: string, field: string, kind: "Color" | "FontSize" | "FontWeight" | "TextAlign") {
-  if ((type === "FreeText" && field === "text") || (type === "RichText" && field === "content")) {
-    return kind === "Color" ? "color" : kind === "FontSize" ? "fontSize" : kind === "FontWeight" ? "fontWeight" : "alignment";
-  }
-  return `${field}${kind}`;
+type PathSegment = number | string;
+type RichField = Record<string, unknown> & { arrayFields?: Record<string, unknown>; richTextDefault?: string };
+
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }
 
-function FormattingBar() {
+function getValueAtPath(value: unknown, path: PathSegment[]) {
+  return path.reduce<unknown>((current, segment) => {
+    if (Array.isArray(current)) return typeof segment === "number" ? current[segment] : undefined;
+    return isPlainRecord(current) ? current[segment] : undefined;
+  }, value);
+}
+
+function setValueAtPath<T extends Record<string, unknown>>(value: T, path: PathSegment[], nextValue: unknown): T {
+  const root = { ...value } as T;
+  let current: Record<string, unknown> | unknown[] = root;
+  path.forEach((segment, index) => {
+    const last = index === path.length - 1;
+    const nextSegment = path[index + 1];
+    if (Array.isArray(current)) {
+      if (typeof segment !== "number") return;
+      if (last) current[segment] = nextValue;
+      else {
+        const child = Array.isArray(current[segment]) ? [...current[segment] as unknown[]] : isPlainRecord(current[segment]) ? { ...current[segment] } : typeof nextSegment === "number" ? [] : {};
+        current[segment] = child;
+        current = child;
+      }
+      return;
+    }
+    if (last) current[segment] = nextValue;
+    else {
+      const child = Array.isArray(current[segment]) ? [...current[segment] as unknown[]] : isPlainRecord(current[segment]) ? { ...current[segment] } : typeof nextSegment === "number" ? [] : {};
+      current[segment] = child;
+      current = child;
+    }
+  });
+  return root;
+}
+
+function humanFieldLabel(name: string) {
+  return name.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/[_-]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function defaultRichTextBlockType(componentType: string, fieldName: string, path: PathSegment[]): LexicalBlockType {
+  const name = fieldName.toLowerCase();
+  if (["HeroCountdown", "HeroAlt"].includes(componentType) && name === "heading") return "h1";
+  if (componentType === "QuoteBlock" && name === "heading") return "paragraph";
+  if (componentType === "Headline" && name === "text") return "h2";
+  if (name === "quote") return "quote";
+  if (name === "value" && componentType === "ResultsStats") return "h3";
+  if (path.some((segment) => typeof segment === "number") && (name.includes("heading") || name.includes("headline") || name === "title" || name.endsWith("title"))) return "h3";
+  if (name === "advisoryheading" || name.endsWith("title")) return "h3";
+  if (name.includes("heading") || name.includes("headline") || name === "title") return "h2";
+  return "paragraph";
+}
+
+function CanvasRichTextEditor({ defaultBlockType, label, onChange, value }: { defaultBlockType: LexicalBlockType; label: string; onChange: (value: unknown) => void; value: unknown }) {
+  const portalRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!portalRef.current) return;
+    return registerOverlayPortal(portalRef.current, { disableDrag: true });
+  }, []);
+  return <div className={styles.canvasRichText} data-puck-overlay-portal="true" data-puck-rich-text-editor="true" onClick={(event) => event.stopPropagation()} onDragStart={(event) => event.preventDefault()} onPointerDown={(event) => event.stopPropagation()} ref={portalRef}><PuckLexicalTextEditor defaultBlockType={defaultBlockType} onChange={onChange} surface="canvas" toolbarLabel={label} toolbarMode="global" value={value} /></div>;
+}
+
+function CanvasRichTextBlock({ componentType, fields, RenderComponent, props }: { componentType: string; fields: Record<string, unknown>; RenderComponent: React.ComponentType<Record<string, unknown>>; props: Record<string, unknown> }) {
   const dispatch = usePuck((state) => state.dispatch);
   const getItemById = usePuck((state) => state.getItemById);
   const getSelectorForId = usePuck((state) => state.getSelectorForId);
-  const selectedItem = usePuck((state) => state.selectedItem) as { props?: Record<string, unknown>; type?: string } | null;
-  const [focus, setFocus] = useState({ componentId: "", field: "" });
-  const itemType = selectedItem?.type || "";
-  const componentId = typeof selectedItem?.props?.id === "string" ? selectedItem.props.id : "";
-  const fields = editableFieldsByType[itemType as keyof typeof editableFieldsByType] || EMPTY_FIELDS;
-  const activeField = focus.componentId === componentId && fields.includes(focus.field) ? focus.field : fields[0] || "";
+  const componentId = typeof props.id === "string" ? props.id : "";
 
-  useEffect(() => {
-    const receive = (event: MessageEvent) => {
-      const message = event.data as { type?: string; componentId?: string; field?: string };
-      if (event.origin === window.location.origin && message.type === "necypaa:puck-text-focus" && message.componentId === componentId && message.field && fields.includes(message.field)) setFocus({ componentId, field: message.field });
-    };
-    window.addEventListener("message", receive);
-    return () => window.removeEventListener("message", receive);
-  }, [componentId, fields]);
-
-  const update = useCallback((name: string, value: unknown) => {
+  const updateRichText = useCallback((containerPath: PathSegment[], fieldName: string, nextValue: unknown) => {
     if (!componentId) return;
-    const current = getItemById(componentId);
+    const item = getItemById(componentId);
     const selector = getSelectorForId(componentId);
-    if (!current || !selector) return;
-    dispatch({ type: "replace", data: { ...current, props: { ...current.props, id: componentId, [name]: value } }, destinationIndex: selector.index, destinationZone: selector.zone, ui: { field: { focus: activeField }, itemSelector: selector, leftSideBarVisible: true, rightSideBarVisible: false } });
-  }, [activeField, componentId, dispatch, getItemById, getSelectorForId]);
+    if (!item || !selector) return;
+    const itemProps = item.props as Record<string, unknown>;
+    const plainPath = [...containerPath, fieldName];
+    const currentPlain = getValueAtPath(itemProps, plainPath);
+    const storedValue = isLexicalValue(currentPlain) ? nextValue : getPlainTextFromLexical(nextValue);
+    const entryPath = [...containerPath, PUCK_RICH_TEXT_FIELD_NAME, fieldName];
+    let nextProps = setValueAtPath(itemProps, plainPath, storedValue);
+    nextProps = setValueAtPath(nextProps, entryPath, { enabled: true, value: nextValue });
+    dispatch({ type: "replace", data: { ...item, props: { ...nextProps, id: componentId } }, destinationIndex: selector.index, destinationZone: selector.zone, ui: { itemSelector: selector, leftSideBarVisible: true, rightSideBarVisible: false } });
+  }, [componentId, dispatch, getItemById, getSelectorForId]);
 
-  if (!selectedItem || !activeField) return <div className={styles.formatEmpty}>Select a section, then click its text to format it.</div>;
-  const props = selectedItem.props || {};
-  const sizeName = property(itemType, activeField, "FontSize");
-  const colorName = property(itemType, activeField, "Color");
-  const weightName = property(itemType, activeField, "FontWeight");
-  const alignName = property(itemType, activeField, "TextAlign");
-  const size = typeof props[sizeName] === "string" ? props[sizeName] : "";
-  const color = typeof props[colorName] === "string" && /^#[0-9a-f]{6}$/i.test(props[colorName] as string) ? props[colorName] as string : "#171b20";
-  const weight = String(props[weightName] || "400");
-  const align = String(props[alignName] || "left");
+  const previewProps = useMemo(() => {
+    const visit = (container: unknown, fieldMap: Record<string, unknown>, path: PathSegment[]): unknown => {
+      if (!isPlainRecord(container)) return container;
+      let next: Record<string, unknown> | null = null;
+      const mutable = () => (next ??= { ...container });
 
-  const activeValue = props[activeField];
+      Object.entries(fieldMap).forEach(([fieldName, rawField]) => {
+        if (!isPlainRecord(rawField)) return;
+        const field = rawField as RichField;
+        if (field.type === "custom" && (field.richText === true || field.label === "Rich text")) {
+          const richMap = isPlainRecord(container[PUCK_RICH_TEXT_FIELD_NAME]) ? container[PUCK_RICH_TEXT_FIELD_NAME] as Record<string, unknown> : {};
+          const storedEntry = richMap[fieldName];
+          const entry = isLexicalValue(storedEntry)
+            ? { enabled: true, value: storedEntry }
+            : isPlainRecord(storedEntry)
+              ? storedEntry
+              : {};
+          const plainValue = container[fieldName];
+          const blockType = defaultRichTextBlockType(componentType, fieldName, path);
+          const fallbackText = typeof plainValue === "string" || typeof plainValue === "number" ? String(plainValue) : field.richTextDefault || "";
+          const editorValue = isLexicalValue(entry.value) ? entry.value : isLexicalValue(plainValue) ? plainValue : emptyLexicalValue(fallbackText, blockType);
+          mutable()[PUCK_RICH_TEXT_FIELD_NAME] = {
+            ...richMap,
+            [fieldName]: {
+              ...entry,
+              enabled: true,
+              value: <CanvasRichTextEditor defaultBlockType={blockType} label={typeof field.label === "string" ? field.label : humanFieldLabel(fieldName)} onChange={(value) => updateRichText(path, fieldName, value)} value={editorValue} />,
+            },
+          };
+        } else if (field.type === "array" && isPlainRecord(field.arrayFields) && Array.isArray(container[fieldName])) {
+          const source = container[fieldName] as unknown[];
+          const items = source.map((item, index) => visit(item, field.arrayFields as Record<string, unknown>, [...path, fieldName, index]));
+          if (items.some((item, index) => item !== source[index])) mutable()[fieldName] = items;
+        }
+      });
+      return next ?? container;
+    };
+    return visit(props, fields, []) as Record<string, unknown>;
+  }, [componentType, fields, props, updateRichText]);
 
-  return <div className={styles.formatBar} aria-label="Selected text formatting">
-    <label><span>Text</span><select value={activeField} onChange={(event) => setFocus({ componentId, field: event.target.value })}>{fields.map((field) => <option key={field} value={field}>{field.replace(/([A-Z])/g, " $1")}</option>)}</select></label>
-    {typeof activeValue === "string"
-      ? <input className={styles.copyInput} aria-label="Text content" value={activeValue} onChange={(event) => update(activeField, event.target.value)} />
-      : <span className={styles.richHint}>Edit the copy in the rich-text panel; style the whole block here.</span>}
-    <label><span>Size</span><input aria-label="Font size in pixels" min="10" max="120" placeholder="px" type="number" value={size.endsWith("px") ? size.slice(0, -2) : ""} onChange={(event) => update(sizeName, event.target.value ? `${event.target.value}px` : "")} /></label>
-    <label><span>Color</span><input aria-label="Text color" type="color" value={color} onChange={(event) => update(colorName, event.target.value)} /></label>
-    <button aria-label="Bold" aria-pressed={weight === "700"} onClick={() => update(weightName, weight === "700" ? "400" : "700")} type="button"><Bold /></button>
-    <div className={styles.align}><button aria-label="Align left" aria-pressed={align === "left"} onClick={() => update(alignName, "left")} type="button"><AlignLeft /></button><button aria-label="Align center" aria-pressed={align === "center"} onClick={() => update(alignName, "center")} type="button"><AlignCenter /></button><button aria-label="Align right" aria-pressed={align === "right"} onClick={() => update(alignName, "right")} type="button"><AlignRight /></button></div>
-  </div>;
+  return <RenderComponent {...previewProps} />;
 }
 
 function ThemePanel({ initialTheme, initialTenantId, onPreviewTheme }: { initialTheme: TenantTheme; initialTenantId?: string; onPreviewTheme: (colors: ThemeColors) => void }) {
@@ -150,14 +221,15 @@ function ThemePanel({ initialTheme, initialTenantId, onPreviewTheme }: { initial
 }
 
 function BuilderHeader({ children, pageId, pageTitle }: { children: React.ReactNode; pageId: string; pageTitle: string }) {
-  return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerControls}>{children}</div></div><FormattingBar /></header>;
+  return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerControls}>{children}</div></div><div className={styles.richToolbarRow}><span className={styles.richToolbarHint}>Click any text in the preview to edit and format it.</span><div className={styles.richToolbarHost} id="necypaa-puck-rich-toolbar" /></div></header>;
 }
 
 function richTextEditorField(field: Record<string, unknown>) {
   return {
     ...field,
     type: "custom",
-    render: ({ value, onChange, readOnly }: { value: unknown; onChange: (value: unknown) => void; readOnly?: boolean }) => <PuckLexicalTextEditor value={value} onChange={onChange} readOnly={readOnly} />,
+    contentEditable: false,
+    render: () => <div className={styles.richTextFieldHint}>Edit this text directly in the preview. Its formatting controls will appear at the top of Puck.</div>,
   };
 }
 
@@ -423,30 +495,18 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
     ...(pageSlug === "home" ? [{ name: "theme", label: "Theme", icon: <Palette />, render: () => <ThemePanel initialTenantId={tenantId} initialTheme={tenantTheme} onPreviewTheme={setPreviewTheme} /> }] : []),
   ], [pageSlug, tenantId, tenantTheme]);
   const editorConfig = useMemo(() => {
-    const richText = puckConfig.components.RichText;
-    const inlineRichTextTypes = ["InlineRichTextAlt", "TextElementAlt"] as const;
-    const inlineRichTextComponents = Object.fromEntries(inlineRichTextTypes.map((type) => {
-      const component = puckConfig.components[type];
-      return [type, { ...component, fields: { ...component.fields, body: { type: "custom", label: "Rich text", render: ({ value, onChange, readOnly }: { value: unknown; onChange: (value: unknown) => void; readOnly?: boolean }) => <PuckLexicalTextEditor value={value} onChange={onChange} readOnly={readOnly} /> } } }];
+    const richComponents = Object.fromEntries(Object.entries(puckConfig.components).map(([type, component]) => {
+      const fields = Object.fromEntries(Object.entries(component.fields || {}).map(([fieldName, field]) => [fieldName, enhanceRichTextFields(field)]));
+      const RenderComponent = component.render as unknown as React.ComponentType<Record<string, unknown>>;
+      return [type, {
+        ...component,
+        fields,
+        render: (props: Record<string, unknown>) => <CanvasRichTextBlock componentType={type} fields={fields} RenderComponent={RenderComponent} props={props} />,
+      }];
     }));
-    const richComponents = Object.fromEntries(Object.entries(puckConfig.components).map(([type, component]) => [type, { ...component, fields: Object.fromEntries(Object.entries(component.fields || {}).map(([fieldName, field]) => [fieldName, enhanceRichTextFields(field)])) }]));
     return {
       ...puckConfig,
-      components: {
-        ...richComponents,
-        ...inlineRichTextComponents,
-        RichText: {
-          ...richText,
-          fields: {
-            ...richText.fields,
-            content: {
-              type: "custom",
-              label: "Rich text",
-              render: ({ value, onChange, readOnly }: { value: unknown; onChange: (value: unknown) => void; readOnly?: boolean }) => <PuckLexicalTextEditor value={value} onChange={onChange} readOnly={readOnly} />,
-            },
-          },
-        },
-      },
+      components: richComponents,
     };
   }, []);
   return <ThemePreviewContext.Provider value={previewTheme}><div className={styles.wrapper}><Puck config={editorConfig as unknown as Config} data={data} height="100dvh" onChange={(next) => setData(next as NECYPAAData)} onPublish={(next) => save(next, true)} overrides={overrides} permissions={{ delete: true, drag: true, duplicate: true, edit: true, insert: true }} plugins={plugins} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></ThemePreviewContext.Provider>;

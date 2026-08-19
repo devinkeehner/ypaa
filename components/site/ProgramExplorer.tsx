@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Accessibility, CalendarDays, Clock3, Grid3X3, List, Map, MapPin, Search, X } from "lucide-react";
 
 import type { ProgramData, ProgramRoom, ProgramSession } from "./program-types";
@@ -103,7 +103,7 @@ function VenueMapView({ data }: { data: ProgramData }) {
   );
 }
 
-export function ProgramExplorer({ initialData, heading = "Your weekend, mapped out", introduction = "Search the convention program, compare rooms, and open any session for details.", embedded = false }: { initialData?: ProgramData; heading?: string; introduction?: string; embedded?: boolean }) {
+export function ProgramExplorer({ initialData, heading = "Your weekend, mapped out", introduction = "Search the convention program, compare rooms, and open any session for details.", embedded = false }: { initialData?: ProgramData; heading?: ReactNode; introduction?: ReactNode; embedded?: boolean }) {
   const [data, setData] = useState(initialData || EMPTY_DATA);
   const [loading, setLoading] = useState(!initialData);
   const [search, setSearch] = useState("");
@@ -146,10 +146,10 @@ export function ProgramExplorer({ initialData, heading = "Your weekend, mapped o
 
   return (
     <div className={embedded ? "program-embed" : "program-page"}>
-      {!embedded ? <section className="program-hero" id="program"><div className="program-shell"><div><CalendarDays aria-hidden="true" /><h1>Convention<br /><em>program</em></h1></div><p>{introduction}</p></div></section> : null}
+      {!embedded ? <section className="program-hero" id="program"><div className="program-shell"><div><CalendarDays aria-hidden="true" /><h1>Convention<br /><em>program</em></h1></div>{typeof introduction === "string" ? <p>{introduction}</p> : introduction}</div></section> : null}
       <section className="program-explorer-section">
         <div className="program-shell">
-          <div className="program-heading"><div><p>NECYPAA XXXVI</p><h2>{heading}</h2>{embedded ? <p className="program-heading-description">{introduction}</p> : null}</div>{!embedded ? <a href="#hotel-map"><Map aria-hidden="true" /> Hotel map</a> : null}</div>
+          <div className="program-heading"><div><p>NECYPAA XXXVI</p>{typeof heading === "string" ? <h2>{heading}</h2> : heading}{embedded ? typeof introduction === "string" ? <p className="program-heading-description">{introduction}</p> : introduction : null}</div>{!embedded ? <a href="#hotel-map"><Map aria-hidden="true" /> Hotel map</a> : null}</div>
           <div className="program-day-tabs" role="tablist" aria-label="Program day">
             {days.map((value) => <button aria-selected={selectedDay === value} key={value} onClick={() => setDay(value)} role="tab" type="button">{dayLabel(value)}</button>)}
           </div>
