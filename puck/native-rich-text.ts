@@ -187,7 +187,7 @@ export function normalizeNativeRichTextProps(
 
 export function stripNativeRichTextForPayload(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(stripNativeRichTextForPayload);
-  if (!isRecord(value)) return typeof value === "string" && HTML_TAG.test(value) ? richTextToPlainText(value) : value;
+  if (!isRecord(value)) return value;
   return Object.fromEntries(
     Object.entries(value)
       .filter(([key]) => key !== "puckRichText")
