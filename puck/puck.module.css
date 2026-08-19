@@ -688,6 +688,9 @@
 .heroAltMedia { box-shadow: 18px 18px 0 #d95132; min-height: 440px; }
 .heroAltMedia img { height: 100%; min-height: 440px; object-fit: cover; }
 .heroAltLogo { display: block; margin-inline: auto; max-height: 190px; max-width: min(640px, 100%); object-fit: contain; object-position: center; }
+.heroAltHeadingEditor { border: 1px dashed currentColor; margin: 14px 0 20px; opacity: .92; padding: 12px 14px; }
+.heroAltHeadingEditor > small { display: block; font: 700 .68rem/1.35 var(--font-geist-mono), monospace; letter-spacing: .04em; margin-bottom: 7px; opacity: .72; text-transform: uppercase; }
+.heroAltHeadingEditor [data-rich-as="h1"] { font-size: clamp(2rem, 4vw, 3.8rem); margin: 0; }
 .heroAltHighlight { border-left: 3px solid #d95132; display: grid; gap: 6px; margin-top: 25px; max-width: 560px; padding: 4px 0 4px 18px; }
 .heroAltHighlight strong,
 .heroAltHighlight [data-rich-as="strong"] { font-size: .78rem; letter-spacing: 0; text-transform: uppercase; }

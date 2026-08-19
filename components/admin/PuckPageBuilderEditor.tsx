@@ -58,7 +58,7 @@ function colorPickerValue(value: string) {
 }
 
 type PathSegment = number | string;
-type RichField = Record<string, unknown> & { arrayFields?: Record<string, unknown>; richTextDefault?: string };
+type RichField = Record<string, unknown> & { arrayFields?: Record<string, unknown>; richTextBlockType?: LexicalBlockType; richTextDefault?: string };
 type InspectorFieldRenderProps = { id: string; name: string; onChange: (value: unknown) => void; readOnly?: boolean; value: unknown };
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
@@ -115,7 +115,8 @@ function humanFieldLabel(name: string) {
   return name.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/[_-]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-function defaultRichTextBlockType(componentType: string, fieldName: string, path: PathSegment[]): LexicalBlockType {
+function defaultRichTextBlockType(componentType: string, fieldName: string, path: PathSegment[], configuredType?: LexicalBlockType): LexicalBlockType {
+  if (configuredType) return configuredType;
   const name = fieldName.toLowerCase();
   if (["HeroCountdown", "HeroAlt"].includes(componentType) && name === "heading") return "h1";
   if (componentType === "QuoteBlock" && name === "heading") return "paragraph";
@@ -128,14 +129,22 @@ function defaultRichTextBlockType(componentType: string, fieldName: string, path
   return "paragraph";
 }
 
-function CanvasRichTextEditor({ defaultBlockType, label, onChange, value }: { defaultBlockType: LexicalBlockType; label: string; onChange: (value: unknown) => void; value: unknown }) {
+function CanvasRichTextEditor({ defaultBlockType, label, onChange, onSelect, value }: { defaultBlockType: LexicalBlockType; label: string; onChange: (value: unknown) => void; onSelect: () => void; value: unknown }) {
   const portalRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (!portalRef.current) return;
-    return registerOverlayPortal(portalRef.current, { disableDrag: true });
+    return registerOverlayPortal(portalRef.current, { disableDragOnFocus: true });
   }, []);
-  const stopOverlayClick = useCallback((event: React.SyntheticEvent) => event.stopPropagation(), []);
-  return <div className={styles.canvasRichTextShell}><div className={styles.canvasRichText} data-puck-overlay-portal="true" data-puck-rich-text-editor="true" onClick={(event) => event.stopPropagation()} onClickCapture={stopOverlayClick} onDragStart={(event) => event.preventDefault()} onPointerDown={(event) => event.stopPropagation()} ref={portalRef}><PuckLexicalTextEditor defaultBlockType={defaultBlockType} onChange={onChange} surface="canvas" toolbarLabel={label} toolbarMode="global" value={value} /></div></div>;
+  const handleClick = useCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+  }, []);
+  const handleClickCapture = useCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    onSelect();
+  }, [onSelect]);
+  return <div className={styles.canvasRichTextShell}><div className={styles.canvasRichText} data-puck-overlay-portal="true" data-puck-rich-text-editor="true" onClick={handleClick} onClickCapture={handleClickCapture} ref={portalRef}><PuckLexicalTextEditor defaultBlockType={defaultBlockType} onChange={onChange} surface="canvas" toolbarLabel={label} toolbarMode="global" value={value} /></div></div>;
 }
 
 function CanvasRichTextBlock({ componentType, fields, RenderComponent, props }: { componentType: string; fields: Record<string, unknown>; RenderComponent: React.ComponentType<Record<string, unknown>>; props: Record<string, unknown> }) {
@@ -143,6 +152,13 @@ function CanvasRichTextBlock({ componentType, fields, RenderComponent, props }: 
   const getItemById = usePuck((state) => state.getItemById);
   const getSelectorForId = usePuck((state) => state.getSelectorForId);
   const componentId = typeof props.id === "string" ? props.id : "";
+
+  const selectComponent = useCallback(() => {
+    if (!componentId) return;
+    const selector = getSelectorForId(componentId);
+    if (!selector) return;
+    dispatch({ type: "setUi", ui: { itemSelector: selector, leftSideBarVisible: true, plugin: { current: "fields" }, rightSideBarVisible: false } });
+  }, [componentId, dispatch, getSelectorForId]);
 
   const updateRichText = useCallback((containerPath: PathSegment[], fieldName: string, nextValue: unknown) => {
     if (!componentId) return;
@@ -177,7 +193,7 @@ function CanvasRichTextBlock({ componentType, fields, RenderComponent, props }: 
               ? storedEntry
               : {};
           const plainValue = container[fieldName];
-          const blockType = defaultRichTextBlockType(componentType, fieldName, path);
+          const blockType = defaultRichTextBlockType(componentType, fieldName, path, field.richTextBlockType);
           const fallbackText = typeof plainValue === "string" || typeof plainValue === "number" ? String(plainValue) : field.richTextDefault || "";
           const editorValue = isLexicalValue(entry.value) ? entry.value : isLexicalValue(plainValue) ? plainValue : emptyLexicalValue(fallbackText, blockType);
           mutable()[PUCK_RICH_TEXT_FIELD_NAME] = {
@@ -185,7 +201,7 @@ function CanvasRichTextBlock({ componentType, fields, RenderComponent, props }: 
             [fieldName]: {
               ...entry,
               enabled: true,
-              value: <CanvasRichTextEditor defaultBlockType={blockType} label={typeof field.label === "string" ? field.label : humanFieldLabel(fieldName)} onChange={(value) => updateRichText(path, fieldName, value)} value={editorValue} />,
+              value: <CanvasRichTextEditor defaultBlockType={blockType} label={typeof field.label === "string" ? field.label : humanFieldLabel(fieldName)} onChange={(value) => updateRichText(path, fieldName, value)} onSelect={selectComponent} value={editorValue} />,
             },
           };
         } else if (field.type === "array" && isPlainRecord(field.arrayFields) && Array.isArray(container[fieldName])) {
@@ -197,7 +213,7 @@ function CanvasRichTextBlock({ componentType, fields, RenderComponent, props }: 
       return next ?? container;
     };
     return visit(props, fields, []) as Record<string, unknown>;
-  }, [componentType, fields, props, updateRichText]);
+  }, [componentType, fields, props, selectComponent, updateRichText]);
 
   return <RenderComponent {...previewProps} />;
 }
@@ -231,7 +247,7 @@ function InspectorRichTextField({ defaultBlockType, defaultText, id, label, name
     dispatch({ type: "replace", data: { ...item, props: { ...nextProps, id: selectedId } }, destinationIndex: selector.index, destinationZone: selector.zone, ui: { field: { focus: name }, itemSelector: selector, leftSideBarVisible: true, plugin: { current: "fields" }, rightSideBarVisible: false } });
   }, [dispatch, fieldPath, getItemById, getSelectorForId, name, onChange, selectedId, storagePath]);
 
-  return <div className={styles.inspectorRichText}><span>{label}</span><PuckLexicalTextEditor compact defaultBlockType={defaultBlockType} onChange={update} readOnly={readOnly} toolbarLabel={label} toolbarMode="none" value={editorValue} /><small>Click the preview for formatting controls.</small></div>;
+  return <div className={styles.inspectorRichText}><span>{label}</span><PuckLexicalTextEditor compact defaultBlockType={defaultBlockType} onChange={update} readOnly={readOnly} toolbarLabel={label} toolbarMode="inline" value={editorValue} /><small>Rich text — also editable directly in the preview.</small></div>;
 }
 
 function ThemePanel({ initialTheme, initialTenantId, onPreviewTheme }: { initialTheme: TenantTheme; initialTenantId?: string; onPreviewTheme: (colors: ThemeColors) => void }) {
@@ -279,7 +295,7 @@ function richTextEditorField(field: Record<string, unknown>, componentType: stri
     render: ({ id, name, onChange, readOnly, value }: InspectorFieldRenderProps) => {
       const path = parseFieldPath(name);
       const fieldName = String(path[path.length - 1] || name);
-      return <InspectorRichTextField defaultBlockType={defaultRichTextBlockType(componentType, fieldName, path.slice(0, -1))} defaultText={typeof field.richTextDefault === "string" ? field.richTextDefault : undefined} id={id} label={typeof field.label === "string" ? field.label : humanFieldLabel(fieldName)} name={name} onChange={onChange} readOnly={readOnly} value={value} />;
+      return <InspectorRichTextField defaultBlockType={defaultRichTextBlockType(componentType, fieldName, path.slice(0, -1), field.richTextBlockType as LexicalBlockType | undefined)} defaultText={typeof field.richTextDefault === "string" ? field.richTextDefault : undefined} id={id} label={typeof field.label === "string" ? field.label : humanFieldLabel(fieldName)} name={name} onChange={onChange} readOnly={readOnly} value={value} />;
     },
   };
 }
