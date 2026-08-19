@@ -17,6 +17,7 @@ import styles from "./puck-builder.module.css";
 
 const usePuck = createUsePuck();
 const PUCK_RICH_TEXT_FIELD_NAME = "puckRichText";
+const FOCUS_LOCAL_RICH_TEXT_BLOCKS = new Set(["HeroAlt", "CardsGridAlt", "PalmCardAlt", "AboutAlt"]);
 type ThemeColors = Omit<TenantTheme, "logoAlt" | "logoUrl">;
 const THEME_FIELDS: Array<{ key: keyof ThemeColors; label: string }> = [
   { key: "primary", label: "Primary" },
@@ -30,6 +31,8 @@ const THEME_FIELDS: Array<{ key: keyof ThemeColors; label: string }> = [
 ];
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 const ThemePreviewContext = createContext<ThemeColors | null>(null);
+type RichTextDraftRegistry = { flush: () => void; register: (id: string, commit: () => void) => () => void };
+const RichTextDraftContext = createContext<RichTextDraftRegistry | null>(null);
 
 function themeColors(theme: TenantTheme): ThemeColors {
   return { primary: theme.primary, secondary: theme.secondary, accent: theme.accent, background: theme.background, surface: theme.surface, lightBackground: theme.lightBackground, darkText: theme.darkText, lightText: theme.lightText };
@@ -129,22 +132,22 @@ function defaultRichTextBlockType(componentType: string, fieldName: string, path
   return "paragraph";
 }
 
-function CanvasRichTextEditor({ defaultBlockType, label, onChange, onSelect, value }: { defaultBlockType: LexicalBlockType; label: string; onChange: (value: unknown) => void; onSelect: () => void; value: unknown }) {
+function CanvasRichTextEditor({ commitOnBlur, defaultBlockType, draftId, label, onChange, onSelect, value }: { commitOnBlur: boolean; defaultBlockType: LexicalBlockType; draftId: string; label: string; onChange: (value: unknown) => void; onSelect: () => void; value: unknown }) {
+  const draftRegistry = useContext(RichTextDraftContext);
   const portalRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (!portalRef.current) return;
     return registerOverlayPortal(portalRef.current, { disableDragOnFocus: true });
   }, []);
   const handleClick = useCallback((event: React.MouseEvent) => {
-    event.preventDefault();
     event.stopPropagation();
   }, []);
   const handleClickCapture = useCallback((event: React.MouseEvent) => {
-    event.preventDefault();
     event.stopPropagation();
     onSelect();
   }, [onSelect]);
-  return <div className={styles.canvasRichTextShell}><div className={styles.canvasRichText} data-puck-overlay-portal="true" data-puck-rich-text-editor="true" onClick={handleClick} onClickCapture={handleClickCapture} ref={portalRef}><PuckLexicalTextEditor defaultBlockType={defaultBlockType} onChange={onChange} surface="canvas" toolbarLabel={label} toolbarMode="global" value={value} /></div></div>;
+  const registerCommit = useCallback((commit: () => void) => draftRegistry?.register(draftId, commit) || (() => undefined), [draftId, draftRegistry]);
+  return <div className={styles.canvasRichTextShell}><div className={styles.canvasRichText} data-puck-overlay-portal="true" data-puck-rich-text-editor="true" onClick={handleClick} onClickCapture={handleClickCapture} ref={portalRef}><PuckLexicalTextEditor commitMode={commitOnBlur ? "blur" : "change"} defaultBlockType={defaultBlockType} onChange={onChange} registerCommit={commitOnBlur ? registerCommit : undefined} surface="canvas" toolbarLabel={label} toolbarMode="global" value={value} /></div></div>;
 }
 
 function CanvasRichTextBlock({ componentType, fields, RenderComponent, props }: { componentType: string; fields: Record<string, unknown>; RenderComponent: React.ComponentType<Record<string, unknown>>; props: Record<string, unknown> }) {
@@ -179,14 +182,14 @@ function CanvasRichTextBlock({ componentType, fields, RenderComponent, props }: 
     const visit = (container: unknown, fieldMap: Record<string, unknown>, path: PathSegment[]): unknown => {
       if (!isPlainRecord(container)) return container;
       let next: Record<string, unknown> | null = null;
+      let richMapDraft = isPlainRecord(container[PUCK_RICH_TEXT_FIELD_NAME]) ? container[PUCK_RICH_TEXT_FIELD_NAME] as Record<string, unknown> : {};
       const mutable = () => (next ??= { ...container });
 
       Object.entries(fieldMap).forEach(([fieldName, rawField]) => {
         if (!isPlainRecord(rawField)) return;
         const field = rawField as RichField;
         if (field.type === "custom" && (field.richText === true || field.label === "Rich text")) {
-          const richMap = isPlainRecord(container[PUCK_RICH_TEXT_FIELD_NAME]) ? container[PUCK_RICH_TEXT_FIELD_NAME] as Record<string, unknown> : {};
-          const storedEntry = richMap[fieldName];
+          const storedEntry = richMapDraft[fieldName];
           const entry = isLexicalValue(storedEntry)
             ? { enabled: true, value: storedEntry }
             : isPlainRecord(storedEntry)
@@ -196,14 +199,15 @@ function CanvasRichTextBlock({ componentType, fields, RenderComponent, props }: 
           const blockType = defaultRichTextBlockType(componentType, fieldName, path, field.richTextBlockType);
           const fallbackText = typeof plainValue === "string" || typeof plainValue === "number" ? String(plainValue) : field.richTextDefault || "";
           const editorValue = isLexicalValue(entry.value) ? entry.value : isLexicalValue(plainValue) ? plainValue : emptyLexicalValue(fallbackText, blockType);
-          mutable()[PUCK_RICH_TEXT_FIELD_NAME] = {
-            ...richMap,
+          richMapDraft = {
+            ...richMapDraft,
             [fieldName]: {
               ...entry,
               enabled: true,
-              value: <CanvasRichTextEditor defaultBlockType={blockType} label={typeof field.label === "string" ? field.label : humanFieldLabel(fieldName)} onChange={(value) => updateRichText(path, fieldName, value)} onSelect={selectComponent} value={editorValue} />,
+              value: <CanvasRichTextEditor commitOnBlur={FOCUS_LOCAL_RICH_TEXT_BLOCKS.has(componentType)} defaultBlockType={blockType} draftId={`${componentId}:${[...path, fieldName].join(".")}`} label={typeof field.label === "string" ? field.label : humanFieldLabel(fieldName)} onChange={(value) => updateRichText(path, fieldName, value)} onSelect={selectComponent} value={editorValue} />,
             },
           };
+          mutable()[PUCK_RICH_TEXT_FIELD_NAME] = richMapDraft;
         } else if (field.type === "array" && isPlainRecord(field.arrayFields) && Array.isArray(container[fieldName])) {
           const source = container[fieldName] as unknown[];
           const items = source.map((item, index) => visit(item, field.arrayFields as Record<string, unknown>, [...path, fieldName, index]));
@@ -380,10 +384,10 @@ function ClipboardActions({ state, dispatch }: { state: ClipboardState; dispatch
   return <><button aria-label="Copy selected block" disabled={!source} onClick={copy} title="Copy selected block" type="button"><Clipboard /></button><button aria-label="Paste block" onClick={paste} title="Paste block after selection" type="button"><ClipboardPaste /></button></>;
 }
 
-function BuilderHeaderActions({ message, onPublish }: { message: string; onPublish: (data: Data) => void }) {
+function BuilderHeaderActions({ message, onPublish }: { message: string; onPublish: () => void }) {
   const appState = usePuck((state) => state.appState) as ClipboardState;
   const dispatch = usePuck((state) => state.dispatch) as ClipboardDispatch;
-  return <div className={styles.publish}><ClipboardActions dispatch={dispatch} state={appState} /><span aria-live="polite">{message}</span><button onClick={() => onPublish(appState.data)} type="button">Publish</button></div>;
+  return <div className={styles.publish}><ClipboardActions dispatch={dispatch} state={appState} /><span aria-live="polite">{message}</span><button onClick={onPublish} type="button">Publish</button></div>;
 }
 
 type BlockPalette = "sections" | "rows" | "elements";
@@ -531,7 +535,19 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
   const latest = useRef(initialData);
   const lastSaved = useRef(JSON.stringify(initialData));
   const timer = useRef<number | null>(null);
+  const richTextDrafts = useRef(new Map<string, () => void>());
   const [message, setMessage] = useState("Autosave on");
+
+  const registerRichTextDraft = useCallback((id: string, commit: () => void) => {
+    richTextDrafts.current.set(id, commit);
+    return () => {
+      if (richTextDrafts.current.get(id) === commit) richTextDrafts.current.delete(id);
+    };
+  }, []);
+  const flushRichTextDrafts = useCallback(() => {
+    richTextDrafts.current.forEach((commit) => commit());
+  }, []);
+  const richTextDraftRegistry = useMemo(() => ({ flush: flushRichTextDrafts, register: registerRichTextDraft }), [flushRichTextDrafts, registerRichTextDraft]);
 
   const save = useCallback(async (next: Data, publish = false) => {
     setMessage(publish ? "Publishing…" : "Saving…");
@@ -551,11 +567,22 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
     return () => { if (timer.current) window.clearTimeout(timer.current); };
   }, [data, save]);
 
+  const publishLatest = useCallback(() => {
+    flushRichTextDrafts();
+    window.requestAnimationFrame(() => void save(latest.current, true));
+  }, [flushRichTextDrafts, save]);
+
+  const handleDataChange = useCallback((next: Data) => {
+    const nextData = next as NECYPAAData;
+    latest.current = nextData;
+    setData(nextData);
+  }, []);
+
   const overrides = useMemo(() => ({
     header: ({ children }: { children: React.ReactNode }) => <BuilderHeader pageId={pageId} pageTitle={pageTitle}>{children}</BuilderHeader>,
-    headerActions: () => <BuilderHeaderActions message={message} onPublish={(next) => void save(next, true)} />,
+    headerActions: () => <BuilderHeaderActions message={message} onPublish={publishLatest} />,
     ...(pageSlug === "home" ? { iframe: ThemePreviewFrame } : {}),
-  }), [message, pageId, pageSlug, pageTitle, save]);
+  }), [message, pageId, pageSlug, pageTitle, publishLatest]);
   const plugins = useMemo<Plugin[]>(() => [
     ...BLOCK_PALETTES.map(createBlockLibraryPlugin),
     fieldsPlugin({ desktopSideBar: "left" }),
@@ -576,5 +603,5 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
       components: richComponents,
     };
   }, []);
-  return <ThemePreviewContext.Provider value={previewTheme}><div className={styles.wrapper}><Puck config={editorConfig as unknown as Config} data={data} height="100dvh" onChange={(next) => setData(next as NECYPAAData)} onPublish={(next) => save(next, true)} overrides={overrides} permissions={{ delete: true, drag: true, duplicate: true, edit: true, insert: true }} plugins={plugins} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></ThemePreviewContext.Provider>;
+  return <ThemePreviewContext.Provider value={previewTheme}><RichTextDraftContext.Provider value={richTextDraftRegistry}><div className={styles.wrapper}><Puck config={editorConfig as unknown as Config} data={data} height="100dvh" onChange={handleDataChange} onPublish={publishLatest} overrides={overrides} permissions={{ delete: true, drag: true, duplicate: true, edit: true, insert: true }} plugins={plugins} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></RichTextDraftContext.Provider></ThemePreviewContext.Provider>;
 }

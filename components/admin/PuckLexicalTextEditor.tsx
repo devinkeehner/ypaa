@@ -53,15 +53,32 @@ function normalizeEditorValue(value: unknown, defaultBlockType: LexicalBlockType
   return typeof value === "string" ? emptyLexicalValue(value, defaultBlockType) : normalizeLexicalValue(value);
 }
 
-function ExternalValuePlugin({ defaultBlockType, value, latestRef }: { defaultBlockType: LexicalBlockType; value: unknown; latestRef: MutableRefObject<string> }) {
+function ExternalValuePlugin({
+  defaultBlockType,
+  draftRef,
+  focusedRef,
+  lastCommittedRef,
+  latestRef,
+  value,
+}: {
+  defaultBlockType: LexicalBlockType;
+  draftRef: MutableRefObject<unknown>;
+  focusedRef: MutableRefObject<boolean>;
+  lastCommittedRef: MutableRefObject<string>;
+  latestRef: MutableRefObject<string>;
+  value: unknown;
+}) {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
-    const serialized = JSON.stringify(normalizeEditorValue(value, defaultBlockType));
-    if (serialized === latestRef.current) return;
+    const normalized = normalizeEditorValue(value, defaultBlockType);
+    const serialized = JSON.stringify(normalized);
+    if (focusedRef.current || serialized === latestRef.current) return;
+    draftRef.current = normalized;
+    lastCommittedRef.current = serialized;
     latestRef.current = serialized;
     editor.setEditorState(editor.parseEditorState(serialized));
-  }, [defaultBlockType, editor, latestRef, value]);
+  }, [defaultBlockType, draftRef, editor, focusedRef, lastCommittedRef, latestRef, value]);
 
   return null;
 }
@@ -200,6 +217,12 @@ function Toolbar({ readOnly }: { readOnly?: boolean }) {
   const color = (value: string) => runToolbarUpdate((selection) => {
     if (selection) $patchStyleText(selection, { color: value || null });
   });
+  const captureSelection = useCallback(() => {
+    editor.getEditorState().read(() => {
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) lastSelection.current = selection.clone();
+    });
+  }, [editor]);
   const clearFormatting = () => runToolbarUpdate((selection) => {
     if (!selection) return;
     selection.getNodes().forEach((node) => {
@@ -237,7 +260,7 @@ function Toolbar({ readOnly }: { readOnly?: boolean }) {
       <ToolbarButton active={active.alignment === "left"} disabled={readOnly} label="Align left" onClick={() => alignment("left")}><AlignLeft /></ToolbarButton>
       <ToolbarButton active={active.alignment === "center"} disabled={readOnly} label="Align center" onClick={() => alignment("center")}><AlignCenter /></ToolbarButton>
       <ToolbarButton active={active.alignment === "right"} disabled={readOnly} label="Align right" onClick={() => alignment("right")}><AlignRight /></ToolbarButton>
-      <label className={styles.colorPicker} title="Text color"><Palette /><input aria-label="Text color" disabled={readOnly} onChange={(event) => color(event.target.value)} type="color" value={/^#[0-9a-f]{6}$/i.test(active.color) ? active.color : "#171b20"} /></label>
+      <label className={styles.colorPicker} title="Text color"><Palette /><input aria-label="Text color" disabled={readOnly} onInput={(event) => color(event.currentTarget.value)} onPointerDownCapture={captureSelection} type="color" value={/^#[0-9a-f]{6}$/i.test(active.color) ? active.color : "#171b20"} /></label>
       <span className={styles.toolbarDivider} />
       <ToolbarButton disabled={readOnly} label="Undo" onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}><Undo2 /></ToolbarButton>
       <ToolbarButton disabled={readOnly} label="Redo" onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}><Redo2 /></ToolbarButton>
@@ -247,33 +270,54 @@ function Toolbar({ readOnly }: { readOnly?: boolean }) {
 
 export function PuckLexicalTextEditor({
   autoFocus = false,
+  commitMode = "change",
   compact = false,
   defaultBlockType = "paragraph",
   onChange,
   readOnly,
+  registerCommit,
   surface = "field",
   toolbarLabel = "Text",
   toolbarMode = "inline",
   value,
 }: {
   autoFocus?: boolean;
+  commitMode?: "blur" | "change";
   compact?: boolean;
   defaultBlockType?: LexicalBlockType;
   onChange: (value: unknown) => void;
   readOnly?: boolean;
+  registerCommit?: (commit: () => void) => () => void;
   surface?: "canvas" | "field";
   toolbarLabel?: string;
   toolbarMode?: "global" | "inline" | "none";
   value: unknown;
 }) {
-  const [initialState] = useState(() => JSON.stringify(normalizeEditorValue(value, defaultBlockType)));
+  const [initialValue] = useState(() => normalizeEditorValue(value, defaultBlockType));
+  const [initialState] = useState(() => JSON.stringify(initialValue));
+  const draft = useRef<unknown>(initialValue);
+  const focused = useRef(false);
+  const lastCommitted = useRef(initialState);
   const latest = useRef(initialState);
+  const onChangeRef = useRef(onChange);
   const fieldRef = useRef<HTMLDivElement | null>(null);
   const toolbarRef = useRef<HTMLDivElement | null>(null);
   const [toolbarTarget, setToolbarTarget] = useState<HTMLElement | null>(null);
   const [toolbarOpen, setToolbarOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const useGlobalToolbar = surface === "canvas" && toolbarMode === "global";
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+
+  const commitDraft = useCallback(() => {
+    if (commitMode !== "blur" || latest.current === lastCommitted.current) return;
+    lastCommitted.current = latest.current;
+    onChangeRef.current(draft.current);
+  }, [commitMode]);
+
+  useEffect(() => registerCommit?.(commitDraft), [commitDraft, registerCommit]);
 
   useEffect(() => {
     if (!useGlobalToolbar) return;
@@ -324,10 +368,27 @@ export function PuckLexicalTextEditor({
 
   const handleChange = useCallback((editorState: EditorState) => {
     const next = editorState.toJSON();
-    latest.current = JSON.stringify(next);
+    const serialized = JSON.stringify(next);
+    draft.current = next;
+    latest.current = serialized;
     setError(null);
-    onChange(next);
-  }, [onChange]);
+    if (commitMode === "change") {
+      lastCommitted.current = serialized;
+      onChangeRef.current(next);
+    }
+  }, [commitMode]);
+
+  const handleBlur = useCallback((event: React.FocusEvent<HTMLDivElement>) => {
+    const nextTarget = event.relatedTarget as Node | null;
+    if (nextTarget && fieldRef.current?.contains(nextTarget)) return;
+    focused.current = false;
+    commitDraft();
+  }, [commitDraft]);
+
+  const handleFocus = useCallback(() => {
+    focused.current = true;
+    if (useGlobalToolbar) setToolbarOpen(true);
+  }, [useGlobalToolbar]);
 
   return (
     <div
@@ -335,7 +396,8 @@ export function PuckLexicalTextEditor({
       data-compact={compact || undefined}
       data-surface={surface}
       data-toolbar-mode={toolbarMode}
-      onFocusCapture={() => useGlobalToolbar && setToolbarOpen(true)}
+      onBlurCapture={handleBlur}
+      onFocusCapture={handleFocus}
       onPointerDownCapture={() => useGlobalToolbar && setToolbarOpen(true)}
       ref={fieldRef}
     >
@@ -365,7 +427,7 @@ export function PuckLexicalTextEditor({
           <ListPlugin />
           <OnChangePlugin ignoreSelectionChange onChange={handleChange} />
           <AutoFocusPlugin enabled={autoFocus} />
-          <ExternalValuePlugin defaultBlockType={defaultBlockType} latestRef={latest} value={value} />
+          <ExternalValuePlugin defaultBlockType={defaultBlockType} draftRef={draft} focusedRef={focused} lastCommittedRef={lastCommitted} latestRef={latest} value={value} />
         </div>
       </LexicalComposer>
       {error ? <p className={styles.error}>{error}</p> : null}

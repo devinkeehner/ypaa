@@ -1,7 +1,7 @@
 "use client";
 
 import { Render, type ComponentConfig, type Config, type Field } from "@puckeditor/core";
-import { RichText as PayloadRichText } from "@payloadcms/richtext-lexical/react";
+import { RichText as PayloadRichText, type JSXConvertersFunction } from "@payloadcms/richtext-lexical/react";
 import { BadgeDollarSign, BriefcaseBusiness, CalendarDays, Check, ChevronDown, ChevronRight, HeartHandshake, Landmark, MapPin, Megaphone, ShieldCheck, Users, Vote } from "lucide-react";
 import { Fragment, isValidElement, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
 
@@ -9,6 +9,7 @@ import { Countdown } from "@/components/site/Countdown";
 import { ProgramExplorer } from "@/components/site/ProgramExplorer";
 import { isLexicalValue, normalizeLexicalValue, type LexicalBlockType } from "@/puck/lexical-value";
 import { layoutColumnCount } from "@/puck/layout-utils.mjs";
+import { extractLexicalTextColor } from "@/puck/rich-text-style.mjs";
 import {
   normalizeImportantDates,
   normalizeMeetings,
@@ -100,7 +101,7 @@ type Video = Base & { video?: MediaValue | null; url: string; caption: string };
 type Embed = Base & { url: string; title: string };
 type PayPal = Base & { label: string; url: string; amount: string };
 type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[]; column1?: NestedSlot; column2?: NestedSlot; column3?: NestedSlot; column4?: NestedSlot; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
-type CampaignAltItem = { label?: string; heading?: string; text?: string; value?: string; linkLabel?: string; url?: string; icon?: string; attribution?: string; role?: string; image?: MediaValue | null };
+type CampaignAltItem = { id?: number | string; label?: string; heading?: string; text?: string; value?: string; linkLabel?: string; url?: string; icon?: string; attribution?: string; role?: string; image?: MediaValue | null };
 type CampaignAltSlotItem = CampaignAltItem & { blocks?: NestedSlot };
 type CampaignAltProps = Base & { variant: string; presentation: string; eyebrow: string; heading: string; intro: string; body: string; media?: MediaValue | null; backgroundMedia?: MediaValue | null; headingLogo?: MediaValue | null; qrImage?: MediaValue | null; highlightTitle: string; highlightText: string; backgroundOverlay: string; textPanelColor: string; textPanelOpacity: string; primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; quote: string; quoteAttribution: string; electionDay: string; earlyVote: string; phone: string; email: string; website: string; qrCaption: string; disclaimer: string; items: CampaignAltItem[]; cards: CampaignAltSlotItem[]; columns: CampaignAltSlotItem[]; tabs: CampaignAltSlotItem[]; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
 type CampaignAltComponents = { [K in CampaignAltType]: CampaignAltProps };
@@ -420,9 +421,19 @@ function getPuckRichTextValue(container: unknown, field: string): unknown {
   return richEntry.enabled && (isLexicalValue(richEntry.value) || isValidElement(richEntry.value)) ? richEntry.value : null;
 }
 
+const richTextConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
+  ...defaultConverters,
+  text: (args) => {
+    const defaultText = defaultConverters.text;
+    const content = typeof defaultText === "function" ? defaultText(args) : defaultText;
+    const color = extractLexicalTextColor(args.node.style);
+    return color ? <span style={{ color }}>{content}</span> : content;
+  },
+});
+
 function RichValue({ as: Tag, className, field, value, style }: { as: ElementType; className?: string; field?: string; value: unknown; style?: CSSProperties }) {
   const richAs = typeof Tag === "string" ? Tag : undefined;
-  if (isLexicalValue(value)) return <div className={`${className || ""} ${styles.richInline}`} data-puck-text-field={field} data-rich-as={richAs} style={style}><PayloadRichText data={normalizeLexicalValue(value)} /></div>;
+  if (isLexicalValue(value)) return <div className={`${className || ""} ${styles.richInline}`} data-puck-text-field={field} data-rich-as={richAs} style={style}><PayloadRichText converters={richTextConverters} data={normalizeLexicalValue(value)} /></div>;
   if (isValidElement(value)) return <div className={className} data-puck-text-field={field} data-rich-as={richAs} style={style}>{value}</div>;
   return <Tag className={className} data-puck-text-field={field} style={style}>{typeof value === "string" || typeof value === "number" ? value : ""}</Tag>;
 }
@@ -530,6 +541,10 @@ function CampaignImage({ media, className }: { media?: MediaValue | null; classN
   return image ? <figure className={className}><img alt={image.alt || ""} src={image.url} /></figure> : null;
 }
 
+function campaignItemKey(scope: string, item: CampaignAltItem, index: number) {
+  return `${scope}-${item.id ?? index}`;
+}
+
 function HeroAltRender({ props }: { props: CampaignAltProps }) {
   const background = normalizeMedia(props.backgroundMedia);
   const headingLogo = normalizeMedia(props.headingLogo);
@@ -543,11 +558,11 @@ function HeroAltRender({ props }: { props: CampaignAltProps }) {
 }
 
 function BioSectionRender({ props }: { props: CampaignAltProps }) {
-  return <section className={`${styles.campaignAlt} ${styles.bioSectionAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div className={styles.bioSectionCopy}><CampaignSectionHeader props={props} />{(props.body && props.intro) || props.puck?.isEditing ? <Editable as="p" className={styles.campaignAltLongCopy} field="body" props={props}>{props.body}</Editable> : null}{props.items.length ? <div className={styles.bioHighlights}>{props.items.map((item, index) => <div key={`${item.text}-${index}`}><CampaignIcon name={item.icon} /><RichCopy container={item} field="text" value={item.text} /></div>)}</div> : null}</div></div></section>;
+  return <section className={`${styles.campaignAlt} ${styles.bioSectionAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div className={styles.bioSectionCopy}><CampaignSectionHeader props={props} />{(props.body && props.intro) || props.puck?.isEditing ? <Editable as="p" className={styles.campaignAltLongCopy} field="body" props={props}>{props.body}</Editable> : null}{props.items.length ? <div className={styles.bioHighlights}>{props.items.map((item, index) => <div key={campaignItemKey("about-highlight", item, index)}><CampaignIcon name={item.icon} /><RichCopy container={item} field="text" value={item.text} /></div>)}</div> : null}</div></div></section>;
 }
 
 function IssuesCardsRender({ props }: { props: CampaignAltProps }) {
-  return <section className={`${styles.campaignAlt} ${styles.issuesCardsAlt}`} data-count={props.items.length} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignSectionHeader centered={props.variant !== "editorialGrid"} props={props} /><div className={styles.issuesCardsAltGrid}>{props.items.map((item, index) => { const image = normalizeMedia(item.image); return <article data-featured={index === 0} key={`${item.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><CampaignIcon name={item.icon} /><RichCopy as="h3" container={item} field="heading" value={item.heading} />{item.text || props.puck?.isEditing ? <RichCopy container={item} field="text" value={item.text} /> : null}{item.url ? <a href={item.url}><RichCopy as="span" container={item} field="linkLabel" value={item.linkLabel || "Learn more"} /></a> : null}</div></article>; })}</div></div></section>;
+  return <section className={`${styles.campaignAlt} ${styles.issuesCardsAlt}`} data-count={props.items.length} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignSectionHeader centered={props.variant !== "editorialGrid"} props={props} /><div className={styles.issuesCardsAltGrid}>{props.items.map((item, index) => { const image = normalizeMedia(item.image); return <article data-featured={index === 0} key={campaignItemKey("cards-grid-item", item, index)}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><CampaignIcon name={item.icon} /><RichCopy as="h3" container={item} field="heading" value={item.heading} />{item.text || props.puck?.isEditing ? <RichCopy container={item} field="text" value={item.text} /> : null}{item.url ? <a href={item.url}><RichCopy as="span" container={item} field="linkLabel" value={item.linkLabel || "Learn more"} /></a> : null}</div></article>; })}</div></div></section>;
 }
 
 function PalmCardPointsRender({ props }: { props: CampaignAltProps }) {
@@ -563,7 +578,7 @@ function TestimonialAltRender({ props }: { props: CampaignAltProps }) {
 }
 
 function PalmCardContentRender({ props }: { props: CampaignAltProps }) {
-  return <section className={`${styles.campaignAlt} ${styles.palmContentAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><div className={styles.palmContentIntro}><CampaignSectionHeader props={props} />{props.quote || props.puck?.isEditing ? <figure className={styles.campaignAltQuote}><Editable as="blockquote" field="quote" props={props}>{props.quote}</Editable>{props.quoteAttribution || props.puck?.isEditing ? <Editable as="figcaption" field="quoteAttribution" props={props}>{props.quoteAttribution}</Editable> : null}</figure> : null}</div><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div className={styles.palmContentGrid}>{props.items.map((item, index) => <article key={`${item.heading}-${index}`}><CampaignIcon name={item.icon} /><div><RichCopy as="h3" container={item} field="heading" value={item.heading} />{item.text || props.puck?.isEditing ? <RichCopy container={item} field="text" value={item.text} /> : null}</div></article>)}</div></div></section>;
+  return <section className={`${styles.campaignAlt} ${styles.palmContentAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><div className={styles.palmContentIntro}><CampaignSectionHeader props={props} />{props.quote || props.puck?.isEditing ? <figure className={styles.campaignAltQuote}><Editable as="blockquote" field="quote" props={props}>{props.quote}</Editable>{props.quoteAttribution || props.puck?.isEditing ? <Editable as="figcaption" field="quoteAttribution" props={props}>{props.quoteAttribution}</Editable> : null}</figure> : null}</div><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div className={styles.palmContentGrid}>{props.items.map((item, index) => <article key={campaignItemKey("palm-card-item", item, index)}><CampaignIcon name={item.icon} /><div><RichCopy as="h3" container={item} field="heading" value={item.heading} />{item.text || props.puck?.isEditing ? <RichCopy container={item} field="text" value={item.text} /> : null}</div></article>)}</div></div></section>;
 }
 
 function PalmCardContactRender({ props }: { props: CampaignAltProps }) {
