@@ -196,21 +196,31 @@ function NativeRichTextInlineMenu({ editor, readOnly }: RichTextMenuProps) {
   return <RichTextMenu><RichTextMenu.Group><RichTextMenu.HeadingSelect /><RichTextMenu.ListSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.Bold /><RichTextMenu.Italic /><RichTextMenu.Underline /><RichTextMenu.Strikethrough /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.AlignSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextColorControl editor={editor} readOnly={readOnly} /></RichTextMenu.Group></RichTextMenu>;
 }
 
+function NativeHeadingRichTextInlineMenu({ editor, readOnly }: RichTextMenuProps) {
+  return <RichTextMenu><RichTextMenu.Group><RichTextMenu.HeadingSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.Bold /><RichTextMenu.Italic /><RichTextMenu.Underline /><RichTextMenu.Strikethrough /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.AlignSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextColorControl editor={editor} readOnly={readOnly} /></RichTextMenu.Group></RichTextMenu>;
+}
+
 const nativeRichTextExtensions = [TextStyle, Color.configure({ types: ["textStyle"] })];
-const richTextField = (label: string, richTextDefault?: string, richTextBlockType?: LexicalBlockType): RichtextField & NativeRichTextField => ({
-  type: "richtext",
-  label,
-  contentEditable: true,
-  initialHeight: 120,
-  options: { heading: { levels: [1, 2, 3, 4] } },
-  renderInlineMenu: NativeRichTextInlineMenu,
-  renderMenu: NativeRichTextMenu,
-  richTextBlockType,
-  richTextDefault,
-  tiptap: { extensions: nativeRichTextExtensions },
-});
-const text = (label: string) => richTextField(label);
-const area = (label: string) => richTextField(label);
+const richTextField = (label: string, richTextDefault?: string, richTextBlockType?: LexicalBlockType, initialHeight = 120): RichtextField & NativeRichTextField => {
+  const isHeading = Boolean(richTextBlockType?.match(/^h[1-4]$/));
+  return {
+    type: "richtext",
+    label,
+    contentEditable: true,
+    initialHeight,
+    options: isHeading
+      ? { blockquote: false, bulletList: false, heading: { levels: [1, 2, 3, 4] }, listItem: false, listKeymap: false, orderedList: false }
+      : { heading: { levels: [1, 2, 3, 4] } },
+    renderInlineMenu: isHeading ? NativeHeadingRichTextInlineMenu : NativeRichTextInlineMenu,
+    renderMenu: NativeRichTextMenu,
+    richTextBlockType,
+    richTextDefault,
+    tiptap: { extensions: nativeRichTextExtensions },
+  };
+};
+const text = (label: string) => richTextField(label, undefined, undefined, 76);
+const area = (label: string) => richTextField(label, undefined, undefined, 144);
+const heading = (label = "Heading", level: Extract<LexicalBlockType, "h1" | "h2" | "h3" | "h4"> = "h2") => richTextField(label, undefined, level, 92);
 const plainText = (label: string) => ({ type: "text" as const, label });
 
 const backgroundDarknessField: Field<number> = {
@@ -499,7 +509,7 @@ const campaignItemsField: Field<CampaignAltItem[]> = {
   type: "array",
   label: "Items",
   defaultItemProps: { label: "", heading: "New item", text: "Add details", value: "", linkLabel: "Learn more", url: "", icon: "check", attribution: "", role: "", image: null },
-  arrayFields: { label: text("Label"), heading: richTextField("Heading"), text: area("Text"), value: text("Value"), linkLabel: richTextField("Link label", "Learn more"), url: plainText("URL"), icon: plainText("Icon"), attribution: text("Attribution"), role: text("Role"), image: mediaField("Image") },
+  arrayFields: { label: text("Label"), heading: heading("Heading", "h3"), text: area("Text"), value: text("Value"), linkLabel: richTextField("Link label", "Learn more", "paragraph", 76), url: plainText("URL"), icon: plainText("Icon"), attribution: text("Attribution"), role: text("Role"), image: mediaField("Image") },
   getItemSummary: (item) => itemSummary("Item", item.heading, item.label, item.value),
 };
 
@@ -518,9 +528,9 @@ function campaignItems(label: string, fields: CampaignItemArrayField["arrayField
 }
 
 const bioHighlightsField = campaignItems("Highlights", { text: area("Highlight") }, { text: "A concise proof point" });
-const issueCardsAltField = campaignItems("Issue cards", { heading: richTextField("Heading", undefined, "h3"), icon: { type: "select", label: "Icon", options: campaignIconOptions }, text: area("Description"), image: mediaField("Background image"), linkLabel: richTextField("Link label", "Learn more"), url: plainText("Link URL") }, { heading: "Community priority", icon: "check", text: "Explain the practical outcome.", image: null, linkLabel: "Learn more", url: "" });
+const issueCardsAltField = campaignItems("Issue cards", { heading: heading("Heading", "h3"), icon: { type: "select", label: "Icon", options: campaignIconOptions }, text: area("Description"), image: mediaField("Background image"), linkLabel: richTextField("Link label", "Learn more", "paragraph", 76), url: plainText("Link URL") }, { heading: "Community priority", icon: "check", text: "Explain the practical outcome.", image: null, linkLabel: "Learn more", url: "" });
 const palmPointsField = campaignItems("Palm card points", { icon: { type: "select", label: "Icon", options: campaignIconOptions }, text: area("Point") }, { icon: "check", text: "Palm card point" });
-const palmContentField = campaignItems("Palm card points", { icon: { type: "select", label: "Icon", options: campaignIconOptions }, heading: richTextField("Heading", undefined, "h3"), text: area("Text") }, { icon: "check", heading: "Palm card point", text: "" });
+const palmContentField = campaignItems("Palm card points", { icon: { type: "select", label: "Icon", options: campaignIconOptions }, heading: heading("Heading", "h3"), text: area("Supporting text") }, { icon: "check", heading: "A clear priority", text: "Add one concise sentence explaining why this point matters." });
 const testimonialsField = campaignItems("Testimonials", { text: area("Quote"), attribution: text("Attribution"), role: text("Role"), image: mediaField("Photo") }, { text: "This work is rooted in what our community needs.", attribution: "Community supporter", role: "Resident", image: null });
 const contactLinksField = campaignItems("Contact links", { label: text("Label"), value: text("Display value"), url: plainText("URL") }, { label: "Website", value: "example.org", url: "https://example.org" });
 
@@ -528,7 +538,7 @@ const campaignNestedField: Field<CampaignAltSlotItem[]> = {
   type: "array",
   label: "Nested content",
   defaultItemProps: { label: "", heading: "New item", text: "Add details", image: null },
-  arrayFields: { label: text("Label"), heading: richTextField("Heading"), text: area("Text"), image: mediaField("Image"), blocks: { type: "slot", allow: nestedElementTypes } },
+  arrayFields: { label: text("Label"), heading: heading("Heading", "h3"), text: area("Text"), image: mediaField("Image"), blocks: { type: "slot", allow: nestedElementTypes } },
   getItemSummary: (item) => itemSummary("Item", item.heading, item.label),
 };
 
@@ -595,7 +605,8 @@ function TestimonialAltRender({ props }: { props: CampaignAltProps }) {
 }
 
 function PalmCardContentRender({ props }: { props: CampaignAltProps }) {
-  return <section className={`${styles.campaignAlt} ${styles.palmContentAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><div className={styles.palmContentIntro}><CampaignSectionHeader props={props} />{props.quote || props.puck?.isEditing ? <figure className={styles.campaignAltQuote}><Editable as="blockquote" field="quote" props={props}>{props.quote}</Editable>{props.quoteAttribution || props.puck?.isEditing ? <Editable as="figcaption" field="quoteAttribution" props={props}>{props.quoteAttribution}</Editable> : null}</figure> : null}</div><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div className={styles.palmContentGrid}>{props.items.map((item, index) => <article key={campaignItemKey("palm-card-item", item, index)}><CampaignIcon name={item.icon} /><div><RichCopy as="h3" container={item} field="heading" value={item.heading} />{item.text || props.puck?.isEditing ? <RichCopy container={item} field="text" value={item.text} /> : null}</div></article>)}</div></div></section>;
+  const isEditing = Boolean(props.puck?.isEditing);
+  return <section className={`${styles.campaignAlt} ${styles.palmContentAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><div className={styles.palmContentIntro}><CampaignSectionHeader props={props} />{props.quote || isEditing ? <figure className={styles.campaignAltQuote}><Editable as="blockquote" field="quote" props={props}>{props.quote}</Editable>{props.quoteAttribution || isEditing ? <Editable as="figcaption" field="quoteAttribution" props={props}>{props.quoteAttribution}</Editable> : null}</figure> : null}</div><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div className={styles.palmContentGrid}>{props.items.map((item, index) => <article key={campaignItemKey("palm-card-item", item, index)}><CampaignIcon name={item.icon} /><div className={styles.palmContentCopy}><div className={styles.palmContentEditorField} data-editing={isEditing || undefined}><span aria-hidden="true" className={styles.palmContentEditorLabel}>Heading</span><RichCopy as="h3" container={item} field="heading" value={item.heading} /></div><div className={styles.palmContentEditorField} data-editing={isEditing || undefined}><span aria-hidden="true" className={styles.palmContentEditorLabel}>Supporting text</span><RichCopy container={item} field="text" value={item.text} /></div></div></article>)}</div></div></section>;
 }
 
 function PalmCardContactRender({ props }: { props: CampaignAltProps }) {
@@ -643,21 +654,21 @@ function campaignAltDefaults(definition: CampaignAltDefinition): Omit<CampaignAl
   if (definition.type === "PalmCardPointsAlt") return { ...base, presentation: "wide", heading: "Working for you", intro: "", body: "", items: [{ icon: "check", text: "Palm card point" }, { icon: "check", text: "Palm card point" }, { icon: "check", text: "Palm card point" }] };
   if (definition.type === "PalmCardBioAlt") return { ...base, presentation: "wide", eyebrow: "About", heading: "Candidate name", body: "Use this short biography to introduce experience, values, and community ties.", quote: "Leadership starts by listening.", quoteAttribution: "Candidate name", items: [] };
   if (definition.type === "TestimonialAlt") return { ...base, heading: "What people are saying", intro: "Use quotes for social proof, endorsements, or community voices.", body: "", items: [{ text: "This work is focused on what our community needs right now.", attribution: "Community supporter", role: "Resident", image: null }, { text: "The message is clear, practical, and rooted in local priorities.", attribution: "Local leader", role: "Endorser", image: null }] };
-  if (definition.type === "PalmCardAlt") return { ...base, presentation: "wide", heading: "Palm card content", intro: "", body: "", items: [{ icon: "check", heading: "Palm card point", text: "" }, { icon: "check", heading: "Palm card point", text: "" }, { icon: "check", heading: "Palm card point", text: "" }] };
+  if (definition.type === "PalmCardAlt") return { ...base, presentation: "wide", heading: "Palm card content", intro: "Use each card for one memorable idea and one short explanation.", body: "", items: [{ icon: "check", heading: "A clear priority", text: "Add one concise sentence explaining why this point matters." }, { icon: "check", heading: "A practical next step", text: "Describe the action or result people should remember." }, { icon: "check", heading: "A reason to get involved", text: "Close with a specific invitation, benefit, or outcome." }] };
   if (definition.type === "PalmCardContactAlt") return { ...base, presentation: "wide", eyebrow: "Voting information", heading: "Everything you need to take action", intro: "Keep essential dates and contact details together.", body: "", electionDay: "Election Day: Nov. 3", earlyVote: "Vote early: Oct. 19 - Nov. 1", website: "example.org", disclaimer: "Paid for by the campaign. Approved by the candidate.", items: [{ label: "Website", value: "example.org", url: "https://example.org" }, { label: "Facebook", value: "Follow the campaign", url: "#" }] };
   return base;
 }
 
 function campaignAltFields(definition: CampaignAltDefinition) {
   const common = { variant: { type: "select" as const, label: "Variant", options: definition.variants.map((value) => ({ label: campaignOptionLabel(value), value })) }, presentation: { type: "select" as const, label: "Presentation", options: (definition.presentations || ["contained"]).map((value) => ({ label: campaignOptionLabel(value), value })) } };
-  const header = { eyebrow: text("Eyebrow"), heading: richTextField("Heading", undefined, "h2"), intro: area("Introduction") };
+  const header = { eyebrow: text("Eyebrow"), heading: heading("Heading", "h2"), intro: area("Introduction") };
 
-  if (definition.type === "HeroAlt") return { ...common, eyebrow: text("Eyebrow"), heading: richTextField("Heading", undefined, "h1"), headingLogo: mediaField("Heading logo"), body: area("Body"), highlightTitle: text("Highlight title"), highlightText: area("Highlight text"), media: mediaField("Primary media"), backgroundMedia: mediaField("Background media"), backgroundOverlay: { type: "select", label: "Background overlay", options: ["none", "off", "subtle", "standard", "strong"].map((value) => ({ label: campaignOptionLabel(value), value })) }, textPanelColor: { type: "select", label: "Panel color", options: ["primary", "accent", "foreground", "background", "white"].map((value) => ({ label: campaignOptionLabel(value), value })) }, textPanelOpacity: { type: "select", label: "Panel opacity", options: ["translucent", "solid"].map((value) => ({ label: campaignOptionLabel(value), value })) }, primaryLabel: text("Primary action label"), primaryUrl: plainText("Primary action URL"), secondaryLabel: text("Secondary action label"), secondaryUrl: plainText("Secondary action URL") };
+  if (definition.type === "HeroAlt") return { ...common, eyebrow: text("Eyebrow"), heading: heading("Heading", "h1"), headingLogo: mediaField("Heading logo"), body: area("Body"), highlightTitle: text("Highlight title"), highlightText: area("Highlight text"), media: mediaField("Primary media"), backgroundMedia: mediaField("Background media"), backgroundOverlay: { type: "select", label: "Background overlay", options: ["none", "off", "subtle", "standard", "strong"].map((value) => ({ label: campaignOptionLabel(value), value })) }, textPanelColor: { type: "select", label: "Panel color", options: ["primary", "accent", "foreground", "background", "white"].map((value) => ({ label: campaignOptionLabel(value), value })) }, textPanelOpacity: { type: "select", label: "Panel opacity", options: ["translucent", "solid"].map((value) => ({ label: campaignOptionLabel(value), value })) }, primaryLabel: text("Primary action label"), primaryUrl: plainText("Primary action URL"), secondaryLabel: text("Secondary action label"), secondaryUrl: plainText("Secondary action URL") };
   if (definition.type === "AboutAlt") return { ...common, ...header, body: area("Body"), media: mediaField("Portrait or feature image"), items: bioHighlightsField };
   if (definition.type === "CardsGridAlt") return { ...common, eyebrow: text("Eyebrow"), heading: richTextField("Heading", undefined, "h2"), intro: area("Introduction"), body: area("Body fallback"), items: issueCardsAltField };
   if (definition.type === "PalmCardPointsAlt") return { ...common, ...header, items: palmPointsField };
-  if (definition.type === "PalmCardBioAlt") return { ...common, eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Biography"), quote: area("Quote"), quoteAttribution: text("Quote attribution"), media: mediaField("Photo") };
-  if (definition.type === "TestimonialAlt") return { ...common, heading: text("Heading"), intro: area("Introduction"), items: testimonialsField };
+  if (definition.type === "PalmCardBioAlt") return { ...common, eyebrow: text("Eyebrow"), heading: heading("Heading", "h2"), body: area("Biography"), quote: richTextField("Quote", undefined, "quote", 144), quoteAttribution: text("Quote attribution"), media: mediaField("Photo") };
+  if (definition.type === "TestimonialAlt") return { ...common, heading: heading("Heading", "h2"), intro: area("Introduction"), items: testimonialsField };
   if (definition.type === "PalmCardAlt") return { ...common, ...header, body: area("Body fallback"), media: mediaField("Photo"), items: palmContentField, quote: area("Quote"), quoteAttribution: text("Quote attribution") };
   if (definition.type === "PalmCardContactAlt") return { ...common, ...header, electionDay: text("Election day"), earlyVote: text("Early vote"), phone: text("Phone"), email: text("Email"), website: text("Website"), items: contactLinksField, qrImage: mediaField("QR image"), qrCaption: text("QR caption"), disclaimer: text("Paid for / disclaimer") };
   return { ...common, eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Body"), media: mediaField("Primary media"), backgroundMedia: mediaField("Background media"), primaryLabel: text("Primary action label"), primaryUrl: plainText("Primary action URL"), secondaryLabel: text("Secondary action label"), secondaryUrl: plainText("Secondary action URL"), items: campaignItemsField };

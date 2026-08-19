@@ -818,6 +818,13 @@
 .palmContentGrid [data-rich-as="h3"] { font-size: 1.35rem; margin: 5px 0 8px; }
 .palmContentGrid p,
 .palmContentGrid [data-rich-as="p"] { color: #5a544c; line-height: 1.6; margin: 0; }
+.palmContentCopy { min-width: 0; width: 100%; }
+.palmContentEditorField { position: relative; }
+.palmContentEditorLabel { display: none; }
+.palmContentEditorField[data-editing="true"] { border: 1px dashed #b7aea1; border-radius: 7px; margin-block: 4px 10px; min-height: 52px; padding: 18px 10px 8px; }
+.palmContentEditorField[data-editing="true"] .palmContentEditorLabel { background: #fff; color: #766e64; display: block; font-size: .68rem; font-weight: 700; left: 8px; letter-spacing: .08em; line-height: 1; padding: 0 4px; position: absolute; text-transform: uppercase; top: 6px; }
+.palmContentEditorField[data-editing="true"] .richInline,
+.palmContentEditorField[data-editing="true"] .richInline :global(.rich-text) { min-height: 1.45em; }
 .palmContentAlt[data-variant="compactList"] .campaignAltProfileMedia { display: none; }
 .palmContentAlt[data-variant="splitProfile"] > .shell { grid-template-columns: 1fr .75fr; }
 .palmContentAlt[data-variant="splitProfile"] .campaignAltProfileMedia { grid-column: 2; grid-row: 1 / span 2; }
@@ -930,6 +937,7 @@
 .richInline { display: block; }
 .richInline > :global([class*="RichTextEditor"]) { color: inherit; font: inherit; text-align: inherit; width: 100%; }
 .richInline :global(.rich-text) { color: inherit; font: inherit; text-align: inherit; }
+.richInline[data-rich-as] :is(h1, h2, h3, h4, p) { color: inherit; font: inherit; text-align: inherit; }
 .richInline :is(h1, h2, h3, h4, p, ul, ol, blockquote) { margin-block: .35em; }
 .richInline :is(ul, ol) { padding-inline-start: 1.35em; }
 .richTextColorControl { align-items: center; display: inline-flex; gap: 4px; min-height: 28px; padding: 0 2px; }
