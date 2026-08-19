@@ -2,7 +2,7 @@ import type { CollectionConfig } from "payload";
 
 import { PAGE_LAYOUT_BLOCKS } from "@/blocks/page-blocks";
 import { defaultPageData } from "@/puck/default-data";
-import { pageLayoutToPuckData, puckDataToLayout } from "@/puck/page-data";
+import { isPuckData, pageLayoutToPuckData, puckDataToLayout } from "@/puck/page-data";
 import type { PageDocument } from "@/puck/types";
 
 function formatSlug(value: unknown) {
@@ -105,7 +105,11 @@ export const Pages: CollectionConfig = {
       },
     ],
     beforeChange: [
-      ({ data, originalDoc }) => {
+      ({ context, data, originalDoc }) => {
+        if (context?.puckVisualBuilder === true && isPuckData(data.builderData)) {
+          data.layout = puckDataToLayout(data.builderData);
+          return data;
+        }
         if (Array.isArray(data.layout)) {
           data.builderData = pageLayoutToPuckData({
             ...(originalDoc as PageDocument),

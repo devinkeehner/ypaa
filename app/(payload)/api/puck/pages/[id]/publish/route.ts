@@ -26,6 +26,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       collection: "pages",
       id,
       data: puckDataToPagePatch(body.data, currentPage as unknown as PageDocument),
+      context: { puckVisualBuilder: true },
       depth: 0,
       draft: false,
       overrideAccess: false,

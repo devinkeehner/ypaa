@@ -12,6 +12,7 @@ import {
 import type { NECYPAAData, PageDocument } from "./types";
 import { normalizeLayoutColumns } from "./layout-utils.mjs";
 import { campaignAltDefinitions, campaignAltTypes } from "./campaign-alt-definitions";
+import { stripNativeRichTextForPayload } from "./native-rich-text";
 
 const COMPONENT_TYPES = new Set([
   "HeroCountdown",
@@ -302,12 +303,13 @@ export function normalizePuckData(value: unknown): NECYPAAData {
 }
 
 export function pageDocumentToPuckData(page: PageDocument): NECYPAAData {
-  if (Array.isArray(page.layout) && page.layout.length) {
-    return pageLayoutToPuckData(page);
+  if (isPuckData(page.builderData)) {
+    const data = normalizePuckData(page.builderData);
+    return { ...data, root: pageRoot(page, data.root) } as NECYPAAData;
   }
 
-  const data = normalizePuckData(page.builderData);
-  return { ...data, root: pageRoot(page, data.root) } as NECYPAAData;
+  if (Array.isArray(page.layout) && page.layout.length) return pageLayoutToPuckData(page);
+  return { ...cloneDefaultData(), root: pageRoot(page) } as NECYPAAData;
 }
 
 export function pageLayoutToPuckData(page: PageDocument): NECYPAAData {
@@ -325,7 +327,7 @@ function contentToNestedLayout(value: unknown): Array<Record<string, unknown>> {
     if (!isRecord(item) || typeof item.type !== "string" || !COMPONENT_TYPES.has(item.type)) return [];
     const props = isRecord(item.props) ? normalizeProps(item.type, item.props) : {};
     const id = typeof props.id === "string" ? props.id : `${item.type}-nested-${index}`;
-    const packedProps = packMedia(item.type, packTextStyles({ ...props, id }));
+    const packedProps = stripNativeRichTextForPayload(packMedia(item.type, packTextStyles({ ...props, id }))) as Record<string, unknown>;
     if (DIRECT_NESTED_TYPES.has(item.type) && Array.isArray(packedProps.blocks)) {
       packedProps.blocks = contentToNestedLayout(packedProps.blocks);
     }
@@ -355,7 +357,7 @@ export function puckDataToLayout(value: unknown): Array<Record<string, unknown>>
     if (DIRECT_NESTED_TYPES.has(item.type) && Array.isArray(withNested.blocks)) {
       withNested.blocks = contentToNestedLayout(withNested.blocks);
     }
-    const packed = packMedia(item.type, packTextStyles(withNested));
+    const packed = stripNativeRichTextForPayload(packMedia(item.type, packTextStyles(withNested))) as Record<string, unknown>;
     return [{ ...packed, id, blockType: item.type }];
   });
 }

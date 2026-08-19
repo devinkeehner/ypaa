@@ -1,15 +1,16 @@
 "use client";
 
-import { Render, type ComponentConfig, type Config, type Field } from "@puckeditor/core";
-import { RichText as PayloadRichText, type JSXConvertersFunction } from "@payloadcms/richtext-lexical/react";
-import { BadgeDollarSign, BriefcaseBusiness, CalendarDays, Check, ChevronDown, ChevronRight, HeartHandshake, Landmark, MapPin, Megaphone, ShieldCheck, Users, Vote } from "lucide-react";
+import { Render, RichTextMenu, type ComponentConfig, type Config, type Field, type RichtextField } from "@puckeditor/core";
+import { Color } from "@tiptap/extension-color";
+import { TextStyle } from "@tiptap/extension-text-style";
+import { BadgeDollarSign, BriefcaseBusiness, CalendarDays, Check, ChevronDown, ChevronRight, HeartHandshake, Landmark, MapPin, Megaphone, Palette, ShieldCheck, Users, Vote, X } from "lucide-react";
 import { Fragment, isValidElement, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { Countdown } from "@/components/site/Countdown";
 import { ProgramExplorer } from "@/components/site/ProgramExplorer";
-import { isLexicalValue, normalizeLexicalValue, type LexicalBlockType } from "@/puck/lexical-value";
+import type { LexicalBlockType } from "@/puck/lexical-value";
 import { layoutColumnCount } from "@/puck/layout-utils.mjs";
-import { extractLexicalTextColor } from "@/puck/rich-text-style.mjs";
+import { normalizeNativeRichTextProps, richTextToPlainText, type NativeRichTextField } from "@/puck/native-rich-text";
 import {
   normalizeImportantDates,
   normalizeMeetings,
@@ -25,7 +26,7 @@ import type { NECYPAAData } from "@/puck/types";
 import styles from "./puck.module.css";
 
 function summaryText(value: unknown): string {
-  if (typeof value === "string") return value.trim();
+  if (typeof value === "string") return richTextToPlainText(value).trim();
   if (typeof value === "number") return String(value);
   if (!value || typeof value !== "object") return "";
   if (Array.isArray(value)) return value.map(summaryText).filter(Boolean).join(" ");
@@ -163,7 +164,51 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   ...campaignAltEditableFields,
 };
 
-const richTextField = (label: string, richTextDefault?: string, richTextBlockType?: LexicalBlockType) => ({ type: "custom" as const, label, richText: true, contentEditable: false, richTextBlockType, richTextDefault, render: () => <></> });
+type RichTextMenuProps = Parameters<NonNullable<RichtextField["renderMenu"]>>[0];
+
+function editorColor(value: unknown) {
+  if (typeof value !== "string") return "#171b20";
+  if (/^#[\da-f]{6}$/i.test(value)) return value;
+  if (/^#[\da-f]{3}$/i.test(value)) return `#${value.slice(1).split("").map((part) => `${part}${part}`).join("")}`;
+  return "#171b20";
+}
+
+function applyRichTextColor(editor: RichTextMenuProps["editor"], color?: string) {
+  if (!editor) return;
+  editor.commands.focus();
+  window.requestAnimationFrame(() => {
+    const chain = editor.chain().focus();
+    if (color) chain.setColor(color).run();
+    else chain.unsetColor().run();
+  });
+}
+
+function RichTextColorControl({ editor, readOnly }: Pick<RichTextMenuProps, "editor" | "readOnly">) {
+  const color = editorColor(editor?.getAttributes("textStyle").color);
+  return <label className={styles.richTextColorControl} onClick={(event) => event.stopPropagation()} title="Text color"><Palette aria-hidden="true" /><input aria-label="Text color" disabled={readOnly || !editor} onChange={(event) => applyRichTextColor(editor, event.currentTarget.value)} type="color" value={color} /><button aria-label="Clear text color" disabled={readOnly || !editor} onClick={(event) => { event.preventDefault(); event.stopPropagation(); applyRichTextColor(editor); }} type="button"><X aria-hidden="true" /></button></label>;
+}
+
+function NativeRichTextMenu({ children, editor, readOnly }: RichTextMenuProps) {
+  return <RichTextMenu>{children}<RichTextMenu.Group><RichTextColorControl editor={editor} readOnly={readOnly} /></RichTextMenu.Group></RichTextMenu>;
+}
+
+function NativeRichTextInlineMenu({ editor, readOnly }: RichTextMenuProps) {
+  return <RichTextMenu><RichTextMenu.Group><RichTextMenu.HeadingSelect /><RichTextMenu.ListSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.Bold /><RichTextMenu.Italic /><RichTextMenu.Underline /><RichTextMenu.Strikethrough /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.AlignSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextColorControl editor={editor} readOnly={readOnly} /></RichTextMenu.Group></RichTextMenu>;
+}
+
+const nativeRichTextExtensions = [TextStyle, Color.configure({ types: ["textStyle"] })];
+const richTextField = (label: string, richTextDefault?: string, richTextBlockType?: LexicalBlockType): RichtextField & NativeRichTextField => ({
+  type: "richtext",
+  label,
+  contentEditable: true,
+  initialHeight: 120,
+  options: { heading: { levels: [1, 2, 3, 4] } },
+  renderInlineMenu: NativeRichTextInlineMenu,
+  renderMenu: NativeRichTextMenu,
+  richTextBlockType,
+  richTextDefault,
+  tiptap: { extensions: nativeRichTextExtensions },
+});
 const text = (label: string) => richTextField(label);
 const area = (label: string) => richTextField(label);
 const plainText = (label: string) => ({ type: "text" as const, label });
@@ -245,12 +290,7 @@ const mediaField = (label: string, allowVideo = false): Field<MediaValue | null 
   renderFooter: () => <a href="/admin/collections/media/create" rel="noreferrer" target="_blank">Upload a new image in Media</a>,
 });
 
-const richTextPlaceholder = {
-  type: "custom" as const,
-  label: "Rich text",
-  richText: true,
-  render: () => <></>,
-};
+const richTextPlaceholder = richTextField("Rich text", "Write rich text here.", "paragraph");
 
 const importantDatesField: Field<ImportantDate[]> = {
   type: "array",
@@ -410,41 +450,18 @@ function styleFor(props: Base, field: string): CSSProperties {
   };
 }
 
-function getPuckRichTextValue(container: unknown, field: string): unknown {
-  if (!container || typeof container !== "object" || Array.isArray(container)) return null;
-  const map = (container as { puckRichText?: unknown }).puckRichText;
-  if (!map || typeof map !== "object" || Array.isArray(map)) return null;
-  const entry = (map as Record<string, unknown>)[field];
-  if (isLexicalValue(entry)) return entry;
-  if (!entry || typeof entry !== "object" || Array.isArray(entry)) return null;
-  const richEntry = entry as { enabled?: boolean; value?: unknown };
-  return richEntry.enabled && (isLexicalValue(richEntry.value) || isValidElement(richEntry.value)) ? richEntry.value : null;
-}
-
-const richTextConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
-  ...defaultConverters,
-  text: (args) => {
-    const defaultText = defaultConverters.text;
-    const content = typeof defaultText === "function" ? defaultText(args) : defaultText;
-    const color = extractLexicalTextColor(args.node.style);
-    return color ? <span style={{ color }}>{content}</span> : content;
-  },
-});
-
 function RichValue({ as: Tag, className, field, value, style }: { as: ElementType; className?: string; field?: string; value: unknown; style?: CSSProperties }) {
   const richAs = typeof Tag === "string" ? Tag : undefined;
-  if (isLexicalValue(value)) return <div className={`${className || ""} ${styles.richInline}`} data-puck-text-field={field} data-rich-as={richAs} style={style}><PayloadRichText converters={richTextConverters} data={normalizeLexicalValue(value)} /></div>;
-  if (isValidElement(value)) return <div className={className} data-puck-text-field={field} data-rich-as={richAs} style={style}>{value}</div>;
+  if (isValidElement(value)) return <div className={`${className || ""} ${styles.richInline}`} data-puck-text-field={field} data-rich-as={richAs} style={style}>{value}</div>;
   return <Tag className={className} data-puck-text-field={field} style={style}>{typeof value === "string" || typeof value === "number" ? value : ""}</Tag>;
 }
 
 function Editable({ as: Tag = "span", props, field, children, className }: { as?: ElementType; props: Base; field: string; children: ReactNode; className?: string }) {
-  const rich = getPuckRichTextValue(props, field);
-  return <RichValue as={Tag} className={className} field={field} style={styleFor(props, field)} value={rich || children} />;
+  return <RichValue as={Tag} className={className} field={field} style={styleFor(props, field)} value={children} />;
 }
 
-function RichCopy({ value, as: Tag = "p", className, container, field }: { value: unknown; as?: ElementType; className?: string; container?: unknown; field?: string }) {
-  return <RichValue as={Tag} className={className} value={field ? getPuckRichTextValue(container, field) || value : value} />;
+function RichCopy({ value, as: Tag = "p", className, field }: { value: unknown; as?: ElementType; className?: string; container?: unknown; field?: string }) {
+  return <RichValue as={Tag} className={className} field={field} value={value} />;
 }
 
 function Button({ href, children, outline = false }: { href: string; children: ReactNode; outline?: boolean }) {
@@ -784,7 +801,7 @@ export const puckConfig: Config<Components> = {
     },
     RichText: {
       label: "Rich text",
-      defaultProps: { content: normalizeLexicalValue("Write rich text here."), fontSize: "1rem", color: "#171b20", fontWeight: "400", alignment: "left" },
+      defaultProps: { content: "Write rich text here.", fontSize: "1rem", color: "#171b20", fontWeight: "400", alignment: "left" },
       fields: { content: richTextPlaceholder, fontSize: plainText("Font size"), color: plainText("Color"), fontWeight: { type: "select", label: "Weight", options: [{ label: "Regular", value: "400" }, { label: "Bold", value: "700" }] }, alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } },
       render: (props) => <section className={styles.richText} id={props.id} style={{ color: props.color, fontSize: props.fontSize, fontWeight: props.fontWeight, textAlign: props.alignment }}><div className={styles.shell}><Editable field="content" props={props}>{props.content as ReactNode}</Editable></div></section>,
     },
@@ -880,6 +897,36 @@ export const puckConfig: Config<Components> = {
   },
 };
 
+function normalizeRichTextItem(item: NECYPAAData["content"][number]) {
+  const component = (puckConfig.components as unknown as Record<string, ComponentConfig<Record<string, unknown>>>)[item.type];
+  if (!component) return item;
+  return {
+    ...item,
+    props: normalizeNativeRichTextProps(
+      (component.fields || {}) as Record<string, NativeRichTextField>,
+      item.props as Record<string, unknown>,
+      item.type,
+    ),
+  } as NECYPAAData["content"][number];
+}
+
+Object.entries(puckConfig.components).forEach(([componentType, component]) => {
+  const config = component as ComponentConfig<Record<string, unknown>>;
+  config.defaultProps = normalizeNativeRichTextProps(
+    (config.fields || {}) as Record<string, NativeRichTextField>,
+    config.defaultProps as Record<string, unknown>,
+    componentType,
+  );
+});
+
+export function normalizePuckRichTextData(data: NECYPAAData): NECYPAAData {
+  return {
+    ...data,
+    content: data.content.map(normalizeRichTextItem),
+    zones: Object.fromEntries(Object.entries(data.zones || {}).map(([zone, content]) => [zone, content.map(normalizeRichTextItem)])),
+  };
+}
+
 export function PublicPuckRender({ data }: { data: NECYPAAData }) {
-  return <Render config={puckConfig as unknown as Config} data={data} />;
+  return <Render config={puckConfig as unknown as Config} data={normalizePuckRichTextData(data)} />;
 }
