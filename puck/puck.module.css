@@ -657,16 +657,20 @@
 
 .campaignAltHeader { max-width: 780px; min-width: 0; }
 .campaignAltHeader[data-centered="true"] { margin-inline: auto; text-align: center; }
-.campaignAltHeader h2 { font-size: clamp(2.25rem, 5vw, 4.8rem); line-height: 1.02; margin: 10px 0 18px; }
+.campaignAltHeader h2,
+.campaignAltHeader [data-rich-as="h2"] { font-size: clamp(2.25rem, 5vw, 4.8rem); line-height: 1.02; margin: 10px 0 18px; }
 .campaignAltHeader > p:last-child,
+.campaignAltHeader > [data-rich-as="p"]:last-child,
 .campaignAltLongCopy { color: #514c45; font-size: 1.08rem; line-height: 1.72; }
 .campaignAltProfileMedia { margin: 0; min-height: 360px; }
 .campaignAltProfileMedia img { height: 100%; min-height: 360px; object-fit: cover; }
 .campaignAltIcon { align-items: center; background: #173c3d; color: #fff; display: inline-flex; flex: 0 0 auto; height: 46px; justify-content: center; width: 46px; }
 .campaignAltIcon svg { height: 22px; width: 22px; }
 .campaignAltQuote { border-left: 4px solid #d95132; margin: 28px 0 0; padding: 10px 0 10px 22px; }
-.campaignAltQuote blockquote { font: 600 italic 1.3rem/1.55 Georgia, serif; margin: 0; }
-.campaignAltQuote figcaption { color: #6f675e; font-size: .78rem; font-weight: 800; margin-top: 12px; text-transform: uppercase; }
+.campaignAltQuote blockquote,
+.campaignAltQuote [data-rich-as="blockquote"] { font: 600 italic 1.3rem/1.55 Georgia, serif; margin: 0; }
+.campaignAltQuote figcaption,
+.campaignAltQuote [data-rich-as="figcaption"] { color: #6f675e; font-size: .78rem; font-weight: 800; margin-top: 12px; text-transform: uppercase; }
 
 /* Every Hero Alt variant has its own layout, not just a selector value. */
 .heroAlt { align-items: center; background: #f4efe5; display: flex; min-height: min(850px, 90vh); padding: clamp(70px, 8vw, 126px) 0; }
@@ -677,14 +681,18 @@
 .heroAlt[data-overlay="strong"]::before { opacity: .82; }
 .heroAlt > .shell { align-items: center; display: grid; gap: clamp(38px, 7vw, 100px); grid-template-columns: minmax(0, 1.05fr) minmax(280px, .95fr); position: relative; width: 100%; z-index: 2; }
 .heroAlt .campaignAltCopy { max-width: 780px; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
-.heroAlt .campaignAltCopy > p:not(.eyebrowDark) { color: inherit; font-size: clamp(1rem, 1.4vw, 1.25rem); line-height: 1.7; max-width: 680px; opacity: .82; }
-.heroAlt .campaignAltCopy h1 { font-size: clamp(3.4rem, 8vw, 7.4rem); letter-spacing: 0; line-height: .94; margin: 14px 0 25px; max-width: 100%; overflow-wrap: anywhere; word-break: break-word; }
+.heroAlt .campaignAltCopy > p:not(.eyebrowDark),
+.heroAlt .campaignAltCopy > [data-rich-as="p"]:not(.eyebrowDark) { color: inherit; font-size: clamp(1rem, 1.4vw, 1.25rem); line-height: 1.7; max-width: 680px; opacity: .82; }
+.heroAlt .campaignAltCopy h1,
+.heroAlt .campaignAltCopy [data-rich-as="h1"] { font-size: clamp(3.4rem, 8vw, 7.4rem); letter-spacing: 0; line-height: .94; margin: 14px 0 25px; max-width: 100%; overflow-wrap: anywhere; word-break: break-word; }
 .heroAltMedia { box-shadow: 18px 18px 0 #d95132; min-height: 440px; }
 .heroAltMedia img { height: 100%; min-height: 440px; object-fit: cover; }
 .heroAltLogo { display: block; margin-inline: auto; max-height: 190px; max-width: min(640px, 100%); object-fit: contain; object-position: center; }
 .heroAltHighlight { border-left: 3px solid #d95132; display: grid; gap: 6px; margin-top: 25px; max-width: 560px; padding: 4px 0 4px 18px; }
-.heroAltHighlight strong { font-size: .78rem; letter-spacing: 0; text-transform: uppercase; }
-.heroAltHighlight span { line-height: 1.5; }
+.heroAltHighlight strong,
+.heroAltHighlight [data-rich-as="strong"] { font-size: .78rem; letter-spacing: 0; text-transform: uppercase; }
+.heroAltHighlight span,
+.heroAltHighlight [data-rich-as="span"] { line-height: 1.5; }
 .heroAlt[data-variant="centeredStatement"] > .shell { display: block; text-align: center; }
 .heroAlt[data-variant="centeredStatement"] .campaignAltCopy { margin-inline: auto; max-width: 1040px; }
 .heroAlt[data-variant="centeredStatement"] .campaignAltCopy > p,
@@ -748,8 +756,10 @@
 .issuesCardsAltGrid article { background: #fff; border: 1px solid #d4cec3; min-height: 280px; overflow: hidden; }
 .issuesCardsAltGrid article > img { aspect-ratio: 16 / 9; object-fit: cover; width: 100%; }
 .issuesCardsAltGrid article > div { padding: 26px; }
-.issuesCardsAltGrid h3 { font-size: 1.55rem; margin: 18px 0 10px; }
-.issuesCardsAltGrid p { color: #5a544c; line-height: 1.65; }
+.issuesCardsAltGrid h3,
+.issuesCardsAltGrid [data-rich-as="h3"] { font-size: 1.55rem; margin: 18px 0 10px; }
+.issuesCardsAltGrid p,
+.issuesCardsAltGrid [data-rich-as="p"] { color: #5a544c; line-height: 1.65; }
 .issuesCardsAltGrid a { color: #983715; font-weight: 800; }
 .issuesCardsAlt[data-variant="imageOverlay"] .issuesCardsAltGrid article { background: #183637; color: #fff; display: grid; min-height: 390px; position: relative; }
 .issuesCardsAlt[data-variant="imageOverlay"] .issuesCardsAltGrid article > img { height: 100%; inset: 0; position: absolute; }
@@ -766,7 +776,8 @@
 
 .palmPointsGrid { display: grid; gap: 16px; margin: 38px auto 0; max-width: 960px; }
 .palmPointsGrid article { align-items: center; background: #fff; border-left: 5px solid #d95132; display: flex; gap: 18px; padding: 20px 24px; }
-.palmPointsGrid p { font-size: 1.08rem; font-weight: 750; line-height: 1.5; margin: 0; }
+.palmPointsGrid p,
+.palmPointsGrid [data-rich-as="p"] { font-size: 1.08rem; font-weight: 750; line-height: 1.5; margin: 0; }
 .palmPointsAlt[data-variant="iconCards"] .palmPointsGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: none; }
 .palmPointsAlt[data-variant="iconCards"] .palmPointsGrid article { align-items: flex-start; border: 1px solid #d4cec3; flex-direction: column; min-height: 210px; }
 .palmPointsAlt[data-variant="twoColumn"] .palmPointsGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: none; }
@@ -784,9 +795,11 @@
 .testimonialsAltGrid { display: grid; gap: 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 40px; }
 .testimonialsAltGrid figure { background: #f7f4ed; color: #171b20; margin: 0; padding: 28px; }
 .testimonialsAltGrid figure > img { border-radius: 50%; height: 68px; object-fit: cover; width: 68px; }
-.testimonialsAltGrid blockquote { font: 600 1.12rem/1.65 Georgia, serif; margin: 20px 0; }
+.testimonialsAltGrid blockquote,
+.testimonialsAltGrid [data-rich-as="blockquote"] { font: 600 1.12rem/1.65 Georgia, serif; margin: 20px 0; }
 .testimonialsAltGrid figcaption { display: grid; gap: 4px; }
-.testimonialsAltGrid figcaption span { color: #9c4329; font-size: .75rem; font-weight: 800; text-transform: uppercase; }
+.testimonialsAltGrid figcaption span,
+.testimonialsAltGrid figcaption [data-rich-as="span"] { color: #9c4329; font-size: .75rem; font-weight: 800; text-transform: uppercase; }
 .testimonialsAlt[data-variant="editorial"] > .shell { display: grid; gap: 50px; grid-template-columns: .75fr 1.25fr; }
 .testimonialsAlt[data-variant="editorial"] .campaignAltHeader { text-align: left; }
 .testimonialsAlt[data-variant="editorial"] .testimonialsAltGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 0; }
@@ -798,8 +811,10 @@
 .palmContentAlt > .shell { display: grid; gap: 34px; }
 .palmContentGrid { display: grid; gap: 15px; }
 .palmContentGrid article { align-items: flex-start; background: #fff; border-left: 5px solid #d95132; display: flex; gap: 18px; padding: 22px; }
-.palmContentGrid h3 { font-size: 1.35rem; margin: 5px 0 8px; }
-.palmContentGrid p { color: #5a544c; line-height: 1.6; margin: 0; }
+.palmContentGrid h3,
+.palmContentGrid [data-rich-as="h3"] { font-size: 1.35rem; margin: 5px 0 8px; }
+.palmContentGrid p,
+.palmContentGrid [data-rich-as="p"] { color: #5a544c; line-height: 1.6; margin: 0; }
 .palmContentAlt[data-variant="compactList"] .campaignAltProfileMedia { display: none; }
 .palmContentAlt[data-variant="splitProfile"] > .shell { grid-template-columns: 1fr .75fr; }
 .palmContentAlt[data-variant="splitProfile"] .campaignAltProfileMedia { grid-column: 2; grid-row: 1 / span 2; }
@@ -814,7 +829,8 @@
 .palmContactDetails small { color: #9c4329; font-weight: 800; text-transform: uppercase; }
 .palmContactLinks { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
 .palmContactLinks a,
-.palmContactLinks span { border: 1px solid #183637; color: #183637; font-weight: 800; padding: 10px 14px; text-decoration: none; }
+.palmContactLinks > span,
+.palmContactLinks [data-rich-as="span"] { border: 1px solid #183637; color: #183637; font-weight: 800; padding: 10px 14px; text-decoration: none; }
 .palmContactQr { margin: 0; text-align: center; width: 190px; }
 .palmContactQr img { aspect-ratio: 1; object-fit: contain; width: 100%; }
 .palmContactQr figcaption { font-size: .72rem; font-weight: 800; margin-top: 8px; text-transform: uppercase; }
@@ -824,7 +840,8 @@
 .palmContactAlt[data-variant="footerBand"] .campaignAltHeader > p:last-child { color: #e8e1d6; }
 .palmContactAlt[data-variant="footerBand"] .palmContactDetails > div { border-color: #ffffff35; }
 .palmContactAlt[data-variant="footerBand"] .palmContactLinks a,
-.palmContactAlt[data-variant="footerBand"] .palmContactLinks span { border-color: #fff; color: #fff; }
+.palmContactAlt[data-variant="footerBand"] .palmContactLinks > span,
+.palmContactAlt[data-variant="footerBand"] .palmContactLinks [data-rich-as="span"] { border-color: #fff; color: #fff; }
 .palmContactAlt[data-variant="splitAction"] > .shell { grid-template-columns: minmax(0, 1fr) minmax(260px, .52fr); }
 .palmContactAlt[data-variant="splitAction"] .palmContactDetails { grid-template-columns: 1fr; }
 

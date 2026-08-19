@@ -24,6 +24,9 @@
 .field[data-surface="canvas"] .editor, .field[data-surface="canvas"] .content { min-height: 1em; }
 .field[data-surface="canvas"] .content { padding: 0; color: inherit; font: inherit; line-height: inherit; }
 .field[data-surface="canvas"] .placeholder { top: 0; left: 0; color: currentColor; opacity: .5; }
+.field[data-compact="true"] .editor, .field[data-compact="true"] .content { min-height: 72px; }
+.field[data-compact="true"] .content { padding: 10px 11px; }
+.field[data-compact="true"] .placeholder { left: 11px; top: 10px; }
 :where(.field[data-surface="canvas"] .paragraph, .field[data-surface="canvas"] .h1, .field[data-surface="canvas"] .h2, .field[data-surface="canvas"] .h3, .field[data-surface="canvas"] .h4, .field[data-surface="canvas"] .quote) { color: inherit; font: inherit; margin: 0; }
 .content { min-height: 180px; padding: 14px; outline: none; font-size: 14px; line-height: 1.6; }
 .placeholder { position: absolute; top: 14px; left: 14px; color: #7a838e; pointer-events: none; }

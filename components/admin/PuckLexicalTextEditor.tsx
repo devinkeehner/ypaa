@@ -247,6 +247,7 @@ function Toolbar({ readOnly }: { readOnly?: boolean }) {
 
 export function PuckLexicalTextEditor({
   autoFocus = false,
+  compact = false,
   defaultBlockType = "paragraph",
   onChange,
   readOnly,
@@ -256,6 +257,7 @@ export function PuckLexicalTextEditor({
   value,
 }: {
   autoFocus?: boolean;
+  compact?: boolean;
   defaultBlockType?: LexicalBlockType;
   onChange: (value: unknown) => void;
   readOnly?: boolean;
@@ -330,6 +332,7 @@ export function PuckLexicalTextEditor({
   return (
     <div
       className={styles.field}
+      data-compact={compact || undefined}
       data-surface={surface}
       data-toolbar-mode={toolbarMode}
       onFocusCapture={() => useGlobalToolbar && setToolbarOpen(true)}
@@ -354,7 +357,7 @@ export function PuckLexicalTextEditor({
         ) : null}
         <div className={styles.editor}>
           <RichTextPlugin
-            contentEditable={<ContentEditable aria-placeholder="Write rich text" className={styles.content} placeholder={<span className={styles.placeholder}>Write rich text</span>} />}
+            contentEditable={<ContentEditable aria-label={toolbarLabel} aria-placeholder="Write rich text" className={styles.content} placeholder={<span className={styles.placeholder}>Write rich text</span>} />}
             ErrorBoundary={LexicalErrorBoundary}
             placeholder={null}
           />

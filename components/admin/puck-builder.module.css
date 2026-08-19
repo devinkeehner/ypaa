@@ -43,8 +43,11 @@
 .richToolbarHost { align-items: center; display: flex; min-width: 0; width: 100%; }
 .richToolbarHost:empty { display: none; }
 .richToolbarRow:has(.richToolbarHost:not(:empty)) .richToolbarHint { display: none; }
-.richTextFieldHint { background: #e6f5f3; border: 1px solid #b9ded9; border-radius: 6px; color: #245e59; font-size: 12px; line-height: 1.45; padding: 10px; }
-.canvasRichText { cursor: text; min-width: 1ch; }
+.inspectorRichText { display: grid; gap: 7px; min-width: 0; }
+.inspectorRichText > span { color: var(--builder-text); font-size: 12px; font-weight: 800; }
+.inspectorRichText > small { color: var(--builder-muted); font-size: 10px; line-height: 1.35; }
+.canvasRichTextShell { min-width: 0; width: 100%; }
+.canvasRichText { cursor: text; min-width: 1ch; pointer-events: auto; position: relative; width: 100%; z-index: 4; }
 
 .blockLibraryPanel { background: var(--builder-panel-muted); display: flex; flex-direction: column; min-height: 100%; }
 .blockPaletteTabIcon { align-items: center; display: inline-flex; flex: 0 0 auto; height: 17px; justify-content: center; width: 17px; }
