@@ -638,16 +638,48 @@ function campaignItemKey(scope: string, item: CampaignAltItem, index: number) {
   return `${scope}-${item.id ?? index}`;
 }
 
+function HeroAltBackground({ media, className }: { media?: MediaValue | null; className?: string }) {
+  const image = normalizeMedia(media);
+  return image ? <img aria-hidden="true" alt="" className={className || styles.campaignAltBackground} src={image.url} /> : null;
+}
+
+function HeroAltCopy({ props, headingAs = "h1", className = "", showHighlight = true }: { props: CampaignAltProps; headingAs?: "h1" | "h2"; className?: string; showHighlight?: boolean }) {
+  const headingLogo = normalizeMedia(props.headingLogo);
+  const editing = Boolean(props.puck?.isEditing);
+  return <div className={`${styles.campaignAltCopy} ${className}`}>
+    {props.eyebrow || editing ? <Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable> : null}
+    {headingLogo ? <><img alt={props.heading || headingLogo.alt || "Heading"} className={styles.heroAltLogo} src={headingLogo.url} />{editing ? <div className={styles.heroAltHeadingEditor}><small>Heading text (the logo replaces this on the published page)</small><Editable as={headingAs} field="heading" props={props}>{props.heading}</Editable></div> : null}</> : <Editable as={headingAs} field="heading" props={props}>{props.heading}</Editable>}
+    {props.body || editing ? <Editable as="p" field="body" props={props}>{props.body}</Editable> : null}
+    {showHighlight && (props.highlightTitle || props.highlightText || editing) ? <aside className={styles.heroAltHighlight}>{props.highlightTitle || editing ? <Editable as="strong" field="highlightTitle" props={props}>{props.highlightTitle}</Editable> : null}{props.highlightText || editing ? <Editable as="span" field="highlightText" props={props}>{props.highlightText}</Editable> : null}</aside> : null}
+    <CampaignActions props={props} />
+  </div>;
+}
+
 function HeroAltRender({ props }: { props: CampaignAltProps }) {
   const background = normalizeMedia(props.backgroundMedia);
-  const headingLogo = normalizeMedia(props.headingLogo);
-  return <section className={`${styles.campaignAlt} ${styles.heroAlt}`} data-overlay={props.backgroundOverlay || "standard"} data-panel-color={props.textPanelColor || "primary"} data-panel-opacity={props.textPanelOpacity || "translucent"} data-presentation={props.presentation} data-variant={props.variant} id={props.id}>
-    {background ? <img aria-hidden="true" alt="" className={styles.campaignAltBackground} src={background.url} /> : null}
-    <div className={styles.shell}>
-      <div className={styles.campaignAltCopy}>{props.eyebrow || props.puck?.isEditing ? <Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable> : null}{headingLogo ? <><img alt={props.heading || headingLogo.alt || "Heading"} className={styles.heroAltLogo} src={headingLogo.url} />{props.puck?.isEditing ? <div className={styles.heroAltHeadingEditor}><small>Heading text (the logo replaces this on the published page)</small><Editable as="h1" field="heading" props={props}>{props.heading}</Editable></div> : null}</> : <Editable as="h1" field="heading" props={props}>{props.heading}</Editable>}<Editable as="p" field="body" props={props}>{props.body}</Editable>{props.highlightTitle || props.highlightText || props.puck?.isEditing ? <aside className={styles.heroAltHighlight}>{props.highlightTitle || props.puck?.isEditing ? <Editable as="strong" field="highlightTitle" props={props}>{props.highlightTitle}</Editable> : null}{props.highlightText || props.puck?.isEditing ? <Editable as="span" field="highlightText" props={props}>{props.highlightText}</Editable> : null}</aside> : null}<CampaignActions props={props} /></div>
-      <CampaignImage className={styles.heroAltMedia} media={props.media} />
-    </div>
-  </section>;
+  const heroMedia = background || normalizeMedia(props.media);
+  const variant = props.variant || "splitSpotlight";
+  const sectionProps = { className: `${styles.campaignAlt} ${styles.heroAlt}`, "data-overlay": props.backgroundOverlay || "standard", "data-panel-color": props.textPanelColor || "primary", "data-panel-opacity": props.textPanelOpacity || "translucent", "data-presentation": props.presentation, "data-variant": variant, id: props.id };
+
+  if (variant === "campaignPoster") return <section {...sectionProps}><div className={styles.shell}><HeroAltCopy headingAs="h1" props={props} /><div className={styles.heroAltPosterMedia}><CampaignImage className={styles.heroAltMedia} media={props.media || background} />{props.highlightTitle || props.highlightText || props.puck?.isEditing ? <aside className={styles.heroAltPosterHighlight}>{props.highlightTitle || props.puck?.isEditing ? <Editable as="strong" field="highlightTitle" props={props}>{props.highlightTitle}</Editable> : null}{props.highlightText || props.puck?.isEditing ? <Editable as="span" field="highlightText" props={props}>{props.highlightText}</Editable> : null}</aside> : null}</div></div></section>;
+
+  if (variant === "photoOverlay") return <section {...sectionProps}><HeroAltBackground media={heroMedia} /><div className={styles.shell}><HeroAltCopy headingAs="h1" className={styles.heroAltOverlayCopy} props={props} showHighlight={false} /></div></section>;
+
+  if (variant === "grassrootsAction") return <section {...sectionProps}><HeroAltBackground media={heroMedia} /><div className={styles.shell}><HeroAltCopy headingAs="h1" className={styles.heroAltGrassrootsCopy} props={props} /></div></section>;
+
+  if (variant === "ribbonOverlay") return <section {...sectionProps}><HeroAltBackground media={background} className={styles.heroAltRibbonBackground} /><div className={styles.heroAltRibbonTop} /><div className={styles.heroAltRibbonBottom} /><div className={styles.shell}><HeroAltCopy headingAs="h2" className={styles.heroAltRibbonCopy} props={props} /></div></section>;
+
+  if (variant === "civicOutdoors" || variant === "civicOutdoorsPanel") return <section {...sectionProps}><HeroAltBackground media={heroMedia} className={styles.heroAltCivicBackground} /><div className={styles.heroAltCivicAccent} /><div className={styles.shell}><HeroAltCopy headingAs="h1" className={variant === "civicOutdoorsPanel" ? styles.heroAltCivicPanel : styles.heroAltCivicCopy} props={props} /><CampaignImage className={styles.heroAltMedia} media={props.media || background} /></div></section>;
+
+  if (variant === "splitCandidate") return <section {...sectionProps}><div className={styles.shell}><CampaignImage className={styles.heroAltMedia} media={props.media || background} /><HeroAltCopy headingAs="h1" className={styles.heroAltCandidateCopy} props={props} /></div></section>;
+
+  if (variant === "officialMasthead") return <section {...sectionProps}><div className={styles.shell}><HeroAltCopy headingAs="h1" className={styles.heroAltMastheadCopy} props={props} showHighlight={false} /></div></section>;
+
+  if (variant === "centeredStatement") return <section {...sectionProps}><div className={styles.shell}><HeroAltCopy headingAs="h2" className={styles.heroAltCenteredCopy} props={props} showHighlight={false} /></div></section>;
+
+  if (variant === "mediaFocus") return <section {...sectionProps}><div className={styles.shell}><CampaignImage className={styles.heroAltMedia} media={heroMedia} /><HeroAltCopy headingAs="h2" className={styles.heroAltMediaCopy} props={props} showHighlight={false} /></div></section>;
+
+  return <section {...sectionProps}><div className={styles.shell}><HeroAltCopy headingAs="h2" props={props} /><div className={styles.heroAltMediaFrame}><div className={styles.heroAltMediaAccent} /><CampaignImage className={styles.heroAltMedia} media={props.media || background} /></div></div></section>;
 }
 
 function BioSectionRender({ props }: { props: CampaignAltProps }) {
