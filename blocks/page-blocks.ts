@@ -17,6 +17,7 @@ import {
 import type { Block, Field } from "payload";
 
 import { campaignAltDefinitions } from "@/puck/campaign-alt-definitions";
+import { AFTER_CONTENT_BLOCK_TYPES } from "@/puck/drop-zones";
 
 const textStyles: Field = {
   name: "textStyles",
@@ -344,6 +345,13 @@ export const PayPalBlock: Block = { slug: "PayPal", labels: { singular: "PayPal 
 
 const nestedElementBlocks: Block[] = [ImageBlock, RichTextBlock, FreeTextBlock, TextBlock, ButtonBlock, CountdownBlock, NavigationBlock, HeadlineBlock, DividerBlock, FollowLinksBlock, BulletedListBlock, InlineFormBlock, ImageCaptionBlock, VideoBlock, EmbedBlock, PayPalBlock];
 
+const afterContentBlocksField: Field = {
+  name: "afterContentBlocks",
+  type: "blocks",
+  blocks: nestedElementBlocks,
+  admin: { hidden: true },
+};
+
 export const SectionBlock: Block = { slug: "Section", labels: { singular: "Section", plural: "Sections" }, admin: { group: "Layout" }, fields: [{ name: "heading", type: "text" }, { name: "background", type: "select", defaultValue: "light", options: ["light", "dark", "muted"] }, { name: "blocks", type: "blocks", blocks: nestedElementBlocks }] };
 export const ColumnBlock: Block = { slug: "Column", labels: { singular: "Column", plural: "Columns" }, admin: { group: "Layout" }, fields: [{ name: "label", type: "text" }, { name: "blocks", type: "blocks", blocks: nestedElementBlocks }] };
 
@@ -447,6 +455,7 @@ function createCampaignAltBlock(definition: (typeof campaignAltDefinitions)[numb
       { name: "items", type: "array", labels: { singular: "Item", plural: "Items" }, fields: campaignItemFields },
       ...campaignSourceFields(definition.type),
       ...(definition.nestedCollection ? [campaignNestedField(definition.nestedCollection)] : []),
+      ...(AFTER_CONTENT_BLOCK_TYPES.has(definition.type) ? [afterContentBlocksField] : []),
     ],
   };
 }

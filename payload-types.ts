@@ -4291,6 +4291,571 @@ export interface Page {
                 }[]
               | null;
             intro?: string | null;
+            afterContentBlocks?:
+              | (
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                      width?: ('full' | 'wide' | 'content') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Image';
+                    }
+                  | {
+                      /**
+                       * Headings, links, lists, quotes, alignment, and inline formatting.
+                       */
+                      content?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RichText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FreeText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Text';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      style?: ('solid' | 'outline') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Button';
+                    }
+                  | {
+                      target?: string | null;
+                      label?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Countdown';
+                    }
+                  | {
+                      brand?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Navigation';
+                    }
+                  | {
+                      text?: string | null;
+                      level?: ('h1' | 'h2' | 'h3') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Headline';
+                    }
+                  | {
+                      style?: ('solid' | 'dashed' | 'dotted') | null;
+                      color?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Divider';
+                    }
+                  | {
+                      heading?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FollowLinks';
+                    }
+                  | {
+                      items?:
+                        | {
+                            text?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'BulletedList';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      submitLabel?: string | null;
+                      actionUrl?: string | null;
+                      fields?:
+                        | {
+                            label?: string | null;
+                            name?: string | null;
+                            type?: ('text' | 'email') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineForm';
+                    }
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ImageCaption';
+                    }
+                  | {
+                      video?: (string | null) | Media;
+                      url?: string | null;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Video';
+                    }
+                  | {
+                      url?: string | null;
+                      title?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Embed';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      amount?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'PayPal';
+                    }
+                  | {
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRow';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'MediaBlockAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRowAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineRichTextAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'TextElementAlt';
+                    }
+                )[]
+              | null;
             puckRichText?:
               | {
                   [k: string]: unknown;
@@ -4390,6 +4955,571 @@ export interface Page {
                 }[]
               | null;
             intro?: string | null;
+            afterContentBlocks?:
+              | (
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                      width?: ('full' | 'wide' | 'content') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Image';
+                    }
+                  | {
+                      /**
+                       * Headings, links, lists, quotes, alignment, and inline formatting.
+                       */
+                      content?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RichText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FreeText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Text';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      style?: ('solid' | 'outline') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Button';
+                    }
+                  | {
+                      target?: string | null;
+                      label?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Countdown';
+                    }
+                  | {
+                      brand?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Navigation';
+                    }
+                  | {
+                      text?: string | null;
+                      level?: ('h1' | 'h2' | 'h3') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Headline';
+                    }
+                  | {
+                      style?: ('solid' | 'dashed' | 'dotted') | null;
+                      color?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Divider';
+                    }
+                  | {
+                      heading?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FollowLinks';
+                    }
+                  | {
+                      items?:
+                        | {
+                            text?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'BulletedList';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      submitLabel?: string | null;
+                      actionUrl?: string | null;
+                      fields?:
+                        | {
+                            label?: string | null;
+                            name?: string | null;
+                            type?: ('text' | 'email') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineForm';
+                    }
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ImageCaption';
+                    }
+                  | {
+                      video?: (string | null) | Media;
+                      url?: string | null;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Video';
+                    }
+                  | {
+                      url?: string | null;
+                      title?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Embed';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      amount?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'PayPal';
+                    }
+                  | {
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRow';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'MediaBlockAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRowAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineRichTextAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'TextElementAlt';
+                    }
+                )[]
+              | null;
             puckRichText?:
               | {
                   [k: string]: unknown;
@@ -4441,6 +5571,571 @@ export interface Page {
               | null;
             quote?: string | null;
             quoteAttribution?: string | null;
+            afterContentBlocks?:
+              | (
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                      width?: ('full' | 'wide' | 'content') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Image';
+                    }
+                  | {
+                      /**
+                       * Headings, links, lists, quotes, alignment, and inline formatting.
+                       */
+                      content?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RichText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FreeText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Text';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      style?: ('solid' | 'outline') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Button';
+                    }
+                  | {
+                      target?: string | null;
+                      label?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Countdown';
+                    }
+                  | {
+                      brand?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Navigation';
+                    }
+                  | {
+                      text?: string | null;
+                      level?: ('h1' | 'h2' | 'h3') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Headline';
+                    }
+                  | {
+                      style?: ('solid' | 'dashed' | 'dotted') | null;
+                      color?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Divider';
+                    }
+                  | {
+                      heading?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FollowLinks';
+                    }
+                  | {
+                      items?:
+                        | {
+                            text?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'BulletedList';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      submitLabel?: string | null;
+                      actionUrl?: string | null;
+                      fields?:
+                        | {
+                            label?: string | null;
+                            name?: string | null;
+                            type?: ('text' | 'email') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineForm';
+                    }
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ImageCaption';
+                    }
+                  | {
+                      video?: (string | null) | Media;
+                      url?: string | null;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Video';
+                    }
+                  | {
+                      url?: string | null;
+                      title?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Embed';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      amount?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'PayPal';
+                    }
+                  | {
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRow';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'MediaBlockAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRowAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineRichTextAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'TextElementAlt';
+                    }
+                )[]
+              | null;
             puckRichText?:
               | {
                   [k: string]: unknown;
@@ -4548,6 +6243,571 @@ export interface Page {
             qrImage?: (string | null) | Media;
             qrCaption?: string | null;
             disclaimer?: string | null;
+            afterContentBlocks?:
+              | (
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                      width?: ('full' | 'wide' | 'content') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Image';
+                    }
+                  | {
+                      /**
+                       * Headings, links, lists, quotes, alignment, and inline formatting.
+                       */
+                      content?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RichText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FreeText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Text';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      style?: ('solid' | 'outline') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Button';
+                    }
+                  | {
+                      target?: string | null;
+                      label?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Countdown';
+                    }
+                  | {
+                      brand?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Navigation';
+                    }
+                  | {
+                      text?: string | null;
+                      level?: ('h1' | 'h2' | 'h3') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Headline';
+                    }
+                  | {
+                      style?: ('solid' | 'dashed' | 'dotted') | null;
+                      color?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Divider';
+                    }
+                  | {
+                      heading?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FollowLinks';
+                    }
+                  | {
+                      items?:
+                        | {
+                            text?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'BulletedList';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      submitLabel?: string | null;
+                      actionUrl?: string | null;
+                      fields?:
+                        | {
+                            label?: string | null;
+                            name?: string | null;
+                            type?: ('text' | 'email') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineForm';
+                    }
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ImageCaption';
+                    }
+                  | {
+                      video?: (string | null) | Media;
+                      url?: string | null;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Video';
+                    }
+                  | {
+                      url?: string | null;
+                      title?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Embed';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      amount?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'PayPal';
+                    }
+                  | {
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRow';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'MediaBlockAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRowAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineRichTextAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'TextElementAlt';
+                    }
+                )[]
+              | null;
             puckRichText?:
               | {
                   [k: string]: unknown;
@@ -4600,6 +6860,571 @@ export interface Page {
             intro?: string | null;
             quote?: string | null;
             quoteAttribution?: string | null;
+            afterContentBlocks?:
+              | (
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                      width?: ('full' | 'wide' | 'content') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Image';
+                    }
+                  | {
+                      /**
+                       * Headings, links, lists, quotes, alignment, and inline formatting.
+                       */
+                      content?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RichText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FreeText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Text';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      style?: ('solid' | 'outline') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Button';
+                    }
+                  | {
+                      target?: string | null;
+                      label?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Countdown';
+                    }
+                  | {
+                      brand?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Navigation';
+                    }
+                  | {
+                      text?: string | null;
+                      level?: ('h1' | 'h2' | 'h3') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Headline';
+                    }
+                  | {
+                      style?: ('solid' | 'dashed' | 'dotted') | null;
+                      color?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Divider';
+                    }
+                  | {
+                      heading?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FollowLinks';
+                    }
+                  | {
+                      items?:
+                        | {
+                            text?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'BulletedList';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      submitLabel?: string | null;
+                      actionUrl?: string | null;
+                      fields?:
+                        | {
+                            label?: string | null;
+                            name?: string | null;
+                            type?: ('text' | 'email') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineForm';
+                    }
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ImageCaption';
+                    }
+                  | {
+                      video?: (string | null) | Media;
+                      url?: string | null;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Video';
+                    }
+                  | {
+                      url?: string | null;
+                      title?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Embed';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      amount?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'PayPal';
+                    }
+                  | {
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRow';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'MediaBlockAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRowAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineRichTextAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'TextElementAlt';
+                    }
+                )[]
+              | null;
             puckRichText?:
               | {
                   [k: string]: unknown;
@@ -4699,6 +7524,571 @@ export interface Page {
                 }[]
               | null;
             intro?: string | null;
+            afterContentBlocks?:
+              | (
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                      width?: ('full' | 'wide' | 'content') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Image';
+                    }
+                  | {
+                      /**
+                       * Headings, links, lists, quotes, alignment, and inline formatting.
+                       */
+                      content?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RichText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FreeText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Text';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      style?: ('solid' | 'outline') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Button';
+                    }
+                  | {
+                      target?: string | null;
+                      label?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Countdown';
+                    }
+                  | {
+                      brand?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Navigation';
+                    }
+                  | {
+                      text?: string | null;
+                      level?: ('h1' | 'h2' | 'h3') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Headline';
+                    }
+                  | {
+                      style?: ('solid' | 'dashed' | 'dotted') | null;
+                      color?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Divider';
+                    }
+                  | {
+                      heading?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FollowLinks';
+                    }
+                  | {
+                      items?:
+                        | {
+                            text?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'BulletedList';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      submitLabel?: string | null;
+                      actionUrl?: string | null;
+                      fields?:
+                        | {
+                            label?: string | null;
+                            name?: string | null;
+                            type?: ('text' | 'email') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineForm';
+                    }
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ImageCaption';
+                    }
+                  | {
+                      video?: (string | null) | Media;
+                      url?: string | null;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Video';
+                    }
+                  | {
+                      url?: string | null;
+                      title?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Embed';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      amount?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'PayPal';
+                    }
+                  | {
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRow';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'MediaBlockAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRowAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineRichTextAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'TextElementAlt';
+                    }
+                )[]
+              | null;
             puckRichText?:
               | {
                   [k: string]: unknown;
@@ -5381,6 +8771,571 @@ export interface Page {
                 }[]
               | null;
             intro?: string | null;
+            afterContentBlocks?:
+              | (
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
+                      width?: ('full' | 'wide' | 'content') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Image';
+                    }
+                  | {
+                      /**
+                       * Headings, links, lists, quotes, alignment, and inline formatting.
+                       */
+                      content?: {
+                        root: {
+                          type: string;
+                          children: {
+                            type: any;
+                            version: number;
+                            [k: string]: unknown;
+                          }[];
+                          direction: ('ltr' | 'rtl') | null;
+                          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                          indent: number;
+                          version: number;
+                        };
+                        [k: string]: unknown;
+                      } | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RichText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      fontWeight?: ('400' | '700') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FreeText';
+                    }
+                  | {
+                      text?: string | null;
+                      fontSize?: string | null;
+                      color?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Text';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      style?: ('solid' | 'outline') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Button';
+                    }
+                  | {
+                      target?: string | null;
+                      label?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Countdown';
+                    }
+                  | {
+                      brand?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Navigation';
+                    }
+                  | {
+                      text?: string | null;
+                      level?: ('h1' | 'h2' | 'h3') | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Headline';
+                    }
+                  | {
+                      style?: ('solid' | 'dashed' | 'dotted') | null;
+                      color?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Divider';
+                    }
+                  | {
+                      heading?: string | null;
+                      links?:
+                        | {
+                            label?: string | null;
+                            url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'FollowLinks';
+                    }
+                  | {
+                      items?:
+                        | {
+                            text?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'BulletedList';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      submitLabel?: string | null;
+                      actionUrl?: string | null;
+                      fields?:
+                        | {
+                            label?: string | null;
+                            name?: string | null;
+                            type?: ('text' | 'email') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineForm';
+                    }
+                  | {
+                      image: string | Media;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ImageCaption';
+                    }
+                  | {
+                      video?: (string | null) | Media;
+                      url?: string | null;
+                      caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Video';
+                    }
+                  | {
+                      url?: string | null;
+                      title?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'Embed';
+                    }
+                  | {
+                      label?: string | null;
+                      url?: string | null;
+                      amount?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'PayPal';
+                    }
+                  | {
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRow';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'MediaBlockAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'ButtonRowAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      presentation?: ('contained' | 'wide' | 'fullBleed') | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'InlineRichTextAlt';
+                    }
+                  | {
+                      variant?: 'default' | null;
+                      eyebrow?: string | null;
+                      heading?: string | null;
+                      body?: string | null;
+                      media?: (string | null) | Media;
+                      backgroundMedia?: (string | null) | Media;
+                      primaryLabel?: string | null;
+                      primaryUrl?: string | null;
+                      secondaryLabel?: string | null;
+                      secondaryUrl?: string | null;
+                      items?:
+                        | {
+                            label?: string | null;
+                            heading?: string | null;
+                            text?: string | null;
+                            value?: string | null;
+                            linkLabel?: string | null;
+                            url?: string | null;
+                            icon?: string | null;
+                            attribution?: string | null;
+                            role?: string | null;
+                            image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                          }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'TextElementAlt';
+                    }
+                )[]
+              | null;
             puckRichText?:
               | {
                   [k: string]: unknown;
@@ -10179,6 +14134,343 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               intro?: T;
+              afterContentBlocks?:
+                | T
+                | {
+                    Image?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          aspectRatio?: T;
+                          width?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RichText?:
+                      | T
+                      | {
+                          content?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FreeText?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Text?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Button?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          style?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Countdown?:
+                      | T
+                      | {
+                          target?: T;
+                          label?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Navigation?:
+                      | T
+                      | {
+                          brand?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Headline?:
+                      | T
+                      | {
+                          text?: T;
+                          level?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Divider?:
+                      | T
+                      | {
+                          style?: T;
+                          color?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FollowLinks?:
+                      | T
+                      | {
+                          heading?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    BulletedList?:
+                      | T
+                      | {
+                          items?:
+                            | T
+                            | {
+                                text?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineForm?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          submitLabel?: T;
+                          actionUrl?: T;
+                          fields?:
+                            | T
+                            | {
+                                label?: T;
+                                name?: T;
+                                type?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ImageCaption?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Video?:
+                      | T
+                      | {
+                          video?: T;
+                          url?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Embed?:
+                      | T
+                      | {
+                          url?: T;
+                          title?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    PayPal?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          amount?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRow?:
+                      | T
+                      | {
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    MediaBlockAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRowAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineRichTextAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          presentation?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    TextElementAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
               puckRichText?: T;
               id?: T;
               blockName?: T;
@@ -10248,6 +14540,343 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               intro?: T;
+              afterContentBlocks?:
+                | T
+                | {
+                    Image?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          aspectRatio?: T;
+                          width?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RichText?:
+                      | T
+                      | {
+                          content?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FreeText?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Text?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Button?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          style?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Countdown?:
+                      | T
+                      | {
+                          target?: T;
+                          label?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Navigation?:
+                      | T
+                      | {
+                          brand?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Headline?:
+                      | T
+                      | {
+                          text?: T;
+                          level?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Divider?:
+                      | T
+                      | {
+                          style?: T;
+                          color?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FollowLinks?:
+                      | T
+                      | {
+                          heading?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    BulletedList?:
+                      | T
+                      | {
+                          items?:
+                            | T
+                            | {
+                                text?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineForm?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          submitLabel?: T;
+                          actionUrl?: T;
+                          fields?:
+                            | T
+                            | {
+                                label?: T;
+                                name?: T;
+                                type?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ImageCaption?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Video?:
+                      | T
+                      | {
+                          video?: T;
+                          url?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Embed?:
+                      | T
+                      | {
+                          url?: T;
+                          title?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    PayPal?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          amount?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRow?:
+                      | T
+                      | {
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    MediaBlockAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRowAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineRichTextAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          presentation?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    TextElementAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
               puckRichText?: T;
               id?: T;
               blockName?: T;
@@ -10284,6 +14913,343 @@ export interface PagesSelect<T extends boolean = true> {
                   };
               quote?: T;
               quoteAttribution?: T;
+              afterContentBlocks?:
+                | T
+                | {
+                    Image?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          aspectRatio?: T;
+                          width?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RichText?:
+                      | T
+                      | {
+                          content?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FreeText?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Text?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Button?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          style?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Countdown?:
+                      | T
+                      | {
+                          target?: T;
+                          label?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Navigation?:
+                      | T
+                      | {
+                          brand?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Headline?:
+                      | T
+                      | {
+                          text?: T;
+                          level?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Divider?:
+                      | T
+                      | {
+                          style?: T;
+                          color?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FollowLinks?:
+                      | T
+                      | {
+                          heading?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    BulletedList?:
+                      | T
+                      | {
+                          items?:
+                            | T
+                            | {
+                                text?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineForm?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          submitLabel?: T;
+                          actionUrl?: T;
+                          fields?:
+                            | T
+                            | {
+                                label?: T;
+                                name?: T;
+                                type?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ImageCaption?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Video?:
+                      | T
+                      | {
+                          video?: T;
+                          url?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Embed?:
+                      | T
+                      | {
+                          url?: T;
+                          title?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    PayPal?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          amount?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRow?:
+                      | T
+                      | {
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    MediaBlockAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRowAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineRichTextAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          presentation?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    TextElementAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
               puckRichText?: T;
               id?: T;
               blockName?: T;
@@ -10361,6 +15327,343 @@ export interface PagesSelect<T extends boolean = true> {
               qrImage?: T;
               qrCaption?: T;
               disclaimer?: T;
+              afterContentBlocks?:
+                | T
+                | {
+                    Image?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          aspectRatio?: T;
+                          width?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RichText?:
+                      | T
+                      | {
+                          content?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FreeText?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Text?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Button?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          style?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Countdown?:
+                      | T
+                      | {
+                          target?: T;
+                          label?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Navigation?:
+                      | T
+                      | {
+                          brand?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Headline?:
+                      | T
+                      | {
+                          text?: T;
+                          level?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Divider?:
+                      | T
+                      | {
+                          style?: T;
+                          color?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FollowLinks?:
+                      | T
+                      | {
+                          heading?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    BulletedList?:
+                      | T
+                      | {
+                          items?:
+                            | T
+                            | {
+                                text?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineForm?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          submitLabel?: T;
+                          actionUrl?: T;
+                          fields?:
+                            | T
+                            | {
+                                label?: T;
+                                name?: T;
+                                type?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ImageCaption?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Video?:
+                      | T
+                      | {
+                          video?: T;
+                          url?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Embed?:
+                      | T
+                      | {
+                          url?: T;
+                          title?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    PayPal?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          amount?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRow?:
+                      | T
+                      | {
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    MediaBlockAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRowAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineRichTextAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          presentation?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    TextElementAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
               puckRichText?: T;
               id?: T;
               blockName?: T;
@@ -10398,6 +15701,343 @@ export interface PagesSelect<T extends boolean = true> {
               intro?: T;
               quote?: T;
               quoteAttribution?: T;
+              afterContentBlocks?:
+                | T
+                | {
+                    Image?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          aspectRatio?: T;
+                          width?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RichText?:
+                      | T
+                      | {
+                          content?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FreeText?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Text?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Button?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          style?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Countdown?:
+                      | T
+                      | {
+                          target?: T;
+                          label?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Navigation?:
+                      | T
+                      | {
+                          brand?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Headline?:
+                      | T
+                      | {
+                          text?: T;
+                          level?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Divider?:
+                      | T
+                      | {
+                          style?: T;
+                          color?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FollowLinks?:
+                      | T
+                      | {
+                          heading?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    BulletedList?:
+                      | T
+                      | {
+                          items?:
+                            | T
+                            | {
+                                text?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineForm?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          submitLabel?: T;
+                          actionUrl?: T;
+                          fields?:
+                            | T
+                            | {
+                                label?: T;
+                                name?: T;
+                                type?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ImageCaption?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Video?:
+                      | T
+                      | {
+                          video?: T;
+                          url?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Embed?:
+                      | T
+                      | {
+                          url?: T;
+                          title?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    PayPal?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          amount?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRow?:
+                      | T
+                      | {
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    MediaBlockAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRowAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineRichTextAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          presentation?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    TextElementAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
               puckRichText?: T;
               id?: T;
               blockName?: T;
@@ -10467,6 +16107,343 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               intro?: T;
+              afterContentBlocks?:
+                | T
+                | {
+                    Image?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          aspectRatio?: T;
+                          width?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RichText?:
+                      | T
+                      | {
+                          content?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FreeText?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Text?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Button?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          style?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Countdown?:
+                      | T
+                      | {
+                          target?: T;
+                          label?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Navigation?:
+                      | T
+                      | {
+                          brand?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Headline?:
+                      | T
+                      | {
+                          text?: T;
+                          level?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Divider?:
+                      | T
+                      | {
+                          style?: T;
+                          color?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FollowLinks?:
+                      | T
+                      | {
+                          heading?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    BulletedList?:
+                      | T
+                      | {
+                          items?:
+                            | T
+                            | {
+                                text?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineForm?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          submitLabel?: T;
+                          actionUrl?: T;
+                          fields?:
+                            | T
+                            | {
+                                label?: T;
+                                name?: T;
+                                type?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ImageCaption?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Video?:
+                      | T
+                      | {
+                          video?: T;
+                          url?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Embed?:
+                      | T
+                      | {
+                          url?: T;
+                          title?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    PayPal?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          amount?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRow?:
+                      | T
+                      | {
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    MediaBlockAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRowAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineRichTextAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          presentation?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    TextElementAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
               puckRichText?: T;
               id?: T;
               blockName?: T;
@@ -10883,6 +16860,343 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               intro?: T;
+              afterContentBlocks?:
+                | T
+                | {
+                    Image?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          aspectRatio?: T;
+                          width?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RichText?:
+                      | T
+                      | {
+                          content?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FreeText?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          fontWeight?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Text?:
+                      | T
+                      | {
+                          text?: T;
+                          fontSize?: T;
+                          color?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Button?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          style?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Countdown?:
+                      | T
+                      | {
+                          target?: T;
+                          label?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Navigation?:
+                      | T
+                      | {
+                          brand?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Headline?:
+                      | T
+                      | {
+                          text?: T;
+                          level?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Divider?:
+                      | T
+                      | {
+                          style?: T;
+                          color?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    FollowLinks?:
+                      | T
+                      | {
+                          heading?: T;
+                          links?:
+                            | T
+                            | {
+                                label?: T;
+                                url?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    BulletedList?:
+                      | T
+                      | {
+                          items?:
+                            | T
+                            | {
+                                text?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineForm?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          submitLabel?: T;
+                          actionUrl?: T;
+                          fields?:
+                            | T
+                            | {
+                                label?: T;
+                                name?: T;
+                                type?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ImageCaption?:
+                      | T
+                      | {
+                          image?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Video?:
+                      | T
+                      | {
+                          video?: T;
+                          url?: T;
+                          caption?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    Embed?:
+                      | T
+                      | {
+                          url?: T;
+                          title?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    PayPal?:
+                      | T
+                      | {
+                          label?: T;
+                          url?: T;
+                          amount?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRow?:
+                      | T
+                      | {
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          alignment?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    MediaBlockAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    ButtonRowAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    InlineRichTextAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          presentation?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    TextElementAlt?:
+                      | T
+                      | {
+                          variant?: T;
+                          eyebrow?: T;
+                          heading?: T;
+                          body?: T;
+                          media?: T;
+                          backgroundMedia?: T;
+                          primaryLabel?: T;
+                          primaryUrl?: T;
+                          secondaryLabel?: T;
+                          secondaryUrl?: T;
+                          items?:
+                            | T
+                            | {
+                                label?: T;
+                                heading?: T;
+                                text?: T;
+                                value?: T;
+                                linkLabel?: T;
+                                url?: T;
+                                icon?: T;
+                                attribution?: T;
+                                role?: T;
+                                image?: T;
+                                puckRichText?: T;
+                                id?: T;
+                              };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                  };
               puckRichText?: T;
               id?: T;
               blockName?: T;

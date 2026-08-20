@@ -14,6 +14,7 @@ import { normalizeLayoutColumns } from "./layout-utils.mjs";
 import { campaignAltDefinitions, campaignAltTypes } from "./campaign-alt-definitions";
 import { isLexicalValue } from "./lexical-value";
 import { lexicalToHTML, stripNativeRichTextForPayload } from "./native-rich-text";
+import { AFTER_CONTENT_BLOCK_TYPES, afterContentZoneID } from "./drop-zones";
 
 const COMPONENT_TYPES = new Set([
   "HeroCountdown",
@@ -102,8 +103,15 @@ function normalizeProps(type: string, value: unknown): Record<string, unknown> {
         : type === "RowThreeColumns" ? "three"
           : type === "RowFourColumns" ? "four"
             : "two";
-    props.columns = normalizeLayoutColumns(layout, props.columns);
+    props.columns = normalizeLayoutColumns(layout, props.columns).map((column) => isRecord(column) && !("blocks" in column) ? { ...column, blocks: [] } : column);
   }
+
+  if (DIRECT_NESTED_TYPES.has(type) && !("blocks" in props)) props.blocks = [];
+  const nestedCollection = NESTED_ZONES[type];
+  if (nestedCollection && Array.isArray(props[nestedCollection])) {
+    props[nestedCollection] = props[nestedCollection].map((item) => isRecord(item) && !("blocks" in item) ? { ...item, blocks: [] } : item);
+  }
+  if (AFTER_CONTENT_BLOCK_TYPES.has(type) && !("afterContent" in props)) props.afterContent = [];
 
   if (type === "MeetingInfo") {
     props.importantDates = normalizeImportantDates(props.importantDates);
@@ -277,6 +285,10 @@ function layoutToContent(layout: unknown): { content: ComponentData<Record<strin
     if (DIRECT_NESTED_TYPES.has(blockType) && Array.isArray(storedProps.blocks)) {
       storedProps.blocks = nestedLayoutToContent(storedProps.blocks);
     }
+    if (AFTER_CONTENT_BLOCK_TYPES.has(blockType) && Array.isArray(storedProps.afterContentBlocks)) {
+      zones[afterContentZoneID(id)] = nestedLayoutToContent(storedProps.afterContentBlocks);
+      delete storedProps.afterContentBlocks;
+    }
     const nestedCollection = NESTED_ZONES[blockType];
     if (nestedCollection && Array.isArray(storedProps[nestedCollection])) {
       storedProps[nestedCollection] = storedProps[nestedCollection].map((item, nestedIndex) => {
@@ -368,6 +380,18 @@ function packNestedZones(type: string, id: string, props: Record<string, unknown
   };
 }
 
+function packAfterContentZone(type: string, id: string, props: Record<string, unknown>, zones: Record<string, unknown>) {
+  if (!AFTER_CONTENT_BLOCK_TYPES.has(type)) return props;
+
+  const packed = { ...props };
+  delete packed.afterContent;
+  const zone = zones[afterContentZoneID(id)];
+  if (Array.isArray(zone)) {
+    packed.afterContentBlocks = contentToNestedLayout(zone);
+  }
+  return packed;
+}
+
 export function puckDataToLayout(value: unknown): Array<Record<string, unknown>> {
   const data = normalizePuckData(value);
   const zones = isRecord(data.zones) ? data.zones : {};
@@ -375,7 +399,7 @@ export function puckDataToLayout(value: unknown): Array<Record<string, unknown>>
     if (!COMPONENT_TYPES.has(item.type)) return [];
     const props = isRecord(item.props) ? normalizeProps(item.type, item.props) : {};
     const id = typeof props.id === "string" ? props.id : `${item.type}-${index}`;
-    const withNested = packNestedZones(item.type, id, { ...props, id }, zones);
+    const withNested = packAfterContentZone(item.type, id, packNestedZones(item.type, id, { ...props, id }, zones), zones);
     if (DIRECT_NESTED_TYPES.has(item.type) && Array.isArray(withNested.blocks)) {
       withNested.blocks = contentToNestedLayout(withNested.blocks);
     }

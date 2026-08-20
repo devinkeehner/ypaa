@@ -1,7 +1,7 @@
 "use client";
 
 import { Render, type ComponentConfig, type Config, type Field } from "@puckeditor/core";
-import { BadgeDollarSign, BriefcaseBusiness, CalendarDays, Check, ChevronDown, ChevronRight, Heading, HeartHandshake, Landmark, MapPin, Megaphone, Palette, ShieldCheck, Users, Vote, X } from "lucide-react";
+import { BadgeDollarSign, BriefcaseBusiness, CalendarDays, Check, ChevronDown, ChevronRight, Heading, HeartHandshake, Landmark, MapPin, Megaphone, ShieldCheck, Users, Vote, X } from "lucide-react";
 import { createContext, Fragment, isValidElement, useContext, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { Countdown } from "@/components/site/Countdown";
@@ -21,6 +21,7 @@ import {
 import type { ImportantDate, MediaValue, MeetingListing, PastEvent, ScheduleMeeting, UpcomingEvent } from "@/puck/list-values";
 import { ctMeetingSchedule } from "@/puck/ct-meeting-schedule-data";
 import { campaignAltDefinitions, campaignAltTypes, campaignAltTypesByPalette, type CampaignAltDefinition, type CampaignAltType } from "@/puck/campaign-alt-definitions";
+import { AFTER_CONTENT_BLOCK_TYPES, ELEMENT_DROP_TYPES } from "@/puck/drop-zones";
 import type { NECYPAAData } from "@/puck/types";
 
 import styles from "./puck.module.css";
@@ -38,6 +39,12 @@ function summaryText(value: unknown): string {
 
 function itemSummary(fallback: string, ...values: unknown[]): string {
   return values.map(summaryText).find(Boolean) || fallback;
+}
+
+function slotLabel(value: unknown, fallback: string): string {
+  if (typeof value === "string") return value.trim() || fallback;
+  if (typeof value === "number") return String(value);
+  return fallback;
 }
 
 type Base = { id?: string };
@@ -66,6 +73,7 @@ function hasEnabledRichText(props: Record<string, unknown>, path: string, value:
   return isLexicalValue(value) || isLexicalValue(entry) || Boolean(entry && typeof entry === "object" && !Array.isArray(entry) && (entry as Record<string, unknown>).enabled);
 }
 type NestedSlot = (options?: { allow?: string[]; className?: string; minEmptyHeight?: number }) => ReactNode;
+type NestedSlotValue = NestedSlot | unknown[];
 type Hero = Base & {
   eyebrow: string;
   heading: string;
@@ -100,20 +108,20 @@ type ProgramSchedule = Base & { heading: string; introduction: string };
 type ButtonRow = Base & { primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; alignment: "left" | "center" | "right" };
 type Issue = { title: string; body: string; icon: string };
 type IssuesSection = Base & { eyebrow: string; heading: string; body: string; issues: Issue[] };
-type IssueCard = { label: string; heading: string; body: string; image?: MediaValue | null; linkLabel?: string; linkUrl?: string; blocks?: NestedSlot };
+type IssueCard = { label: string; heading: string; body: string; image?: MediaValue | null; linkLabel?: string; linkUrl?: string; blocks?: NestedSlotValue };
 type IssueCards = Base & { heading: string; intro: string; variant: "cards" | "editorial" | "image"; cards: IssueCard[] };
 type Quote = Base & { heading: string; quote: string; attribution: string; role: string; image?: MediaValue | null };
 type ResultStat = { value: string; label: string; detail: string };
 type ResultsStats = Base & { heading: string; intro: string; stats: ResultStat[] };
 type SupporterLogo = { name: string; image?: MediaValue | null };
 type SupporterLogos = Base & { heading: string; intro: string; logos: SupporterLogo[] };
-type ActionTab = { label: string; description: string; blocks?: NestedSlot };
+type ActionTab = { label: string; description: string; blocks?: NestedSlotValue };
 type ActionTabs = Base & { heading: string; intro: string; tabs: ActionTab[] };
 type GalleryItem = { image?: MediaValue | null; caption: string; size: "small" | "medium" | "large" };
 type MediaGallery = Base & { heading: string; intro: string; items: GalleryItem[] };
-type ContentColumn = { label: string; blocks?: NestedSlot };
-type Section = Base & { heading: string; background: "light" | "dark" | "muted" | "themeLight" | "themeDark" | "themeSurface" | "themePrimary" | "themeSecondary" | "themeAccent"; blocks?: NestedSlot };
-type Column = Base & { label: string; blocks?: NestedSlot };
+type ContentColumn = { label: string; blocks?: NestedSlotValue };
+type Section = Base & { heading: string; background: "light" | "dark" | "muted" | "themeLight" | "themeDark" | "themeSurface" | "themePrimary" | "themeSecondary" | "themeAccent"; blocks?: NestedSlotValue };
+type Column = Base & { label: string; blocks?: NestedSlotValue };
 type LinkItem = { label: string; url: string };
 type Navigation = Base & { brand: string; links: LinkItem[] };
 type Headline = Base & { text: string; level: "h1" | "h2" | "h3"; alignment: "left" | "center" | "right" };
@@ -125,10 +133,10 @@ type ImageCaption = Base & { image?: MediaValue | null; caption: string };
 type Video = Base & { video?: MediaValue | null; url: string; caption: string };
 type Embed = Base & { url: string; title: string };
 type PayPal = Base & { label: string; url: string; amount: string };
-type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[]; column1?: NestedSlot; column2?: NestedSlot; column3?: NestedSlot; column4?: NestedSlot; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
+type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[]; column1?: NestedSlotValue; column2?: NestedSlotValue; column3?: NestedSlotValue; column4?: NestedSlotValue; puck?: { isEditing?: boolean } };
 type CampaignAltItem = { id?: number | string; label?: string; heading?: string; text?: string; value?: string; linkLabel?: string; url?: string; icon?: string; attribution?: string; role?: string; image?: MediaValue | null };
-type CampaignAltSlotItem = CampaignAltItem & { blocks?: NestedSlot };
-type CampaignAltProps = Base & { variant: string; presentation: string; eyebrow: string; heading: string; intro: string; body: string; media?: MediaValue | null; backgroundMedia?: MediaValue | null; headingLogo?: MediaValue | null; qrImage?: MediaValue | null; highlightTitle: string; highlightText: string; backgroundOverlay: string; textPanelColor: string; textPanelOpacity: string; primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; quote: string; quoteAttribution: string; electionDay: string; earlyVote: string; phone: string; email: string; website: string; qrCaption: string; disclaimer: string; items: CampaignAltItem[]; cards: CampaignAltSlotItem[]; columns: CampaignAltSlotItem[]; tabs: CampaignAltSlotItem[]; puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } };
+type CampaignAltSlotItem = CampaignAltItem & { blocks?: NestedSlotValue };
+type CampaignAltProps = Base & { variant: string; presentation: string; eyebrow: string; heading: string; intro: string; body: string; media?: MediaValue | null; backgroundMedia?: MediaValue | null; headingLogo?: MediaValue | null; qrImage?: MediaValue | null; highlightTitle: string; highlightText: string; backgroundOverlay: string; textPanelColor: string; textPanelOpacity: string; primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; quote: string; quoteAttribution: string; electionDay: string; earlyVote: string; phone: string; email: string; website: string; qrCaption: string; disclaimer: string; afterContent?: NestedSlotValue; items: CampaignAltItem[]; cards: CampaignAltSlotItem[]; columns: CampaignAltSlotItem[]; tabs: CampaignAltSlotItem[]; puck?: { isEditing?: boolean } };
 type CampaignAltComponents = { [K in CampaignAltType]: CampaignAltProps };
 
 type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CTMeetingSchedule: CTMeetingSchedule; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; Text: TextBlockProps; Button: ButtonBlockProps; Countdown: CountdownBlockProps; Section: Section; Column: Column; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; Navigation: Navigation; Headline: Headline; Divider: Divider; FollowLinks: FollowLinks; BulletedList: BulletedList; InlineForm: InlineForm; ImageCaption: ImageCaption; Video: Video; Embed: Embed; PayPal: PayPal; ContentRow: ContentRow; Row: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow } & CampaignAltComponents;
@@ -339,12 +347,12 @@ const issueField: Field<Issue[]> = {
   getItemSummary: (item) => itemSummary("Issue", item.title),
 };
 
-export const nestedElementTypes = ["Image", "RichText", "FreeText", "Text", "Button", "Countdown", "ButtonRow", "Headline", "Divider", "BulletedList", "ImageCaption", "Video", "Embed", "FollowLinks", "InlineForm", "PayPal", "Navigation", ...campaignAltTypesByPalette.elements];
+export const nestedElementTypes = ELEMENT_DROP_TYPES;
 
 const issueCardsField: Field<IssueCard[]> = {
   type: "array",
   label: "Feature cards",
-  defaultItemProps: { label: "", heading: "", body: "", image: null, linkLabel: "", linkUrl: "" },
+  defaultItemProps: { label: "", heading: "", body: "", image: null, linkLabel: "", linkUrl: "", blocks: [] },
   arrayFields: { label: plainText("Editor label"), heading: richTextField("Heading"), body: area("Description"), image: mediaField("Card image"), linkLabel: text("Link label"), linkUrl: plainText("Link URL"), blocks: { type: "slot", allow: nestedElementTypes } },
   getItemSummary: (item) => itemSummary("Issue card", item.heading, item.label),
 };
@@ -368,7 +376,7 @@ const logosField: Field<SupporterLogo[]> = {
 const tabsField: Field<ActionTab[]> = {
   type: "array",
   label: "Content tabs",
-  defaultItemProps: { label: "", description: "" },
+  defaultItemProps: { label: "", description: "", blocks: [] },
   arrayFields: { label: text("Tab label"), description: area("Description"), blocks: { type: "slot", allow: nestedElementTypes } },
   getItemSummary: (item) => item.label || "Action tab",
 };
@@ -384,7 +392,7 @@ const galleryItemsField: Field<GalleryItem[]> = {
 const columnsField: Field<ContentColumn[]> = {
   type: "array",
   label: "Columns",
-  defaultItemProps: { label: "" },
+  defaultItemProps: { label: "", blocks: [] },
   arrayFields: { label: plainText("Editor label"), blocks: { type: "slot", allow: nestedElementTypes } },
   getItemSummary: (item) => item.label || "Column",
 };
@@ -395,32 +403,32 @@ function visibleColumnCount(layout: ContentRow["layout"]) {
   return layoutColumnCount(layout);
 }
 
-function NestedDropZone({ children, label }: { children: ReactNode; label: string }) {
-  return <div className={styles.nestedDropZone}><span>{label}</span>{children}</div>;
+type SlotTone = "light" | "dark";
+
+function LabeledSlot({ children, label, tone = "light" }: { children: ReactNode; label: string; tone?: SlotTone }) {
+  return <div className={styles.nestedDropZone} data-slot-label={label} data-tone={tone}>
+    <div className={styles.nestedDropZoneLabel}><span aria-hidden="true" className={styles.nestedDropZonePlus} /><span>Drop elements here</span></div>
+    {children}
+  </div>;
 }
 
-function renderZone(props: Base & { puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } }, zone: string, label: string) {
-  const content = props.puck?.renderDropZone ? props.puck.renderDropZone({ zone, allow: nestedElementTypes, minEmptyHeight: 96 }) : null;
-  return props.puck?.isEditing ? <NestedDropZone label={label}>{content}</NestedDropZone> : <>{content}</>;
-}
-
-function SlotContent({ content, label, fallback }: { content?: NestedSlot; label: string; fallback: ReactNode }) {
+function SlotContent({ content, label, fallback, minEmptyHeight = 150, tone = "light" }: { content?: NestedSlotValue; label: string; fallback: ReactNode; minEmptyHeight?: number; tone?: SlotTone }) {
   const renderProps = useContext(PuckRenderPropsContext);
   const editing = Boolean(renderProps?.puck?.isEditing);
   if (typeof content === "function") {
     const Content = content;
-    const slot = <Content className={styles.nestedSlot} minEmptyHeight={96} allow={nestedElementTypes} />;
-    return editing ? <NestedDropZone label={label}>{slot}</NestedDropZone> : slot;
+    const slot = <Content className={styles.nestedSlot} minEmptyHeight={minEmptyHeight} allow={nestedElementTypes} />;
+    return editing ? <LabeledSlot label={label} tone={tone}>{slot}</LabeledSlot> : slot;
   }
   return <>{fallback}</>;
 }
 
 function contentRowRender(props: ContentRow) {
   const columns = (props.columns || []).slice(0, visibleColumnCount(props.layout));
-  return <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{columns.map((column, index) => <article key={`${column.label}-${index}`}>{props.puck?.isEditing ? <span>{column.label || `Column ${index + 1}`}</span> : null}<SlotContent content={column.blocks} label={column.label || `column ${index + 1}`} fallback={renderZone(props, `columns.${index}.blocks`, `Drop elements in ${column.label || `column ${index + 1}`}`)} /></article>)}</div></div></section>;
+  return <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{columns.map((column, index) => { const label = slotLabel(column.label, `Column ${index + 1}`); return <article key={`${label}-${index}`}>{props.puck?.isEditing ? <span>{label}</span> : null}<SlotContent content={column.blocks} label={label} minEmptyHeight={150} fallback={null} /></article>; })}</div></div></section>;
 }
 
-function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean; renderDropZone?: (options: { zone: string; allow: string[]; minEmptyHeight: number }) => ReactNode } }) {
+function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean } }) {
   const [active, setActive] = useState(0);
   const tabs = props.tabs?.length ? props.tabs : [];
   const editing = Boolean(props.puck?.isEditing);
@@ -441,9 +449,9 @@ function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean; re
         <div className={styles.tabPanels}>
           {tabs.map((tab, index) => (editing || active === index)
             ? (
-                <section aria-label={tab.label || `Tab ${index + 1}`} className={styles.tabPanel} hidden={!editing && active !== index} key={`${tab.label || index}-${index}`}>
+                <section aria-label={slotLabel(tab.label, `Tab ${index + 1}`)} className={styles.tabPanel} hidden={!editing && active !== index} key={`${tab.label || index}-${index}`}>
                 <RichCopy as="p" path={`tabs[${index}].description`} field="description" props={props} value={tab.description} />
-                <SlotContent content={tab.blocks} label={tab.label || `tab ${index + 1}`} fallback={renderZone(props, `tabs.${index}.blocks`, `Drop elements in ${tab.label || `tab ${index + 1}`}`)} />
+                <SlotContent content={tab.blocks} label={slotLabel(tab.label, `Tab ${index + 1}`)} minEmptyHeight={180} fallback={null} />
               </section>
             )
             : null)}
@@ -618,6 +626,14 @@ function CampaignImage({ media, className }: { media?: MediaValue | null; classN
   return image ? <figure className={className}><img alt={image.alt || ""} src={image.url} /></figure> : null;
 }
 
+const campaignAltDefinitionByType = Object.fromEntries(campaignAltDefinitions.map((definition) => [definition.type, definition])) as Partial<Record<CampaignAltType, CampaignAltDefinition>>;
+
+function CampaignBridge({ type, props }: { type: CampaignAltType; props: CampaignAltProps }) {
+  const definition = campaignAltDefinitionByType[type];
+  if (!definition || !AFTER_CONTENT_BLOCK_TYPES.has(type)) return null;
+  return <SlotContent content={props.afterContent} label={`${definition.label} content`} minEmptyHeight={96} tone={campaignBridgeTone(definition, props)} fallback={null} />;
+}
+
 function campaignItemKey(scope: string, item: CampaignAltItem, index: number) {
   return `${scope}-${item.id ?? index}`;
 }
@@ -635,42 +651,53 @@ function HeroAltRender({ props }: { props: CampaignAltProps }) {
 }
 
 function BioSectionRender({ props }: { props: CampaignAltProps }) {
-  return <section className={`${styles.campaignAlt} ${styles.bioSectionAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div className={styles.bioSectionCopy}><CampaignSectionHeader props={props} />{(props.body && props.intro) || props.puck?.isEditing ? <Editable as="p" className={styles.campaignAltLongCopy} field="body" props={props}>{props.body}</Editable> : null}{props.items.length ? <div className={styles.bioHighlights}>{props.items.map((item, index) => <div key={campaignItemKey("about-highlight", item, index)}><CampaignIcon name={item.icon} /><Editable as="p" path={`items[${index}].text`} field="text" props={props}>{item.text}</Editable></div>)}</div> : null}</div></div></section>;
+  return <section className={`${styles.campaignAlt} ${styles.bioSectionAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div className={styles.bioSectionCopy}><CampaignSectionHeader props={props} />{(props.body && props.intro) || props.puck?.isEditing ? <Editable as="p" className={styles.campaignAltLongCopy} field="body" props={props}>{props.body}</Editable> : null}<CampaignBridge props={props} type="AboutAlt" />{props.items.length ? <div className={styles.bioHighlights}>{props.items.map((item, index) => <div key={campaignItemKey("about-highlight", item, index)}><CampaignIcon name={item.icon} /><Editable as="p" path={`items[${index}].text`} field="text" props={props}>{item.text}</Editable></div>)}</div> : null}</div></div></section>;
 }
 
 function IssuesCardsRender({ props }: { props: CampaignAltProps }) {
-  return <section className={`${styles.campaignAlt} ${styles.issuesCardsAlt}`} data-count={props.items.length} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignSectionHeader centered={props.variant !== "editorialGrid"} props={props} /><div className={styles.issuesCardsAltGrid}>{props.items.map((item, index) => { const image = normalizeMedia(item.image); return <article data-featured={index === 0} key={campaignItemKey("cards-grid-item", item, index)}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><CampaignIcon name={item.icon} /><Editable as="h3" path={`items[${index}].heading`} field="heading" props={props}>{item.heading}</Editable>{item.text || props.puck?.isEditing ? <Editable path={`items[${index}].text`} field="text" props={props}>{item.text}</Editable> : null}{item.url ? <a href={item.url}><Editable as="span" path={`items[${index}].linkLabel`} field="linkLabel" props={props}>{item.linkLabel || "Learn more"}</Editable></a> : null}</div></article>; })}</div></div></section>;
+  return <section className={`${styles.campaignAlt} ${styles.issuesCardsAlt}`} data-count={props.items.length} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignSectionHeader centered={props.variant !== "editorialGrid"} props={props} /><CampaignBridge props={props} type="CardsGridAlt" /><div className={styles.issuesCardsAltGrid}>{props.items.map((item, index) => { const image = normalizeMedia(item.image); return <article data-featured={index === 0} key={campaignItemKey("cards-grid-item", item, index)}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div><CampaignIcon name={item.icon} /><Editable as="h3" path={`items[${index}].heading`} field="heading" props={props}>{item.heading}</Editable>{item.text || props.puck?.isEditing ? <Editable path={`items[${index}].text`} field="text" props={props}>{item.text}</Editable> : null}{item.url ? <a href={item.url}><Editable as="span" path={`items[${index}].linkLabel`} field="linkLabel" props={props}>{item.linkLabel || "Learn more"}</Editable></a> : null}</div></article>; })}</div></div></section>;
 }
 
 function PalmCardPointsRender({ props }: { props: CampaignAltProps }) {
-  return <section className={`${styles.campaignAlt} ${styles.palmPointsAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignSectionHeader centered props={props} /><div className={styles.palmPointsGrid}>{props.items.map((item, index) => <article key={`${item.text}-${index}`}><CampaignIcon name={item.icon} /><Editable as="p" path={`items[${index}].${item.text ? "text" : "heading"}`} field={item.text ? "text" : "heading"} props={props}>{item.text || item.heading}</Editable></article>)}</div></div></section>;
+  return <section className={`${styles.campaignAlt} ${styles.palmPointsAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignSectionHeader centered props={props} /><CampaignBridge props={props} type="PalmCardPointsAlt" /><div className={styles.palmPointsGrid}>{props.items.map((item, index) => <article key={`${item.text}-${index}`}><CampaignIcon name={item.icon} /><Editable as="p" path={`items[${index}].${item.text ? "text" : "heading"}`} field={item.text ? "text" : "heading"} props={props}>{item.text || item.heading}</Editable></article>)}</div></div></section>;
 }
 
 function PalmCardBioRender({ props }: { props: CampaignAltProps }) {
-  return <section className={`${styles.campaignAlt} ${styles.palmBioAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div><CampaignSectionHeader props={props} />{props.quote ? <figure className={styles.campaignAltQuote}><Editable as="blockquote" field="quote" props={props}>{props.quote}</Editable>{props.quoteAttribution ? <Editable as="figcaption" field="quoteAttribution" props={props}>{props.quoteAttribution}</Editable> : null}</figure> : null}</div></div></section>;
+  return <section className={`${styles.campaignAlt} ${styles.palmBioAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div><CampaignSectionHeader props={props} /><CampaignBridge props={props} type="PalmCardBioAlt" />{props.body || props.puck?.isEditing ? <Editable as="p" className={styles.campaignAltLongCopy} field="body" props={props}>{props.body}</Editable> : null}{props.quote || props.puck?.isEditing ? <figure className={styles.campaignAltQuote}><Editable as="blockquote" field="quote" props={props}>{props.quote}</Editable>{props.quoteAttribution || props.puck?.isEditing ? <Editable as="figcaption" field="quoteAttribution" props={props}>{props.quoteAttribution}</Editable> : null}</figure> : null}</div></div></section>;
 }
 
 function TestimonialAltRender({ props }: { props: CampaignAltProps }) {
-  return <section className={`${styles.campaignAlt} ${styles.testimonialsAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignSectionHeader centered={props.variant === "contained"} props={props} /><div className={styles.testimonialsAltGrid}>{props.items.map((item, index) => { const image = normalizeMedia(item.image); const isAttribution = Boolean(item.attribution); const isRole = Boolean(item.role); return <figure data-lead={index === 0} key={`${item.attribution}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<Editable as="blockquote" path={`items[${index}].text`} field="text" props={props}>{item.text}</Editable><figcaption><Editable as="strong" path={`items[${index}].${isAttribution ? "attribution" : "heading"}`} field={isAttribution ? "attribution" : "heading"} props={props}>{isAttribution ? item.attribution : item.heading}</Editable>{isRole || item.label ? <Editable as="span" path={`items[${index}].${isRole ? "role" : "label"}`} field={isRole ? "role" : "label"} props={props}>{isRole ? item.role : item.label}</Editable> : null}</figcaption></figure>; })}</div></div></section>;
+  return <section className={`${styles.campaignAlt} ${styles.testimonialsAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><CampaignSectionHeader centered={props.variant === "contained"} props={props} /><CampaignBridge props={props} type="TestimonialAlt" /><div className={styles.testimonialsAltGrid}>{props.items.map((item, index) => { const image = normalizeMedia(item.image); const isAttribution = Boolean(item.attribution); const isRole = Boolean(item.role); return <figure data-lead={index === 0} key={`${item.attribution}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<Editable as="blockquote" path={`items[${index}].text`} field="text" props={props}>{item.text}</Editable><figcaption><Editable as="strong" path={`items[${index}].${isAttribution ? "attribution" : "heading"}`} field={isAttribution ? "attribution" : "heading"} props={props}>{isAttribution ? item.attribution : item.heading}</Editable>{isRole || item.label ? <Editable as="span" path={`items[${index}].${isRole ? "role" : "label"}`} field={isRole ? "role" : "label"} props={props}>{isRole ? item.role : item.label}</Editable> : null}</figcaption></figure>; })}</div></div></section>;
 }
 
 function PalmCardContentRender({ props }: { props: CampaignAltProps }) {
   const isEditing = Boolean(props.puck?.isEditing);
-  return <section className={`${styles.campaignAlt} ${styles.palmContentAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><div className={styles.palmContentIntro}><CampaignSectionHeader props={props} />{props.quote || isEditing ? <figure className={styles.campaignAltQuote}><Editable as="blockquote" field="quote" props={props}>{props.quote}</Editable>{props.quoteAttribution || isEditing ? <Editable as="figcaption" field="quoteAttribution" props={props}>{props.quoteAttribution}</Editable> : null}</figure> : null}</div><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div className={styles.palmContentGrid}>{props.items.map((item, index) => <article key={campaignItemKey("palm-card-item", item, index)}><CampaignIcon name={item.icon} /><div className={styles.palmContentCopy}><div className={styles.palmContentEditorField} data-editing={isEditing || undefined}><span aria-hidden="true" className={styles.palmContentEditorLabel}>Heading</span><Editable as="h3" path={`items[${index}].heading`} field="heading" props={props}>{item.heading}</Editable></div><div className={styles.palmContentEditorField} data-editing={isEditing || undefined}><span aria-hidden="true" className={styles.palmContentEditorLabel}>Supporting text</span><Editable as="p" path={`items[${index}].text`} field="text" props={props}>{item.text}</Editable></div></div></article>)}</div></div></section>;
+  const isSplitProfile = props.variant === "splitProfile";
+  const quote = props.quote || isEditing ? <figure className={styles.campaignAltQuote}><Editable as="blockquote" field="quote" props={props}>{props.quote}</Editable>{props.quoteAttribution || isEditing ? <Editable as="figcaption" field="quoteAttribution" props={props}>{props.quoteAttribution}</Editable> : null}</figure> : null;
+  return <section className={`${styles.campaignAlt} ${styles.palmContentAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><div className={styles.palmContentIntro}><CampaignSectionHeader props={props} /><CampaignBridge props={props} type="PalmCardAlt" />{isSplitProfile ? quote : null}</div><CampaignImage className={styles.campaignAltProfileMedia} media={props.media} /><div className={styles.palmContentGrid}>{props.items.map((item, index) => <article key={campaignItemKey("palm-card-item", item, index)}><CampaignIcon name={item.icon} /><div className={styles.palmContentCopy}><div className={styles.palmContentEditorField} data-editing={isEditing || undefined}><span aria-hidden="true" className={styles.palmContentEditorLabel}>Heading</span><Editable as="h3" path={`items[${index}].heading`} field="heading" props={props}>{item.heading}</Editable></div><div className={styles.palmContentEditorField} data-editing={isEditing || undefined}><span aria-hidden="true" className={styles.palmContentEditorLabel}>Supporting text</span><Editable as="p" path={`items[${index}].text`} field="text" props={props}>{item.text}</Editable></div></div></article>)}</div>{isSplitProfile ? null : quote}</div></section>;
 }
 
 function PalmCardContactRender({ props }: { props: CampaignAltProps }) {
   const qr = normalizeMedia(props.qrImage);
   const details = [{ field: "electionDay", label: "Election day", value: props.electionDay }, { field: "earlyVote", label: "Early vote", value: props.earlyVote }, { field: "phone", label: "Phone", value: props.phone }, { field: "email", label: "Email", value: props.email }, { field: "website", label: "Website", value: props.website }].filter((item) => item.value);
-  return <section className={`${styles.campaignAlt} ${styles.palmContactAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><div><CampaignSectionHeader props={props} /><div className={styles.palmContactDetails}>{details.map((item) => <div key={item.label}><small>{item.label}</small><Editable as="strong" field={item.field} props={props}>{item.value}</Editable></div>)}</div>{props.items.length ? <nav className={styles.palmContactLinks}>{props.items.map((item, index) => item.url ? <a href={item.url} key={`${item.label}-${index}`}><Editable as="span" path={`items[${index}].${item.label ? "label" : "value"}`} field={item.label ? "label" : "value"} props={props}>{item.label || item.value}</Editable></a> : <Editable as="span" path={`items[${index}].${item.label ? "label" : "value"}`} field={item.label ? "label" : "value"} props={props} key={`${item.label}-${index}`}>{item.label || item.value}</Editable>)}</nav> : null}</div>{qr ? <figure className={styles.palmContactQr}><img alt={qr.alt || props.qrCaption || "QR code"} src={qr.url} />{props.qrCaption ? <Editable as="figcaption" field="qrCaption" props={props}>{props.qrCaption}</Editable> : null}</figure> : null}{props.disclaimer ? <Editable as="small" className={styles.palmContactDisclaimer} field="disclaimer" props={props}>{props.disclaimer}</Editable> : null}</div></section>;
+  return <section className={`${styles.campaignAlt} ${styles.palmContactAlt}`} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><div><CampaignSectionHeader props={props} /><CampaignBridge props={props} type="PalmCardContactAlt" /><div className={styles.palmContactDetails}>{details.map((item) => <div key={item.label}><small>{item.label}</small><Editable as="strong" field={item.field} props={props}>{item.value}</Editable></div>)}</div>{props.items.length ? <nav className={styles.palmContactLinks}>{props.items.map((item, index) => item.url ? <a href={item.url} key={`${item.label}-${index}`}><Editable as="span" path={`items[${index}].${item.label ? "label" : "value"}`} field={item.label ? "label" : "value"} props={props}>{item.label || item.value}</Editable></a> : <Editable as="span" path={`items[${index}].${item.label ? "label" : "value"}`} field={item.label ? "label" : "value"} props={props} key={`${item.label}-${index}`}>{item.label || item.value}</Editable>)}</nav> : null}</div>{qr ? <figure className={styles.palmContactQr}><img alt={qr.alt || props.qrCaption || "QR code"} src={qr.url} />{props.qrCaption ? <Editable as="figcaption" field="qrCaption" props={props}>{props.qrCaption}</Editable> : null}</figure> : null}{props.disclaimer ? <Editable as="small" className={styles.palmContactDisclaimer} field="disclaimer" props={props}>{props.disclaimer}</Editable> : null}</div></section>;
 }
 
 function CampaignAltTabs({ props }: { props: CampaignAltProps }) {
   const [active, setActive] = useState(0);
   return <div className={styles.campaignAltTabs} data-variant={props.variant}><div role="tablist">{props.tabs.map((tab, index) => {
     const tabLabelField = tab.label ? "label" : "heading";
-    return <button aria-selected={active === index} key={`${tab.label || tab.heading || index}-${index}`} onClick={() => setActive(index)} role="tab" type="button"><Editable as="span" path={`tabs[${index}].${tabLabelField}`} field={tabLabelField} props={props}>{tab.label || tab.heading || `Tab ${index + 1}`}</Editable></button>;
-  })}</div>{props.tabs.map((tab, index) => <section hidden={!props.puck?.isEditing && active !== index} key={`${tab.label || tab.heading || index}-${index}`}><Editable as="h3" path={`tabs[${index}].heading`} field="heading" props={props}>{tab.heading}</Editable>{tab.text ? <Editable as="p" path={`tabs[${index}].text`} field="text" props={props}>{tab.text}</Editable> : null}<SlotContent content={tab.blocks} label={tab.label || `tab ${index + 1}`} fallback={renderZone(props, `tabs.${index}.blocks`, `Drop elements in ${tab.label || `tab ${index + 1}`}`)} /></section>)}</div>;
+    const tabLabel = slotLabel(tab.label || tab.heading, `Tab ${index + 1}`);
+    return <button aria-selected={active === index} key={`${tabLabel}-${index}`} onClick={() => setActive(index)} role="tab" type="button"><Editable as="span" path={`tabs[${index}].${tabLabelField}`} field={tabLabelField} props={props}>{tab.label || tab.heading || `Tab ${index + 1}`}</Editable></button>;
+  })}</div>{props.tabs.map((tab, index) => { const tabLabel = slotLabel(tab.label || tab.heading, `Tab ${index + 1}`); return <section hidden={!props.puck?.isEditing && active !== index} key={`${tabLabel}-${index}`}><Editable as="h3" path={`tabs[${index}].heading`} field="heading" props={props}>{tab.heading}</Editable>{tab.text ? <Editable as="p" path={`tabs[${index}].text`} field="text" props={props}>{tab.text}</Editable> : null}<SlotContent content={tab.blocks} label={tabLabel} minEmptyHeight={180} fallback={null} /></section>; })}</div>;
+}
+
+function campaignBridgeTone(definition: CampaignAltDefinition, props: CampaignAltProps): SlotTone {
+  if (definition.type === "TestimonialAlt") return "dark";
+  if (definition.type === "CardsGridAlt" && props.variant === "imageOverlay") return "dark";
+  if (definition.type === "PalmCardBioAlt" && props.variant === "quoteBio") return "dark";
+  if (definition.type === "PalmCardContactAlt" && props.variant === "footerBand") return "dark";
+  return "light";
 }
 
 function CampaignAltRender({ definition, props }: { definition: CampaignAltDefinition; props: CampaignAltProps }) {
@@ -691,7 +718,7 @@ function CampaignAltRender({ definition, props }: { definition: CampaignAltDefin
   if (definition.kind === "tabs") return <section className={styles.campaignAlt} data-kind="tabs" data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable><CampaignAltTabs props={props} /></div></section>;
 
   if (definition.kind === "columns" || definition.nestedCollection === "cards") {
-    return <section className={styles.campaignAlt} data-kind={definition.kind} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable><div className={styles.campaignAltGrid}>{nestedItems.map((item, index) => <article key={`${item.heading}-${index}`}><Editable as="span" path={`items[${index}].label`} field="label" props={props}>{item.label || `${definition.nestedCollection === "columns" ? "Column" : "Card"} ${index + 1}`}</Editable><Editable as="h3" path={`items[${index}].heading`} field="heading" props={props}>{item.heading}</Editable>{item.text ? <Editable path={`items[${index}].text`} field="text" props={props}>{item.text}</Editable> : null}<SlotContent content={item.blocks} label={item.label || `item ${index + 1}`} fallback={renderZone(props, `${definition.nestedCollection}.${index}.blocks`, `Drop elements in ${item.label || `item ${index + 1}`}`)} /></article>)}</div></div></section>;
+    return <section className={styles.campaignAlt} data-kind={definition.kind} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable><div className={styles.campaignAltGrid}>{nestedItems.map((item, index) => { const label = slotLabel(item.label, `${definition.nestedCollection === "columns" ? "Column" : "Card"} ${index + 1}`); return <article key={`${item.heading}-${index}`}><Editable as="span" path={`items[${index}].label`} field="label" props={props}>{item.label || label}</Editable><Editable as="h3" path={`items[${index}].heading`} field="heading" props={props}>{item.heading}</Editable>{item.text ? <Editable path={`items[${index}].text`} field="text" props={props}>{item.text}</Editable> : null}<SlotContent content={item.blocks} label={label} minEmptyHeight={definition.nestedCollection === "columns" ? 150 : 120} fallback={null} /></article>; })}</div></div></section>;
   }
 
   const isHero = definition.kind === "hero";
@@ -699,7 +726,7 @@ function CampaignAltRender({ definition, props }: { definition: CampaignAltDefin
 }
 
 function campaignAltDefaults(definition: CampaignAltDefinition): Omit<CampaignAltProps, "id"> {
-  const base = { variant: definition.variants[0], presentation: definition.presentations?.[0] || "contained", eyebrow: "", heading: definition.label, intro: "", body: "Add campaign-facing content here.", media: null, backgroundMedia: null, headingLogo: null, qrImage: null, highlightTitle: "", highlightText: "", backgroundOverlay: "standard", textPanelColor: "primary", textPanelOpacity: "translucent", primaryLabel: "Learn more", primaryUrl: "#", secondaryLabel: "", secondaryUrl: "#", quote: "", quoteAttribution: "", electionDay: "", earlyVote: "", phone: "", email: "", website: "", qrCaption: "", disclaimer: "", items: [{ label: "", heading: "First item", text: "Add details", value: "", linkLabel: "Learn more", url: "", icon: "check", attribution: "", role: "", image: null }], cards: [], columns: [], tabs: [] };
+  const base = { variant: definition.variants[0], presentation: definition.presentations?.[0] || "contained", eyebrow: "", heading: definition.label, intro: "", body: "Add campaign-facing content here.", media: null, backgroundMedia: null, headingLogo: null, qrImage: null, highlightTitle: "", highlightText: "", backgroundOverlay: "standard", textPanelColor: "primary", textPanelOpacity: "translucent", primaryLabel: "Learn more", primaryUrl: "#", secondaryLabel: "", secondaryUrl: "#", quote: "", quoteAttribution: "", electionDay: "", earlyVote: "", phone: "", email: "", website: "", qrCaption: "", disclaimer: "", afterContent: [], items: [{ label: "", heading: "First item", text: "Add details", value: "", linkLabel: "Learn more", url: "", icon: "check", attribution: "", role: "", image: null }], cards: [], columns: [], tabs: [] };
 
   if (definition.type === "HeroAlt") return { ...base, variant: "civicOutdoors", eyebrow: "NECYPAA XXXVI", heading: "A bold alternate opening", body: "Use the hero variant that best fits the message, media, and call to action.", highlightTitle: "Hartford, Connecticut", highlightText: "Connection, service, and recovery.", primaryLabel: "Register", secondaryLabel: "Learn more" };
   if (definition.type === "AboutAlt") return { ...base, heading: "Our story", intro: "A clear introduction to the people and purpose behind the work.", body: "Use this space for the fuller biography or organizational story.", items: [{ text: "Built through service", icon: "check" }, { text: "Rooted in community", icon: "check" }, { text: "Focused on the next person", icon: "check" }] };
@@ -715,25 +742,26 @@ function campaignAltDefaults(definition: CampaignAltDefinition): Omit<CampaignAl
 function campaignAltFields(definition: CampaignAltDefinition) {
   const common = { variant: { type: "select" as const, label: "Variant", options: definition.variants.map((value) => ({ label: campaignOptionLabel(value), value })) }, presentation: { type: "select" as const, label: "Presentation", options: (definition.presentations || ["contained"]).map((value) => ({ label: campaignOptionLabel(value), value })) } };
   const header = { eyebrow: text("Eyebrow"), heading: heading("Heading", "h2"), intro: area("Introduction") };
+  const bridge = AFTER_CONTENT_BLOCK_TYPES.has(definition.type) ? { afterContent: { type: "slot" as const, allow: nestedElementTypes } } : {};
 
   if (definition.type === "HeroAlt") return { ...common, eyebrow: text("Eyebrow"), heading: heading("Heading", "h1"), headingLogo: mediaField("Heading logo"), body: area("Body"), highlightTitle: text("Highlight title"), highlightText: area("Highlight text"), media: mediaField("Primary media"), backgroundMedia: mediaField("Background media"), backgroundOverlay: { type: "select", label: "Background overlay", options: ["none", "off", "subtle", "standard", "strong"].map((value) => ({ label: campaignOptionLabel(value), value })) }, textPanelColor: { type: "select", label: "Panel color", options: ["primary", "accent", "foreground", "background", "white"].map((value) => ({ label: campaignOptionLabel(value), value })) }, textPanelOpacity: { type: "select", label: "Panel opacity", options: ["translucent", "solid"].map((value) => ({ label: campaignOptionLabel(value), value })) }, primaryLabel: text("Primary action label"), primaryUrl: plainText("Primary action URL"), secondaryLabel: text("Secondary action label"), secondaryUrl: plainText("Secondary action URL") };
-  if (definition.type === "AboutAlt") return { ...common, ...header, body: area("Body"), media: mediaField("Portrait or feature image"), items: bioHighlightsField };
-  if (definition.type === "CardsGridAlt") return { ...common, eyebrow: text("Eyebrow"), heading: richTextField("Heading", undefined, "h2"), intro: area("Introduction"), body: area("Body fallback"), items: issueCardsAltField };
-  if (definition.type === "PalmCardPointsAlt") return { ...common, ...header, items: palmPointsField };
-  if (definition.type === "PalmCardBioAlt") return { ...common, eyebrow: text("Eyebrow"), heading: heading("Heading", "h2"), body: area("Biography"), quote: richTextField("Quote", undefined, "quote", 144), quoteAttribution: text("Quote attribution"), media: mediaField("Photo") };
-  if (definition.type === "TestimonialAlt") return { ...common, heading: heading("Heading", "h2"), intro: area("Introduction"), items: testimonialsField };
-  if (definition.type === "PalmCardAlt") return { ...common, ...header, body: area("Body fallback"), media: mediaField("Photo"), items: palmContentField, quote: area("Quote"), quoteAttribution: text("Quote attribution") };
-  if (definition.type === "PalmCardContactAlt") return { ...common, ...header, electionDay: text("Election day"), earlyVote: text("Early vote"), phone: text("Phone"), email: text("Email"), website: text("Website"), items: contactLinksField, qrImage: mediaField("QR image"), qrCaption: text("QR caption"), disclaimer: text("Paid for / disclaimer") };
+  if (definition.type === "AboutAlt") return { ...common, ...header, ...bridge, body: area("Body"), media: mediaField("Portrait or feature image"), items: bioHighlightsField };
+  if (definition.type === "CardsGridAlt") return { ...common, ...bridge, eyebrow: text("Eyebrow"), heading: richTextField("Heading", undefined, "h2"), intro: area("Introduction"), body: area("Body fallback"), items: issueCardsAltField };
+  if (definition.type === "PalmCardPointsAlt") return { ...common, ...header, ...bridge, items: palmPointsField };
+  if (definition.type === "PalmCardBioAlt") return { ...common, ...bridge, eyebrow: text("Eyebrow"), heading: heading("Heading", "h2"), body: area("Biography"), quote: richTextField("Quote", undefined, "quote", 144), quoteAttribution: text("Quote attribution"), media: mediaField("Photo") };
+  if (definition.type === "TestimonialAlt") return { ...common, ...bridge, heading: heading("Heading", "h2"), intro: area("Introduction"), items: testimonialsField };
+  if (definition.type === "PalmCardAlt") return { ...common, ...header, ...bridge, body: area("Body fallback"), media: mediaField("Photo"), items: palmContentField, quote: area("Quote"), quoteAttribution: text("Quote attribution") };
+  if (definition.type === "PalmCardContactAlt") return { ...common, ...header, ...bridge, electionDay: text("Election day"), earlyVote: text("Early vote"), phone: text("Phone"), email: text("Email"), website: text("Website"), items: contactLinksField, qrImage: mediaField("QR image"), qrCaption: text("QR caption"), disclaimer: text("Paid for / disclaimer") };
   return { ...common, eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Body"), media: mediaField("Primary media"), backgroundMedia: mediaField("Background media"), primaryLabel: text("Primary action label"), primaryUrl: plainText("Primary action URL"), secondaryLabel: text("Secondary action label"), secondaryUrl: plainText("Secondary action URL"), items: campaignItemsField };
 }
 
 const campaignAltComponents = Object.fromEntries(campaignAltDefinitions.map((definition) => {
   const nestedDefaults = definition.nestedCollection === "columns"
-    ? [{ label: "Column 1", heading: "", text: "" }, { label: "Column 2", heading: "", text: "" }]
+    ? [{ label: "Column 1", heading: "", text: "", blocks: [] }, { label: "Column 2", heading: "", text: "", blocks: [] }]
     : definition.nestedCollection === "tabs"
-      ? [{ label: "First tab", heading: "First tab", text: "Add tab content" }, { label: "Second tab", heading: "Second tab", text: "Add tab content" }]
+      ? [{ label: "First tab", heading: "First tab", text: "Add tab content", blocks: [] }, { label: "Second tab", heading: "Second tab", text: "Add tab content", blocks: [] }]
       : definition.nestedCollection === "cards"
-        ? [{ label: "Card 1", heading: "First card", text: "Add card content" }, { label: "Card 2", heading: "Second card", text: "Add card content" }]
+        ? [{ label: "Card 1", heading: "First card", text: "Add card content", blocks: [] }, { label: "Card 2", heading: "Second card", text: "Add card content", blocks: [] }]
         : [];
   const nestedFields = definition.nestedCollection ? { [definition.nestedCollection]: campaignNestedField } : {};
   return [definition.type, {
@@ -895,9 +923,9 @@ export const puckConfig: Config<Components> = {
     },
     IssueCards: {
       label: "Feature cards",
-      defaultProps: { heading: "The work in focus", intro: "Use cards for detailed priorities, workshops, or ways to help.", variant: "cards", cards: [{ label: "Recovery", heading: "Bring the next person in", body: "Create a convention experience that makes newcomers feel at home.", image: null }, { label: "Fellowship", heading: "Make room for connection", body: "Build spaces where people can meet, laugh, and stay involved.", image: null }, { label: "Service", heading: "Put gratitude into action", body: "Invite people into the work that makes the weekend possible.", image: null }] },
+      defaultProps: { heading: "The work in focus", intro: "Use cards for detailed priorities, workshops, or ways to help.", variant: "cards", cards: [{ label: "Recovery", heading: "Bring the next person in", body: "Create a convention experience that makes newcomers feel at home.", image: null, blocks: [] }, { label: "Fellowship", heading: "Make room for connection", body: "Build spaces where people can meet, laugh, and stay involved.", image: null, blocks: [] }, { label: "Service", heading: "Put gratitude into action", body: "Invite people into the work that makes the weekend possible.", image: null, blocks: [] }] },
       fields: { heading: text("Heading"), intro: area("Introduction"), variant: { type: "select", label: "Card style", options: [{ label: "Cards", value: "cards" }, { label: "Editorial", value: "editorial" }, { label: "Image overlay", value: "image" }] }, cards: issueCardsField },
-      render: (props) => <section className={styles.issueCards} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.issueCardGrid} data-count={props.cards.length}>{props.cards.map((card, index) => { const image = normalizeMedia(card.image); return <article data-has-image={Boolean(image)} key={`${card.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div>{card.label ? <RichCopy as="small" path={`cards[${index}].label`} field="label" value={card.label} /> : null}<RichCopy as="h3" path={`cards[${index}].heading`} field="heading" value={card.heading} /><RichCopy path={`cards[${index}].body`} field="body" value={card.body} />{card.linkLabel && card.linkUrl ? <a className={styles.cardLink} href={card.linkUrl}><RichCopy as="span" path={`cards[${index}].linkLabel`} field="linkLabel" value={card.linkLabel} /></a> : null}<SlotContent content={card.blocks} label={card.label || `card ${index + 1}`} fallback={renderZone(props, `cards.${index}.blocks`, `Drop elements in ${card.label || `card ${index + 1}`}`)} /></div></article>; })}</div></div></section>,
+      render: (props) => <section className={styles.issueCards} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable><div className={styles.issueCardGrid} data-count={props.cards.length}>{props.cards.map((card, index) => { const image = normalizeMedia(card.image); const label = slotLabel(card.label, `Card ${index + 1}`); return <article data-has-image={Boolean(image)} key={`${card.heading}-${index}`}>{image ? <img alt={image.alt || ""} src={image.url} /> : null}<div>{card.label ? <RichCopy as="small" path={`cards[${index}].label`} field="label" value={card.label} /> : null}<RichCopy as="h3" path={`cards[${index}].heading`} field="heading" value={card.heading} /><RichCopy path={`cards[${index}].body`} field="body" value={card.body} />{card.linkLabel && card.linkUrl ? <a className={styles.cardLink} href={card.linkUrl}><RichCopy as="span" path={`cards[${index}].linkLabel`} field="linkLabel" value={card.linkLabel} /></a> : null}<SlotContent content={card.blocks} label={label} minEmptyHeight={120} fallback={null} /></div></article>; })}</div></div></section>,
     },
     QuoteBlock: {
       label: "Quote / testimonial",
@@ -919,7 +947,7 @@ export const puckConfig: Config<Components> = {
     },
     ActionTabs: {
       label: "Content tabs",
-      defaultProps: { heading: "Choose how to join in", intro: "Give visitors a clear next step and add richer content inside each action tab.", tabs: [{ label: "Register", description: "Save your place for NECYPAA XXXVI." }, { label: "Volunteer", description: "Join the committee work that brings the convention to life." }, { label: "Stay connected", description: "Follow announcements, meetings, and upcoming events." }] },
+      defaultProps: { heading: "Choose how to join in", intro: "Give visitors a clear next step and add richer content inside each action tab.", tabs: [{ label: "Register", description: "Save your place for NECYPAA XXXVI.", blocks: [] }, { label: "Volunteer", description: "Join the committee work that brings the convention to life.", blocks: [] }, { label: "Stay connected", description: "Follow announcements, meetings, and upcoming events.", blocks: [] }] },
       fields: { heading: text("Heading"), intro: area("Introduction"), tabs: tabsField },
       render: ActionTabsRender,
     },
@@ -927,8 +955,8 @@ export const puckConfig: Config<Components> = {
     Text: { label: "Text", defaultProps: { text: "Add text", fontSize: "1rem", color: "#171b20", alignment: "left" }, fields: { text: area("Text"), fontSize: plainText("Font size"), color: plainText("Color"), alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => <section className={styles.freeText} id={props.id} style={{ color: props.color, fontSize: props.fontSize, textAlign: props.alignment }}><Editable field="text" props={props}>{props.text}</Editable></section> },
     Button: { label: "Button", defaultProps: { label: "Learn more", url: "#", style: "solid" }, fields: { label: text("Label"), url: plainText("URL"), style: { type: "select", label: "Style", options: [{ label: "Solid", value: "solid" }, { label: "Outline", value: "outline" }] } }, render: (props) => <a className={styles.button} data-outline={props.style === "outline"} href={props.url || "#"} id={props.id}><Editable field="label" props={props}>{props.label}</Editable></a> },
     Countdown: { label: "Countdown", defaultProps: { target: "2026-12-31T17:00:00-05:00", label: "Time remaining" }, fields: { target: plainText("Target ISO date"), label: text("Label") }, render: (props) => <div className={styles.standaloneCountdown} id={props.id}><Editable field="label" props={props}>{props.label}</Editable><Countdown target={props.target} /></div> },
-    Section: { label: "Section", defaultProps: { heading: "Section heading", background: "themeLight" }, fields: { heading: text("Heading"), background: { type: "select", label: "Background", options: [{ label: "Theme light", value: "themeLight" }, { label: "Theme dark", value: "themeDark" }, { label: "Theme surface", value: "themeSurface" }, { label: "Theme primary", value: "themePrimary" }, { label: "Theme secondary", value: "themeSecondary" }, { label: "Theme accent", value: "themeAccent" }, { label: "Muted neutral", value: "muted" }] }, blocks: { type: "slot", allow: nestedElementTypes } }, render: (props) => <section className={styles.builderSection} data-background={props.background} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><SlotContent content={props.blocks} label="section" fallback={<div />}/></div></section> },
-    Column: { label: "Column", defaultProps: { label: "Column" }, fields: { label: plainText("Editor label"), blocks: { type: "slot", allow: nestedElementTypes } }, render: (props) => <div className={styles.builderColumn} data-label={props.label} id={props.id}><SlotContent content={props.blocks} label={props.label} fallback={<div />}/></div> },
+    Section: { label: "Section", defaultProps: { heading: "Section heading", background: "themeLight", blocks: [] }, fields: { heading: text("Heading"), background: { type: "select", label: "Background", options: [{ label: "Theme light", value: "themeLight" }, { label: "Theme dark", value: "themeDark" }, { label: "Theme surface", value: "themeSurface" }, { label: "Theme primary", value: "themePrimary" }, { label: "Theme secondary", value: "themeSecondary" }, { label: "Theme accent", value: "themeAccent" }, { label: "Muted neutral", value: "muted" }] }, blocks: { type: "slot", allow: nestedElementTypes } }, render: (props) => <section className={styles.builderSection} data-background={props.background} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><SlotContent content={props.blocks} label="section" minEmptyHeight={150} tone={["themeDark", "themePrimary", "themeSecondary"].includes(props.background) ? "dark" : "light"} fallback={<div />}/></div></section> },
+    Column: { label: "Column", defaultProps: { label: "Column", blocks: [] }, fields: { label: plainText("Editor label"), blocks: { type: "slot", allow: nestedElementTypes } }, render: (props) => <div className={styles.builderColumn} data-label={props.label} id={props.id}><SlotContent content={props.blocks} label={props.label} minEmptyHeight={150} fallback={<div />}/></div> },
     Headline: { label: "Headline", defaultProps: { text: "Add a headline", level: "h2", alignment: "left" }, fields: { text: text("Headline"), level: { type: "select", label: "Level", options: [{ label: "Heading 1", value: "h1" }, { label: "Heading 2", value: "h2" }, { label: "Heading 3", value: "h3" }] }, alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => <Editable as={props.level} className={styles.headline} field="text" props={{ ...props, textTextAlign: props.alignment } as unknown as Base}>{props.text}</Editable> },
     Divider: { label: "Divider", defaultProps: { style: "solid", color: "#d8d0c4" }, fields: { style: { type: "select", label: "Style", options: [{ label: "Solid", value: "solid" }, { label: "Dashed", value: "dashed" }, { label: "Dotted", value: "dotted" }] }, color: { type: "text", label: "Color" } }, render: (props) => <hr className={styles.divider} id={props.id} style={{ borderTopStyle: props.style, borderTopColor: props.color }} /> },
     FollowLinks: { label: "Follow links", defaultProps: { heading: "Follow along", links: [{ label: "Instagram", url: "#" }, { label: "Facebook", url: "#" }] }, fields: { heading: text("Heading"), links: { type: "array", label: "Links", arrayFields: { label: text("Label"), url: plainText("URL") } } }, render: (props) => <section className={styles.followLinks} id={props.id}><Editable as="strong" field="heading" props={props}>{props.heading}</Editable><div>{props.links.map((link, index) => <a href={link.url || "#"} key={`${link.label}-${index}`}><RichCopy as="span" path={`links[${index}].label`} field="label" value={link.label} /></a>)}</div></section> },
@@ -946,17 +974,17 @@ export const puckConfig: Config<Components> = {
     },
     ContentRow: {
       label: "Content row",
-      defaultProps: { layout: "two", columns: [{ label: "Column 1" }, { label: "Column 2" }] },
+      defaultProps: { layout: "two", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] },
       fields: contentRowFields,
       render: contentRowRender,
     },
-    Row: { label: "Row", defaultProps: { layout: "two", columns: [{ label: "Column 1" }, { label: "Column 2" }] }, fields: contentRowFields, render: contentRowRender },
-    RowOneColumn: { label: "1 column row", defaultProps: { layout: "one", columns: [{ label: "Column 1" }] }, fields: contentRowFields, render: contentRowRender },
-    RowTwoColumns: { label: "2 column row", defaultProps: { layout: "two", columns: [{ label: "Column 1" }, { label: "Column 2" }] }, fields: contentRowFields, render: contentRowRender },
-    RowLeftWide: { label: "left wide row", defaultProps: { layout: "leftWide", columns: [{ label: "Main column" }, { label: "Side column" }] }, fields: contentRowFields, render: contentRowRender },
-    RowRightWide: { label: "right wide row", defaultProps: { layout: "rightWide", columns: [{ label: "Side column" }, { label: "Main column" }] }, fields: contentRowFields, render: contentRowRender },
-    RowThreeColumns: { label: "3 column row", defaultProps: { layout: "three", columns: [{ label: "Column 1" }, { label: "Column 2" }, { label: "Column 3" }] }, fields: contentRowFields, render: contentRowRender },
-    RowFourColumns: { label: "4 column row", defaultProps: { layout: "four", columns: [{ label: "Column 1" }, { label: "Column 2" }, { label: "Column 3" }, { label: "Column 4" }] }, fields: contentRowFields, render: contentRowRender },
+    Row: { label: "Row", defaultProps: { layout: "two", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowOneColumn: { label: "1 column row", defaultProps: { layout: "one", columns: [{ label: "Column 1", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowTwoColumns: { label: "2 column row", defaultProps: { layout: "two", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowLeftWide: { label: "left wide row", defaultProps: { layout: "leftWide", columns: [{ label: "Main column", blocks: [] }, { label: "Side column", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowRightWide: { label: "right wide row", defaultProps: { layout: "rightWide", columns: [{ label: "Side column", blocks: [] }, { label: "Main column", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowThreeColumns: { label: "3 column row", defaultProps: { layout: "three", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }, { label: "Column 3", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowFourColumns: { label: "4 column row", defaultProps: { layout: "four", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }, { label: "Column 3", blocks: [] }, { label: "Column 4", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
     ...campaignAltComponents,
   },
 };

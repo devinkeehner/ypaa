@@ -935,8 +935,18 @@
 }
 
 /* Campaign-inspired visual builder sections */
-.nestedDropZone { margin-top: 18px; }
-.nestedSlot { display: block; min-height: 96px; }
+.nestedDropZone { border-radius: 10px; margin-top: 18px; padding: 10px; }
+.nestedDropZone[data-tone="light"] { background: color-mix(in srgb, var(--ink) 4%, transparent); color: var(--ink); }
+.nestedDropZone[data-tone="dark"] { background: color-mix(in srgb, var(--cream) 7%, transparent); color: var(--cream); }
+.nestedDropZoneLabel { align-items: center; display: flex; font: 800 .68rem/1.3 var(--font-geist-mono), monospace; gap: 7px; letter-spacing: .08em; margin: 0 0 8px; text-transform: uppercase; }
+.nestedDropZoneLabel svg { flex: 0 0 auto; }
+.nestedDropZonePlus { border: 1px solid currentColor; border-radius: 50%; display: inline-block; flex: 0 0 auto; height: 15px; position: relative; width: 15px; }
+.nestedDropZonePlus::before,
+.nestedDropZonePlus::after { background: currentColor; content: ""; inset: 6px 3px auto; height: 1px; position: absolute; }
+.nestedDropZonePlus::after { inset: 3px auto 3px 6px; height: auto; width: 1px; }
+.nestedSlot { display: block; }
+.nestedDropZone .nestedSlot { background: color-mix(in srgb, currentColor 3%, transparent); border: 1px dashed color-mix(in srgb, var(--ember), transparent 35%); min-height: var(--min-empty-height, 96px); padding: 12px; }
+.nestedDropZone[data-tone="dark"] .nestedSlot { border-color: color-mix(in srgb, var(--cream) 45%, transparent); }
 .richInline { display: block; }
 .richInline > :global([class*="RichTextEditor"]) { color: inherit; font: inherit; text-align: inherit; width: 100%; }
 .richInline :global(.rich-text) { color: inherit; font-family: inherit; text-align: inherit; width: 100%; }
@@ -973,8 +983,6 @@
 .resultsStats article [data-rich-as="span"] { font: 800 .72rem/1.4 var(--font-geist-mono), monospace; letter-spacing: .1em; margin-top: 16px; text-transform: uppercase; }
 .supporterLogos strong,
 .supporterLogos [data-rich-as="strong"] { font: 750 .71rem/1.4 var(--font-geist-mono), monospace; letter-spacing: .06em; text-transform: uppercase; }
-.nestedDropZone > span { color: #71695e; display: block; font: 800 .64rem/1.3 var(--font-geist-mono), monospace; letter-spacing: .08em; margin: 0 0 8px; text-transform: uppercase; }
-.nestedDropZone :global(.Puck-DropZone) { border: 1px dashed color-mix(in srgb, var(--ember), transparent 35%); min-height: 96px; padding: 12px; }
 
 .issuesSection,
 .issueCards,
