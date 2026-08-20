@@ -64,7 +64,6 @@ export type SupportedTimezones =
 export interface Config {
   auth: {
     users: UserAuthOperations;
-    'payload-mcp-api-keys': PayloadMcpApiKeyAuthOperations;
   };
   blocks: {};
   collections: {
@@ -80,9 +79,6 @@ export interface Config {
     rooms: Room;
     'program-sessions': ProgramSession;
     'venue-maps': VenueMap;
-    forms: Form;
-    'form-submissions': FormSubmission;
-    'payload-mcp-api-keys': PayloadMcpApiKey;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -102,9 +98,6 @@ export interface Config {
     rooms: RoomsSelect<false> | RoomsSelect<true>;
     'program-sessions': ProgramSessionsSelect<false> | ProgramSessionsSelect<true>;
     'venue-maps': VenueMapsSelect<false> | VenueMapsSelect<true>;
-    forms: FormsSelect<false> | FormsSelect<true>;
-    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
-    'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -120,31 +113,13 @@ export interface Config {
   widgets: {
     collections: CollectionsWidget;
   };
-  user: User | PayloadMcpApiKey;
+  user: User;
   jobs: {
     tasks: unknown;
     workflows: unknown;
   };
 }
 export interface UserAuthOperations {
-  forgotPassword: {
-    email: string;
-    password: string;
-  };
-  login: {
-    email: string;
-    password: string;
-  };
-  registerFirstUser: {
-    email: string;
-    password: string;
-  };
-  unlock: {
-    email: string;
-    password: string;
-  };
-}
-export interface PayloadMcpApiKeyAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -261,6 +236,15 @@ export interface Page {
               | number
               | boolean
               | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'HeroCountdown';
@@ -273,6 +257,15 @@ export interface Page {
             advisoryBody?: string | null;
             image?: (string | null) | Media;
             textStyles?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            puckRichText?:
               | {
                   [k: string]: unknown;
                 }
@@ -298,10 +291,28 @@ export interface Page {
               | {
                   date?: string | null;
                   label?: string | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
             textStyles?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            puckRichText?:
               | {
                   [k: string]: unknown;
                 }
@@ -327,6 +338,15 @@ export interface Page {
               | {
                   title?: string | null;
                   date?: string | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
@@ -335,10 +355,28 @@ export interface Page {
                   title?: string | null;
                   date?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
             textStyles?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            puckRichText?:
               | {
                   [k: string]: unknown;
                 }
@@ -361,10 +399,28 @@ export interface Page {
                   location?: string | null;
                   date?: string | null;
                   url?: string | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
             textStyles?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            puckRichText?:
               | {
                   [k: string]: unknown;
                 }
@@ -391,8 +447,26 @@ export interface Page {
                   attendance?: string | null;
                   address?: string | null;
                   types?: string | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -416,6 +490,15 @@ export interface Page {
               | number
               | boolean
               | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'CallToAction';
@@ -425,6 +508,15 @@ export interface Page {
             caption?: string | null;
             aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
             width?: ('full' | 'wide' | 'content') | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'Image';
@@ -452,6 +544,15 @@ export interface Page {
             color?: string | null;
             fontWeight?: ('400' | '700') | null;
             alignment?: ('left' | 'center' | 'right') | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'RichText';
@@ -462,6 +563,15 @@ export interface Page {
             color?: string | null;
             fontWeight?: ('400' | '700') | null;
             alignment?: ('left' | 'center' | 'right') | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'FreeText';
@@ -472,6 +582,15 @@ export interface Page {
             secondaryLabel?: string | null;
             secondaryUrl?: string | null;
             alignment?: ('left' | 'center' | 'right') | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'ButtonRow';
@@ -485,8 +604,26 @@ export interface Page {
                   title?: string | null;
                   body?: string | null;
                   icon?: string | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -511,6 +648,15 @@ export interface Page {
                             caption?: string | null;
                             aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
                             width?: ('full' | 'wide' | 'content') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Image';
@@ -538,6 +684,15 @@ export interface Page {
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'RichText';
@@ -548,6 +703,15 @@ export interface Page {
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'FreeText';
@@ -557,6 +721,15 @@ export interface Page {
                             fontSize?: string | null;
                             color?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Text';
@@ -565,6 +738,15 @@ export interface Page {
                             label?: string | null;
                             url?: string | null;
                             style?: ('solid' | 'outline') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Button';
@@ -572,6 +754,15 @@ export interface Page {
                         | {
                             target?: string | null;
                             label?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Countdown';
@@ -582,8 +773,26 @@ export interface Page {
                               | {
                                   label?: string | null;
                                   url?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -593,6 +802,15 @@ export interface Page {
                             text?: string | null;
                             level?: ('h1' | 'h2' | 'h3') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Headline';
@@ -600,6 +818,15 @@ export interface Page {
                         | {
                             style?: ('solid' | 'dashed' | 'dotted') | null;
                             color?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Divider';
@@ -610,8 +837,26 @@ export interface Page {
                               | {
                                   label?: string | null;
                                   url?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -621,8 +866,26 @@ export interface Page {
                             items?:
                               | {
                                   text?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -638,8 +901,26 @@ export interface Page {
                                   label?: string | null;
                                   name?: string | null;
                                   type?: ('text' | 'email') | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -648,6 +929,15 @@ export interface Page {
                         | {
                             image: string | Media;
                             caption?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'ImageCaption';
@@ -656,6 +946,15 @@ export interface Page {
                             video?: (string | null) | Media;
                             url?: string | null;
                             caption?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Video';
@@ -663,6 +962,15 @@ export interface Page {
                         | {
                             url?: string | null;
                             title?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Embed';
@@ -671,6 +979,15 @@ export interface Page {
                             label?: string | null;
                             url?: string | null;
                             amount?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'PayPal';
@@ -681,6 +998,15 @@ export interface Page {
                             secondaryLabel?: string | null;
                             secondaryUrl?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'ButtonRow';
@@ -702,13 +1028,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -731,13 +1076,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -761,13 +1125,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -790,13 +1173,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -804,8 +1206,26 @@ export interface Page {
                           }
                       )[]
                     | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -817,6 +1237,15 @@ export interface Page {
             attribution?: string | null;
             role?: string | null;
             image?: (string | null) | Media;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'QuoteBlock';
@@ -829,8 +1258,26 @@ export interface Page {
                   value?: string | null;
                   label?: string | null;
                   detail?: string | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -843,8 +1290,26 @@ export interface Page {
               | {
                   name?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -864,6 +1329,15 @@ export interface Page {
                             caption?: string | null;
                             aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
                             width?: ('full' | 'wide' | 'content') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Image';
@@ -891,6 +1365,15 @@ export interface Page {
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'RichText';
@@ -901,6 +1384,15 @@ export interface Page {
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'FreeText';
@@ -910,6 +1402,15 @@ export interface Page {
                             fontSize?: string | null;
                             color?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Text';
@@ -918,6 +1419,15 @@ export interface Page {
                             label?: string | null;
                             url?: string | null;
                             style?: ('solid' | 'outline') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Button';
@@ -925,6 +1435,15 @@ export interface Page {
                         | {
                             target?: string | null;
                             label?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Countdown';
@@ -935,8 +1454,26 @@ export interface Page {
                               | {
                                   label?: string | null;
                                   url?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -946,6 +1483,15 @@ export interface Page {
                             text?: string | null;
                             level?: ('h1' | 'h2' | 'h3') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Headline';
@@ -953,6 +1499,15 @@ export interface Page {
                         | {
                             style?: ('solid' | 'dashed' | 'dotted') | null;
                             color?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Divider';
@@ -963,8 +1518,26 @@ export interface Page {
                               | {
                                   label?: string | null;
                                   url?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -974,8 +1547,26 @@ export interface Page {
                             items?:
                               | {
                                   text?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -991,8 +1582,26 @@ export interface Page {
                                   label?: string | null;
                                   name?: string | null;
                                   type?: ('text' | 'email') | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -1001,6 +1610,15 @@ export interface Page {
                         | {
                             image: string | Media;
                             caption?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'ImageCaption';
@@ -1009,6 +1627,15 @@ export interface Page {
                             video?: (string | null) | Media;
                             url?: string | null;
                             caption?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Video';
@@ -1016,6 +1643,15 @@ export interface Page {
                         | {
                             url?: string | null;
                             title?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Embed';
@@ -1024,6 +1660,15 @@ export interface Page {
                             label?: string | null;
                             url?: string | null;
                             amount?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'PayPal';
@@ -1034,6 +1679,15 @@ export interface Page {
                             secondaryLabel?: string | null;
                             secondaryUrl?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'ButtonRow';
@@ -1055,13 +1709,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -1084,13 +1757,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -1114,13 +1806,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -1143,13 +1854,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -1157,8 +1887,26 @@ export interface Page {
                           }
                       )[]
                     | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -1172,8 +1920,26 @@ export interface Page {
                   image?: (string | null) | Media;
                   caption?: string | null;
                   size?: ('small' | 'medium' | 'large') | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -1191,6 +1957,15 @@ export interface Page {
                             caption?: string | null;
                             aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
                             width?: ('full' | 'wide' | 'content') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Image';
@@ -1218,6 +1993,15 @@ export interface Page {
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'RichText';
@@ -1228,6 +2012,15 @@ export interface Page {
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'FreeText';
@@ -1237,6 +2030,15 @@ export interface Page {
                             fontSize?: string | null;
                             color?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Text';
@@ -1245,6 +2047,15 @@ export interface Page {
                             label?: string | null;
                             url?: string | null;
                             style?: ('solid' | 'outline') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Button';
@@ -1252,6 +2063,15 @@ export interface Page {
                         | {
                             target?: string | null;
                             label?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Countdown';
@@ -1262,8 +2082,26 @@ export interface Page {
                               | {
                                   label?: string | null;
                                   url?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -1273,6 +2111,15 @@ export interface Page {
                             text?: string | null;
                             level?: ('h1' | 'h2' | 'h3') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Headline';
@@ -1280,6 +2127,15 @@ export interface Page {
                         | {
                             style?: ('solid' | 'dashed' | 'dotted') | null;
                             color?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Divider';
@@ -1290,8 +2146,26 @@ export interface Page {
                               | {
                                   label?: string | null;
                                   url?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -1301,8 +2175,26 @@ export interface Page {
                             items?:
                               | {
                                   text?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -1318,8 +2210,26 @@ export interface Page {
                                   label?: string | null;
                                   name?: string | null;
                                   type?: ('text' | 'email') | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -1328,6 +2238,15 @@ export interface Page {
                         | {
                             image: string | Media;
                             caption?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'ImageCaption';
@@ -1336,6 +2255,15 @@ export interface Page {
                             video?: (string | null) | Media;
                             url?: string | null;
                             caption?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Video';
@@ -1343,6 +2271,15 @@ export interface Page {
                         | {
                             url?: string | null;
                             title?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Embed';
@@ -1351,6 +2288,15 @@ export interface Page {
                             label?: string | null;
                             url?: string | null;
                             amount?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'PayPal';
@@ -1361,6 +2307,15 @@ export interface Page {
                             secondaryLabel?: string | null;
                             secondaryUrl?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'ButtonRow';
@@ -1382,13 +2337,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -1411,13 +2385,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -1441,13 +2434,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -1470,13 +2482,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -1484,8 +2515,26 @@ export interface Page {
                           }
                       )[]
                     | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -1494,6 +2543,15 @@ export interface Page {
         | {
             heading?: string | null;
             introduction?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'ProgramSchedule';
@@ -1504,8 +2562,26 @@ export interface Page {
               | {
                   label?: string | null;
                   url?: string | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -1516,6 +2592,15 @@ export interface Page {
             fontSize?: string | null;
             color?: string | null;
             alignment?: ('left' | 'center' | 'right') | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'Text';
@@ -1524,6 +2609,15 @@ export interface Page {
             label?: string | null;
             url?: string | null;
             style?: ('solid' | 'outline') | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'Button';
@@ -1531,6 +2625,15 @@ export interface Page {
         | {
             target?: string | null;
             label?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'Countdown';
@@ -1545,6 +2648,15 @@ export interface Page {
                       caption?: string | null;
                       aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
                       width?: ('full' | 'wide' | 'content') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Image';
@@ -1572,6 +2684,15 @@ export interface Page {
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RichText';
@@ -1582,6 +2703,15 @@ export interface Page {
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'FreeText';
@@ -1591,6 +2721,15 @@ export interface Page {
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Text';
@@ -1599,6 +2738,15 @@ export interface Page {
                       label?: string | null;
                       url?: string | null;
                       style?: ('solid' | 'outline') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Button';
@@ -1606,6 +2754,15 @@ export interface Page {
                   | {
                       target?: string | null;
                       label?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Countdown';
@@ -1616,8 +2773,26 @@ export interface Page {
                         | {
                             label?: string | null;
                             url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -1627,6 +2802,15 @@ export interface Page {
                       text?: string | null;
                       level?: ('h1' | 'h2' | 'h3') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Headline';
@@ -1634,6 +2818,15 @@ export interface Page {
                   | {
                       style?: ('solid' | 'dashed' | 'dotted') | null;
                       color?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Divider';
@@ -1644,8 +2837,26 @@ export interface Page {
                         | {
                             label?: string | null;
                             url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -1655,8 +2866,26 @@ export interface Page {
                       items?:
                         | {
                             text?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -1672,8 +2901,26 @@ export interface Page {
                             label?: string | null;
                             name?: string | null;
                             type?: ('text' | 'email') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -1682,6 +2929,15 @@ export interface Page {
                   | {
                       image: string | Media;
                       caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'ImageCaption';
@@ -1690,6 +2946,15 @@ export interface Page {
                       video?: (string | null) | Media;
                       url?: string | null;
                       caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Video';
@@ -1697,6 +2962,15 @@ export interface Page {
                   | {
                       url?: string | null;
                       title?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Embed';
@@ -1705,6 +2979,15 @@ export interface Page {
                       label?: string | null;
                       url?: string | null;
                       amount?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'PayPal';
@@ -1715,6 +2998,15 @@ export interface Page {
                       secondaryLabel?: string | null;
                       secondaryUrl?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'ButtonRow';
@@ -1736,13 +3028,32 @@ export interface Page {
                             heading?: string | null;
                             text?: string | null;
                             value?: string | null;
+                            linkLabel?: string | null;
                             url?: string | null;
                             icon?: string | null;
                             attribution?: string | null;
                             role?: string | null;
                             image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -1765,13 +3076,32 @@ export interface Page {
                             heading?: string | null;
                             text?: string | null;
                             value?: string | null;
+                            linkLabel?: string | null;
                             url?: string | null;
                             icon?: string | null;
                             attribution?: string | null;
                             role?: string | null;
                             image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -1795,13 +3125,32 @@ export interface Page {
                             heading?: string | null;
                             text?: string | null;
                             value?: string | null;
+                            linkLabel?: string | null;
                             url?: string | null;
                             icon?: string | null;
                             attribution?: string | null;
                             role?: string | null;
                             image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -1824,19 +3173,47 @@ export interface Page {
                             heading?: string | null;
                             text?: string | null;
                             value?: string | null;
+                            linkLabel?: string | null;
                             url?: string | null;
                             icon?: string | null;
                             attribution?: string | null;
                             role?: string | null;
                             image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'TextElementAlt';
                     }
                 )[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -1851,6 +3228,15 @@ export interface Page {
                       caption?: string | null;
                       aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
                       width?: ('full' | 'wide' | 'content') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Image';
@@ -1878,6 +3264,15 @@ export interface Page {
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RichText';
@@ -1888,6 +3283,15 @@ export interface Page {
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'FreeText';
@@ -1897,6 +3301,15 @@ export interface Page {
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Text';
@@ -1905,6 +3318,15 @@ export interface Page {
                       label?: string | null;
                       url?: string | null;
                       style?: ('solid' | 'outline') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Button';
@@ -1912,6 +3334,15 @@ export interface Page {
                   | {
                       target?: string | null;
                       label?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Countdown';
@@ -1922,8 +3353,26 @@ export interface Page {
                         | {
                             label?: string | null;
                             url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -1933,6 +3382,15 @@ export interface Page {
                       text?: string | null;
                       level?: ('h1' | 'h2' | 'h3') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Headline';
@@ -1940,6 +3398,15 @@ export interface Page {
                   | {
                       style?: ('solid' | 'dashed' | 'dotted') | null;
                       color?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Divider';
@@ -1950,8 +3417,26 @@ export interface Page {
                         | {
                             label?: string | null;
                             url?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -1961,8 +3446,26 @@ export interface Page {
                       items?:
                         | {
                             text?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -1978,8 +3481,26 @@ export interface Page {
                             label?: string | null;
                             name?: string | null;
                             type?: ('text' | 'email') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -1988,6 +3509,15 @@ export interface Page {
                   | {
                       image: string | Media;
                       caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'ImageCaption';
@@ -1996,6 +3526,15 @@ export interface Page {
                       video?: (string | null) | Media;
                       url?: string | null;
                       caption?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Video';
@@ -2003,6 +3542,15 @@ export interface Page {
                   | {
                       url?: string | null;
                       title?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'Embed';
@@ -2011,6 +3559,15 @@ export interface Page {
                       label?: string | null;
                       url?: string | null;
                       amount?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'PayPal';
@@ -2021,6 +3578,15 @@ export interface Page {
                       secondaryLabel?: string | null;
                       secondaryUrl?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'ButtonRow';
@@ -2042,13 +3608,32 @@ export interface Page {
                             heading?: string | null;
                             text?: string | null;
                             value?: string | null;
+                            linkLabel?: string | null;
                             url?: string | null;
                             icon?: string | null;
                             attribution?: string | null;
                             role?: string | null;
                             image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -2071,13 +3656,32 @@ export interface Page {
                             heading?: string | null;
                             text?: string | null;
                             value?: string | null;
+                            linkLabel?: string | null;
                             url?: string | null;
                             icon?: string | null;
                             attribution?: string | null;
                             role?: string | null;
                             image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -2101,13 +3705,32 @@ export interface Page {
                             heading?: string | null;
                             text?: string | null;
                             value?: string | null;
+                            linkLabel?: string | null;
                             url?: string | null;
                             icon?: string | null;
                             attribution?: string | null;
                             role?: string | null;
                             image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
@@ -2130,19 +3753,47 @@ export interface Page {
                             heading?: string | null;
                             text?: string | null;
                             value?: string | null;
+                            linkLabel?: string | null;
                             url?: string | null;
                             icon?: string | null;
                             attribution?: string | null;
                             role?: string | null;
                             image?: (string | null) | Media;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                           }[]
+                        | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
                         | null;
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'TextElementAlt';
                     }
                 )[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -2152,6 +3803,15 @@ export interface Page {
             text?: string | null;
             level?: ('h1' | 'h2' | 'h3') | null;
             alignment?: ('left' | 'center' | 'right') | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'Headline';
@@ -2159,6 +3819,15 @@ export interface Page {
         | {
             style?: ('solid' | 'dashed' | 'dotted') | null;
             color?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'Divider';
@@ -2169,8 +3838,26 @@ export interface Page {
               | {
                   label?: string | null;
                   url?: string | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -2180,8 +3867,26 @@ export interface Page {
             items?:
               | {
                   text?: string | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -2197,8 +3902,26 @@ export interface Page {
                   label?: string | null;
                   name?: string | null;
                   type?: ('text' | 'email') | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -2207,6 +3930,15 @@ export interface Page {
         | {
             image: string | Media;
             caption?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'ImageCaption';
@@ -2215,6 +3947,15 @@ export interface Page {
             video?: (string | null) | Media;
             url?: string | null;
             caption?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'Video';
@@ -2222,6 +3963,15 @@ export interface Page {
         | {
             url?: string | null;
             title?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'Embed';
@@ -2230,6 +3980,15 @@ export interface Page {
             label?: string | null;
             url?: string | null;
             amount?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'PayPal';
@@ -2251,13 +4010,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -2280,13 +4058,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -2310,13 +4107,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -2339,13 +4155,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -2383,11 +4218,21 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
@@ -2397,6 +4242,15 @@ export interface Page {
             backgroundOverlay?: ('none' | 'off' | 'subtle' | 'standard' | 'strong') | null;
             textPanelColor?: ('primary' | 'accent' | 'foreground' | 'background' | 'white') | null;
             textPanelOpacity?: ('translucent' | 'solid') | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'HeroAlt';
@@ -2418,15 +4272,34 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
             intro?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'AboutAlt';
@@ -2449,13 +4322,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -2479,15 +4371,34 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
             intro?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'PalmCardPointsAlt';
@@ -2510,16 +4421,35 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
             quote?: string | null;
             quoteAttribution?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'PalmCardBioAlt';
@@ -2542,13 +4472,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -2572,11 +4521,21 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
@@ -2589,6 +4548,15 @@ export interface Page {
             qrImage?: (string | null) | Media;
             qrCaption?: string | null;
             disclaimer?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'PalmCardContactAlt';
@@ -2611,17 +4579,36 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
             intro?: string | null;
             quote?: string | null;
             quoteAttribution?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'PalmCardAlt';
@@ -2644,13 +4631,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -2674,15 +4680,34 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
             intro?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'CardsGridAlt';
@@ -2705,11 +4730,21 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
@@ -2726,6 +4761,15 @@ export interface Page {
                             caption?: string | null;
                             aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
                             width?: ('full' | 'wide' | 'content') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Image';
@@ -2753,6 +4797,15 @@ export interface Page {
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'RichText';
@@ -2763,6 +4816,15 @@ export interface Page {
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'FreeText';
@@ -2772,6 +4834,15 @@ export interface Page {
                             fontSize?: string | null;
                             color?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Text';
@@ -2780,6 +4851,15 @@ export interface Page {
                             label?: string | null;
                             url?: string | null;
                             style?: ('solid' | 'outline') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Button';
@@ -2787,6 +4867,15 @@ export interface Page {
                         | {
                             target?: string | null;
                             label?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Countdown';
@@ -2797,8 +4886,26 @@ export interface Page {
                               | {
                                   label?: string | null;
                                   url?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -2808,6 +4915,15 @@ export interface Page {
                             text?: string | null;
                             level?: ('h1' | 'h2' | 'h3') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Headline';
@@ -2815,6 +4931,15 @@ export interface Page {
                         | {
                             style?: ('solid' | 'dashed' | 'dotted') | null;
                             color?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Divider';
@@ -2825,8 +4950,26 @@ export interface Page {
                               | {
                                   label?: string | null;
                                   url?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -2836,8 +4979,26 @@ export interface Page {
                             items?:
                               | {
                                   text?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -2853,8 +5014,26 @@ export interface Page {
                                   label?: string | null;
                                   name?: string | null;
                                   type?: ('text' | 'email') | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -2863,6 +5042,15 @@ export interface Page {
                         | {
                             image: string | Media;
                             caption?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'ImageCaption';
@@ -2871,6 +5059,15 @@ export interface Page {
                             video?: (string | null) | Media;
                             url?: string | null;
                             caption?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Video';
@@ -2878,6 +5075,15 @@ export interface Page {
                         | {
                             url?: string | null;
                             title?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Embed';
@@ -2886,6 +5092,15 @@ export interface Page {
                             label?: string | null;
                             url?: string | null;
                             amount?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'PayPal';
@@ -2896,6 +5111,15 @@ export interface Page {
                             secondaryLabel?: string | null;
                             secondaryUrl?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'ButtonRow';
@@ -2917,13 +5141,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -2946,13 +5189,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -2976,13 +5238,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3005,13 +5286,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3019,8 +5319,26 @@ export interface Page {
                           }
                       )[]
                     | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -3044,15 +5362,34 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
             intro?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'TestimonialAlt';
@@ -3075,13 +5412,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -3105,13 +5461,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -3134,13 +5509,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -3164,13 +5558,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -3196,11 +5609,21 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
@@ -3217,6 +5640,15 @@ export interface Page {
                             caption?: string | null;
                             aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
                             width?: ('full' | 'wide' | 'content') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Image';
@@ -3244,6 +5676,15 @@ export interface Page {
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'RichText';
@@ -3254,6 +5695,15 @@ export interface Page {
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'FreeText';
@@ -3263,6 +5713,15 @@ export interface Page {
                             fontSize?: string | null;
                             color?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Text';
@@ -3271,6 +5730,15 @@ export interface Page {
                             label?: string | null;
                             url?: string | null;
                             style?: ('solid' | 'outline') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Button';
@@ -3278,6 +5746,15 @@ export interface Page {
                         | {
                             target?: string | null;
                             label?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Countdown';
@@ -3288,8 +5765,26 @@ export interface Page {
                               | {
                                   label?: string | null;
                                   url?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3299,6 +5794,15 @@ export interface Page {
                             text?: string | null;
                             level?: ('h1' | 'h2' | 'h3') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Headline';
@@ -3306,6 +5810,15 @@ export interface Page {
                         | {
                             style?: ('solid' | 'dashed' | 'dotted') | null;
                             color?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Divider';
@@ -3316,8 +5829,26 @@ export interface Page {
                               | {
                                   label?: string | null;
                                   url?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3327,8 +5858,26 @@ export interface Page {
                             items?:
                               | {
                                   text?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3344,8 +5893,26 @@ export interface Page {
                                   label?: string | null;
                                   name?: string | null;
                                   type?: ('text' | 'email') | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3354,6 +5921,15 @@ export interface Page {
                         | {
                             image: string | Media;
                             caption?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'ImageCaption';
@@ -3362,6 +5938,15 @@ export interface Page {
                             video?: (string | null) | Media;
                             url?: string | null;
                             caption?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Video';
@@ -3369,6 +5954,15 @@ export interface Page {
                         | {
                             url?: string | null;
                             title?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Embed';
@@ -3377,6 +5971,15 @@ export interface Page {
                             label?: string | null;
                             url?: string | null;
                             amount?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'PayPal';
@@ -3387,6 +5990,15 @@ export interface Page {
                             secondaryLabel?: string | null;
                             secondaryUrl?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'ButtonRow';
@@ -3408,13 +6020,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3437,13 +6068,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3467,13 +6117,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3496,13 +6165,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3510,8 +6198,26 @@ export interface Page {
                           }
                       )[]
                     | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -3535,11 +6241,21 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
               | null;
@@ -3556,6 +6272,15 @@ export interface Page {
                             caption?: string | null;
                             aspectRatio?: ('natural' | 'landscape' | 'portrait' | 'square') | null;
                             width?: ('full' | 'wide' | 'content') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Image';
@@ -3583,6 +6308,15 @@ export interface Page {
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'RichText';
@@ -3593,6 +6327,15 @@ export interface Page {
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'FreeText';
@@ -3602,6 +6345,15 @@ export interface Page {
                             fontSize?: string | null;
                             color?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Text';
@@ -3610,6 +6362,15 @@ export interface Page {
                             label?: string | null;
                             url?: string | null;
                             style?: ('solid' | 'outline') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Button';
@@ -3617,6 +6378,15 @@ export interface Page {
                         | {
                             target?: string | null;
                             label?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Countdown';
@@ -3627,8 +6397,26 @@ export interface Page {
                               | {
                                   label?: string | null;
                                   url?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3638,6 +6426,15 @@ export interface Page {
                             text?: string | null;
                             level?: ('h1' | 'h2' | 'h3') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Headline';
@@ -3645,6 +6442,15 @@ export interface Page {
                         | {
                             style?: ('solid' | 'dashed' | 'dotted') | null;
                             color?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Divider';
@@ -3655,8 +6461,26 @@ export interface Page {
                               | {
                                   label?: string | null;
                                   url?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3666,8 +6490,26 @@ export interface Page {
                             items?:
                               | {
                                   text?: string | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3683,8 +6525,26 @@ export interface Page {
                                   label?: string | null;
                                   name?: string | null;
                                   type?: ('text' | 'email') | null;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3693,6 +6553,15 @@ export interface Page {
                         | {
                             image: string | Media;
                             caption?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'ImageCaption';
@@ -3701,6 +6570,15 @@ export interface Page {
                             video?: (string | null) | Media;
                             url?: string | null;
                             caption?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Video';
@@ -3708,6 +6586,15 @@ export interface Page {
                         | {
                             url?: string | null;
                             title?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'Embed';
@@ -3716,6 +6603,15 @@ export interface Page {
                             label?: string | null;
                             url?: string | null;
                             amount?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'PayPal';
@@ -3726,6 +6622,15 @@ export interface Page {
                             secondaryLabel?: string | null;
                             secondaryUrl?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'ButtonRow';
@@ -3747,13 +6652,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3776,13 +6700,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3806,13 +6749,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3835,13 +6797,32 @@ export interface Page {
                                   heading?: string | null;
                                   text?: string | null;
                                   value?: string | null;
+                                  linkLabel?: string | null;
                                   url?: string | null;
                                   icon?: string | null;
                                   attribution?: string | null;
                                   role?: string | null;
                                   image?: (string | null) | Media;
+                                  puckRichText?:
+                                    | {
+                                        [k: string]: unknown;
+                                      }
+                                    | unknown[]
+                                    | string
+                                    | number
+                                    | boolean
+                                    | null;
                                   id?: string | null;
                                 }[]
+                              | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
                               | null;
                             id?: string | null;
                             blockName?: string | null;
@@ -3849,8 +6830,26 @@ export interface Page {
                           }
                       )[]
                     | null;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -3873,13 +6872,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -3902,13 +6920,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -3931,13 +6968,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -3960,13 +7016,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -3989,13 +7064,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -4018,13 +7112,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -4047,13 +7160,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -4076,13 +7208,32 @@ export interface Page {
                   heading?: string | null;
                   text?: string | null;
                   value?: string | null;
+                  linkLabel?: string | null;
                   url?: string | null;
                   icon?: string | null;
                   attribution?: string | null;
                   role?: string | null;
                   image?: (string | null) | Media;
+                  puckRichText?:
+                    | {
+                        [k: string]: unknown;
+                      }
+                    | unknown[]
+                    | string
+                    | number
+                    | boolean
+                    | null;
                   id?: string | null;
                 }[]
+              | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
               | null;
             id?: string | null;
             blockName?: string | null;
@@ -4459,431 +7610,6 @@ export interface VenueMap {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "forms".
- */
-export interface Form {
-  id: string;
-  title: string;
-  fields?:
-    | (
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            defaultValue?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'checkbox';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'country';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'email';
-          }
-        | {
-            message?: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            } | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'message';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'number';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            placeholder?: string | null;
-            options?:
-              | {
-                  label: string;
-                  value: string;
-                  id?: string | null;
-                }[]
-              | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'select';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'state';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'text';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'textarea';
-          }
-      )[]
-    | null;
-  submitButtonLabel?: string | null;
-  confirmationType?: ('message' | 'redirect') | null;
-  confirmationMessage?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  redirect?: {
-    url: string;
-  };
-  emails?:
-    | {
-        emailTo?: string | null;
-        cc?: string | null;
-        bcc?: string | null;
-        replyTo?: string | null;
-        emailFrom?: string | null;
-        subject: string;
-        message?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-submissions".
- */
-export interface FormSubmission {
-  id: string;
-  form: string | Form;
-  submissionData?:
-    | {
-        field: string;
-        value: string;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * API keys control which collections, resources, tools, and prompts MCP clients can access
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-mcp-api-keys".
- */
-export interface PayloadMcpApiKey {
-  id: string;
-  /**
-   * The user that the API key is associated with.
-   */
-  user: string | User;
-  /**
-   * A useful label for the API key.
-   */
-  label?: string | null;
-  /**
-   * The purpose of the API key.
-   */
-  description?: string | null;
-  users?: {
-    /**
-     * Allow clients to find users.
-     */
-    find?: boolean | null;
-    /**
-     * Allow clients to create users.
-     */
-    create?: boolean | null;
-    /**
-     * Allow clients to update users.
-     */
-    update?: boolean | null;
-    /**
-     * Allow clients to delete users.
-     */
-    delete?: boolean | null;
-  };
-  media?: {
-    /**
-     * Allow clients to find media.
-     */
-    find?: boolean | null;
-    /**
-     * Allow clients to create media.
-     */
-    create?: boolean | null;
-    /**
-     * Allow clients to update media.
-     */
-    update?: boolean | null;
-    /**
-     * Allow clients to delete media.
-     */
-    delete?: boolean | null;
-  };
-  pages?: {
-    /**
-     * Allow clients to find pages.
-     */
-    find?: boolean | null;
-    /**
-     * Allow clients to create pages.
-     */
-    create?: boolean | null;
-    /**
-     * Allow clients to update pages.
-     */
-    update?: boolean | null;
-    /**
-     * Allow clients to delete pages.
-     */
-    delete?: boolean | null;
-  };
-  merchandise?: {
-    /**
-     * Allow clients to find merchandise.
-     */
-    find?: boolean | null;
-    /**
-     * Allow clients to create merchandise.
-     */
-    create?: boolean | null;
-    /**
-     * Allow clients to update merchandise.
-     */
-    update?: boolean | null;
-    /**
-     * Allow clients to delete merchandise.
-     */
-    delete?: boolean | null;
-  };
-  tenants?: {
-    /**
-     * Allow clients to find tenants.
-     */
-    find?: boolean | null;
-    /**
-     * Allow clients to create tenants.
-     */
-    create?: boolean | null;
-    /**
-     * Allow clients to update tenants.
-     */
-    update?: boolean | null;
-    /**
-     * Allow clients to delete tenants.
-     */
-    delete?: boolean | null;
-  };
-  accessCodes?: {
-    /**
-     * Allow clients to find access-codes.
-     */
-    find?: boolean | null;
-    /**
-     * Allow clients to create access-codes.
-     */
-    create?: boolean | null;
-    /**
-     * Allow clients to update access-codes.
-     */
-    update?: boolean | null;
-    /**
-     * Allow clients to delete access-codes.
-     */
-    delete?: boolean | null;
-  };
-  cashTransactions?: {
-    /**
-     * Allow clients to find cash-transactions.
-     */
-    find?: boolean | null;
-    /**
-     * Allow clients to create cash-transactions.
-     */
-    create?: boolean | null;
-    /**
-     * Allow clients to update cash-transactions.
-     */
-    update?: boolean | null;
-    /**
-     * Allow clients to delete cash-transactions.
-     */
-    delete?: boolean | null;
-  };
-  attendees?: {
-    /**
-     * Allow clients to find attendees.
-     */
-    find?: boolean | null;
-    /**
-     * Allow clients to create attendees.
-     */
-    create?: boolean | null;
-    /**
-     * Allow clients to update attendees.
-     */
-    update?: boolean | null;
-    /**
-     * Allow clients to delete attendees.
-     */
-    delete?: boolean | null;
-  };
-  breakfastTickets?: {
-    /**
-     * Allow clients to find breakfast-tickets.
-     */
-    find?: boolean | null;
-    /**
-     * Allow clients to create breakfast-tickets.
-     */
-    create?: boolean | null;
-    /**
-     * Allow clients to update breakfast-tickets.
-     */
-    update?: boolean | null;
-    /**
-     * Allow clients to delete breakfast-tickets.
-     */
-    delete?: boolean | null;
-  };
-  rooms?: {
-    /**
-     * Allow clients to find rooms.
-     */
-    find?: boolean | null;
-    /**
-     * Allow clients to create rooms.
-     */
-    create?: boolean | null;
-    /**
-     * Allow clients to update rooms.
-     */
-    update?: boolean | null;
-    /**
-     * Allow clients to delete rooms.
-     */
-    delete?: boolean | null;
-  };
-  programSessions?: {
-    /**
-     * Allow clients to find program-sessions.
-     */
-    find?: boolean | null;
-    /**
-     * Allow clients to create program-sessions.
-     */
-    create?: boolean | null;
-    /**
-     * Allow clients to update program-sessions.
-     */
-    update?: boolean | null;
-    /**
-     * Allow clients to delete program-sessions.
-     */
-    delete?: boolean | null;
-  };
-  venueMaps?: {
-    /**
-     * Allow clients to find venue-maps.
-     */
-    find?: boolean | null;
-    /**
-     * Allow clients to create venue-maps.
-     */
-    create?: boolean | null;
-    /**
-     * Allow clients to update venue-maps.
-     */
-    update?: boolean | null;
-    /**
-     * Allow clients to delete venue-maps.
-     */
-    delete?: boolean | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-  enableAPIKey?: boolean | null;
-  apiKey?: string | null;
-  apiKeyIndex?: string | null;
-  collection: 'payload-mcp-api-keys';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -4953,29 +7679,12 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'venue-maps';
         value: string | VenueMap;
-      } | null)
-    | ({
-        relationTo: 'forms';
-        value: string | Form;
-      } | null)
-    | ({
-        relationTo: 'form-submissions';
-        value: string | FormSubmission;
-      } | null)
-    | ({
-        relationTo: 'payload-mcp-api-keys';
-        value: string | PayloadMcpApiKey;
       } | null);
   globalSlug?: string | null;
-  user:
-    | {
-        relationTo: 'users';
-        value: string | User;
-      }
-    | {
-        relationTo: 'payload-mcp-api-keys';
-        value: string | PayloadMcpApiKey;
-      };
+  user: {
+    relationTo: 'users';
+    value: string | User;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -4985,15 +7694,10 @@ export interface PayloadLockedDocument {
  */
 export interface PayloadPreference {
   id: string;
-  user:
-    | {
-        relationTo: 'users';
-        value: string | User;
-      }
-    | {
-        relationTo: 'payload-mcp-api-keys';
-        value: string | PayloadMcpApiKey;
-      };
+  user: {
+    relationTo: 'users';
+    value: string | User;
+  };
   key?: string | null;
   value?:
     | {
@@ -5087,6 +7791,7 @@ export interface PagesSelect<T extends boolean = true> {
               backgroundDarkness?: T;
               image?: T;
               textStyles?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5100,6 +7805,7 @@ export interface PagesSelect<T extends boolean = true> {
               advisoryBody?: T;
               image?: T;
               textStyles?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5119,9 +7825,11 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     date?: T;
                     label?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               textStyles?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5141,6 +7849,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     title?: T;
                     date?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               pastEvents?:
@@ -5149,9 +7858,11 @@ export interface PagesSelect<T extends boolean = true> {
                     title?: T;
                     date?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               textStyles?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5168,9 +7879,11 @@ export interface PagesSelect<T extends boolean = true> {
                     location?: T;
                     date?: T;
                     url?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               textStyles?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5191,8 +7904,10 @@ export interface PagesSelect<T extends boolean = true> {
                     attendance?: T;
                     address?: T;
                     types?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5208,6 +7923,7 @@ export interface PagesSelect<T extends boolean = true> {
               secondaryUrl?: T;
               image?: T;
               textStyles?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5218,6 +7934,7 @@ export interface PagesSelect<T extends boolean = true> {
               caption?: T;
               aspectRatio?: T;
               width?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5229,6 +7946,7 @@ export interface PagesSelect<T extends boolean = true> {
               color?: T;
               fontWeight?: T;
               alignment?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5240,6 +7958,7 @@ export interface PagesSelect<T extends boolean = true> {
               color?: T;
               fontWeight?: T;
               alignment?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5251,6 +7970,7 @@ export interface PagesSelect<T extends boolean = true> {
               secondaryLabel?: T;
               secondaryUrl?: T;
               alignment?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5266,8 +7986,10 @@ export interface PagesSelect<T extends boolean = true> {
                     title?: T;
                     body?: T;
                     icon?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5296,6 +8018,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 caption?: T;
                                 aspectRatio?: T;
                                 width?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5307,6 +8030,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 color?: T;
                                 fontWeight?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5318,6 +8042,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 color?: T;
                                 fontWeight?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5328,6 +8053,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 fontSize?: T;
                                 color?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5337,6 +8063,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 style?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5345,6 +8072,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 target?: T;
                                 label?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5357,8 +8085,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       url?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5368,6 +8098,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 level?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5376,6 +8107,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 style?: T;
                                 color?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5388,8 +8120,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       url?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5400,8 +8134,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | T
                                   | {
                                       text?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5418,8 +8154,10 @@ export interface PagesSelect<T extends boolean = true> {
                                       label?: T;
                                       name?: T;
                                       type?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5428,6 +8166,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 image?: T;
                                 caption?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5437,6 +8176,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 video?: T;
                                 url?: T;
                                 caption?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5445,6 +8185,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 url?: T;
                                 title?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5454,6 +8195,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 amount?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5465,6 +8207,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5488,13 +8231,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5518,13 +8264,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5549,13 +8298,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5579,19 +8331,24 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
                         };
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5603,6 +8360,7 @@ export interface PagesSelect<T extends boolean = true> {
               attribution?: T;
               role?: T;
               image?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5617,8 +8375,10 @@ export interface PagesSelect<T extends boolean = true> {
                     value?: T;
                     label?: T;
                     detail?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5632,8 +8392,10 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     name?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5657,6 +8419,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 caption?: T;
                                 aspectRatio?: T;
                                 width?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5668,6 +8431,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 color?: T;
                                 fontWeight?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5679,6 +8443,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 color?: T;
                                 fontWeight?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5689,6 +8454,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 fontSize?: T;
                                 color?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5698,6 +8464,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 style?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5706,6 +8473,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 target?: T;
                                 label?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5718,8 +8486,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       url?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5729,6 +8499,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 level?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5737,6 +8508,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 style?: T;
                                 color?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5749,8 +8521,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       url?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5761,8 +8535,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | T
                                   | {
                                       text?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5779,8 +8555,10 @@ export interface PagesSelect<T extends boolean = true> {
                                       label?: T;
                                       name?: T;
                                       type?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5789,6 +8567,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 image?: T;
                                 caption?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5798,6 +8577,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 video?: T;
                                 url?: T;
                                 caption?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5806,6 +8586,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 url?: T;
                                 title?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5815,6 +8596,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 amount?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5826,6 +8608,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5849,13 +8632,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5879,13 +8665,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5910,13 +8699,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -5940,19 +8732,24 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
                         };
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5967,8 +8764,10 @@ export interface PagesSelect<T extends boolean = true> {
                     image?: T;
                     caption?: T;
                     size?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -5990,6 +8789,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 caption?: T;
                                 aspectRatio?: T;
                                 width?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6001,6 +8801,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 color?: T;
                                 fontWeight?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6012,6 +8813,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 color?: T;
                                 fontWeight?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6022,6 +8824,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 fontSize?: T;
                                 color?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6031,6 +8834,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 style?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6039,6 +8843,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 target?: T;
                                 label?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6051,8 +8856,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       url?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6062,6 +8869,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 level?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6070,6 +8878,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 style?: T;
                                 color?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6082,8 +8891,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       url?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6094,8 +8905,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | T
                                   | {
                                       text?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6112,8 +8925,10 @@ export interface PagesSelect<T extends boolean = true> {
                                       label?: T;
                                       name?: T;
                                       type?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6122,6 +8937,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 image?: T;
                                 caption?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6131,6 +8947,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 video?: T;
                                 url?: T;
                                 caption?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6139,6 +8956,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 url?: T;
                                 title?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6148,6 +8966,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 amount?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6159,6 +8978,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6182,13 +9002,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6212,13 +9035,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6243,13 +9069,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -6273,19 +9102,24 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
                         };
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -6294,6 +9128,7 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               heading?: T;
               introduction?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -6306,8 +9141,10 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     label?: T;
                     url?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -6318,6 +9155,7 @@ export interface PagesSelect<T extends boolean = true> {
               fontSize?: T;
               color?: T;
               alignment?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -6327,6 +9165,7 @@ export interface PagesSelect<T extends boolean = true> {
               label?: T;
               url?: T;
               style?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -6335,6 +9174,7 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               target?: T;
               label?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -6353,6 +9193,7 @@ export interface PagesSelect<T extends boolean = true> {
                           caption?: T;
                           aspectRatio?: T;
                           width?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6364,6 +9205,7 @@ export interface PagesSelect<T extends boolean = true> {
                           color?: T;
                           fontWeight?: T;
                           alignment?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6375,6 +9217,7 @@ export interface PagesSelect<T extends boolean = true> {
                           color?: T;
                           fontWeight?: T;
                           alignment?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6385,6 +9228,7 @@ export interface PagesSelect<T extends boolean = true> {
                           fontSize?: T;
                           color?: T;
                           alignment?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6394,6 +9238,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           style?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6402,6 +9247,7 @@ export interface PagesSelect<T extends boolean = true> {
                       | {
                           target?: T;
                           label?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6414,8 +9260,10 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 url?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6425,6 +9273,7 @@ export interface PagesSelect<T extends boolean = true> {
                           text?: T;
                           level?: T;
                           alignment?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6433,6 +9282,7 @@ export interface PagesSelect<T extends boolean = true> {
                       | {
                           style?: T;
                           color?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6445,8 +9295,10 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 url?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6457,8 +9309,10 @@ export interface PagesSelect<T extends boolean = true> {
                             | T
                             | {
                                 text?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6475,8 +9329,10 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 name?: T;
                                 type?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6485,6 +9341,7 @@ export interface PagesSelect<T extends boolean = true> {
                       | {
                           image?: T;
                           caption?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6494,6 +9351,7 @@ export interface PagesSelect<T extends boolean = true> {
                           video?: T;
                           url?: T;
                           caption?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6502,6 +9360,7 @@ export interface PagesSelect<T extends boolean = true> {
                       | {
                           url?: T;
                           title?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6511,6 +9370,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           amount?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6522,6 +9382,7 @@ export interface PagesSelect<T extends boolean = true> {
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           alignment?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6545,13 +9406,16 @@ export interface PagesSelect<T extends boolean = true> {
                                 heading?: T;
                                 text?: T;
                                 value?: T;
+                                linkLabel?: T;
                                 url?: T;
                                 icon?: T;
                                 attribution?: T;
                                 role?: T;
                                 image?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6575,13 +9439,16 @@ export interface PagesSelect<T extends boolean = true> {
                                 heading?: T;
                                 text?: T;
                                 value?: T;
+                                linkLabel?: T;
                                 url?: T;
                                 icon?: T;
                                 attribution?: T;
                                 role?: T;
                                 image?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6606,13 +9473,16 @@ export interface PagesSelect<T extends boolean = true> {
                                 heading?: T;
                                 text?: T;
                                 value?: T;
+                                linkLabel?: T;
                                 url?: T;
                                 icon?: T;
                                 attribution?: T;
                                 role?: T;
                                 image?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6636,17 +9506,21 @@ export interface PagesSelect<T extends boolean = true> {
                                 heading?: T;
                                 text?: T;
                                 value?: T;
+                                linkLabel?: T;
                                 url?: T;
                                 icon?: T;
                                 attribution?: T;
                                 role?: T;
                                 image?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -6664,6 +9538,7 @@ export interface PagesSelect<T extends boolean = true> {
                           caption?: T;
                           aspectRatio?: T;
                           width?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6675,6 +9550,7 @@ export interface PagesSelect<T extends boolean = true> {
                           color?: T;
                           fontWeight?: T;
                           alignment?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6686,6 +9562,7 @@ export interface PagesSelect<T extends boolean = true> {
                           color?: T;
                           fontWeight?: T;
                           alignment?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6696,6 +9573,7 @@ export interface PagesSelect<T extends boolean = true> {
                           fontSize?: T;
                           color?: T;
                           alignment?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6705,6 +9583,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           style?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6713,6 +9592,7 @@ export interface PagesSelect<T extends boolean = true> {
                       | {
                           target?: T;
                           label?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6725,8 +9605,10 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 url?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6736,6 +9618,7 @@ export interface PagesSelect<T extends boolean = true> {
                           text?: T;
                           level?: T;
                           alignment?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6744,6 +9627,7 @@ export interface PagesSelect<T extends boolean = true> {
                       | {
                           style?: T;
                           color?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6756,8 +9640,10 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 label?: T;
                                 url?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6768,8 +9654,10 @@ export interface PagesSelect<T extends boolean = true> {
                             | T
                             | {
                                 text?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6786,8 +9674,10 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 name?: T;
                                 type?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6796,6 +9686,7 @@ export interface PagesSelect<T extends boolean = true> {
                       | {
                           image?: T;
                           caption?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6805,6 +9696,7 @@ export interface PagesSelect<T extends boolean = true> {
                           video?: T;
                           url?: T;
                           caption?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6813,6 +9705,7 @@ export interface PagesSelect<T extends boolean = true> {
                       | {
                           url?: T;
                           title?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6822,6 +9715,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           amount?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6833,6 +9727,7 @@ export interface PagesSelect<T extends boolean = true> {
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           alignment?: T;
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6856,13 +9751,16 @@ export interface PagesSelect<T extends boolean = true> {
                                 heading?: T;
                                 text?: T;
                                 value?: T;
+                                linkLabel?: T;
                                 url?: T;
                                 icon?: T;
                                 attribution?: T;
                                 role?: T;
                                 image?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6886,13 +9784,16 @@ export interface PagesSelect<T extends boolean = true> {
                                 heading?: T;
                                 text?: T;
                                 value?: T;
+                                linkLabel?: T;
                                 url?: T;
                                 icon?: T;
                                 attribution?: T;
                                 role?: T;
                                 image?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6917,13 +9818,16 @@ export interface PagesSelect<T extends boolean = true> {
                                 heading?: T;
                                 text?: T;
                                 value?: T;
+                                linkLabel?: T;
                                 url?: T;
                                 icon?: T;
                                 attribution?: T;
                                 role?: T;
                                 image?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
@@ -6947,17 +9851,21 @@ export interface PagesSelect<T extends boolean = true> {
                                 heading?: T;
                                 text?: T;
                                 value?: T;
+                                linkLabel?: T;
                                 url?: T;
                                 icon?: T;
                                 attribution?: T;
                                 role?: T;
                                 image?: T;
+                                puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
                           id?: T;
                           blockName?: T;
                         };
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -6967,6 +9875,7 @@ export interface PagesSelect<T extends boolean = true> {
               text?: T;
               level?: T;
               alignment?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -6975,6 +9884,7 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               style?: T;
               color?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -6987,8 +9897,10 @@ export interface PagesSelect<T extends boolean = true> {
                 | {
                     label?: T;
                     url?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -6999,8 +9911,10 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     text?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7017,8 +9931,10 @@ export interface PagesSelect<T extends boolean = true> {
                     label?: T;
                     name?: T;
                     type?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7027,6 +9943,7 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               image?: T;
               caption?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7036,6 +9953,7 @@ export interface PagesSelect<T extends boolean = true> {
               video?: T;
               url?: T;
               caption?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7044,6 +9962,7 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               url?: T;
               title?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7053,6 +9972,7 @@ export interface PagesSelect<T extends boolean = true> {
               label?: T;
               url?: T;
               amount?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7076,13 +9996,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7106,13 +10029,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7137,13 +10063,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7167,13 +10096,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7198,11 +10130,13 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               headingLogo?: T;
@@ -7211,6 +10145,7 @@ export interface PagesSelect<T extends boolean = true> {
               backgroundOverlay?: T;
               textPanelColor?: T;
               textPanelOpacity?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7234,14 +10169,17 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               intro?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7266,13 +10204,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7297,14 +10238,17 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               intro?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7329,15 +10273,18 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               quote?: T;
               quoteAttribution?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7362,13 +10309,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7393,11 +10343,13 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               intro?: T;
@@ -7409,6 +10361,7 @@ export interface PagesSelect<T extends boolean = true> {
               qrImage?: T;
               qrCaption?: T;
               disclaimer?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7433,16 +10386,19 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               intro?: T;
               quote?: T;
               quoteAttribution?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7467,13 +10423,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7498,14 +10457,17 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               intro?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7530,11 +10492,13 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               cards?:
@@ -7554,6 +10518,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 caption?: T;
                                 aspectRatio?: T;
                                 width?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7565,6 +10530,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 color?: T;
                                 fontWeight?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7576,6 +10542,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 color?: T;
                                 fontWeight?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7586,6 +10553,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 fontSize?: T;
                                 color?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7595,6 +10563,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 style?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7603,6 +10572,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 target?: T;
                                 label?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7615,8 +10585,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       url?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7626,6 +10598,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 level?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7634,6 +10607,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 style?: T;
                                 color?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7646,8 +10620,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       url?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7658,8 +10634,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | T
                                   | {
                                       text?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7676,8 +10654,10 @@ export interface PagesSelect<T extends boolean = true> {
                                       label?: T;
                                       name?: T;
                                       type?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7686,6 +10666,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 image?: T;
                                 caption?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7695,6 +10676,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 video?: T;
                                 url?: T;
                                 caption?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7703,6 +10685,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 url?: T;
                                 title?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7712,6 +10695,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 amount?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7723,6 +10707,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7746,13 +10731,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7776,13 +10764,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7807,13 +10798,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -7837,19 +10831,24 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
                         };
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7874,14 +10873,17 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               intro?: T;
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7906,13 +10908,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7937,13 +10942,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7967,13 +10975,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -7998,13 +11009,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -8029,11 +11043,13 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               columns?:
@@ -8053,6 +11069,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 caption?: T;
                                 aspectRatio?: T;
                                 width?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8064,6 +11081,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 color?: T;
                                 fontWeight?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8075,6 +11093,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 color?: T;
                                 fontWeight?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8085,6 +11104,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 fontSize?: T;
                                 color?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8094,6 +11114,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 style?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8102,6 +11123,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 target?: T;
                                 label?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8114,8 +11136,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       url?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8125,6 +11149,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 level?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8133,6 +11158,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 style?: T;
                                 color?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8145,8 +11171,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       url?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8157,8 +11185,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | T
                                   | {
                                       text?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8175,8 +11205,10 @@ export interface PagesSelect<T extends boolean = true> {
                                       label?: T;
                                       name?: T;
                                       type?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8185,6 +11217,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 image?: T;
                                 caption?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8194,6 +11227,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 video?: T;
                                 url?: T;
                                 caption?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8202,6 +11236,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 url?: T;
                                 title?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8211,6 +11246,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 amount?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8222,6 +11258,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8245,13 +11282,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8275,13 +11315,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8306,13 +11349,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8336,19 +11382,24 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
                         };
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -8373,11 +11424,13 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
               tabs?:
@@ -8397,6 +11450,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 caption?: T;
                                 aspectRatio?: T;
                                 width?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8408,6 +11462,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 color?: T;
                                 fontWeight?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8419,6 +11474,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 color?: T;
                                 fontWeight?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8429,6 +11485,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 fontSize?: T;
                                 color?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8438,6 +11495,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 style?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8446,6 +11504,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 target?: T;
                                 label?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8458,8 +11517,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       url?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8469,6 +11530,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 text?: T;
                                 level?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8477,6 +11539,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 style?: T;
                                 color?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8489,8 +11552,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | {
                                       label?: T;
                                       url?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8501,8 +11566,10 @@ export interface PagesSelect<T extends boolean = true> {
                                   | T
                                   | {
                                       text?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8519,8 +11586,10 @@ export interface PagesSelect<T extends boolean = true> {
                                       label?: T;
                                       name?: T;
                                       type?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8529,6 +11598,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 image?: T;
                                 caption?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8538,6 +11608,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 video?: T;
                                 url?: T;
                                 caption?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8546,6 +11617,7 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 url?: T;
                                 title?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8555,6 +11627,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 amount?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8566,6 +11639,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 alignment?: T;
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8589,13 +11663,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8619,13 +11696,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8650,13 +11730,16 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -8680,19 +11763,24 @@ export interface PagesSelect<T extends boolean = true> {
                                       heading?: T;
                                       text?: T;
                                       value?: T;
+                                      linkLabel?: T;
                                       url?: T;
                                       icon?: T;
                                       attribution?: T;
                                       role?: T;
                                       image?: T;
+                                      puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
                               };
                         };
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -8716,13 +11804,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -8746,13 +11837,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -8776,13 +11870,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -8806,13 +11903,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -8836,13 +11936,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -8866,13 +11969,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -8896,13 +12002,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -8926,13 +12035,16 @@ export interface PagesSelect<T extends boolean = true> {
                     heading?: T;
                     text?: T;
                     value?: T;
+                    linkLabel?: T;
                     url?: T;
                     icon?: T;
                     attribution?: T;
                     role?: T;
                     image?: T;
+                    puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
               id?: T;
               blockName?: T;
             };
@@ -9167,265 +12279,6 @@ export interface VenueMapsSelect<T extends boolean = true> {
   displayOrder?: T;
   updatedAt?: T;
   createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "forms_select".
- */
-export interface FormsSelect<T extends boolean = true> {
-  title?: T;
-  fields?:
-    | T
-    | {
-        checkbox?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              required?: T;
-              defaultValue?: T;
-              id?: T;
-              blockName?: T;
-            };
-        country?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              required?: T;
-              id?: T;
-              blockName?: T;
-            };
-        email?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              required?: T;
-              id?: T;
-              blockName?: T;
-            };
-        message?:
-          | T
-          | {
-              message?: T;
-              id?: T;
-              blockName?: T;
-            };
-        number?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              defaultValue?: T;
-              required?: T;
-              id?: T;
-              blockName?: T;
-            };
-        select?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              defaultValue?: T;
-              placeholder?: T;
-              options?:
-                | T
-                | {
-                    label?: T;
-                    value?: T;
-                    id?: T;
-                  };
-              required?: T;
-              id?: T;
-              blockName?: T;
-            };
-        state?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              required?: T;
-              id?: T;
-              blockName?: T;
-            };
-        text?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              defaultValue?: T;
-              required?: T;
-              id?: T;
-              blockName?: T;
-            };
-        textarea?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              defaultValue?: T;
-              required?: T;
-              id?: T;
-              blockName?: T;
-            };
-      };
-  submitButtonLabel?: T;
-  confirmationType?: T;
-  confirmationMessage?: T;
-  redirect?:
-    | T
-    | {
-        url?: T;
-      };
-  emails?:
-    | T
-    | {
-        emailTo?: T;
-        cc?: T;
-        bcc?: T;
-        replyTo?: T;
-        emailFrom?: T;
-        subject?: T;
-        message?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-submissions_select".
- */
-export interface FormSubmissionsSelect<T extends boolean = true> {
-  form?: T;
-  submissionData?:
-    | T
-    | {
-        field?: T;
-        value?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "payload-mcp-api-keys_select".
- */
-export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
-  user?: T;
-  label?: T;
-  description?: T;
-  users?:
-    | T
-    | {
-        find?: T;
-        create?: T;
-        update?: T;
-        delete?: T;
-      };
-  media?:
-    | T
-    | {
-        find?: T;
-        create?: T;
-        update?: T;
-        delete?: T;
-      };
-  pages?:
-    | T
-    | {
-        find?: T;
-        create?: T;
-        update?: T;
-        delete?: T;
-      };
-  merchandise?:
-    | T
-    | {
-        find?: T;
-        create?: T;
-        update?: T;
-        delete?: T;
-      };
-  tenants?:
-    | T
-    | {
-        find?: T;
-        create?: T;
-        update?: T;
-        delete?: T;
-      };
-  accessCodes?:
-    | T
-    | {
-        find?: T;
-        create?: T;
-        update?: T;
-        delete?: T;
-      };
-  cashTransactions?:
-    | T
-    | {
-        find?: T;
-        create?: T;
-        update?: T;
-        delete?: T;
-      };
-  attendees?:
-    | T
-    | {
-        find?: T;
-        create?: T;
-        update?: T;
-        delete?: T;
-      };
-  breakfastTickets?:
-    | T
-    | {
-        find?: T;
-        create?: T;
-        update?: T;
-        delete?: T;
-      };
-  rooms?:
-    | T
-    | {
-        find?: T;
-        create?: T;
-        update?: T;
-        delete?: T;
-      };
-  programSessions?:
-    | T
-    | {
-        find?: T;
-        create?: T;
-        update?: T;
-        delete?: T;
-      };
-  venueMaps?:
-    | T
-    | {
-        find?: T;
-        create?: T;
-        update?: T;
-        delete?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  enableAPIKey?: T;
-  apiKey?: T;
-  apiKeyIndex?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

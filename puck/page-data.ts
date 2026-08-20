@@ -12,7 +12,8 @@ import {
 import type { NECYPAAData, PageDocument } from "./types";
 import { normalizeLayoutColumns } from "./layout-utils.mjs";
 import { campaignAltDefinitions, campaignAltTypes } from "./campaign-alt-definitions";
-import { stripNativeRichTextForPayload } from "./native-rich-text";
+import { isLexicalValue } from "./lexical-value";
+import { lexicalToHTML, stripNativeRichTextForPayload } from "./native-rich-text";
 
 const COMPONENT_TYPES = new Set([
   "HeroCountdown",
@@ -229,6 +230,26 @@ function packMedia(type: string, props: Record<string, unknown>) {
   return packed;
 }
 
+function materializePuckRichText(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(materializePuckRichText);
+  if (!isRecord(value)) return value;
+
+  const next = Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, materializePuckRichText(entry)])) as Record<string, unknown>;
+  const storage = isRecord(next.puckRichText) ? next.puckRichText : null;
+  if (!storage) return next;
+
+  Object.entries(storage).forEach(([fieldName, entry]) => {
+    const richValue = isLexicalValue(entry)
+      ? entry
+      : isRecord(entry) && entry.enabled === true && isLexicalValue(entry.value)
+        ? entry.value
+        : null;
+    if (!richValue) return;
+    next[fieldName] = lexicalToHTML(richValue);
+  });
+  return next;
+}
+
 function zoneID(parentID: string, collection: "cards" | "columns" | "tabs", index: number) {
   return `${parentID}:${collection}.${index}.blocks`;
 }
@@ -327,7 +348,8 @@ function contentToNestedLayout(value: unknown): Array<Record<string, unknown>> {
     if (!isRecord(item) || typeof item.type !== "string" || !COMPONENT_TYPES.has(item.type)) return [];
     const props = isRecord(item.props) ? normalizeProps(item.type, item.props) : {};
     const id = typeof props.id === "string" ? props.id : `${item.type}-nested-${index}`;
-    const packedProps = stripNativeRichTextForPayload(packMedia(item.type, packTextStyles({ ...props, id }))) as Record<string, unknown>;
+    const materializedProps = materializePuckRichText({ ...props, id }) as Record<string, unknown>;
+    const packedProps = stripNativeRichTextForPayload(packMedia(item.type, packTextStyles(materializedProps))) as Record<string, unknown>;
     if (DIRECT_NESTED_TYPES.has(item.type) && Array.isArray(packedProps.blocks)) {
       packedProps.blocks = contentToNestedLayout(packedProps.blocks);
     }
@@ -357,7 +379,8 @@ export function puckDataToLayout(value: unknown): Array<Record<string, unknown>>
     if (DIRECT_NESTED_TYPES.has(item.type) && Array.isArray(withNested.blocks)) {
       withNested.blocks = contentToNestedLayout(withNested.blocks);
     }
-    const packed = stripNativeRichTextForPayload(packMedia(item.type, packTextStyles(withNested))) as Record<string, unknown>;
+    const materializedProps = materializePuckRichText(withNested) as Record<string, unknown>;
+    const packed = stripNativeRichTextForPayload(packMedia(item.type, packTextStyles(materializedProps))) as Record<string, unknown>;
     return [{ ...packed, id, blockType: item.type }];
   });
 }

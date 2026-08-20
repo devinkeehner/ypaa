@@ -5,6 +5,7 @@ import {
   $createParagraphNode,
   $createRangeSelectionFromDom,
   $getSelection,
+  $getRoot,
   $isElementNode,
   $isRangeSelection,
   $setSelection,
@@ -46,11 +47,12 @@ import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObjec
 import { createPortal } from "react-dom";
 
 import { emptyLexicalValue, normalizeLexicalValue, type LexicalBlockType } from "@/puck/lexical-value";
+import { richTextToPlainText } from "@/puck/native-rich-text";
 
 import styles from "./puck-lexical-editor.module.css";
 
 function normalizeEditorValue(value: unknown, defaultBlockType: LexicalBlockType) {
-  return typeof value === "string" ? emptyLexicalValue(value, defaultBlockType) : normalizeLexicalValue(value);
+  return typeof value === "string" ? emptyLexicalValue(richTextToPlainText(value), defaultBlockType) : normalizeLexicalValue(value);
 }
 
 function ExternalValuePlugin({
@@ -87,7 +89,23 @@ type ActiveFormats = { alignment: ElementFormatType; block: string; bold: boolea
 const EMPTY_FORMATS: ActiveFormats = { alignment: "", block: "paragraph", bold: false, italic: false, underline: false, strikethrough: false, code: false, color: "" };
 
 function ToolbarButton({ active, children, disabled, label, onClick }: { active?: boolean; children: React.ReactNode; disabled?: boolean; label: string; onClick: () => void }) {
-  return <button aria-label={label} aria-pressed={active} data-active={active || undefined} disabled={disabled} onClick={onClick} onMouseDown={(event) => event.preventDefault()} title={label} type="button">{children}</button>;
+  const handledPointer = useRef(false);
+  const runAction = useCallback(() => {
+    if (!disabled) onClick();
+  }, [disabled, onClick]);
+  return <button aria-label={label} aria-pressed={active} data-active={active || undefined} disabled={disabled} onClick={(event) => {
+    event.stopPropagation();
+    if (handledPointer.current) {
+      handledPointer.current = false;
+      return;
+    }
+    runAction();
+  }} onMouseDown={(event) => { event.preventDefault(); event.stopPropagation(); }} onPointerDown={(event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    handledPointer.current = true;
+    runAction();
+  }} title={label} type="button">{children}</button>;
 }
 
 function AutoFocusPlugin({ enabled }: { enabled: boolean }) {
@@ -149,24 +167,26 @@ function applyCustomLink(url: string | null) {
   });
 }
 
-function Toolbar({ readOnly }: { readOnly?: boolean }) {
+function Toolbar({ readOnly, toolbarInteraction }: { readOnly?: boolean; toolbarInteraction?: MutableRefObject<boolean> }) {
   const [editor] = useLexicalComposerContext();
   const [active, setActive] = useState<ActiveFormats>(EMPTY_FORMATS);
   const lastSelection = useRef<RangeSelection | null>(null);
 
   const updateActive = useCallback(() => {
     const selection = $getSelection();
-    if (!$isRangeSelection(selection)) return;
-    lastSelection.current = selection.clone();
-    const anchor = selection.anchor.getNode();
-    const element = anchor.getKey() === "root" ? anchor : anchor.getTopLevelElementOrThrow();
+    const rangeSelection = $isRangeSelection(selection) ? selection : null;
+    if (rangeSelection) lastSelection.current = rangeSelection.clone();
+    const anchor = rangeSelection?.anchor.getNode();
+    const element = anchor ? (anchor.getKey() === "root" ? anchor : anchor.getTopLevelElementOrThrow()) : $getRoot().getFirstChild();
+    if (!element) return;
     const parent = element.getParent();
     const block = element.getType() === "heading" && "getTag" in element ? String((element as unknown as { getTag: () => string }).getTag()) : element.getType() === "quote" ? "quote" : parent?.getType() === "list" && "getListType" in parent ? String((parent as unknown as { getListType: () => string }).getListType()) : element.getType();
     const alignment = "getFormatType" in element ? (element as unknown as { getFormatType: () => ElementFormatType }).getFormatType() : "";
-    setActive({ alignment, block, bold: selection.hasFormat("bold"), italic: selection.hasFormat("italic"), underline: selection.hasFormat("underline"), strikethrough: selection.hasFormat("strikethrough"), code: selection.hasFormat("code"), color: $getSelectionStyleValueForProperty(selection, "color", "") });
+    setActive({ alignment, block, bold: rangeSelection?.hasFormat("bold") || false, italic: rangeSelection?.hasFormat("italic") || false, underline: rangeSelection?.hasFormat("underline") || false, strikethrough: rangeSelection?.hasFormat("strikethrough") || false, code: rangeSelection?.hasFormat("code") || false, color: rangeSelection ? $getSelectionStyleValueForProperty(rangeSelection, "color", "") : "" });
   }, []);
 
   useEffect(() => {
+    editor.getEditorState().read(updateActive);
     const removeUpdate = editor.registerUpdateListener(({ editorState }) => editorState.read(updateActive));
     const removeSelection = editor.registerCommand(SELECTION_CHANGE_COMMAND, () => { updateActive(); return false; }, COMMAND_PRIORITY_LOW);
     return () => { removeUpdate(); removeSelection(); };
@@ -186,7 +206,15 @@ function Toolbar({ readOnly }: { readOnly?: boolean }) {
       lastSelection.current = current.clone();
       return current;
     }
-    if (!lastSelection.current) return null;
+    if (!lastSelection.current) {
+      // A native select can clear both the browser selection and Lexical's
+      // selection before its change event runs. These fields are single-block
+      // editors, so the root-end selection is a safe final fallback and keeps
+      // the block-style control usable even after focus changes.
+      const fallback = $getRoot().selectEnd();
+      lastSelection.current = fallback.clone();
+      return fallback;
+    }
     try {
       const restored = lastSelection.current.clone();
       $setSelection(restored);
@@ -203,8 +231,14 @@ function Toolbar({ readOnly }: { readOnly?: boolean }) {
       action(selection);
       const next = $getSelection();
       if ($isRangeSelection(next)) lastSelection.current = next.clone();
-    }, { discrete: true, onUpdate: () => editor.focus(undefined, { defaultSelection: "rootEnd" }) });
-  }, [editor, restoreSelection]);
+    }, { discrete: true, onUpdate: () => {
+      editor.focus(undefined, { defaultSelection: "rootEnd" });
+      // A toolbar interaction that produces no content change still needs to
+      // release this flag; otherwise the next keystroke could be committed as
+      // if it were a toolbar command and cause an unnecessary Puck update.
+      if (toolbarInteraction) toolbarInteraction.current = false;
+    } });
+  }, [editor, restoreSelection, toolbarInteraction]);
 
   const format = (value: TextFormatType) => runToolbarUpdate((selection) => selection?.formatText(value));
   const block = (tag: "paragraph" | "quote" | HeadingTagType) => {
@@ -218,7 +252,14 @@ function Toolbar({ readOnly }: { readOnly?: boolean }) {
     if (selection) $patchStyleText(selection, { color: value || null });
   });
   const captureSelection = useCallback(() => {
+    const root = editor.getRootElement();
+    const domSelection = root?.ownerDocument.getSelection();
     editor.getEditorState().read(() => {
+      const fromDom = domSelection && domSelection.rangeCount > 0 ? $createRangeSelectionFromDom(domSelection, editor) : null;
+      if ($isRangeSelection(fromDom)) {
+        lastSelection.current = fromDom.clone();
+        return;
+      }
       const selection = $getSelection();
       if ($isRangeSelection(selection)) lastSelection.current = selection.clone();
     });
@@ -238,7 +279,7 @@ function Toolbar({ readOnly }: { readOnly?: boolean }) {
 
   return (
     <div className={styles.toolbar} aria-label="Rich text formatting">
-      <label className={styles.toolbarSelect}><Heading /><select aria-label="Text style" disabled={readOnly} onChange={(event) => block(event.target.value as "paragraph" | HeadingTagType)} value={["paragraph", "h1", "h2", "h3", "h4", "quote"].includes(active.block) ? active.block : "paragraph"}>
+      <label className={styles.toolbarSelect}><Heading /><select aria-label="Text style" disabled={readOnly} onChange={(event) => block(event.target.value as "paragraph" | HeadingTagType)} onPointerDownCapture={captureSelection} value={["paragraph", "h1", "h2", "h3", "h4", "quote"].includes(active.block) ? active.block : "paragraph"}>
         <option value="paragraph">Paragraph</option>
         <option value="h1">Heading 1</option>
         <option value="h2">Heading 2</option>
@@ -297,6 +338,7 @@ export function PuckLexicalTextEditor({
   const [initialState] = useState(() => JSON.stringify(initialValue));
   const draft = useRef<unknown>(initialValue);
   const focused = useRef(false);
+  const toolbarInteraction = useRef(false);
   const lastCommitted = useRef(initialState);
   const latest = useRef(initialState);
   const onChangeRef = useRef(onChange);
@@ -324,8 +366,17 @@ export function PuckLexicalTextEditor({
     const ownerDocument = fieldRef.current?.ownerDocument;
     if (!ownerDocument) return;
     const frame = ownerDocument.defaultView?.frameElement;
-    const parentDocument = frame instanceof HTMLElement ? frame.ownerDocument : ownerDocument;
-    setToolbarTarget(parentDocument.getElementById("necypaa-puck-rich-toolbar") || parentDocument.body);
+    // Puck previews are often isolated srcdoc documents. When the browser
+    // hides frameElement across that boundary, the preview document is the
+    // only safe portal target; the render below provides a local fallback for
+    // that case so the toolbar cannot disappear completely.
+    const parentDocument = frame?.ownerDocument || ownerDocument;
+    const resolveToolbarTarget = () => {
+      setToolbarTarget(parentDocument.getElementById("necypaa-puck-rich-toolbar") || parentDocument.body);
+    };
+    resolveToolbarTarget();
+    const retry = window.setTimeout(resolveToolbarTarget, 0);
+    return () => window.clearTimeout(retry);
   }, [useGlobalToolbar]);
 
   useEffect(() => {
@@ -375,12 +426,24 @@ export function PuckLexicalTextEditor({
     if (commitMode === "change") {
       lastCommitted.current = serialized;
       onChangeRef.current(next);
+    } else if (!focused.current || toolbarInteraction.current) {
+      // The canvas toolbar lives outside the preview iframe. Selecting a
+      // heading level, alignment, or color therefore blurs the editor before
+      // Lexical applies the command. Commit that command's resulting state,
+      // while still keeping ordinary typing local until blur.
+      lastCommitted.current = serialized;
+      onChangeRef.current(next);
+      toolbarInteraction.current = false;
     }
   }, [commitMode]);
 
   const handleBlur = useCallback((event: React.FocusEvent<HTMLDivElement>) => {
     const nextTarget = event.relatedTarget as Node | null;
     if (nextTarget && fieldRef.current?.contains(nextTarget)) return;
+    if (nextTarget && toolbarRef.current?.contains(nextTarget)) {
+      toolbarInteraction.current = true;
+      return;
+    }
     focused.current = false;
     commitDraft();
   }, [commitDraft]);
@@ -389,6 +452,25 @@ export function PuckLexicalTextEditor({
     focused.current = true;
     if (useGlobalToolbar) setToolbarOpen(true);
   }, [useGlobalToolbar]);
+
+  const canvasToolbar = useGlobalToolbar && toolbarOpen ? (
+    <div
+      className={styles.canvasToolbar}
+      data-puck-overlay-portal="true"
+      data-puck-rich-text-toolbar="true"
+      onClick={(event) => event.stopPropagation()}
+      onPointerDown={(event) => event.stopPropagation()}
+      onPointerDownCapture={() => { toolbarInteraction.current = true; }}
+      ref={toolbarRef}
+    >
+      <span className={styles.canvasToolbarLabel}>{toolbarLabel}</span>
+      <Toolbar readOnly={readOnly} toolbarInteraction={toolbarInteraction} />
+    </div>
+  ) : null;
+  // A preview can briefly have no resolved portal target while Puck moves its
+  // overlay between documents. Keep the toolbar in the editor for that
+  // transition instead of dropping it during the focused editing session.
+  const localCanvasToolbar = useGlobalToolbar && toolbarOpen && (!toolbarTarget || toolbarTarget === fieldRef.current?.ownerDocument.body);
 
   return (
     <div
@@ -403,20 +485,8 @@ export function PuckLexicalTextEditor({
     >
       <LexicalComposer initialConfig={initialConfig}>
         {toolbarMode === "inline" ? <Toolbar readOnly={readOnly} /> : null}
-        {useGlobalToolbar && toolbarOpen && toolbarTarget ? createPortal(
-          <div
-            className={styles.canvasToolbar}
-            data-puck-overlay-portal="true"
-            data-puck-rich-text-toolbar="true"
-            onClick={(event) => event.stopPropagation()}
-            onPointerDown={(event) => event.stopPropagation()}
-            ref={toolbarRef}
-          >
-            <span className={styles.canvasToolbarLabel}>{toolbarLabel}</span>
-            <Toolbar readOnly={readOnly} />
-          </div>,
-          toolbarTarget,
-        ) : null}
+        {useGlobalToolbar && toolbarOpen && toolbarTarget && !localCanvasToolbar ? createPortal(canvasToolbar, toolbarTarget) : null}
+        {useGlobalToolbar && localCanvasToolbar ? <div className={styles.canvasToolbarLocal}>{canvasToolbar}</div> : null}
         <div className={styles.editor}>
           <RichTextPlugin
             contentEditable={<ContentEditable aria-label={toolbarLabel} aria-placeholder="Write rich text" className={styles.content} placeholder={<span className={styles.placeholder}>Write rich text</span>} />}

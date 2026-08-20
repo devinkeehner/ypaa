@@ -1,16 +1,16 @@
 "use client";
 
-import { Render, RichTextMenu, type ComponentConfig, type Config, type Field, type RichtextField } from "@puckeditor/core";
-import { Color } from "@tiptap/extension-color";
-import { TextStyle } from "@tiptap/extension-text-style";
+import { Render, type ComponentConfig, type Config, type Field } from "@puckeditor/core";
 import { BadgeDollarSign, BriefcaseBusiness, CalendarDays, Check, ChevronDown, ChevronRight, Heading, HeartHandshake, Landmark, MapPin, Megaphone, Palette, ShieldCheck, Users, Vote, X } from "lucide-react";
-import { Fragment, isValidElement, useEffect, useState, type ChangeEvent, type CSSProperties, type ElementType, type ReactNode } from "react";
+import { createContext, Fragment, isValidElement, useContext, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { Countdown } from "@/components/site/Countdown";
 import { ProgramExplorer } from "@/components/site/ProgramExplorer";
-import type { LexicalBlockType } from "@/puck/lexical-value";
+import { PuckRichTextSwitchField } from "@/components/admin/PuckRichTextSwitchField";
+import { PuckCanvasRichTextField } from "@/components/admin/PuckCanvasRichTextContext";
+import { isLexicalValue, type LexicalBlockType } from "@/puck/lexical-value";
 import { layoutColumnCount } from "@/puck/layout-utils.mjs";
-import { normalizeNativeRichTextProps, richTextToPlainText, type NativeRichTextField } from "@/puck/native-rich-text";
+import { lexicalToHTML, normalizeNativeRichTextProps, richTextToPlainText, type NativeRichTextField } from "@/puck/native-rich-text";
 import {
   normalizeImportantDates,
   normalizeMeetings,
@@ -41,6 +41,30 @@ function itemSummary(fallback: string, ...values: unknown[]): string {
 }
 
 type Base = { id?: string };
+type CanvasBase = Base & { puck?: { isEditing?: boolean } };
+const PuckRenderPropsContext = createContext<CanvasBase | undefined>(undefined);
+
+function PuckRenderContent({ render, props }: { render: (props: Record<string, unknown>) => ReactNode; props: Record<string, unknown> }) {
+  return <>{render(props)}</>;
+}
+
+function PuckRenderScope({ render, props }: { render: (props: Record<string, unknown>) => ReactNode; props: Record<string, unknown> }) {
+  return <PuckRenderPropsContext.Provider value={props as CanvasBase}><PuckRenderContent props={props} render={render} /></PuckRenderPropsContext.Provider>;
+}
+
+function richStoragePath(path: string) {
+  const index = path.lastIndexOf(".");
+  return index === -1 ? `puckRichText.${path}` : `${path.slice(0, index)}.puckRichText.${path.slice(index + 1)}`;
+}
+
+function hasEnabledRichText(props: Record<string, unknown>, path: string, value: unknown) {
+  const parts = richStoragePath(path).replace(/\[(\d+)\]/g, ".$1").split(".").filter(Boolean);
+  const entry = parts.reduce<unknown>((current, part) => {
+    if (current == null) return undefined;
+    return Array.isArray(current) ? current[Number(part)] : typeof current === "object" ? (current as Record<string, unknown>)[part] : undefined;
+  }, props);
+  return isLexicalValue(value) || isLexicalValue(entry) || Boolean(entry && typeof entry === "object" && !Array.isArray(entry) && (entry as Record<string, unknown>).enabled);
+}
 type NestedSlot = (options?: { allow?: string[]; className?: string; minEmptyHeight?: number }) => ReactNode;
 type Hero = Base & {
   eyebrow: string;
@@ -164,105 +188,14 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   ...campaignAltEditableFields,
 };
 
-type RichTextMenuProps = Parameters<NonNullable<RichtextField["renderMenu"]>>[0];
-
-function editorColor(value: unknown) {
-  if (typeof value !== "string") return "#171b20";
-  if (/^#[\da-f]{6}$/i.test(value)) return value;
-  if (/^#[\da-f]{3}$/i.test(value)) return `#${value.slice(1).split("").map((part) => `${part}${part}`).join("")}`;
-  return "#171b20";
-}
-
-function applyRichTextColor(editor: RichTextMenuProps["editor"], color?: string) {
-  if (!editor) return;
-  editor.commands.focus();
-  window.requestAnimationFrame(() => {
-    const chain = editor.chain().focus();
-    if (color) chain.setColor(color).run();
-    else chain.unsetColor().run();
-  });
-}
-
-function RichTextColorControl({ editor, readOnly }: Pick<RichTextMenuProps, "editor" | "readOnly">) {
-  const color = editorColor(editor?.getAttributes("textStyle").color);
-  return <label className={styles.richTextColorControl} onClick={(event) => event.stopPropagation()} title="Text color"><Palette aria-hidden="true" /><input aria-label="Text color" disabled={readOnly || !editor} onChange={(event) => applyRichTextColor(editor, event.currentTarget.value)} type="color" value={color} /><button aria-label="Clear text color" disabled={readOnly || !editor} onClick={(event) => { event.preventDefault(); event.stopPropagation(); applyRichTextColor(editor); }} type="button"><X aria-hidden="true" /></button></label>;
-}
-
-function NativeRichTextMenu({ children, editor, readOnly }: RichTextMenuProps) {
-  return <RichTextMenu>{children}<RichTextMenu.Group><RichTextColorControl editor={editor} readOnly={readOnly} /></RichTextMenu.Group></RichTextMenu>;
-}
-
-function NativeHeadingSelect({ editor, readOnly }: Pick<RichTextMenuProps, "editor" | "readOnly">) {
-  const [currentValue, setCurrentValue] = useState("paragraph");
-
-  useEffect(() => {
-    if (!editor) return;
-    const updateValue = () => {
-      if (editor.isActive("paragraph")) {
-        setCurrentValue("paragraph");
-        return;
-      }
-      for (const level of [1, 2, 3, 4]) {
-        if (editor.isActive("heading", { level })) {
-          setCurrentValue(`h${level}`);
-          return;
-        }
-      }
-      setCurrentValue("paragraph");
-    };
-    updateValue();
-    editor.on("selectionUpdate", updateValue);
-    editor.on("transaction", updateValue);
-    return () => {
-      editor.off("selectionUpdate", updateValue);
-      editor.off("transaction", updateValue);
-    };
-  }, [editor]);
-
-  function changeBlock(event: ChangeEvent<HTMLSelectElement>) {
-    if (!editor) return;
-    const value = event.currentTarget.value;
-    const chain = editor.chain().focus();
-    if (value === "paragraph") chain.setParagraph().run();
-    else chain.toggleHeading({ level: Number(value.slice(1)) as 1 | 2 | 3 | 4 }).run();
-  }
-
-  return <label className={styles.richTextHeadingSelect} onClick={(event) => event.stopPropagation()} onPointerDown={(event) => event.stopPropagation()} title="Text style">
-    <Heading aria-hidden="true" />
-    <select aria-label="Text style" disabled={readOnly || !editor} onChange={changeBlock} value={currentValue || "paragraph"}>
-      <option value="paragraph">Paragraph</option>
-      <option value="h1">Heading 1</option>
-      <option value="h2">Heading 2</option>
-      <option value="h3">Heading 3</option>
-      <option value="h4">Heading 4</option>
-    </select>
-  </label>;
-}
-
-function NativeRichTextInlineMenu({ editor, readOnly }: RichTextMenuProps) {
-  return <RichTextMenu><RichTextMenu.Group><NativeHeadingSelect editor={editor} readOnly={readOnly} /><RichTextMenu.ListSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.Bold /><RichTextMenu.Italic /><RichTextMenu.Underline /><RichTextMenu.Strikethrough /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.AlignSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextColorControl editor={editor} readOnly={readOnly} /></RichTextMenu.Group></RichTextMenu>;
-}
-
-function NativeHeadingRichTextInlineMenu({ editor, readOnly }: RichTextMenuProps) {
-  return <RichTextMenu><RichTextMenu.Group><NativeHeadingSelect editor={editor} readOnly={readOnly} /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.Bold /><RichTextMenu.Italic /><RichTextMenu.Underline /><RichTextMenu.Strikethrough /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.AlignSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextColorControl editor={editor} readOnly={readOnly} /></RichTextMenu.Group></RichTextMenu>;
-}
-
-const nativeRichTextExtensions = [TextStyle, Color.configure({ types: ["textStyle"] })];
-const richTextField = (label: string, richTextDefault?: string, richTextBlockType?: LexicalBlockType, initialHeight = 120): RichtextField & NativeRichTextField => {
-  const isHeading = Boolean(richTextBlockType?.match(/^h[1-4]$/));
+const richTextField = (label: string, richTextDefault?: string, richTextBlockType?: LexicalBlockType, initialHeight = 120): Field & NativeRichTextField => {
   return {
-    type: "richtext",
+    type: "custom",
     label,
     contentEditable: true,
-    initialHeight,
-    options: isHeading
-      ? { blockquote: false, bulletList: false, heading: { levels: [1, 2, 3, 4] }, listItem: false, listKeymap: false, orderedList: false }
-      : { heading: { levels: [1, 2, 3, 4] } },
-    renderInlineMenu: isHeading ? NativeHeadingRichTextInlineMenu : NativeRichTextInlineMenu,
-    renderMenu: NativeRichTextMenu,
+    render: ({ name, value, onChange, readOnly }) => <PuckRichTextSwitchField defaultBlockType={richTextBlockType} field={{ type: "text", label }} fieldName={name} plainType={initialHeight > 100 ? "textarea" : "text"} value={value} onChange={onChange} readOnly={readOnly} />,
     richTextBlockType,
     richTextDefault,
-    tiptap: { extensions: nativeRichTextExtensions },
   };
 };
 const text = (label: string) => richTextField(label, undefined, undefined, 76);
@@ -472,9 +405,12 @@ function renderZone(props: Base & { puck?: { isEditing?: boolean; renderDropZone
 }
 
 function SlotContent({ content, label, fallback }: { content?: NestedSlot; label: string; fallback: ReactNode }) {
+  const renderProps = useContext(PuckRenderPropsContext);
+  const editing = Boolean(renderProps?.puck?.isEditing);
   if (typeof content === "function") {
     const Content = content;
-    return <Content className={styles.nestedSlot} minEmptyHeight={96} allow={nestedElementTypes} />;
+    const slot = <Content className={styles.nestedSlot} minEmptyHeight={96} allow={nestedElementTypes} />;
+    return editing ? <NestedDropZone label={label}>{slot}</NestedDropZone> : slot;
   }
   return <>{fallback}</>;
 }
@@ -497,7 +433,7 @@ function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean; re
           {tabs.map((tab, index) => {
             return (
               <button aria-selected={active === index} key={`${tab.label || index}-${index}`} onClick={() => setActive(index)} role="tab" type="button">
-                <RichCopy as="span" path={`tabs[${index}].label`} field="label" value={tab.label || `Tab ${index + 1}`} />
+                <RichCopy as="span" path={`tabs[${index}].label`} field="label" props={props} value={tab.label || `Tab ${index + 1}`} />
               </button>
             );
           })}
@@ -506,7 +442,7 @@ function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean; re
           {tabs.map((tab, index) => (editing || active === index)
             ? (
                 <section aria-label={tab.label || `Tab ${index + 1}`} className={styles.tabPanel} hidden={!editing && active !== index} key={`${tab.label || index}-${index}`}>
-                <RichCopy as="p" path={`tabs[${index}].description`} field="description" value={tab.description} />
+                <RichCopy as="p" path={`tabs[${index}].description`} field="description" props={props} value={tab.description} />
                 <SlotContent content={tab.blocks} label={tab.label || `tab ${index + 1}`} fallback={renderZone(props, `tabs.${index}.blocks`, `Drop elements in ${tab.label || `tab ${index + 1}`}`)} />
               </section>
             )
@@ -540,6 +476,7 @@ function RichValue({
   path,
   value,
   style,
+  props,
 }: {
   as: ElementType;
   className?: string;
@@ -547,9 +484,24 @@ function RichValue({
   path?: string;
   value: unknown;
   style?: CSSProperties;
+  props?: CanvasBase;
 }) {
   const richAs = typeof Tag === "string" ? Tag : undefined;
-  if (isValidElement(value)) return <div className={`${className || ""} ${styles.richInline}`} data-puck-text-field={field} data-rich-as={richAs} style={style}>{value}</div>;
+  const scopedProps = useContext(PuckRenderPropsContext);
+  const renderProps = (props || scopedProps) as Record<string, unknown> | undefined;
+  const fieldPath = path || field || "text";
+  const defaultBlockType: LexicalBlockType = richAs === "h1" || richAs === "h2" || richAs === "h3" || richAs === "h4" ? richAs : "paragraph";
+  const directCanvasEditor = Boolean((renderProps?.puck as CanvasBase["puck"])?.isEditing) && renderProps && hasEnabledRichText(renderProps, fieldPath, value)
+    ? <PuckCanvasRichTextField request={{ props: renderProps, fieldPath, fieldName: field, value, defaultBlockType, label: field || "Text" }} />
+    : null;
+  if (directCanvasEditor) return <div className={`${className || ""} ${styles.richInline}`} data-puck-text-field={fieldPath} data-rich-content="editor" data-rich-default-as={richAs} style={style}>{directCanvasEditor}</div>;
+  // Puck can pass its own InlineTextField element as the child for plain
+  // custom fields. Preserve the complete nested path here; using only the
+  // leaf name makes every `items[0].heading` look like the top-level
+  // `heading` field and prevents the canvas editor from addressing it.
+  if (isValidElement(value)) return <div className={`${className || ""} ${styles.richInline}`} data-puck-text-field={path || field} data-rich-as={richAs} style={style}>{value}</div>;
+  if (isLexicalValue(value)) return <div className={`${className || ""} ${styles.richInline}`} data-puck-text-field={path || field} data-rich-content="rendered" data-rich-default-as={richAs} style={style} dangerouslySetInnerHTML={{ __html: lexicalToHTML(value) }} />;
+  if (typeof value === "string" && /<\/?[a-z][\s\S]*>/i.test(value)) return <div className={`${className || ""} ${styles.richInline}`} data-puck-text-field={path || field} data-rich-content="rendered" data-rich-default-as={richAs} style={style} dangerouslySetInnerHTML={{ __html: value }} />;
   return (
     <Tag className={className} data-puck-text-field={path || field} style={style}>
       {typeof value === "string" || typeof value === "number" ? value : ""}
@@ -564,12 +516,12 @@ function Editable({
   path,
   children,
   className,
-}: { as?: ElementType; props: Base; field: string; path?: string; children: ReactNode; className?: string }) {
-  return <RichValue as={Tag} className={className} field={field} path={path} style={styleFor(props, field)} value={children} />;
+}: { as?: ElementType; props: CanvasBase; field: string; path?: string; children: ReactNode; className?: string }) {
+  return <RichValue as={Tag} className={className} field={field} path={path} props={props} style={styleFor(props, field)} value={children} />;
 }
 
-function RichCopy({ value, as: Tag = "p", className, field, path }: { value: unknown; as?: ElementType; className?: string; container?: unknown; field?: string; path?: string }) {
-  return <RichValue as={Tag} className={className} field={field} path={path} value={value} />;
+function RichCopy({ value, as: Tag = "p", className, field, path, props }: { value: unknown; as?: ElementType; className?: string; field?: string; path?: string; props?: CanvasBase }) {
+  return <RichValue as={Tag} className={className} field={field} path={path} props={props} value={value} />;
 }
 
 function Button({ href, children, outline = false }: { href: string; children: ReactNode; outline?: boolean }) {
@@ -588,15 +540,15 @@ function CTMeetingScheduleBlock(props: CTMeetingSchedule) {
         const isOpen = openIndex === index;
         return <Fragment key={`${item.day}-${item.time}-${item.name}-${index}`}>
           <div className={styles.scheduleRow} role="row">
-            <span data-label="Day" role="cell"><RichCopy as="span" path={`meetings[${index}].day`} field="day" value={item.day} /></span>
-            <span data-label="Time" role="cell"><RichCopy as="span" path={`meetings[${index}].time`} field="time" value={item.time} /></span>
-            <span className={styles.scheduleName} data-label="Meeting" role="cell">{item.url ? <a href={item.url} rel="noreferrer" target="_blank"><RichCopy as="span" path={`meetings[${index}].name`} field="name" value={item.name} /></a> : <RichCopy as="span" path={`meetings[${index}].name`} field="name" value={item.name} />}</span>
-            <span data-label="Location" role="cell"><RichCopy as="span" path={`meetings[${index}].location`} field="location" value={item.location} /></span>
-            <span data-label="City" role="cell"><RichCopy as="span" path={`meetings[${index}].city`} field="city" value={item.city} /></span>
-            <span data-label="Attendance" role="cell"><RichCopy as="span" path={`meetings[${index}].attendance`} field="attendance" value={item.attendance} /></span>
+            <span data-label="Day" role="cell"><RichCopy as="span" path={`meetings[${index}].day`} field="day" props={props} value={item.day} /></span>
+            <span data-label="Time" role="cell"><RichCopy as="span" path={`meetings[${index}].time`} field="time" props={props} value={item.time} /></span>
+            <span className={styles.scheduleName} data-label="Meeting" role="cell">{item.url ? <a href={item.url} rel="noreferrer" target="_blank"><RichCopy as="span" path={`meetings[${index}].name`} field="name" props={props} value={item.name} /></a> : <RichCopy as="span" path={`meetings[${index}].name`} field="name" props={props} value={item.name} />}</span>
+            <span data-label="Location" role="cell"><RichCopy as="span" path={`meetings[${index}].location`} field="location" props={props} value={item.location} /></span>
+            <span data-label="City" role="cell"><RichCopy as="span" path={`meetings[${index}].city`} field="city" props={props} value={item.city} /></span>
+            <span data-label="Attendance" role="cell"><RichCopy as="span" path={`meetings[${index}].attendance`} field="attendance" props={props} value={item.attendance} /></span>
             <span className={styles.scheduleDetailsToggle} role="cell"><button aria-expanded={isOpen} aria-label={`${isOpen ? "Collapse" : "Expand"} details for ${item.name}`} onClick={() => setOpenIndex(isOpen ? null : index)} type="button">{isOpen ? <ChevronDown aria-hidden="true" /> : <ChevronRight aria-hidden="true" />}</button></span>
           </div>
-          {isOpen ? <div className={styles.scheduleDetails} role="row"><div role="cell"><strong>Address</strong><RichCopy as="span" path={`meetings[${index}].address`} field="address" value={item.address || "Not listed"} /></div><div role="cell"><strong>Meeting types</strong><RichCopy as="span" path={`meetings[${index}].types`} field="types" value={item.types || "Not listed"} /></div></div> : null}
+          {isOpen ? <div className={styles.scheduleDetails} role="row"><div role="cell"><strong>Address</strong><RichCopy as="span" path={`meetings[${index}].address`} field="address" props={props} value={item.address || "Not listed"} /></div><div role="cell"><strong>Meeting types</strong><RichCopy as="span" path={`meetings[${index}].types`} field="types" props={props} value={item.types || "Not listed"} /></div></div> : null}
         </Fragment>;
       })}
     </div>
@@ -1009,7 +961,7 @@ export const puckConfig: Config<Components> = {
   },
 };
 
-function normalizeRichTextItem(item: NECYPAAData["content"][number]) {
+function normalizeRichTextItem(item: NECYPAAData["content"][number], editor = false) {
   const component = (puckConfig.components as unknown as Record<string, ComponentConfig<Record<string, unknown>>>)[item.type];
   if (!component) return item;
   return {
@@ -1018,12 +970,18 @@ function normalizeRichTextItem(item: NECYPAAData["content"][number]) {
       (component.fields || {}) as Record<string, NativeRichTextField>,
       item.props as Record<string, unknown>,
       item.type,
+      [],
+      { editor },
     ),
   } as NECYPAAData["content"][number];
 }
 
 Object.entries(puckConfig.components).forEach(([componentType, component]) => {
   const config = component as ComponentConfig<Record<string, unknown>>;
+  const render = config.render;
+  if (render) {
+    config.render = ((props: Record<string, unknown>) => <PuckRenderScope props={props} render={render as unknown as (props: Record<string, unknown>) => ReactNode} />) as typeof config.render;
+  }
   config.defaultProps = normalizeNativeRichTextProps(
     (config.fields || {}) as Record<string, NativeRichTextField>,
     config.defaultProps as Record<string, unknown>,
@@ -1031,11 +989,11 @@ Object.entries(puckConfig.components).forEach(([componentType, component]) => {
   );
 });
 
-export function normalizePuckRichTextData(data: NECYPAAData): NECYPAAData {
+export function normalizePuckRichTextData(data: NECYPAAData, editor = false): NECYPAAData {
   return {
     ...data,
-    content: data.content.map(normalizeRichTextItem),
-    zones: Object.fromEntries(Object.entries(data.zones || {}).map(([zone, content]) => [zone, content.map(normalizeRichTextItem)])),
+    content: data.content.map((item) => normalizeRichTextItem(item, editor)),
+    zones: Object.fromEntries(Object.entries(data.zones || {}).map(([zone, content]) => [zone, content.map((item) => normalizeRichTextItem(item, editor))])),
   };
 }
 

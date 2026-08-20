@@ -661,6 +661,7 @@
 .campaignAltHeader [data-rich-as="h2"] { font-size: clamp(2.25rem, 5vw, 4.8rem); line-height: 1.02; margin: 10px 0 18px; }
 .campaignAltHeader > p:last-child,
 .campaignAltHeader > [data-rich-as="p"]:last-child,
+.campaignAltHeader > [data-rich-content][data-rich-default-as="p"]:last-child,
 .campaignAltLongCopy { color: #514c45; font-size: 1.08rem; line-height: 1.72; }
 .campaignAltProfileMedia { margin: 0; min-height: 360px; }
 .campaignAltProfileMedia img { height: 100%; min-height: 360px; object-fit: cover; }
@@ -682,7 +683,8 @@
 .heroAlt > .shell { align-items: center; display: grid; gap: clamp(38px, 7vw, 100px); grid-template-columns: minmax(0, 1.05fr) minmax(280px, .95fr); position: relative; width: 100%; z-index: 2; }
 .heroAlt .campaignAltCopy { max-width: 780px; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
 .heroAlt .campaignAltCopy > p:not(.eyebrowDark),
-.heroAlt .campaignAltCopy > [data-rich-as="p"]:not(.eyebrowDark) { color: inherit; font-size: clamp(1rem, 1.4vw, 1.25rem); line-height: 1.7; max-width: 680px; opacity: .82; }
+.heroAlt .campaignAltCopy > [data-rich-as="p"]:not(.eyebrowDark),
+.heroAlt .campaignAltCopy > [data-rich-content][data-rich-default-as="p"] { color: inherit; font-size: clamp(1rem, 1.4vw, 1.25rem); line-height: 1.7; max-width: 680px; opacity: .82; }
 .heroAlt .campaignAltCopy h1,
 .heroAlt .campaignAltCopy [data-rich-as="h1"] { font-size: clamp(3.4rem, 8vw, 7.4rem); letter-spacing: 0; line-height: .94; margin: 14px 0 25px; max-width: 100%; overflow-wrap: anywhere; word-break: break-word; }
 .heroAltMedia { box-shadow: 18px 18px 0 #d95132; min-height: 440px; }
@@ -690,6 +692,7 @@
 .heroAltLogo { display: block; margin-inline: auto; max-height: 190px; max-width: min(640px, 100%); object-fit: contain; object-position: center; }
 .heroAltHeadingEditor { border: 1px dashed currentColor; margin: 14px 0 20px; opacity: .92; padding: 12px 14px; }
 .heroAltHeadingEditor > small { display: block; font: 700 .68rem/1.35 var(--font-geist-mono), monospace; letter-spacing: .04em; margin-bottom: 7px; opacity: .72; text-transform: uppercase; }
+.heroAltHeadingEditor h1,
 .heroAltHeadingEditor [data-rich-as="h1"] { font-size: clamp(2rem, 4vw, 3.8rem); margin: 0; }
 .heroAltHighlight { border-left: 3px solid #d95132; display: grid; gap: 6px; margin-top: 25px; max-width: 560px; padding: 4px 0 4px 18px; }
 .heroAltHighlight strong,
@@ -942,7 +945,7 @@
 .richInline[data-rich-as="h2"] { font-size: clamp(2rem, 5vw, 4.5rem); font-weight: 750; line-height: 1.05; }
 .richInline[data-rich-as="h3"] { font-size: clamp(1.35rem, 2.5vw, 2rem); font-weight: 750; line-height: 1.15; }
 .richInline[data-rich-as="h4"] { font-size: 1.25rem; font-weight: 750; line-height: 1.2; }
-.richInline :is(h1, h2, h3, h4, p, ul, ol, blockquote) { margin-block: .35em; }
+.richInline:not([data-rich-content]) :is(h1, h2, h3, h4, p, ul, ol, blockquote) { margin-block: .35em; }
 .richInline :is(ul, ol) { padding-inline-start: 1.35em; }
 .richTextColorControl { align-items: center; display: inline-flex; gap: 4px; min-height: 28px; padding: 0 2px; }
 .richTextColorControl > svg { height: 16px; width: 16px; }
@@ -954,13 +957,21 @@
 .richTextHeadingSelect { align-items: center; display: inline-flex; gap: 4px; border: 1px solid #cbd1d8; border-radius: 5px; padding-left: 7px; background: #fff; color: #171b20; }
 .richTextHeadingSelect svg { color: #52606d; height: 14px; width: 14px; }
 .richTextHeadingSelect select { min-height: 30px; border: 0; background: transparent; color: inherit; font: inherit; font-size: 12px; padding: 0 8px 0 2px; }
+.dates li strong,
 .dates li [data-rich-as="strong"] { color: var(--cream); font: 500 1.38rem/1.1 Georgia, "Times New Roman", serif; }
-.futureEvents li [data-rich-as="strong"] { color: var(--cream); font: 500 1.15rem/1.3 Georgia, "Times New Roman", serif; }
+.futureEvents li strong,
+.futureEvents li [data-rich-as="strong"] { font: 500 1.15rem/1.3 Georgia, "Times New Roman", serif; }
+.futureEvents li time,
 .futureEvents li [data-rich-as="time"] { color: var(--cream-muted); font: 700 .72rem/1.3 var(--font-geist-mono), monospace; text-align: right; }
+.archive small,
 .archive [data-rich-as="small"] { color: var(--ember-bright); font: 700 .67rem/1.4 var(--font-geist-mono), monospace; letter-spacing: .04em; }
+.archive strong,
 .archive [data-rich-as="strong"] { font: 500 1.15rem/1.2 Georgia, "Times New Roman", serif; margin-top: 5px; }
+.resultsStats article strong,
 .resultsStats article [data-rich-as="strong"] { font: 500 clamp(3.4rem, 7vw, 6.4rem)/.9 Georgia, serif; }
+.resultsStats article span,
 .resultsStats article [data-rich-as="span"] { font: 800 .72rem/1.4 var(--font-geist-mono), monospace; letter-spacing: .1em; margin-top: 16px; text-transform: uppercase; }
+.supporterLogos strong,
 .supporterLogos [data-rich-as="strong"] { font: 750 .71rem/1.4 var(--font-geist-mono), monospace; letter-spacing: .06em; text-transform: uppercase; }
 .nestedDropZone > span { color: #71695e; display: block; font: 800 .64rem/1.3 var(--font-geist-mono), monospace; letter-spacing: .08em; margin: 0 0 8px; text-transform: uppercase; }
 .nestedDropZone :global(.Puck-DropZone) { border: 1px dashed color-mix(in srgb, var(--ember), transparent 35%); min-height: 96px; padding: 12px; }

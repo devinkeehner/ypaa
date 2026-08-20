@@ -1,4 +1,4 @@
-import { isLexicalValue, type LexicalBlockType } from "./lexical-value";
+import { getPlainTextFromLexical, isLexicalValue, type LexicalBlockType } from "./lexical-value";
 
 export type NativeRichTextField = {
   arrayFields?: Record<string, NativeRichTextField>;
@@ -6,6 +6,7 @@ export type NativeRichTextField = {
   objectFields?: Record<string, NativeRichTextField>;
   richTextBlockType?: LexicalBlockType;
   richTextDefault?: string;
+  contentEditable?: boolean;
   type?: string;
 };
 
@@ -146,8 +147,13 @@ function nativeRichTextValue(value: unknown, blockType: LexicalBlockType, fallba
 function legacyRichTextValue(map: Record<string, unknown>, fieldName: string) {
   const entry = map[fieldName];
   if (isLexicalValue(entry)) return entry;
-  if (isRecord(entry) && isLexicalValue(entry.value)) return entry.value;
+  if (isRecord(entry) && entry.enabled !== false && isLexicalValue(entry.value)) return entry.value;
   return null;
+}
+
+function editorPlainText(value: unknown, fallback = "") {
+  if (isLexicalValue(value)) return getPlainTextFromLexical(value);
+  return richTextToPlainText(value) || fallback;
 }
 
 export function normalizeNativeRichTextProps(
@@ -155,28 +161,30 @@ export function normalizeNativeRichTextProps(
   props: Record<string, unknown>,
   componentType: string,
   path: Array<number | string> = [],
+  options: { editor?: boolean } = {},
 ) {
   const next = { ...props };
   const storedMap = isRecord(props.puckRichText) ? { ...props.puckRichText } : {};
 
   Object.entries(fields).forEach(([fieldName, field]) => {
-    if (field.type === "richtext") {
+    const isEditorRichText = options.editor && field.type === "custom" && field.contentEditable === true;
+    if (field.type === "richtext" || isEditorRichText) {
       const blockType = defaultNativeRichTextBlockType(componentType, fieldName, path, field.richTextBlockType);
       const legacyValue = legacyRichTextValue(storedMap, fieldName);
-      next[fieldName] = nativeRichTextValue(legacyValue ?? props[fieldName], blockType, field.richTextDefault);
-      delete storedMap[fieldName];
+      const source = legacyValue ?? props[fieldName];
+      next[fieldName] = options.editor ? editorPlainText(source, field.richTextDefault) : nativeRichTextValue(source, blockType, field.richTextDefault);
       return;
     }
 
     if (field.type === "array" && field.arrayFields && Array.isArray(props[fieldName])) {
       next[fieldName] = (props[fieldName] as unknown[]).map((item, index) => isRecord(item)
-        ? normalizeNativeRichTextProps(field.arrayFields || {}, item, componentType, [...path, fieldName, index])
+        ? normalizeNativeRichTextProps(field.arrayFields || {}, item, componentType, [...path, fieldName, index], options)
         : item);
       return;
     }
 
     if (field.type === "object" && field.objectFields && isRecord(props[fieldName])) {
-      next[fieldName] = normalizeNativeRichTextProps(field.objectFields, props[fieldName] as Record<string, unknown>, componentType, [...path, fieldName]);
+      next[fieldName] = normalizeNativeRichTextProps(field.objectFields, props[fieldName] as Record<string, unknown>, componentType, [...path, fieldName], options);
     }
   });
 
@@ -190,7 +198,6 @@ export function stripNativeRichTextForPayload(value: unknown): unknown {
   if (!isRecord(value)) return value;
   return Object.fromEntries(
     Object.entries(value)
-      .filter(([key]) => key !== "puckRichText")
       .map(([key, entry]) => [key, stripNativeRichTextForPayload(entry)]),
   );
 }

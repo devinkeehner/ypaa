@@ -2,7 +2,7 @@
 
 import "@puckeditor/core/puck.css";
 
-import { createUsePuck, Drawer, fieldsPlugin, Puck, type Config, type Data, type Plugin } from "@puckeditor/core";
+import { Drawer, fieldsPlugin, Puck, type Config, type Data, type Plugin } from "@puckeditor/core";
 import { ArrowLeft, BarChart3, Box, Clipboard, ClipboardPaste, Columns2, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, MousePointerClick, Palette, Quote, Save, Search, TextQuote, Type } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
@@ -12,8 +12,8 @@ import type { NECYPAAData } from "@/puck/types";
 import type { TenantTheme } from "@/components/site/TenantThemeProvider";
 
 import styles from "./puck-builder.module.css";
+import { usePuck } from "./puck-context";
 
-const usePuck = createUsePuck();
 type ThemeColors = Omit<TenantTheme, "logoAlt" | "logoUrl">;
 const THEME_FIELDS: Array<{ key: keyof ThemeColors; label: string }> = [
   { key: "primary", label: "Primary" },
@@ -307,14 +307,23 @@ function createBlockLibraryPlugin(palette: (typeof BLOCK_PALETTES)[number]): Plu
 }
 
 export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle, tenantId, tenantTheme }: { initialData: NECYPAAData; pageId: string; pageSlug: string; pageTitle: string; tenantId?: string; tenantTheme: TenantTheme }) {
-  const [data, setData] = useState(() => normalizePuckRichTextData(initialData));
+  const data = useMemo(() => normalizePuckRichTextData(initialData, true), [initialData]);
   const [previewTheme, setPreviewTheme] = useState<ThemeColors>(() => themeColors(tenantTheme));
   const latest = useRef(data);
   const lastSaved = useRef(JSON.stringify(data));
   const timer = useRef<number | null>(null);
+  const saving = useRef(false);
+  const pendingSave = useRef(false);
   const [message, setMessage] = useState("Autosave on");
+  const messageRef = useRef(message);
+  messageRef.current = message;
 
   const save = useCallback(async (next: Data, publish = false) => {
+    if (saving.current) {
+      pendingSave.current = true;
+      return;
+    }
+    saving.current = true;
     setMessage(publish ? "Publishing…" : "Saving…");
     try {
       const response = await fetch(`/api/puck/pages/${pageId}${publish ? "/publish" : ""}`, { method: publish ? "POST" : "PATCH", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ data: next }) });
@@ -322,15 +331,28 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
       lastSaved.current = JSON.stringify(next);
       setMessage(publish ? "Published" : "Saved");
     } catch (error) { setMessage(error instanceof Error ? error.message : "Unable to save"); }
+    finally {
+      saving.current = false;
+      if (pendingSave.current) {
+        pendingSave.current = false;
+        const current = latest.current;
+        if (JSON.stringify(current) !== lastSaved.current) void save(current);
+      }
+    }
   }, [pageId]);
 
-  useEffect(() => {
-    latest.current = data;
-    if (JSON.stringify(data) === lastSaved.current) return;
+  const scheduleSave = useCallback(() => {
+    if (JSON.stringify(latest.current) === lastSaved.current) return;
     if (timer.current) window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => void save(latest.current), 900);
-    return () => { if (timer.current) window.clearTimeout(timer.current); };
-  }, [data, save]);
+    timer.current = window.setTimeout(() => {
+      timer.current = null;
+      void save(latest.current);
+    }, 900);
+  }, [save]);
+
+  useEffect(() => () => {
+    if (timer.current) window.clearTimeout(timer.current);
+  }, []);
 
   const publishLatest = useCallback(() => {
     window.setTimeout(() => void save(latest.current, true), 250);
@@ -339,14 +361,14 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
   const handleDataChange = useCallback((next: Data) => {
     const nextData = next as NECYPAAData;
     latest.current = nextData;
-    setData(nextData);
-  }, []);
+    scheduleSave();
+  }, [scheduleSave]);
 
   const overrides = useMemo(() => ({
     header: ({ children }: { children: React.ReactNode }) => <BuilderHeader pageId={pageId} pageTitle={pageTitle}>{children}</BuilderHeader>,
-    headerActions: () => <BuilderHeaderActions message={message} onPublish={publishLatest} />,
+    headerActions: () => <BuilderHeaderActions message={messageRef.current} onPublish={publishLatest} />,
     ...(pageSlug === "home" ? { iframe: ThemePreviewFrame } : {}),
-  }), [message, pageId, pageSlug, pageTitle, publishLatest]);
+  }), [pageId, pageSlug, pageTitle, publishLatest]);
   const plugins = useMemo<Plugin[]>(() => [
     ...BLOCK_PALETTES.map(createBlockLibraryPlugin),
     fieldsPlugin({ desktopSideBar: "left" }),
