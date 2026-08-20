@@ -936,8 +936,12 @@
 .nestedSlot { display: block; min-height: 96px; }
 .richInline { display: block; }
 .richInline > :global([class*="RichTextEditor"]) { color: inherit; font: inherit; text-align: inherit; width: 100%; }
-.richInline :global(.rich-text) { color: inherit; font: inherit; text-align: inherit; }
-.richInline[data-rich-as] :is(h1, h2, h3, h4, p) { color: inherit; font: inherit; text-align: inherit; }
+.richInline :global(.rich-text) { color: inherit; font-family: inherit; text-align: inherit; width: 100%; }
+.richInline[data-rich-as] :is(h1, h2, h3, h4, p) { color: inherit; font-family: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; text-align: inherit; }
+.richInline[data-rich-as="h1"] { font-size: clamp(2.5rem, 7vw, 6rem); font-weight: 800; line-height: .95; }
+.richInline[data-rich-as="h2"] { font-size: clamp(2rem, 5vw, 4.5rem); font-weight: 750; line-height: 1.05; }
+.richInline[data-rich-as="h3"] { font-size: clamp(1.35rem, 2.5vw, 2rem); font-weight: 750; line-height: 1.15; }
+.richInline[data-rich-as="h4"] { font-size: 1.25rem; font-weight: 750; line-height: 1.2; }
 .richInline :is(h1, h2, h3, h4, p, ul, ol, blockquote) { margin-block: .35em; }
 .richInline :is(ul, ol) { padding-inline-start: 1.35em; }
 .richTextColorControl { align-items: center; display: inline-flex; gap: 4px; min-height: 28px; padding: 0 2px; }
