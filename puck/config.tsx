@@ -3,7 +3,7 @@
 import { Render, RichTextMenu, type ComponentConfig, type Config, type Field, type RichtextField } from "@puckeditor/core";
 import { Color } from "@tiptap/extension-color";
 import { TextStyle } from "@tiptap/extension-text-style";
-import { BadgeDollarSign, BriefcaseBusiness, CalendarDays, Check, ChevronDown, ChevronRight, HeartHandshake, Landmark, MapPin, Megaphone, Palette, ShieldCheck, Users, Vote, X } from "lucide-react";
+import { BadgeDollarSign, BriefcaseBusiness, CalendarDays, Check, ChevronDown, ChevronRight, Heading, HeartHandshake, Landmark, MapPin, Megaphone, Palette, ShieldCheck, Users, Vote, X } from "lucide-react";
 import { Fragment, isValidElement, useEffect, useState, type ChangeEvent, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { Countdown } from "@/components/site/Countdown";
