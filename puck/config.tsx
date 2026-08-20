@@ -4,7 +4,8 @@ import { Render, RichTextMenu, type ComponentConfig, type Config, type Field, ty
 import { Color } from "@tiptap/extension-color";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { BadgeDollarSign, BriefcaseBusiness, CalendarDays, Check, ChevronDown, ChevronRight, HeartHandshake, Landmark, MapPin, Megaphone, Palette, ShieldCheck, Users, Vote, X } from "lucide-react";
-import { Fragment, isValidElement, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
+import { Fragment, isValidElement, useState, type ChangeEvent, type CSSProperties, type ElementType, type ReactNode } from "react";
+import { useEditorState } from "@tiptap/react";
 
 import { Countdown } from "@/components/site/Countdown";
 import { ProgramExplorer } from "@/components/site/ProgramExplorer";
@@ -192,12 +193,45 @@ function NativeRichTextMenu({ children, editor, readOnly }: RichTextMenuProps) {
   return <RichTextMenu>{children}<RichTextMenu.Group><RichTextColorControl editor={editor} readOnly={readOnly} /></RichTextMenu.Group></RichTextMenu>;
 }
 
+function NativeHeadingSelect({ editor, readOnly }: Pick<RichTextMenuProps, "editor" | "readOnly">) {
+  const currentValue = useEditorState({
+    editor,
+    selector: ({ editor: currentEditor }) => {
+      if (!currentEditor) return "paragraph";
+      if (currentEditor.isActive("paragraph")) return "paragraph";
+      for (const level of [1, 2, 3, 4]) {
+        if (currentEditor.isActive("heading", { level })) return `h${level}`;
+      }
+      return "paragraph";
+    },
+  });
+
+  function changeBlock(event: ChangeEvent<HTMLSelectElement>) {
+    if (!editor) return;
+    const value = event.currentTarget.value;
+    const chain = editor.chain().focus();
+    if (value === "paragraph") chain.setParagraph().run();
+    else chain.toggleHeading({ level: Number(value.slice(1)) as 1 | 2 | 3 | 4 }).run();
+  }
+
+  return <label className={styles.richTextHeadingSelect} onClick={(event) => event.stopPropagation()} onPointerDown={(event) => event.stopPropagation()} title="Text style">
+    <Heading aria-hidden="true" />
+    <select aria-label="Text style" disabled={readOnly || !editor} onChange={changeBlock} value={currentValue || "paragraph"}>
+      <option value="paragraph">Paragraph</option>
+      <option value="h1">Heading 1</option>
+      <option value="h2">Heading 2</option>
+      <option value="h3">Heading 3</option>
+      <option value="h4">Heading 4</option>
+    </select>
+  </label>;
+}
+
 function NativeRichTextInlineMenu({ editor, readOnly }: RichTextMenuProps) {
-  return <RichTextMenu><RichTextMenu.Group><RichTextMenu.HeadingSelect /><RichTextMenu.ListSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.Bold /><RichTextMenu.Italic /><RichTextMenu.Underline /><RichTextMenu.Strikethrough /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.AlignSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextColorControl editor={editor} readOnly={readOnly} /></RichTextMenu.Group></RichTextMenu>;
+  return <RichTextMenu><RichTextMenu.Group><NativeHeadingSelect editor={editor} readOnly={readOnly} /><RichTextMenu.ListSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.Bold /><RichTextMenu.Italic /><RichTextMenu.Underline /><RichTextMenu.Strikethrough /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.AlignSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextColorControl editor={editor} readOnly={readOnly} /></RichTextMenu.Group></RichTextMenu>;
 }
 
 function NativeHeadingRichTextInlineMenu({ editor, readOnly }: RichTextMenuProps) {
-  return <RichTextMenu><RichTextMenu.Group><RichTextMenu.HeadingSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.Bold /><RichTextMenu.Italic /><RichTextMenu.Underline /><RichTextMenu.Strikethrough /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.AlignSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextColorControl editor={editor} readOnly={readOnly} /></RichTextMenu.Group></RichTextMenu>;
+  return <RichTextMenu><RichTextMenu.Group><NativeHeadingSelect editor={editor} readOnly={readOnly} /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.Bold /><RichTextMenu.Italic /><RichTextMenu.Underline /><RichTextMenu.Strikethrough /></RichTextMenu.Group><RichTextMenu.Group><RichTextMenu.AlignSelect /></RichTextMenu.Group><RichTextMenu.Group><RichTextColorControl editor={editor} readOnly={readOnly} /></RichTextMenu.Group></RichTextMenu>;
 }
 
 const nativeRichTextExtensions = [TextStyle, Color.configure({ types: ["textStyle"] })];
