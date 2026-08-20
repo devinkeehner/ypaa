@@ -4,8 +4,7 @@ import { Render, RichTextMenu, type ComponentConfig, type Config, type Field, ty
 import { Color } from "@tiptap/extension-color";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { BadgeDollarSign, BriefcaseBusiness, CalendarDays, Check, ChevronDown, ChevronRight, HeartHandshake, Landmark, MapPin, Megaphone, Palette, ShieldCheck, Users, Vote, X } from "lucide-react";
-import { Fragment, isValidElement, useState, type ChangeEvent, type CSSProperties, type ElementType, type ReactNode } from "react";
-import { useEditorState } from "@tiptap/react";
+import { Fragment, isValidElement, useEffect, useState, type ChangeEvent, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { Countdown } from "@/components/site/Countdown";
 import { ProgramExplorer } from "@/components/site/ProgramExplorer";
@@ -194,17 +193,31 @@ function NativeRichTextMenu({ children, editor, readOnly }: RichTextMenuProps) {
 }
 
 function NativeHeadingSelect({ editor, readOnly }: Pick<RichTextMenuProps, "editor" | "readOnly">) {
-  const currentValue = useEditorState({
-    editor,
-    selector: ({ editor: currentEditor }) => {
-      if (!currentEditor) return "paragraph";
-      if (currentEditor.isActive("paragraph")) return "paragraph";
-      for (const level of [1, 2, 3, 4]) {
-        if (currentEditor.isActive("heading", { level })) return `h${level}`;
+  const [currentValue, setCurrentValue] = useState("paragraph");
+
+  useEffect(() => {
+    if (!editor) return;
+    const updateValue = () => {
+      if (editor.isActive("paragraph")) {
+        setCurrentValue("paragraph");
+        return;
       }
-      return "paragraph";
-    },
-  });
+      for (const level of [1, 2, 3, 4]) {
+        if (editor.isActive("heading", { level })) {
+          setCurrentValue(`h${level}`);
+          return;
+        }
+      }
+      setCurrentValue("paragraph");
+    };
+    updateValue();
+    editor.on("selectionUpdate", updateValue);
+    editor.on("transaction", updateValue);
+    return () => {
+      editor.off("selectionUpdate", updateValue);
+      editor.off("transaction", updateValue);
+    };
+  }, [editor]);
 
   function changeBlock(event: ChangeEvent<HTMLSelectElement>) {
     if (!editor) return;
