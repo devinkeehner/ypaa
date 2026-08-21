@@ -26,39 +26,39 @@ export default async function VisualBuilderPage({ params }: { params: Promise<{ 
     redirect(`${loginPath}?redirect=${encodeURIComponent(builderPath)}`);
   }
 
-  const page = await payload.findByID({
-    collection: "pages",
-    id,
-    draft: true,
-    depth: 1,
-    disableErrors: true,
-    overrideAccess: false,
-    user,
-  });
+  const [page, tenants] = await Promise.all([
+    payload.findByID({
+      collection: "pages",
+      id,
+      draft: true,
+      depth: 1,
+      disableErrors: true,
+      overrideAccess: false,
+      user,
+    }),
+    payload.find({ collection: "tenants", depth: 0, limit: 1, sort: "createdAt", overrideAccess: false, user }),
+  ]);
 
   if (!page) notFound();
   const pageDoc = page as unknown as PageDocument;
   let tenantId: string | undefined;
   let tenantTheme: TenantTheme = defaultTenantTheme;
 
-  if (pageDoc.slug === "home") {
-    const tenants = await payload.find({ collection: "tenants", depth: 0, limit: 1, sort: "createdAt", overrideAccess: false, user });
-    const tenant = tenants.docs[0] as unknown as Record<string, unknown> | undefined;
-    const theme = tenant?.theme as Record<string, unknown> | undefined;
-    if (tenant) {
-      tenantId = String(tenant.id);
-      tenantTheme = {
-        ...defaultTenantTheme,
-        primary: typeof theme?.primary === "string" ? theme.primary : defaultTenantTheme.primary,
-        secondary: typeof theme?.secondary === "string" ? theme.secondary : defaultTenantTheme.secondary,
-        accent: typeof theme?.accent === "string" ? theme.accent : defaultTenantTheme.accent,
-        background: typeof theme?.background === "string" ? theme.background : defaultTenantTheme.background,
-        surface: typeof theme?.surface === "string" ? theme.surface : defaultTenantTheme.surface,
-        lightBackground: typeof theme?.lightBackground === "string" ? theme.lightBackground : defaultTenantTheme.lightBackground,
-        darkText: typeof theme?.darkText === "string" ? theme.darkText : defaultTenantTheme.darkText,
-        lightText: typeof theme?.lightText === "string" ? theme.lightText : defaultTenantTheme.lightText,
-      };
-    }
+  const tenant = tenants.docs[0] as unknown as Record<string, unknown> | undefined;
+  const theme = tenant?.theme as Record<string, unknown> | undefined;
+  if (tenant) {
+    tenantId = String(tenant.id);
+    tenantTheme = {
+      ...defaultTenantTheme,
+      primary: typeof theme?.primary === "string" ? theme.primary : defaultTenantTheme.primary,
+      secondary: typeof theme?.secondary === "string" ? theme.secondary : defaultTenantTheme.secondary,
+      accent: typeof theme?.accent === "string" ? theme.accent : defaultTenantTheme.accent,
+      background: typeof theme?.background === "string" ? theme.background : defaultTenantTheme.background,
+      surface: typeof theme?.surface === "string" ? theme.surface : defaultTenantTheme.surface,
+      lightBackground: typeof theme?.lightBackground === "string" ? theme.lightBackground : defaultTenantTheme.lightBackground,
+      darkText: typeof theme?.darkText === "string" ? theme.darkText : defaultTenantTheme.darkText,
+      lightText: typeof theme?.lightText === "string" ? theme.lightText : defaultTenantTheme.lightText,
+    };
   }
 
   return (

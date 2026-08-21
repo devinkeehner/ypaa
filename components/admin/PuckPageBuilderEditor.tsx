@@ -6,8 +6,9 @@ import { Drawer, fieldsPlugin, Puck, type Config, type Data, type Plugin } from 
 import { ArrowLeft, BarChart3, Box, Clipboard, ClipboardPaste, Columns2, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, MousePointerClick, Palette, Quote, Save, Search, TextQuote, Type } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
-import { nestedElementTypes, normalizePuckRichTextData, puckConfig } from "@/puck/config";
-import { campaignAltDefinitions, campaignAltTypesByPalette } from "@/puck/campaign-alt-definitions";
+import { normalizePuckRichTextData, puckConfig } from "@/puck/config";
+import { campaignAltDefinitions } from "@/puck/campaign-alt-definitions";
+import { ELEMENT_DROP_TYPES, REUSABLE_ROW_TYPES, REUSABLE_SECTION_TYPES } from "@/puck/drop-zones";
 import type { NECYPAAData } from "@/puck/types";
 import type { TenantTheme } from "@/components/site/TenantThemeProvider";
 
@@ -219,19 +220,19 @@ const BLOCK_PALETTES: Array<{ blocks: string[]; description: string; id: BlockPa
     id: "sections",
     label: "Sections",
     description: "Complete, ready-to-customize page sections.",
-    blocks: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "CTMeetingSchedule", "ProgramSchedule", "CallToAction", "IssuesSection", "IssueCards", "QuoteBlock", "ResultsStats", "SupporterLogos", "ActionTabs", "MediaGallery", ...campaignAltTypesByPalette.sections],
+    blocks: REUSABLE_SECTION_TYPES,
   },
   {
     id: "rows",
     label: "Rows",
     description: "Flexible column layouts for custom page compositions.",
-    blocks: ["Section", "RowOneColumn", "RowTwoColumns", "RowLeftWide", "RowRightWide", "RowThreeColumns", "RowFourColumns", "Column", ...campaignAltTypesByPalette.rows],
+    blocks: REUSABLE_ROW_TYPES,
   },
   {
     id: "elements",
     label: "Elements",
     description: "Smaller building blocks for rows, cards, and tabs.",
-    blocks: nestedElementTypes,
+    blocks: ELEMENT_DROP_TYPES,
   },
 ];
 
@@ -289,7 +290,7 @@ function BlockDrawerPanel({ palette }: { palette: (typeof BLOCK_PALETTES)[number
         {renderBlocks(readyBlocks)}
       </section> : null}
       {remainingBlocks.length ? <section className={styles.blockDrawerGroup}>
-        {readyBlocks.length ? <h3>More sections</h3> : null}
+        {readyBlocks.length ? <h3>More reusable sections</h3> : null}
         {renderBlocks(remainingBlocks)}
       </section> : null}
     </> : <p className={styles.blockDrawerEmpty}>No matching blocks.</p>}
@@ -312,8 +313,10 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
   const latest = useRef(data);
   const lastSaved = useRef(JSON.stringify(data));
   const timer = useRef<number | null>(null);
+  const publishTimer = useRef<number | null>(null);
   const saving = useRef(false);
   const pendingSave = useRef(false);
+  const pendingPublish = useRef(false);
   const [message, setMessage] = useState("Autosave on");
   const messageRef = useRef(message);
   messageRef.current = message;
@@ -321,6 +324,7 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
   const save = useCallback(async (next: Data, publish = false) => {
     if (saving.current) {
       pendingSave.current = true;
+      pendingPublish.current = pendingPublish.current || publish;
       return;
     }
     saving.current = true;
@@ -334,9 +338,11 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
     finally {
       saving.current = false;
       if (pendingSave.current) {
+        const shouldPublish = pendingPublish.current;
         pendingSave.current = false;
+        pendingPublish.current = false;
         const current = latest.current;
-        if (JSON.stringify(current) !== lastSaved.current) void save(current);
+        if (shouldPublish || JSON.stringify(current) !== lastSaved.current) void save(current, shouldPublish);
       }
     }
   }, [pageId]);
@@ -352,10 +358,25 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
 
   useEffect(() => () => {
     if (timer.current) window.clearTimeout(timer.current);
+    if (publishTimer.current) window.clearTimeout(publishTimer.current);
   }, []);
 
   const publishLatest = useCallback(() => {
-    window.setTimeout(() => void save(latest.current, true), 250);
+    if (timer.current) {
+      window.clearTimeout(timer.current);
+      timer.current = null;
+    }
+    if (publishTimer.current) window.clearTimeout(publishTimer.current);
+    // Give a focused rich-text field one frame to commit its blur update, then
+    // publish the newest Puck value through the same serialized save queue.
+    publishTimer.current = window.setTimeout(() => {
+      publishTimer.current = null;
+      if (timer.current) {
+        window.clearTimeout(timer.current);
+        timer.current = null;
+      }
+      void save(latest.current, true);
+    }, 150);
   }, [save]);
 
   const handleDataChange = useCallback((next: Data) => {
@@ -367,12 +388,12 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
   const overrides = useMemo(() => ({
     header: ({ children }: { children: React.ReactNode }) => <BuilderHeader pageId={pageId} pageTitle={pageTitle}>{children}</BuilderHeader>,
     headerActions: () => <BuilderHeaderActions message={messageRef.current} onPublish={publishLatest} />,
-    ...(pageSlug === "home" ? { iframe: ThemePreviewFrame } : {}),
+    iframe: ThemePreviewFrame,
   }), [pageId, pageSlug, pageTitle, publishLatest]);
   const plugins = useMemo<Plugin[]>(() => [
     ...BLOCK_PALETTES.map(createBlockLibraryPlugin),
     fieldsPlugin({ desktopSideBar: "left" }),
     ...(pageSlug === "home" ? [{ name: "theme", label: "Theme", icon: <Palette />, render: () => <ThemePanel initialTenantId={tenantId} initialTheme={tenantTheme} onPreviewTheme={setPreviewTheme} /> }] : []),
   ], [pageSlug, tenantId, tenantTheme]);
-  return <ThemePreviewContext.Provider value={previewTheme}><div className={styles.wrapper}><Puck config={puckConfig as unknown as Config} data={data} height="100dvh" onChange={handleDataChange} onPublish={publishLatest} overrides={overrides} permissions={{ delete: true, drag: true, duplicate: true, edit: true, insert: true }} plugins={plugins} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></ThemePreviewContext.Provider>;
+  return <ThemePreviewContext.Provider value={previewTheme}><div className={`${styles.wrapper} tenant-theme`} style={themeVariables(previewTheme)}><Puck config={puckConfig as unknown as Config} data={data} height="100dvh" onChange={handleDataChange} onPublish={publishLatest} overrides={overrides} permissions={{ delete: true, drag: true, duplicate: true, edit: true, insert: true }} plugins={plugins} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></ThemePreviewContext.Provider>;
 }

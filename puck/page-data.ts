@@ -15,6 +15,7 @@ import { campaignAltDefinitions, campaignAltTypes } from "./campaign-alt-definit
 import { isLexicalValue } from "./lexical-value";
 import { lexicalToHTML, stripNativeRichTextForPayload } from "./native-rich-text";
 import { AFTER_CONTENT_BLOCK_TYPES, afterContentZoneID } from "./drop-zones";
+import { hydrateExpandedMedia } from "./runtime-data.mjs";
 
 const COMPONENT_TYPES = new Set([
   "HeroCountdown",
@@ -335,14 +336,24 @@ export function normalizePuckData(value: unknown): NECYPAAData {
   } as NECYPAAData;
 }
 
-export function pageDocumentToPuckData(page: PageDocument): NECYPAAData {
+export function pageDocumentToPuckData(page: PageDocument, options: { materializeRichText?: boolean } = {}): NECYPAAData {
+  let data: NECYPAAData;
   if (isPuckData(page.builderData)) {
-    const data = normalizePuckData(page.builderData);
-    return { ...data, root: pageRoot(page, data.root) } as NECYPAAData;
+    data = normalizePuckData(page.builderData);
+    if (Array.isArray(page.layout) && page.layout.length) {
+      data = hydrateExpandedMedia(data, pageLayoutToPuckData(page));
+    }
+  } else if (Array.isArray(page.layout) && page.layout.length) {
+    data = pageLayoutToPuckData(page);
+  } else {
+    data = cloneDefaultData();
   }
 
-  if (Array.isArray(page.layout) && page.layout.length) return pageLayoutToPuckData(page);
-  return { ...cloneDefaultData(), root: pageRoot(page) } as NECYPAAData;
+  if (options.materializeRichText) {
+    data = normalizePuckData(materializePuckRichText(data));
+  }
+
+  return { ...data, root: pageRoot(page, data.root) } as NECYPAAData;
 }
 
 export function pageLayoutToPuckData(page: PageDocument): NECYPAAData {

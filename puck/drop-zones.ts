@@ -1,5 +1,3 @@
-import { campaignAltTypesByPalette } from "./campaign-alt-definitions";
-
 /**
  * Blocks that can be placed inside a section, row, card, or tab slot.
  * Sections and rows are deliberately excluded so nested areas stay element-only.
@@ -7,7 +5,6 @@ import { campaignAltTypesByPalette } from "./campaign-alt-definitions";
 export const ELEMENT_DROP_TYPES = [
   "Image",
   "RichText",
-  "FreeText",
   "Text",
   "Button",
   "Countdown",
@@ -21,8 +18,45 @@ export const ELEMENT_DROP_TYPES = [
   "FollowLinks",
   "InlineForm",
   "PayPal",
-  "Navigation",
-  ...campaignAltTypesByPalette.elements,
+] as string[];
+
+/**
+ * Campaign's strongest reusable families, without compatibility-only or
+ * single-use home blocks. The component registry remains broader so existing
+ * pages continue to render; this list controls what authors are offered.
+ */
+export const REUSABLE_SECTION_TYPES = [
+  "HeroAlt",
+  "AboutAlt",
+  "CardsGridAlt",
+  "PalmCardPointsAlt",
+  "PalmCardBioAlt",
+  "TestimonialAlt",
+  "PalmCardAlt",
+  "PalmCardContactAlt",
+  "PalmCardMastheadAlt",
+  "PalmCardGalleryAlt",
+  "FeatureFamilyAlt",
+  "ComposableCardsAlt",
+  "StatsAlt",
+  "LogoCloudAlt",
+  "CTAFamilyAlt",
+  "TabbedContentAlt",
+  "MediaGalleryAlt",
+  "FormBlockAlt",
+  "MeetingScheduleAlt",
+  "FacebookFeedAlt",
+  "BannerAlt",
+] as string[];
+
+export const REUSABLE_ROW_TYPES = [
+  "Section",
+  "RowOneColumn",
+  "RowTwoColumns",
+  "RowLeftWide",
+  "RowRightWide",
+  "RowThreeColumns",
+  "RowFourColumns",
 ] as string[];
 
 /**
@@ -37,6 +71,17 @@ export const AFTER_CONTENT_BLOCK_TYPES = new Set([
   "TestimonialAlt",
   "PalmCardAlt",
   "PalmCardContactAlt",
+  "PalmCardGalleryAlt",
+  "FeatureFamilyAlt",
+  "ComposableCardsAlt",
+  "StatsAlt",
+  "LogoCloudAlt",
+  "CTAFamilyAlt",
+  "MediaGalleryAlt",
+  "FormBlockAlt",
+  "MeetingScheduleAlt",
+  "FacebookFeedAlt",
+  "BannerAlt",
 ]);
 
 export function afterContentZoneID(blockID: string) {

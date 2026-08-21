@@ -455,7 +455,7 @@ function createCampaignAltBlock(definition: (typeof campaignAltDefinitions)[numb
       { name: "items", type: "array", labels: { singular: "Item", plural: "Items" }, fields: campaignItemFields },
       ...campaignSourceFields(definition.type),
       ...(definition.nestedCollection ? [campaignNestedField(definition.nestedCollection)] : []),
-      ...(AFTER_CONTENT_BLOCK_TYPES.has(definition.type) ? [afterContentBlocksField] : []),
+      ...(AFTER_CONTENT_BLOCK_TYPES.has(definition.type) ? [{ name: "enableAfterContent", type: "checkbox" as const, defaultValue: true }, afterContentBlocksField] : []),
     ],
   };
 }

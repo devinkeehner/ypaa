@@ -87,6 +87,13 @@ function ExternalValuePlugin({
 
 type ActiveFormats = { alignment: ElementFormatType; block: string; bold: boolean; italic: boolean; underline: boolean; strikethrough: boolean; code: boolean; color: string };
 const EMPTY_FORMATS: ActiveFormats = { alignment: "", block: "paragraph", bold: false, italic: false, underline: false, strikethrough: false, code: false, color: "" };
+const THEME_TEXT_COLORS = [
+  { label: "Primary theme color", variable: "--tenant-primary", fallback: "#E85E27" },
+  { label: "Secondary theme color", variable: "--tenant-secondary", fallback: "#31275A" },
+  { label: "Accent theme color", variable: "--tenant-accent", fallback: "#FFD76A" },
+  { label: "Text on light", variable: "--tenant-dark-text", fallback: "#171614" },
+  { label: "Text on dark", variable: "--tenant-light-text", fallback: "#F4E8D3" },
+] as const;
 
 function ToolbarButton({ active, children, disabled, label, onClick }: { active?: boolean; children: React.ReactNode; disabled?: boolean; label: string; onClick: () => void }) {
   const handledPointer = useRef(false);
@@ -251,6 +258,13 @@ function Toolbar({ readOnly, toolbarInteraction }: { readOnly?: boolean; toolbar
   const color = (value: string) => runToolbarUpdate((selection) => {
     if (selection) $patchStyleText(selection, { color: value || null });
   });
+  const editorRoot = editor.getRootElement();
+  const themedRoot = editorRoot?.closest(".tenant-theme") || editorRoot;
+  const themedStyle = themedRoot ? getComputedStyle(themedRoot) : null;
+  const themeTextColors = THEME_TEXT_COLORS.map((option) => ({
+    ...option,
+    resolved: themedStyle?.getPropertyValue(option.variable).trim() || option.fallback,
+  }));
   const captureSelection = useCallback(() => {
     const root = editor.getRootElement();
     const domSelection = root?.ownerDocument.getSelection();
@@ -301,7 +315,8 @@ function Toolbar({ readOnly, toolbarInteraction }: { readOnly?: boolean; toolbar
       <ToolbarButton active={active.alignment === "left"} disabled={readOnly} label="Align left" onClick={() => alignment("left")}><AlignLeft /></ToolbarButton>
       <ToolbarButton active={active.alignment === "center"} disabled={readOnly} label="Align center" onClick={() => alignment("center")}><AlignCenter /></ToolbarButton>
       <ToolbarButton active={active.alignment === "right"} disabled={readOnly} label="Align right" onClick={() => alignment("right")}><AlignRight /></ToolbarButton>
-      <label className={styles.colorPicker} title="Text color"><Palette /><input aria-label="Text color" disabled={readOnly} onInput={(event) => color(event.currentTarget.value)} onPointerDownCapture={captureSelection} type="color" value={/^#[0-9a-f]{6}$/i.test(active.color) ? active.color : "#171b20"} /></label>
+      <span aria-label="Theme text colors" className={styles.themeColorSwatches} role="group">{themeTextColors.map((option) => <ToolbarButton active={active.color.toLowerCase() === option.resolved.toLowerCase()} disabled={readOnly} key={option.variable} label={option.label} onClick={() => color(option.resolved)}><span aria-hidden="true" className={styles.themeColorSwatch} style={{ background: `var(${option.variable}, ${option.fallback})` }} /></ToolbarButton>)}</span>
+      <label className={styles.colorPicker} title="Custom text color"><Palette /><input aria-label="Custom text color" disabled={readOnly} onInput={(event) => color(event.currentTarget.value)} onPointerDownCapture={captureSelection} type="color" value={/^#[0-9a-f]{6}$/i.test(active.color) ? active.color : "#171b20"} /></label>
       <span className={styles.toolbarDivider} />
       <ToolbarButton disabled={readOnly} label="Undo" onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}><Undo2 /></ToolbarButton>
       <ToolbarButton disabled={readOnly} label="Redo" onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}><Redo2 /></ToolbarButton>

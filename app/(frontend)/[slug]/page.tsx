@@ -26,7 +26,7 @@ export default async function SlugPage({ params }: PageProps) {
     const page = result.docs[0];
 
     if (page) {
-      data = pageDocumentToPuckData(page as unknown as PageDocument);
+      data = pageDocumentToPuckData(page as unknown as PageDocument, { materializeRichText: true });
     }
   } catch {
     // Keep the prototype homepage available while the database is unavailable.

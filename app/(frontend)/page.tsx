@@ -15,7 +15,7 @@ export default async function Home() {
     const payload = await getPayload({ config });
     const result = await payload.find({ collection: "pages", depth: 1, limit: 1, where: { slug: { equals: "home" } } });
     const page = result.docs[0];
-    if (page) data = pageDocumentToPuckData(page as unknown as PageDocument);
+    if (page) data = pageDocumentToPuckData(page as unknown as PageDocument, { materializeRichText: true });
   } catch {
     // Keep the initial public view available before the database is seeded.
   }

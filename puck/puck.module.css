@@ -632,6 +632,7 @@
 
 /* Modern campaign block families imported as YPAA-safe alternatives. */
 .campaignAlt { background: #f7f4ed; color: #171b20; overflow: hidden; padding: clamp(68px, 8vw, 118px) 0; position: relative; }
+.publicCanvas .campaignAlt:not(.heroAlt) { padding-block: clamp(46px, 5.5vw, 78px); }
 .campaignAlt[data-presentation="wide"] > .shell { max-width: 1460px; }
 .campaignAlt[data-presentation="fullBleed"] > .shell { max-width: none; padding-inline: clamp(22px, 5vw, 82px); }
 .campaignAltBackground { height: 100%; inset: 0; object-fit: cover; position: absolute; width: 100%; }
@@ -688,7 +689,9 @@
 .heroAlt .campaignAltCopy h1,
 .heroAlt .campaignAltCopy h2,
 .heroAlt .campaignAltCopy [data-rich-as="h1"],
-.heroAlt .campaignAltCopy [data-rich-as="h2"] { font-size: clamp(3.4rem, 8vw, 7.4rem); letter-spacing: 0; line-height: .94; margin: 14px 0 25px; max-width: 100%; overflow-wrap: anywhere; word-break: break-word; }
+.heroAlt .campaignAltCopy [data-rich-as="h2"],
+.heroAlt .campaignAltCopy [data-rich-default-as="h1"],
+.heroAlt .campaignAltCopy [data-rich-default-as="h2"] { font-size: clamp(3.4rem, 8vw, 7.4rem); letter-spacing: 0; line-height: .94; margin: 14px 0 25px; max-width: 100%; overflow-wrap: anywhere; word-break: break-word; }
 .heroAltMedia { box-shadow: 18px 18px 0 #d95132; min-height: 440px; }
 .heroAltMedia img { height: 100%; min-height: 440px; object-fit: cover; }
 .heroAltLogo { display: block; margin-inline: auto; max-height: 190px; max-width: min(640px, 100%); object-fit: contain; object-position: center; }
@@ -1024,11 +1027,11 @@
 .richInline { display: block; }
 .richInline > :global([class*="RichTextEditor"]) { color: inherit; font: inherit; text-align: inherit; width: 100%; }
 .richInline :global(.rich-text) { color: inherit; font-family: inherit; text-align: inherit; width: 100%; }
-.richInline[data-rich-as] :is(h1, h2, h3, h4, p) { color: inherit; font-family: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; text-align: inherit; }
-.richInline[data-rich-as="h1"] { font-size: clamp(2.5rem, 7vw, 6rem); font-weight: 800; line-height: .95; }
-.richInline[data-rich-as="h2"] { font-size: clamp(2rem, 5vw, 4.5rem); font-weight: 750; line-height: 1.05; }
-.richInline[data-rich-as="h3"] { font-size: clamp(1.35rem, 2.5vw, 2rem); font-weight: 750; line-height: 1.15; }
-.richInline[data-rich-as="h4"] { font-size: 1.25rem; font-weight: 750; line-height: 1.2; }
+.richInline:is([data-rich-as], [data-rich-default-as]) :is(h1, h2, h3, h4, p) { color: inherit; font-family: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; text-align: inherit; }
+.richInline:is([data-rich-as="h1"], [data-rich-default-as="h1"]) { font-size: clamp(2.5rem, 7vw, 6rem); font-weight: 800; line-height: .95; }
+.richInline:is([data-rich-as="h2"], [data-rich-default-as="h2"]) { font-size: clamp(2rem, 5vw, 4.5rem); font-weight: 750; line-height: 1.05; }
+.richInline:is([data-rich-as="h3"], [data-rich-default-as="h3"]) { font-size: clamp(1.35rem, 2.5vw, 2rem); font-weight: 750; line-height: 1.15; }
+.richInline:is([data-rich-as="h4"], [data-rich-default-as="h4"]) { font-size: 1.25rem; font-weight: 750; line-height: 1.2; }
 .richInline:not([data-rich-content]) :is(h1, h2, h3, h4, p, ul, ol, blockquote) { margin-block: .35em; }
 .richInline :is(ul, ol) { padding-inline-start: 1.35em; }
 .richTextColorControl { align-items: center; display: inline-flex; gap: 4px; min-height: 28px; padding: 0 2px; }
@@ -1038,6 +1041,14 @@
 .richTextColorControl button:hover:not(:disabled) { background: color-mix(in srgb, currentColor 12%, transparent); }
 .richTextColorControl button:disabled, .richTextColorControl input:disabled { cursor: not-allowed; opacity: .45; }
 .richTextColorControl button svg { height: 14px; width: 14px; }
+.themeColorField { display: grid; gap: 9px; }
+.themeColorField > div { display: grid; gap: 6px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.themeColorField button { align-items: center; background: #fff; border: 1px solid #cbd1d8; border-radius: 6px; color: #171b20; display: flex; gap: 7px; min-height: 34px; padding: 5px 7px; text-align: left; }
+.themeColorField button[aria-pressed="true"] { border-color: #2563eb; box-shadow: 0 0 0 2px #2563eb24; }
+.themeColorField button > span { border: 1px solid #0003; border-radius: 50%; flex: 0 0 auto; height: 17px; width: 17px; }
+.themeColorField button b { font-size: 11px; line-height: 1.2; }
+.themeColorField > label { align-items: center; display: flex; font-size: 11px; font-weight: 700; gap: 8px; }
+.themeColorField > label input { height: 30px; width: 42px; }
 .richTextHeadingSelect { align-items: center; display: inline-flex; gap: 4px; border: 1px solid #cbd1d8; border-radius: 5px; padding-left: 7px; background: #fff; color: #171b20; }
 .richTextHeadingSelect svg { color: #52606d; height: 14px; width: 14px; }
 .richTextHeadingSelect select { min-height: 30px; border: 0; background: transparent; color: inherit; font: inherit; font-size: 12px; padding: 0 8px 0 2px; }
