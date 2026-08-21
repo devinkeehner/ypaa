@@ -869,6 +869,7 @@
 
 .testimonialsAlt { background: #183637; color: #fff; }
 .testimonialsAlt .campaignAltHeader > p:last-child { color: #e8e1d6; }
+.testimonialsAltIntro { min-width: 0; }
 .testimonialsAltGrid { display: grid; gap: 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 40px; }
 .testimonialsAltGrid figure { background: #f7f4ed; color: #171b20; margin: 0; padding: 28px; }
 .testimonialsAltGrid figure > img { border-radius: 50%; height: 68px; object-fit: cover; width: 68px; }
@@ -989,6 +990,8 @@
 .campaignAltAccordionPanel > [data-rich-as="h4"] { margin-top: 0; }
 .campaignAltTabPanel > :is(.nestedSlot, .nestedDropZone),
 .campaignAltAccordionPanel > :is(.nestedSlot, .nestedDropZone) { margin-top: 16px; }
+.campaignAltPrimaryElements { min-width: 0; width: 100%; }
+.campaignAltPrimaryElements > .nestedSlot:not(:empty) { margin-block: 18px 24px; }
 .campaignAltBottomElements { grid-column: 1 / -1; min-width: 0; width: 100%; }
 .campaignAltBottomElements > .nestedSlot:not(:empty) { margin-top: 24px; }
 

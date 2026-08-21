@@ -352,6 +352,13 @@ const afterContentBlocksField: Field = {
   admin: { hidden: true },
 };
 
+const bottomContentBlocksField: Field = {
+  name: "bottomContentBlocks",
+  type: "blocks",
+  blocks: nestedElementBlocks,
+  admin: { hidden: true },
+};
+
 export const SectionBlock: Block = { slug: "Section", labels: { singular: "Section", plural: "Sections" }, admin: { group: "Layout" }, fields: [{ name: "heading", type: "text" }, { name: "background", type: "select", defaultValue: "light", options: ["light", "dark", "muted"] }, { name: "blocks", type: "blocks", blocks: nestedElementBlocks }] };
 export const ColumnBlock: Block = { slug: "Column", labels: { singular: "Column", plural: "Columns" }, admin: { group: "Layout" }, fields: [{ name: "label", type: "text" }, { name: "blocks", type: "blocks", blocks: nestedElementBlocks }] };
 
@@ -455,7 +462,7 @@ function createCampaignAltBlock(definition: (typeof campaignAltDefinitions)[numb
       { name: "items", type: "array", labels: { singular: "Item", plural: "Items" }, fields: campaignItemFields },
       ...campaignSourceFields(definition.type),
       ...(definition.nestedCollection ? [campaignNestedField(definition.nestedCollection)] : []),
-      ...(AFTER_CONTENT_BLOCK_TYPES.has(definition.type) ? [{ name: "enableAfterContent", type: "checkbox" as const, defaultValue: true, admin: { hidden: true } }, afterContentBlocksField] : []),
+      ...(AFTER_CONTENT_BLOCK_TYPES.has(definition.type) ? [{ name: "enableAfterContent", type: "checkbox" as const, defaultValue: true, admin: { hidden: true } }, afterContentBlocksField, bottomContentBlocksField] : []),
     ],
   };
 }

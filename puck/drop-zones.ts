@@ -84,3 +84,7 @@ export const AFTER_CONTENT_BLOCK_TYPES = new Set([
 export function afterContentZoneID(blockID: string) {
   return `${blockID}:afterContent`;
 }
+
+export function bottomContentZoneID(blockID: string) {
+  return `${blockID}:bottomContent`;
+}

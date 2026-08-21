@@ -14,7 +14,7 @@ import { normalizeLayoutColumns } from "./layout-utils.mjs";
 import { campaignAltDefinitions, campaignAltTypes } from "./campaign-alt-definitions";
 import { isLexicalValue } from "./lexical-value";
 import { lexicalToHTML, stripNativeRichTextForPayload } from "./native-rich-text";
-import { AFTER_CONTENT_BLOCK_TYPES, afterContentZoneID } from "./drop-zones";
+import { AFTER_CONTENT_BLOCK_TYPES, afterContentZoneID, bottomContentZoneID } from "./drop-zones";
 import { hydrateExpandedMedia } from "./runtime-data.mjs";
 
 const COMPONENT_TYPES = new Set([
@@ -112,7 +112,10 @@ function normalizeProps(type: string, value: unknown): Record<string, unknown> {
   if (nestedCollection && Array.isArray(props[nestedCollection])) {
     props[nestedCollection] = props[nestedCollection].map((item) => isRecord(item) && !("blocks" in item) ? { ...item, blocks: [] } : item);
   }
-  if (AFTER_CONTENT_BLOCK_TYPES.has(type) && !("afterContent" in props)) props.afterContent = [];
+  if (AFTER_CONTENT_BLOCK_TYPES.has(type)) {
+    if (!("afterContent" in props)) props.afterContent = [];
+    if (!("bottomContent" in props)) props.bottomContent = [];
+  }
 
   if (type === "MeetingInfo") {
     props.importantDates = normalizeImportantDates(props.importantDates);
@@ -290,6 +293,10 @@ function layoutToContent(layout: unknown): { content: ComponentData<Record<strin
       zones[afterContentZoneID(id)] = nestedLayoutToContent(storedProps.afterContentBlocks);
       delete storedProps.afterContentBlocks;
     }
+    if (AFTER_CONTENT_BLOCK_TYPES.has(blockType) && Array.isArray(storedProps.bottomContentBlocks)) {
+      zones[bottomContentZoneID(id)] = nestedLayoutToContent(storedProps.bottomContentBlocks);
+      delete storedProps.bottomContentBlocks;
+    }
     const nestedCollection = NESTED_ZONES[blockType];
     if (nestedCollection && Array.isArray(storedProps[nestedCollection])) {
       storedProps[nestedCollection] = storedProps[nestedCollection].map((item, nestedIndex) => {
@@ -396,9 +403,14 @@ function packAfterContentZone(type: string, id: string, props: Record<string, un
 
   const packed = { ...props };
   delete packed.afterContent;
+  delete packed.bottomContent;
   const zone = zones[afterContentZoneID(id)];
   if (Array.isArray(zone)) {
     packed.afterContentBlocks = contentToNestedLayout(zone);
+  }
+  const bottomZone = zones[bottomContentZoneID(id)];
+  if (Array.isArray(bottomZone)) {
+    packed.bottomContentBlocks = contentToNestedLayout(bottomZone);
   }
   return packed;
 }
