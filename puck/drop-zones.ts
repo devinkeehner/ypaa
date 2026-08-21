@@ -73,6 +73,7 @@ export const AFTER_CONTENT_BLOCK_TYPES = new Set([
   "StatsAlt",
   "LogoCloudAlt",
   "CTAFamilyAlt",
+  "TabbedContentAlt",
   "MediaGalleryAlt",
   "FormBlockAlt",
   "MeetingScheduleAlt",
