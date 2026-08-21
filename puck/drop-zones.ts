@@ -3,18 +3,14 @@
  * Sections and rows are deliberately excluded so nested areas stay element-only.
  */
 export const ELEMENT_DROP_TYPES = [
-  "Image",
-  "RichText",
-  "Text",
-  "Button",
-  "Countdown",
-  "ButtonRow",
   "Headline",
-  "Divider",
-  "BulletedList",
+  "Text",
   "ImageCaption",
+  "ButtonRow",
+  "Divider",
   "Video",
   "Embed",
+  "Countdown",
   "FollowLinks",
   "InlineForm",
   "PayPal",

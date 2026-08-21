@@ -49,6 +49,14 @@
 
 .canvas :is(h1, h2, h3, p) { margin-top: 0; }
 .canvas :is(h1, h2, h3) { text-wrap: balance; }
+.canvas h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.75rem, 6vw, 5.5rem);
+  font-weight: 500;
+  letter-spacing: -.05em;
+  line-height: .96;
+  margin: 0 0 28px;
+}
 .canvas h2 {
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(2.15rem, 4.2vw, 4.15rem);
@@ -516,13 +524,15 @@
 .cta .button[data-outline="true"]:hover { background: var(--ink); color: var(--paper-soft); }
 
 /* Flexible text blocks */
-.freeText { background: var(--paper-soft); color: var(--ink); padding: 38px max(24px, calc((100vw - 1180px) / 2)); }
+/* Element text should feel like part of its parent section, not a nested section. */
+.freeText,
+.richText { background: transparent; color: inherit; margin: 12px auto; max-width: 1100px; padding: 0 24px; width: 100%; }
 .freeText p { margin: 0; }
-.richText { background: var(--paper-soft); color: var(--ink); padding: 80px 0; }
 .richText :is(h2, h3, h4) { color: inherit; margin: 1.25em 0 .45em; }
 .richText :is(p, li, blockquote) { color: inherit; line-height: 1.75; }
 .richText blockquote { border-left: 4px solid var(--ember); margin-left: 0; padding-left: 22px; }
 .richText a { color: #8d3315; text-decoration-thickness: .12em; text-underline-offset: .16em; }
+.nestedSlot :is(.freeText, .richText) { margin: 10px 0; max-width: none; padding: 0; }
 
 /* Reusable image block */
 .imageBlock { background: var(--paper-soft); color: var(--ink); margin: 0 auto; padding: 34px clamp(22px, 4vw, 64px); }
@@ -1012,26 +1022,26 @@
 }
 
 /* Campaign-inspired visual builder sections */
-.nestedDropZone { border-radius: 10px; margin-top: 18px; padding: 10px; }
-.nestedDropZone[data-tone="light"] { background: color-mix(in srgb, var(--ink) 4%, transparent); color: var(--ink); }
-.nestedDropZone[data-tone="dark"] { background: color-mix(in srgb, var(--cream) 7%, transparent); color: var(--cream); }
-.nestedDropZoneLabel { align-items: center; display: flex; font: 800 .68rem/1.3 var(--font-geist-mono), monospace; gap: 7px; letter-spacing: .08em; margin: 0 0 8px; text-transform: uppercase; }
+.nestedDropZone { border: 2px dashed color-mix(in srgb, var(--ember) 58%, currentColor 22%); border-radius: 7px; margin-top: 18px; min-width: 0; padding: 34px 8px 8px; position: relative; }
+.nestedDropZone[data-purpose="bottom"] { margin-block: 22px 8px; }
+.nestedDropZone[data-tone="light"] { background: color-mix(in srgb, var(--ember) 7%, transparent); color: var(--ink); }
+.nestedDropZone[data-tone="dark"] { background: rgba(0, 0, 0, .22); border-color: rgba(255, 255, 255, .55); color: var(--cream); }
+.nestedDropZoneLabel { align-items: center; display: flex; font: 800 .68rem/1.1 var(--font-geist-sans), Arial, sans-serif; gap: 7px; left: 10px; letter-spacing: .01em; pointer-events: none; position: absolute; text-transform: none; top: 9px; }
 .nestedDropZoneLabel svg { flex: 0 0 auto; }
 .nestedDropZonePlus { border: 1px solid currentColor; border-radius: 50%; display: inline-block; flex: 0 0 auto; height: 15px; position: relative; width: 15px; }
 .nestedDropZonePlus::before,
 .nestedDropZonePlus::after { background: currentColor; content: ""; inset: 6px 3px auto; height: 1px; position: absolute; }
 .nestedDropZonePlus::after { inset: 3px auto 3px 6px; height: auto; width: 1px; }
 .nestedSlot { display: block; }
-.nestedDropZone .nestedSlot { background: color-mix(in srgb, currentColor 3%, transparent); border: 1px dashed color-mix(in srgb, var(--ember), transparent 35%); min-height: var(--min-empty-height, 96px); padding: 12px; }
-.nestedDropZone[data-tone="dark"] .nestedSlot { border-color: color-mix(in srgb, var(--cream) 45%, transparent); }
+.nestedDropZone .nestedSlot { background: transparent; min-height: var(--min-empty-height, 96px); padding: 0; }
 .richInline { display: block; }
 .richInline > :global([class*="RichTextEditor"]) { color: inherit; font: inherit; text-align: inherit; width: 100%; }
 .richInline :global(.rich-text) { color: inherit; font-family: inherit; text-align: inherit; width: 100%; }
-.richInline:is([data-rich-as], [data-rich-default-as]) :is(h1, h2, h3, h4, p) { color: inherit; font-family: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; text-align: inherit; }
-.richInline:is([data-rich-as="h1"], [data-rich-default-as="h1"]) { font-size: clamp(2.5rem, 7vw, 6rem); font-weight: 800; line-height: .95; }
-.richInline:is([data-rich-as="h2"], [data-rich-default-as="h2"]) { font-size: clamp(2rem, 5vw, 4.5rem); font-weight: 750; line-height: 1.05; }
-.richInline:is([data-rich-as="h3"], [data-rich-default-as="h3"]) { font-size: clamp(1.35rem, 2.5vw, 2rem); font-weight: 750; line-height: 1.15; }
-.richInline:is([data-rich-as="h4"], [data-rich-default-as="h4"]) { font-size: 1.25rem; font-weight: 750; line-height: 1.2; }
+.richInline[data-rich-content] :is(h1, h2, h3, h4, p, ul, ol, blockquote) { color: inherit; text-align: inherit; }
+.richInline:not([data-rich-content]):is([data-rich-as="h1"], [data-rich-default-as="h1"]) { font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.75rem, 6vw, 5.5rem); font-weight: 500; letter-spacing: -.05em; line-height: .96; }
+.richInline:not([data-rich-content]):is([data-rich-as="h2"], [data-rich-default-as="h2"]) { font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.15rem, 4.2vw, 4.15rem); font-weight: 500; letter-spacing: -.045em; line-height: .98; }
+.richInline:not([data-rich-content]):is([data-rich-as="h3"], [data-rich-default-as="h3"]) { font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.45rem, 2.5vw, 2.25rem); font-weight: 500; letter-spacing: -.025em; line-height: 1.05; }
+.richInline:not([data-rich-content]):is([data-rich-as="h4"], [data-rich-default-as="h4"]) { font-family: Georgia, "Times New Roman", serif; font-size: 1.25rem; font-weight: 500; line-height: 1.2; }
 .richInline:not([data-rich-content]) :is(h1, h2, h3, h4, p, ul, ol, blockquote) { margin-block: .35em; }
 .richInline :is(ul, ol) { padding-inline-start: 1.35em; }
 .richTextColorControl { align-items: center; display: inline-flex; gap: 4px; min-height: 28px; padding: 0 2px; }
@@ -1049,6 +1059,12 @@
 .themeColorField button b { font-size: 11px; line-height: 1.2; }
 .themeColorField > label { align-items: center; display: flex; font-size: 11px; font-weight: 700; gap: 8px; }
 .themeColorField > label input { height: 30px; width: 42px; }
+.bottomElementsField { align-items: flex-start; background: #f7f9fc; border: 1px solid #cbd5e1; border-radius: 7px; color: #172033; cursor: pointer; display: flex; gap: 10px; padding: 11px; }
+.bottomElementsField[data-enabled="true"] { background: #effaf6; border-color: #69aa92; }
+.bottomElementsField input { flex: 0 0 auto; height: 17px; margin: 1px 0 0; width: 17px; }
+.bottomElementsField > span { display: grid; gap: 3px; }
+.bottomElementsField strong { font-size: 12px; line-height: 1.25; }
+.bottomElementsField small { color: #52606d; font-size: 11px; line-height: 1.4; }
 .richTextHeadingSelect { align-items: center; display: inline-flex; gap: 4px; border: 1px solid #cbd1d8; border-radius: 5px; padding-left: 7px; background: #fff; color: #171b20; }
 .richTextHeadingSelect svg { color: #52606d; height: 14px; width: 14px; }
 .richTextHeadingSelect select { min-height: 30px; border: 0; background: transparent; color: inherit; font: inherit; font-size: 12px; padding: 0 8px 0 2px; }
@@ -1164,21 +1180,21 @@
 .contentRow[data-layout="rightWide"] > .shell > div { grid-template-columns: 1fr 2fr; }
 .contentRow article { background: #fffaf1; border: 1px solid color-mix(in srgb, var(--ink), transparent 78%); min-height: 150px; padding: 20px; }
 .contentRow article > span { color: #746c5f; display: block; font: 800 .64rem/1.4 var(--font-geist-mono), monospace; letter-spacing: .08em; text-transform: uppercase; }
-.buttonRow { align-items: center; display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0; }
+.buttonRow { align-items: center; display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
 .buttonRow[data-align="center"] { justify-content: center; }
 .buttonRow[data-align="right"] { justify-content: flex-end; }
 .navigation { align-items: center; background: var(--night-soft); color: var(--cream); display: flex; gap: 28px; justify-content: space-between; padding: 18px clamp(20px, 5vw, 72px); }
 .navigation > div, .followLinks > div { display: flex; flex-wrap: wrap; gap: 18px; }
 .navigation a, .followLinks a { color: inherit; text-decoration: none; }
-.headline { margin: 36px auto 18px; max-width: 1100px; padding: 0 24px; }
-.divider { border: 0; border-top: 1px solid; margin: 32px auto; max-width: 1100px; }
+.headline { margin: 18px auto 10px; max-width: 1100px; padding: 0 24px; }
+.divider { border: 0; border-top: 1px solid; margin: 20px auto; max-width: 1100px; }
 .followLinks { align-items: center; display: flex; gap: 24px; justify-content: space-between; margin: 28px auto; max-width: 1100px; padding: 0 24px; }
 .bulletedList { margin: 24px auto; max-width: 760px; padding-inline-start: 44px; }
 .inlineForm { background: #fffaf1; border: 1px solid color-mix(in srgb, var(--ink), transparent 78%); display: grid; gap: 12px; margin: 28px auto; max-width: 760px; padding: 28px; }
 .inlineForm h2, .inlineForm p { margin: 0; }
 .inlineForm label { display: grid; font-weight: 700; gap: 6px; }
 .inlineForm input { border: 1px solid #c8c0b3; min-height: 40px; padding: 8px 10px; }
-.imageCaption, .video { margin: 28px auto; max-width: 1100px; }
+.imageCaption, .video { margin: 16px auto; max-width: 1100px; }
 .imageCaption img, .video video { display: block; max-height: 620px; object-fit: contain; width: 100%; }
 .imageCaption > div, .video > div { align-items: center; background: #eee8dc; display: flex; min-height: 180px; justify-content: center; }
 .imageCaption figcaption, .video figcaption { color: #5b554c; font-size: .85rem; padding-top: 8px; }

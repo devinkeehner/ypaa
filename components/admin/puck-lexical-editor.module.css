@@ -34,15 +34,7 @@
 .field[data-compact="true"] .content { padding: 10px 11px; }
 .field[data-compact="true"] .placeholder { left: 11px; top: 10px; }
 :where(.field[data-surface="canvas"] .paragraph, .field[data-surface="canvas"] .quote) { color: inherit; font: inherit; margin: 0; }
-.field[data-surface="canvas"] .h1,
-.field[data-surface="canvas"] .h2,
-.field[data-surface="canvas"] .h3,
-.field[data-surface="canvas"] .h4,
 .field[data-surface="canvas"] .quote { color: inherit; font-family: inherit; letter-spacing: inherit; text-transform: inherit; }
-.field[data-surface="canvas"] .h1 { font-size: clamp(2.5rem, 6vw, 4rem); }
-.field[data-surface="canvas"] .h2 { font-size: clamp(2rem, 5vw, 3.25rem); }
-.field[data-surface="canvas"] .h3 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
-.field[data-surface="canvas"] .h4 { font-size: clamp(1.25rem, 3vw, 2rem); }
 .content { min-height: 180px; padding: 14px; outline: none; font-size: 14px; line-height: 1.6; }
 .placeholder { position: absolute; top: 14px; left: 14px; color: #7a838e; pointer-events: none; }
 .paragraph { margin: 0 0 .8em; }
