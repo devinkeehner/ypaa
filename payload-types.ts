@@ -810,9 +810,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             accessibleContext?: string | null;
-                            style?: ('solid' | 'outline') | null;
+                            style?: ('solid' | 'outline' | 'text') | null;
                             backgroundColor?: string | null;
                             textColor?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
                             puckRichText?:
                               | {
                                   [k: string]: unknown;
@@ -1621,9 +1622,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             accessibleContext?: string | null;
-                            style?: ('solid' | 'outline') | null;
+                            style?: ('solid' | 'outline' | 'text') | null;
                             backgroundColor?: string | null;
                             textColor?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
                             puckRichText?:
                               | {
                                   [k: string]: unknown;
@@ -2389,9 +2391,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             accessibleContext?: string | null;
-                            style?: ('solid' | 'outline') | null;
+                            style?: ('solid' | 'outline' | 'text') | null;
                             backgroundColor?: string | null;
                             textColor?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
                             puckRichText?:
                               | {
                                   [k: string]: unknown;
@@ -3081,9 +3084,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             accessibleContext?: string | null;
-            style?: ('solid' | 'outline') | null;
+            style?: ('solid' | 'outline' | 'text') | null;
             backgroundColor?: string | null;
             textColor?: string | null;
+            alignment?: ('left' | 'center' | 'right') | null;
             puckRichText?:
               | {
                   [k: string]: unknown;
@@ -3279,9 +3283,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -3985,9 +3990,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -5293,9 +5299,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -5984,9 +5991,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -6809,9 +6817,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -7500,9 +7509,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -8260,9 +8270,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -8951,9 +8962,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -9709,9 +9721,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -10400,9 +10413,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -11167,9 +11181,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -11858,9 +11873,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -12619,9 +12635,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -13310,9 +13327,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -14068,9 +14086,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -14759,9 +14778,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -15518,9 +15538,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -16209,9 +16230,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -16972,9 +16994,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             accessibleContext?: string | null;
-                            style?: ('solid' | 'outline') | null;
+                            style?: ('solid' | 'outline' | 'text') | null;
                             backgroundColor?: string | null;
                             textColor?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
                             puckRichText?:
                               | {
                                   [k: string]: unknown;
@@ -17676,9 +17699,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -18367,9 +18391,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -19126,9 +19151,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -19817,9 +19843,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -20575,9 +20602,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -21266,9 +21294,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -22024,9 +22053,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -22715,9 +22745,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -23539,9 +23570,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -24230,9 +24262,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -24995,9 +25028,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             accessibleContext?: string | null;
-                            style?: ('solid' | 'outline') | null;
+                            style?: ('solid' | 'outline' | 'text') | null;
                             backgroundColor?: string | null;
                             textColor?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
                             puckRichText?:
                               | {
                                   [k: string]: unknown;
@@ -25770,9 +25804,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             accessibleContext?: string | null;
-                            style?: ('solid' | 'outline') | null;
+                            style?: ('solid' | 'outline' | 'text') | null;
                             backgroundColor?: string | null;
                             textColor?: string | null;
+                            alignment?: ('left' | 'center' | 'right') | null;
                             puckRichText?:
                               | {
                                   [k: string]: unknown;
@@ -26474,9 +26509,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -27165,9 +27201,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -27922,9 +27959,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -28613,9 +28651,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -29371,9 +29410,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -30062,9 +30102,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -30886,9 +30927,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -31577,9 +31619,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -32401,9 +32444,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -33092,9 +33136,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -33850,9 +33895,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -34541,9 +34587,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
-                      style?: ('solid' | 'outline') | null;
+                      style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
+                      alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
                             [k: string]: unknown;
@@ -36195,6 +36242,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 style?: T;
                                 backgroundColor?: T;
                                 textColor?: T;
+                                alignment?: T;
                                 puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
@@ -36645,6 +36693,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 style?: T;
                                 backgroundColor?: T;
                                 textColor?: T;
+                                alignment?: T;
                                 puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
@@ -37064,6 +37113,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 style?: T;
                                 backgroundColor?: T;
                                 textColor?: T;
+                                alignment?: T;
                                 puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
@@ -37441,6 +37491,7 @@ export interface PagesSelect<T extends boolean = true> {
               style?: T;
               backgroundColor?: T;
               textColor?: T;
+              alignment?: T;
               puckRichText?: T;
               id?: T;
               blockName?: T;
@@ -37534,6 +37585,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -37924,6 +37976,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -38669,6 +38722,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -39051,6 +39105,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -39519,6 +39574,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -39901,6 +39957,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -40328,6 +40385,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -40710,6 +40768,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -41135,6 +41194,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -41517,6 +41577,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -41951,6 +42012,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -42333,6 +42395,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -42761,6 +42824,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -43143,6 +43207,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -43568,6 +43633,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -43950,6 +44016,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -44376,6 +44443,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -44758,6 +44826,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -45189,6 +45258,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 style?: T;
                                 backgroundColor?: T;
                                 textColor?: T;
+                                alignment?: T;
                                 puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
@@ -45575,6 +45645,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -45957,6 +46028,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -46383,6 +46455,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -46765,6 +46838,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -47190,6 +47264,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -47572,6 +47647,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -47997,6 +48073,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -48379,6 +48456,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -48846,6 +48924,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -49228,6 +49307,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -49659,6 +49739,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 style?: T;
                                 backgroundColor?: T;
                                 textColor?: T;
+                                alignment?: T;
                                 puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
@@ -50093,6 +50174,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 style?: T;
                                 backgroundColor?: T;
                                 textColor?: T;
+                                alignment?: T;
                                 puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
@@ -50479,6 +50561,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -50861,6 +50944,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -51285,6 +51369,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -51667,6 +51752,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -52092,6 +52178,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -52474,6 +52561,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -52941,6 +53029,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -53323,6 +53412,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -53790,6 +53880,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -54172,6 +54263,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -54597,6 +54689,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -54979,6 +55072,7 @@ export interface PagesSelect<T extends boolean = true> {
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
+                          alignment?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;

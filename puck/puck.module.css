@@ -113,6 +113,11 @@
 .button:hover { filter: brightness(1.08); transform: translateY(-2px); }
 .button[data-outline="true"] { background: transparent; border-color: var(--button-border, currentColor); color: var(--button-text, inherit); }
 .button[data-outline="true"]:hover { background: var(--button-background, currentColor); color: var(--button-text, var(--night)); }
+.button[data-appearance="text"] { background: transparent; border-color: transparent; color: var(--button-text, var(--button-background, currentColor)); min-width: 0; padding-inline: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.button[data-appearance="text"]:hover { filter: none; text-decoration-thickness: 2px; transform: none; }
+.buttonElement { display: flex; margin: 12px 0; }
+.buttonElement[data-align="center"] { justify-content: center; }
+.buttonElement[data-align="right"] { justify-content: flex-end; }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0 42px; }
 
 /* Hero */

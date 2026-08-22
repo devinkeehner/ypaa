@@ -127,7 +127,7 @@ type CTA = Base & { eyebrow: string; heading: string; body: string; primaryLabel
 type ImageBlock = Base & { image?: MediaValue | null; caption: string; aspectRatio: "natural" | "landscape" | "portrait" | "square"; width: "full" | "wide" | "content" };
 type FreeText = Base & { text: string; fontSize: string; color: string; fontWeight: string; alignment: "left" | "center" | "right" };
 type TextBlockProps = Base & { text: string; fontSize: string; color: string; alignment: "left" | "center" | "right" };
-type ButtonBlockProps = Base & { label: string; url: string; accessibleContext: string; style: "solid" | "outline"; backgroundColor: string; textColor: string };
+type ButtonBlockProps = Base & { label: string; url: string; accessibleContext: string; style: "solid" | "outline" | "text"; backgroundColor: string; textColor: string; alignment: "left" | "center" | "right" };
 type CountdownBlockProps = Base & { target: string; label: string };
 type RichTextSection = Base & { content: unknown; fontSize: string; color: string; fontWeight: string; alignment: "left" | "center" | "right" };
 type ProgramSchedule = Base & { heading: string; introduction: string };
@@ -632,17 +632,25 @@ function RichCopy({ value, as: Tag = "p", className, field, path, props }: { val
   return <RichValue as={Tag} className={className} field={field} path={path} props={props} value={value} />;
 }
 
-function buttonColorStyle(backgroundColor?: string, textColor?: string): CSSProperties | undefined {
-  if (!backgroundColor && !textColor) return undefined;
+function buttonColorStyle(backgroundColor?: string, textColor?: string, appearance: "solid" | "outline" | "text" = "solid"): CSSProperties | undefined {
+  const accentColor = backgroundColor && backgroundColor !== "inherit" ? backgroundColor : undefined;
+  // Outline and text buttons use the accent for their label by default. Older
+  // saved buttons used the solid-button light label value, so treat that as
+  // automatic rather than rendering an unreadable light outline on a light page.
+  const labelColor = appearance === "solid"
+    ? textColor || DEFAULT_BUTTON_TEXT
+    : textColor && textColor !== DEFAULT_BUTTON_TEXT ? textColor : accentColor;
+  if (!accentColor && !labelColor) return undefined;
   return {
-    ...(backgroundColor ? { "--button-background": backgroundColor, "--button-border": backgroundColor } : {}),
-    ...(textColor ? { "--button-text": textColor } : {}),
+    ...(accentColor ? { "--button-background": accentColor, "--button-border": accentColor } : {}),
+    ...(labelColor ? { "--button-text": labelColor } : {}),
   } as CSSProperties;
 }
 
-function Button({ accessibleLabel, backgroundColor, href, children, id, outline = false, textColor }: { accessibleLabel?: string; backgroundColor?: string; href: string; children: ReactNode; id?: string; outline?: boolean; textColor?: string }) {
-  const style = buttonColorStyle(backgroundColor, textColor);
-  return <a aria-label={accessibleLabel} className={styles.button} data-outline={outline} href={href || "#"} id={id} style={style}>{children}</a>;
+function Button({ accessibleLabel, appearance, backgroundColor, href, children, id, outline = false, textColor }: { accessibleLabel?: string; appearance?: "solid" | "outline" | "text"; backgroundColor?: string; href: string; children: ReactNode; id?: string; outline?: boolean; textColor?: string }) {
+  const resolvedAppearance = appearance || (outline ? "outline" : "solid");
+  const style = buttonColorStyle(backgroundColor, textColor, resolvedAppearance);
+  return <a aria-label={accessibleLabel} className={styles.button} data-appearance={resolvedAppearance} data-outline={resolvedAppearance === "outline"} href={href || "#"} id={id} style={style}>{children}</a>;
 }
 
 function CTMeetingScheduleBlock(props: CTMeetingSchedule) {
@@ -1134,7 +1142,7 @@ export const puckConfig: Config<Components> = {
     },
     Navigation: { label: "Navigation", defaultProps: { brand: "NECYPAA XXXVI", links: [{ label: "About", url: "#about", accessibleContext: "" }, { label: "Register", url: "#register", accessibleContext: "" }] }, fields: { brand: text("Brand"), links: { type: "array", label: "Links", arrayFields: { label: text("Label"), url: plainText("URL"), accessibleContext: accessibleContextField() } } }, render: (props) => <nav className={styles.navigation} id={props.id}><Editable as="strong" field="brand" props={props}>{props.brand}</Editable><div>{props.links.map((link, index) => <a aria-label={actionAccessibleName(link.label, link.accessibleContext)} href={link.url || "#"} key={`${link.label}-${index}`}><RichCopy as="span" path={`links[${index}].label`} field="label" value={link.label} /></a>)}</div></nav> },
     Text: { label: "Text", defaultProps: { text: "Add text", fontSize: "1rem", color: "inherit", alignment: "left" }, fields: { text: area("Text"), fontSize: plainText("Font size"), color: themeColorField("Color"), alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => <div className={styles.freeText} id={props.id} style={{ color: props.color, fontSize: props.fontSize, textAlign: props.alignment }}><Editable as="p" field="text" props={props}>{props.text}</Editable></div> },
-    Button: { label: "Button", defaultProps: { label: "Learn more", url: "#", accessibleContext: "", style: "solid", backgroundColor: DEFAULT_BUTTON_BACKGROUND, textColor: DEFAULT_BUTTON_TEXT }, fields: { label: text("Label"), url: plainText("URL"), accessibleContext: accessibleContextField(), style: { type: "select", label: "Style", options: [{ label: "Solid", value: "solid" }, { label: "Outline", value: "outline" }] }, backgroundColor: themeColorField("Button color"), textColor: themeColorField("Button text") }, render: (props) => <Button accessibleLabel={actionAccessibleName(props.label, props.accessibleContext)} backgroundColor={props.backgroundColor} href={props.url} id={props.id} outline={props.style === "outline"} textColor={props.textColor}><Editable field="label" props={props}>{props.label}</Editable></Button> },
+    Button: { label: "Button", defaultProps: { label: "Learn more", url: "#", accessibleContext: "", style: "solid", backgroundColor: DEFAULT_BUTTON_BACKGROUND, textColor: "", alignment: "left" }, fields: { label: text("Label"), url: plainText("URL"), accessibleContext: accessibleContextField(), style: { type: "select", label: "Appearance", options: [{ label: "Solid — filled button", value: "solid" }, { label: "Outline — border only", value: "outline" }, { label: "Text link — no box", value: "text" }] }, backgroundColor: themeColorField("Accent / border color"), textColor: themeColorField("Label color (optional)"), alignment: { type: "select", label: "Justify", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => <div className={styles.buttonElement} data-align={props.alignment} id={props.id}><Button accessibleLabel={actionAccessibleName(props.label, props.accessibleContext)} appearance={props.style} backgroundColor={props.backgroundColor} href={props.url} textColor={props.textColor}><Editable field="label" props={props}>{props.label}</Editable></Button></div> },
     Icon: {
       label: "Icon",
       defaultProps: { icon: "check", label: "Helpful icon", showLabel: false, size: "medium", color: "var(--tenant-light-text, #F4E8D3)", backgroundColor: "var(--tenant-background, #0C0D0E)", shape: "circle", alignment: "left" },

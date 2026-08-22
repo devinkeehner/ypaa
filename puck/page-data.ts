@@ -136,6 +136,10 @@ function cloneDefaultData(): NECYPAAData {
 
 function normalizeProps(type: string, value: unknown): Record<string, unknown> {
   const props = isRecord(value) ? { ...value } : {};
+  if (type === "Button") {
+    if (props.style !== "solid" && props.style !== "outline" && props.style !== "text") props.style = "solid";
+    if (typeof props.alignment !== "string") props.alignment = "left";
+  }
   const defaultVerticalPadding = CAMPAIGN_VERTICAL_PADDING_DEFAULTS.get(type)
     ?? (COZY_VERTICAL_PADDING_TYPES.has(type) ? "cozy" : undefined);
 

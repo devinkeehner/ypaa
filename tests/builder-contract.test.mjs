@@ -54,7 +54,11 @@ test("width, blank-line, tab-editor, Posts, and MCP contracts stay wired", async
   assert.match(styles, /data-presentation="fullBleed"[^\n]*max-width:\s*none/);
   assert.match(styles, /p:empty[^\n]*min-height:/);
   assert.match(styles, /campaignAltTabs\[data-editing="true"\]/);
-  assert.match(config, /backgroundColor:\s*themeColorField\("Button color"\)/);
+  assert.match(config, /backgroundColor:\s*themeColorField\("Accent \/ border color"\)/);
+  assert.match(config, /label: "Justify"/);
+  assert.match(config, /value: "text"/);
+  assert.match(styles, /buttonElement\[data-align="center"\]/);
+  assert.match(styles, /button\[data-appearance="text"\]/);
   assert.match(posts, /type:\s*"richText"/);
   assert.match(payloadConfig, /mcpPlugin\(\{/);
   assert.match(payloadConfig, /collection[s]?:[\s\S]*posts:/);
