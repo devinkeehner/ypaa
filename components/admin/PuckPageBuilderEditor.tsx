@@ -15,7 +15,7 @@ import type { TenantTheme } from "@/components/site/TenantThemeProvider";
 import styles from "./puck-builder.module.css";
 import { usePuck } from "./puck-context";
 
-type ThemeColors = Omit<TenantTheme, "logoAlt" | "logoUrl">;
+type ThemeColors = Pick<TenantTheme, "primary" | "secondary" | "accent" | "background" | "surface" | "lightBackground" | "darkText" | "lightText">;
 const THEME_FIELDS: Array<{ key: keyof ThemeColors; label: string }> = [
   { key: "primary", label: "Primary" },
   { key: "secondary", label: "Secondary" },

@@ -35394,6 +35394,31 @@ export interface Tenant {
    */
   logo?: (string | null) | Media;
   logoAlt?: string | null;
+  /**
+   * Links shown in the global header. Button-style items appear as header actions.
+   */
+  headerNavigation?:
+    | {
+        label: string;
+        url: string;
+        style?: ('link' | 'button') | null;
+        newTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  footer?: {
+    heading?: string | null;
+    text?: string | null;
+    links?:
+      | {
+          label: string;
+          url: string;
+          newTab?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
+    legal?: string | null;
+  };
   theme: {
     /**
      * Choose a color or paste an exact six-digit hex code.
@@ -55511,6 +55536,30 @@ export interface TenantsSelect<T extends boolean = true> {
   name?: T;
   logo?: T;
   logoAlt?: T;
+  headerNavigation?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        style?: T;
+        newTab?: T;
+        id?: T;
+      };
+  footer?:
+    | T
+    | {
+        heading?: T;
+        text?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+              newTab?: T;
+              id?: T;
+            };
+        legal?: T;
+      };
   theme?:
     | T
     | {

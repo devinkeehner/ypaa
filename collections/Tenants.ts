@@ -41,6 +41,45 @@ export const Tenants: CollectionConfig = {
     },
     { name: "logoAlt", type: "text", defaultValue: "NECYPAA XXXVI" },
     {
+      name: "headerNavigation",
+      label: "Header navigation",
+      type: "array",
+      admin: { description: "Links shown in the global header. Button-style items appear as header actions." },
+      fields: [
+        { name: "label", type: "text", required: true },
+        { name: "url", type: "text", required: true },
+        {
+          name: "style",
+          type: "select",
+          defaultValue: "link",
+          options: [
+            { label: "Navigation link", value: "link" },
+            { label: "Button / action", value: "button" },
+          ],
+        },
+        { name: "newTab", label: "Open in a new tab", type: "checkbox", defaultValue: false },
+      ],
+    },
+    {
+      name: "footer",
+      type: "group",
+      label: "Global footer",
+      fields: [
+        { name: "heading", type: "text", defaultValue: "See you in Hartford" },
+        { name: "text", type: "textarea", defaultValue: "The 36th Northeast Convention of Young People in Alcoholics Anonymous." },
+        {
+          name: "links",
+          type: "array",
+          fields: [
+            { name: "label", type: "text", required: true },
+            { name: "url", type: "text", required: true },
+            { name: "newTab", label: "Open in a new tab", type: "checkbox", defaultValue: false },
+          ],
+        },
+        { name: "legal", label: "Copyright / legal text", type: "text", defaultValue: "NECYPAA XXXVI · Northeast Convention of Young People in Alcoholics Anonymous" },
+      ],
+    },
+    {
       type: "group",
       name: "theme",
       label: "Theme colors",

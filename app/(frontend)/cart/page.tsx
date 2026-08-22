@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-
-import { CartPage } from "@/components/site/CartPage";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Cart | NECYPAA XXXVI",
@@ -8,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function Cart() {
-  return <CartPage />;
+  notFound();
 }

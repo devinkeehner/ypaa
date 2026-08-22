@@ -3,7 +3,7 @@ import config from "@payload-config";
 import { getPayload } from "payload";
 
 import { FrontendStyles } from "./frontend-styles";
-import { defaultTenantTheme, TenantThemeProvider, type TenantTheme } from "@/components/site/TenantThemeProvider";
+import { defaultTenantTheme, TenantThemeProvider, type TenantTheme, defaultHeaderNavigation, defaultFooter } from "@/components/site/TenantThemeProvider";
 
 export const metadata: Metadata = {
   title: "NECYPAA XXXVI | Hartford, Connecticut",
@@ -47,6 +47,18 @@ export default async function FrontendLayout({
         lightBackground: typeof theme?.lightBackground === "string" ? theme.lightBackground : defaultTenantTheme.lightBackground,
         darkText: typeof theme?.darkText === "string" ? theme.darkText : defaultTenantTheme.darkText,
         lightText: typeof theme?.lightText === "string" ? theme.lightText : defaultTenantTheme.lightText,
+        headerNavigation: Array.isArray(settings.headerNavigation) && settings.headerNavigation.length ? settings.headerNavigation.map((item) => ({
+          label: typeof item?.label === "string" ? item.label : "Link",
+          url: typeof item?.url === "string" ? item.url : "/",
+          style: item?.style === "button" ? "button" : "link",
+          newTab: item?.newTab === true,
+        })) : defaultHeaderNavigation,
+        footer: {
+          heading: typeof (settings.footer as Record<string, unknown> | undefined)?.heading === "string" ? (settings.footer as Record<string, unknown>).heading as string : defaultFooter.heading,
+          text: typeof (settings.footer as Record<string, unknown> | undefined)?.text === "string" ? (settings.footer as Record<string, unknown>).text as string : defaultFooter.text,
+          links: Array.isArray((settings.footer as Record<string, unknown> | undefined)?.links) ? ((settings.footer as Record<string, unknown>).links as unknown[]).filter((item): item is Record<string, unknown> => Boolean(item && typeof item === "object")).map((item) => ({ label: typeof item.label === "string" ? item.label : "Link", url: typeof item.url === "string" ? item.url : "/", newTab: item.newTab === true })) : defaultFooter.links,
+          legal: typeof (settings.footer as Record<string, unknown> | undefined)?.legal === "string" ? (settings.footer as Record<string, unknown>).legal as string : defaultFooter.legal,
+        },
       };
     }
   } catch {

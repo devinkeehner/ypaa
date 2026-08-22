@@ -13,6 +13,34 @@ export type TenantTheme = {
   lightBackground: string;
   darkText: string;
   lightText: string;
+  headerNavigation: HeaderNavigationItem[];
+  footer: FooterSettings;
+};
+
+export type HeaderNavigationItem = { label: string; url: string; style: "link" | "button"; newTab?: boolean };
+export type FooterLink = { label: string; url: string; newTab?: boolean };
+export type FooterSettings = { heading: string; text: string; links: FooterLink[]; legal: string };
+
+export const defaultHeaderNavigation: HeaderNavigationItem[] = [
+  { label: "About", url: "/#about", style: "link" },
+  { label: "Meetings", url: "/#business-meeting", style: "link" },
+  { label: "Events", url: "/#events", style: "link" },
+  { label: "Program", url: "/program", style: "link" },
+  { label: "YPAA near you", url: "/#ypaa", style: "link" },
+  { label: "Merch", url: "/merch", style: "link" },
+  { label: "Register", url: "/register", style: "button" },
+  { label: "Book a hotel room", url: "https://www.necypaact.com/hotel", style: "button", newTab: true },
+];
+
+export const defaultFooter: FooterSettings = {
+  heading: "See you in Hartford",
+  text: "The 36th Northeast Convention of Young People in Alcoholics Anonymous.",
+  links: [
+    { label: "Register", url: "/register" },
+    { label: "Program", url: "/program" },
+    { label: "News & updates", url: "/blog" },
+  ],
+  legal: "NECYPAA XXXVI · Northeast Convention of Young People in Alcoholics Anonymous",
 };
 
 export const defaultTenantTheme: TenantTheme = {
@@ -25,6 +53,8 @@ export const defaultTenantTheme: TenantTheme = {
   lightBackground: "#F5EEE1",
   darkText: "#171614",
   lightText: "#F4E8D3",
+  headerNavigation: defaultHeaderNavigation,
+  footer: defaultFooter,
 };
 
 const TenantContext = createContext<TenantTheme>(defaultTenantTheme);
