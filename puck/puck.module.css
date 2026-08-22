@@ -354,8 +354,9 @@
   pointer-events: none;
   position: absolute;
 }
-.meeting { align-items: start; display: grid; gap: clamp(48px, 8vw, 110px); grid-template-columns: minmax(0, .8fr) minmax(380px, 1.2fr); }
-.meeting .body { color: var(--cream-muted); }
+.meeting { align-items: start; display: grid; gap: clamp(52px, 7vw, 96px); grid-template-columns: minmax(0, .82fr) minmax(420px, 1.18fr); }
+.meeting > div:first-child { max-width: 620px; }
+.meeting .body { color: var(--cream-muted); max-width: 610px; }
 .meeting dl { display: grid; gap: 0; margin: 32px 0; max-width: 560px; }
 .meeting dl div { border-bottom: 1px solid var(--line-dark); display: grid; gap: 18px; grid-template-columns: 76px 1fr; padding: 12px 0; }
 .meeting dt { color: var(--ember-bright); font: 800 .66rem/1.4 var(--font-geist-mono), monospace; letter-spacing: .1em; text-transform: uppercase; }
@@ -367,8 +368,12 @@
 }
 .dates > strong { color: var(--ember-bright); display: block; font: 800 .72rem/1.2 var(--font-geist-mono), monospace; letter-spacing: .14em; margin-bottom: 20px; text-transform: uppercase; }
 .dates ul { list-style: none; margin: 0; padding: 0; }
-.dates li { border-top: 1px solid color-mix(in srgb, var(--gold), transparent 48%); display: grid; gap: 18px; grid-template-columns: 88px 1fr; line-height: 1.45; padding: 18px 0; }
+.dates li { border-top: 1px solid color-mix(in srgb, var(--gold), transparent 48%); display: grid; gap: clamp(22px, 2.4vw, 36px); grid-template-columns: minmax(100px, .28fr) minmax(0, 1fr); line-height: 1.45; padding: 22px 0; }
 .dates li strong { color: var(--cream); font: 500 1.38rem/1.1 Georgia, "Times New Roman", serif; }
+.dateDetails { align-items: baseline; display: grid; gap: 16px; grid-template-columns: 18px minmax(0, 1fr); min-width: 0; }
+.dateDetails > :global(.rich-text),
+.dateDetails .richInline { min-width: 0; }
+.dateDetails .richInline :is(p, h1, h2, h3, h4) { margin: 0; }
 
 /* Events */
 .events {
@@ -596,7 +601,8 @@
   .artPlaceholder { aspect-ratio: 6 / 5; border-radius: 34% 7% 32% 8% / 10% 32% 8% 30%; }
   .meeting { gap: 54px; }
   .dates { padding: 34px 24px; }
-  .dates li { grid-template-columns: 74px 1fr; }
+  .dates li { gap: 18px; grid-template-columns: minmax(74px, .28fr) minmax(0, 1fr); }
+  .dateDetails { gap: 10px; grid-template-columns: 14px minmax(0, 1fr); }
   .upcoming { padding-top: 30px; }
   .flyer { margin: 0 auto; max-width: 420px; width: 100%; }
   .upcoming h3 { font-size: clamp(2.45rem, 13vw, 4rem); }
@@ -629,7 +635,7 @@
   .advisory::before { left: 18px; top: 20px; }
   .advisory h3,
   .advisory p { margin-left: 42px; }
-  .dates li { gap: 12px; grid-template-columns: 64px 1fr; }
+  .dates li { gap: 12px; grid-template-columns: 74px minmax(0, 1fr); }
   .archive > div { grid-template-columns: repeat(4, minmax(205px, 82vw)); }
 }
 
@@ -1210,6 +1216,7 @@
 .navigation > div, .followLinks > div { display: flex; flex-wrap: wrap; gap: 18px; }
 .navigation a, .followLinks a { color: inherit; text-decoration: none; }
 .headline { margin: 18px auto 10px; max-width: 1100px; padding: 0 24px; }
+.nestedSlot .headline { margin-inline: 0; max-width: none; padding-inline: 0; width: 100%; }
 .divider { border: 0; border-top: 1px solid; margin: 20px auto; max-width: 1100px; }
 .followLinks { align-items: center; display: flex; gap: 24px; justify-content: space-between; margin: 28px auto; max-width: 1100px; padding: 0 24px; }
 .bulletedList { margin: 24px auto; max-width: 760px; padding-inline-start: 44px; }
