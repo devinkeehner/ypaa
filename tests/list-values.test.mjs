@@ -33,6 +33,10 @@ test("normalizes past events and meeting directory entries", () => {
     normalizeMeetings([{ title: "Connecticut YPAA", state: "Connecticut" }]),
     [{ name: "Connecticut YPAA", location: "Connecticut" }],
   );
+  assert.deepEqual(
+    normalizeMeetings([{ name: "Learn more", location: "Hartford", url: "/about", accessibleContext: "about the Hartford meeting" }]),
+    [{ name: "Learn more", location: "Hartford", url: "/about", accessibleContext: "about the Hartford meeting" }],
+  );
 });
 
 test("invalid editor-transformed and empty values are safe", () => {

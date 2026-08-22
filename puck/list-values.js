@@ -88,7 +88,8 @@ export function normalizeMeetings(value) {
       };
       const date = text(item, ["date", "when"]);
       const url = text(item, ["url", "href", "link"]);
-      return { ...richTextStorage(item), ...meeting, ...(date ? { date } : {}), ...(url ? { url } : {}) };
+      const accessibleContext = text(item, ["accessibleContext"]);
+      return { ...richTextStorage(item), ...meeting, ...(date ? { date } : {}), ...(url ? { url } : {}), ...(accessibleContext ? { accessibleContext } : {}) };
     })
     .filter((item) => item && (item.name || item.location));
 }
@@ -122,6 +123,7 @@ export function normalizeScheduleMeetings(value) {
         time: text(item, ["time"]),
         name: text(item, ["name", "title", "label"]),
         url: text(item, ["url", "href", "link"]),
+        accessibleContext: text(item, ["accessibleContext"]),
         location: text(item, ["location", "venue", "place"]),
         city: text(item, ["city", "town"]),
         attendance: text(item, ["attendance", "format"]),

@@ -1418,6 +1418,31 @@
 .builderSection h2 { margin: 0 0 24px; }
 .builderColumn { min-height: 120px; }
 
+/* Campaign Websites-style section rhythm. The data attribute is author-controlled
+   in Puck and Payload; keeping the values in rem also lets browser zoom scale the
+   spacing with the text. */
+.canvas [data-vertical-padding="none"], .publicCanvas [data-vertical-padding="none"] { --section-padding-block: 0rem; }
+.canvas [data-vertical-padding="compact"], .publicCanvas [data-vertical-padding="compact"] { --section-padding-block: 2.5rem; }
+.canvas [data-vertical-padding="cozy"], .publicCanvas [data-vertical-padding="cozy"] { --section-padding-block: 3.25rem; }
+.canvas [data-vertical-padding="comfortable"], .publicCanvas [data-vertical-padding="comfortable"] { --section-padding-block: 4.25rem; }
+.canvas [data-vertical-padding="spacious"], .publicCanvas [data-vertical-padding="spacious"] { --section-padding-block: 5.5rem; }
+.canvas [data-vertical-padding="viewport"], .publicCanvas [data-vertical-padding="viewport"] { --section-padding-block: 4.25rem; align-items: center; display: flex; min-height: 100svh; }
+
+.campaignAlt[data-vertical-padding],
+.contentRow[data-vertical-padding],
+.builderSection[data-vertical-padding],
+.issuesSection[data-vertical-padding],
+.issueCards[data-vertical-padding],
+.quote[data-vertical-padding],
+.resultsStats[data-vertical-padding],
+.supporterLogos[data-vertical-padding],
+.actionTabs[data-vertical-padding],
+.mediaGallery[data-vertical-padding] { padding-block: var(--section-padding-block); }
+
+.publicCanvas .campaignAlt[data-vertical-padding] { padding-block: var(--section-padding-block); }
+.canvas [data-vertical-padding="viewport"] > .shell,
+.publicCanvas [data-vertical-padding="viewport"] > .shell { width: 100%; }
+
 @media (max-width: 760px) {
   .issuesGrid,
   .issueCardGrid,

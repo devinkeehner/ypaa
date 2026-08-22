@@ -78,6 +78,30 @@ const NESTED_ZONES: Partial<Record<string, "cards" | "columns" | "tabs">> = {
   ...Object.fromEntries(campaignAltDefinitions.flatMap((definition) => definition.nestedCollection ? [[definition.type, definition.nestedCollection]] : [])),
 };
 const DIRECT_NESTED_TYPES = new Set(["Section", "Column"]);
+const COZY_VERTICAL_PADDING_TYPES = new Set([
+  "Section",
+  "ContentRow",
+  "Row",
+  "RowOneColumn",
+  "RowTwoColumns",
+  "RowLeftWide",
+  "RowRightWide",
+  "RowThreeColumns",
+  "RowFourColumns",
+  "IssuesSection",
+  "IssueCards",
+  "QuoteBlock",
+  "ResultsStats",
+  "SupporterLogos",
+  "ActionTabs",
+  "MediaGallery",
+]);
+const CAMPAIGN_VERTICAL_PADDING_DEFAULTS = new Map(
+  campaignAltDefinitions.map((definition) => [
+    definition.type,
+    definition.palette === "elements" ? "none" : definition.type === "HeroAlt" ? "comfortable" : "cozy",
+  ] as const),
+);
 
 function payloadBlockType(type: string) {
   if (type.startsWith("Row")) return "ContentRow";
@@ -112,6 +136,14 @@ function cloneDefaultData(): NECYPAAData {
 
 function normalizeProps(type: string, value: unknown): Record<string, unknown> {
   const props = isRecord(value) ? { ...value } : {};
+  const defaultVerticalPadding = CAMPAIGN_VERTICAL_PADDING_DEFAULTS.get(type)
+    ?? (COZY_VERTICAL_PADDING_TYPES.has(type) ? "cozy" : undefined);
+
+  // Keep the first server render and Puck's client-side default merge identical
+  // for pages created before section spacing became an explicit field.
+  if (defaultVerticalPadding && typeof props.verticalPadding !== "string") {
+    props.verticalPadding = defaultVerticalPadding;
+  }
 
   if (["ContentRow", "Row", "RowOneColumn", "RowTwoColumns", "RowLeftWide", "RowRightWide", "RowThreeColumns", "RowFourColumns"].includes(type)) {
     const layout = typeof props.layout === "string"

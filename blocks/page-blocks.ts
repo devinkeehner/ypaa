@@ -25,6 +25,25 @@ const textStyles: Field = {
   admin: { hidden: true },
 };
 
+const ACCESSIBLE_CONTEXT_DESCRIPTION = "Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.";
+
+function accessibleContextField(name = "accessibleContext"): Field {
+  return { name, type: "text", admin: { description: ACCESSIBLE_CONTEXT_DESCRIPTION } };
+}
+
+const verticalPaddingOptions = [
+  { label: "None", value: "none" },
+  { label: "Compact", value: "compact" },
+  { label: "Cozy", value: "cozy" },
+  { label: "Comfortable", value: "comfortable" },
+  { label: "Spacious", value: "spacious" },
+  { label: "Full viewport", value: "viewport" },
+];
+
+function verticalPaddingField(defaultValue = "cozy"): Field {
+  return { name: "verticalPadding", type: "select", defaultValue, options: verticalPaddingOptions };
+}
+
 const richTextEditor = lexicalEditor({
   features: [
     ParagraphFeature(),
@@ -56,8 +75,10 @@ export const HeroCountdownBlock: Block = {
     { name: "countdownTarget", type: "text", admin: { description: "ISO date and time, including timezone." } },
     { name: "registerLabel", type: "text" },
     { name: "registerUrl", type: "text" },
+    accessibleContextField("registerAccessibleContext"),
     { name: "hotelLabel", type: "text" },
     { name: "hotelUrl", type: "text" },
+    accessibleContextField("hotelAccessibleContext"),
     {
       name: "foregroundImage",
       type: "upload",
@@ -122,6 +143,7 @@ export const MeetingInfoBlock: Block = {
     { name: "location", type: "text" },
     { name: "actionLabel", type: "text" },
     { name: "actionUrl", type: "text" },
+    accessibleContextField("actionAccessibleContext"),
     {
       name: "importantDates",
       type: "array",
@@ -188,6 +210,7 @@ export const MeetingDirectoryBlock: Block = {
         { name: "location", type: "text" },
         { name: "date", type: "text" },
         { name: "url", type: "text" },
+        accessibleContextField(),
       ],
     },
     textStyles,
@@ -210,6 +233,7 @@ export const CTMeetingScheduleBlock: Block = {
         { name: "time", type: "text" },
         { name: "name", type: "text" },
         { name: "url", type: "text" },
+        accessibleContextField(),
         { name: "location", type: "text" },
         { name: "city", type: "text" },
         { name: "attendance", type: "text" },
@@ -230,8 +254,10 @@ export const CallToActionBlock: Block = {
     { name: "body", type: "textarea" },
     { name: "primaryLabel", type: "text" },
     { name: "primaryUrl", type: "text" },
+    accessibleContextField("primaryAccessibleContext"),
     { name: "secondaryLabel", type: "text" },
     { name: "secondaryUrl", type: "text" },
+    accessibleContextField("secondaryAccessibleContext"),
     { name: "image", type: "upload", relationTo: "media" },
     textStyles,
   ],
@@ -327,22 +353,22 @@ export const ProgramScheduleBlock: Block = {
 };
 
 export const TextBlock: Block = { slug: "Text", labels: { singular: "Text", plural: "Text blocks" }, admin: { group: "Flexible content" }, fields: [{ name: "text", type: "textarea" }, { name: "fontSize", type: "text", defaultValue: "1rem" }, { name: "color", type: "text", defaultValue: "inherit" }, { name: "alignment", type: "select", defaultValue: "left", options: ["left", "center", "right"] }] };
-export const ButtonBlock: Block = { slug: "Button", labels: { singular: "Button", plural: "Buttons" }, admin: { group: "Flexible content" }, fields: [{ name: "label", type: "text" }, { name: "url", type: "text" }, { name: "style", type: "select", defaultValue: "solid", options: ["solid", "outline"] }, { name: "backgroundColor", type: "text", defaultValue: "var(--tenant-primary, #E85E27)" }, { name: "textColor", type: "text", defaultValue: "var(--tenant-light-text, #F4E8D3)" }] };
+export const ButtonBlock: Block = { slug: "Button", labels: { singular: "Button", plural: "Buttons" }, admin: { group: "Flexible content" }, fields: [{ name: "label", type: "text" }, { name: "url", type: "text" }, accessibleContextField(), { name: "style", type: "select", defaultValue: "solid", options: ["solid", "outline"] }, { name: "backgroundColor", type: "text", defaultValue: "var(--tenant-primary, #E85E27)" }, { name: "textColor", type: "text", defaultValue: "var(--tenant-light-text, #F4E8D3)" }] };
 export const IconBlock: Block = { slug: "Icon", labels: { singular: "Icon", plural: "Icons" }, admin: { group: "Flexible content" }, fields: [{ name: "icon", type: "select", defaultValue: "check", options: ["award", "book", "briefcase", "calendar", "check", "clock", "dollar", "externalLink", "family", "handshake", "heart", "home", "info", "landmark", "lightbulb", "mail", "mapPin", "megaphone", "people", "phone", "shieldCheck", "sparkles", "star", "vote"] }, { name: "label", type: "text", defaultValue: "Helpful icon" }, { name: "showLabel", type: "checkbox", defaultValue: false }, { name: "size", type: "select", defaultValue: "medium", options: ["small", "medium", "large"] }, { name: "color", type: "text", defaultValue: "var(--tenant-light-text, #F4E8D3)" }, { name: "backgroundColor", type: "text", defaultValue: "var(--tenant-background, #0C0D0E)" }, { name: "shape", type: "select", defaultValue: "circle", options: ["none", "circle", "rounded", "square"] }, { name: "alignment", type: "select", defaultValue: "left", options: ["left", "center", "right"] }] };
 export const CountdownBlock: Block = { slug: "Countdown", labels: { singular: "Countdown", plural: "Countdowns" }, admin: { group: "Flexible content" }, fields: [{ name: "target", type: "text" }, { name: "label", type: "text" }] };
 
-const linkFields = [{ name: "label", type: "text" as const }, { name: "url", type: "text" as const }];
+const linkFields: Field[] = [{ name: "label", type: "text" }, { name: "url", type: "text" }, accessibleContextField()];
 
 export const NavigationBlock: Block = { slug: "Navigation", labels: { singular: "Navigation", plural: "Navigations" }, admin: { group: "Page blocks" }, fields: [{ name: "brand", type: "text" }, { name: "links", type: "array", fields: linkFields }] };
 export const HeadlineBlock: Block = { slug: "Headline", labels: { singular: "Headline", plural: "Headlines" }, admin: { group: "Page blocks" }, fields: [{ name: "text", type: "text" }, { name: "level", type: "select", defaultValue: "h2", options: ["h1", "h2", "h3"] }, { name: "alignment", type: "select", defaultValue: "left", options: ["left", "center", "right"] }] };
 export const DividerBlock: Block = { slug: "Divider", labels: { singular: "Divider", plural: "Dividers" }, admin: { group: "Page blocks" }, fields: [{ name: "style", type: "select", defaultValue: "solid", options: ["solid", "dashed", "dotted"] }, { name: "color", type: "text", defaultValue: "#d8d0c4" }] };
 export const FollowLinksBlock: Block = { slug: "FollowLinks", labels: { singular: "Follow links", plural: "Follow links" }, admin: { group: "Page blocks" }, fields: [{ name: "heading", type: "text", defaultValue: "Follow along" }, { name: "links", type: "array", fields: linkFields }] };
 export const BulletedListBlock: Block = { slug: "BulletedList", labels: { singular: "Bulleted list", plural: "Bulleted lists" }, admin: { group: "Page blocks" }, fields: [{ name: "items", type: "array", fields: [{ name: "text", type: "text" }] }] };
-export const InlineFormBlock: Block = { slug: "InlineForm", labels: { singular: "Inline form", plural: "Inline forms" }, admin: { group: "Page blocks" }, fields: [{ name: "heading", type: "text" }, { name: "intro", type: "textarea" }, { name: "submitLabel", type: "text", defaultValue: "Submit" }, { name: "actionUrl", type: "text" }, { name: "fields", type: "array", fields: [{ name: "label", type: "text" }, { name: "name", type: "text" }, { name: "type", type: "select", defaultValue: "text", options: ["text", "email"] }] }] };
+export const InlineFormBlock: Block = { slug: "InlineForm", labels: { singular: "Inline form", plural: "Inline forms" }, admin: { group: "Page blocks" }, fields: [{ name: "heading", type: "text" }, { name: "intro", type: "textarea" }, { name: "submitLabel", type: "text", defaultValue: "Submit" }, accessibleContextField("submitAccessibleContext"), { name: "actionUrl", type: "text" }, { name: "fields", type: "array", fields: [{ name: "label", type: "text" }, { name: "name", type: "text" }, { name: "type", type: "select", defaultValue: "text", options: ["text", "email"] }] }] };
 export const ImageCaptionBlock: Block = { slug: "ImageCaption", labels: { singular: "Image + caption", plural: "Images + captions" }, admin: { group: "Page blocks" }, fields: [{ name: "image", type: "upload", relationTo: "media", required: true }, { name: "caption", type: "text" }] };
 export const VideoBlock: Block = { slug: "Video", labels: { singular: "Video", plural: "Videos" }, admin: { group: "Page blocks" }, fields: [{ name: "video", type: "upload", relationTo: "media" }, { name: "url", type: "text" }, { name: "caption", type: "text" }] };
 export const EmbedBlock: Block = { slug: "Embed", labels: { singular: "Embed", plural: "Embeds" }, admin: { group: "Page blocks" }, fields: [{ name: "url", type: "text" }, { name: "title", type: "text" }] };
-export const PayPalBlock: Block = { slug: "PayPal", labels: { singular: "Legacy PayPal button", plural: "Legacy PayPal buttons" }, admin: { group: "Legacy compatibility" }, fields: [{ name: "label", type: "text", defaultValue: "Donate" }, { name: "url", type: "text" }, { name: "amount", type: "text" }] };
+export const PayPalBlock: Block = { slug: "PayPal", labels: { singular: "Legacy PayPal button", plural: "Legacy PayPal buttons" }, admin: { group: "Legacy compatibility" }, fields: [{ name: "label", type: "text", defaultValue: "Donate" }, { name: "url", type: "text" }, accessibleContextField(), { name: "amount", type: "text" }] };
 
 const nestedElementBlocks: Block[] = [ImageBlock, RichTextBlock, FreeTextBlock, TextBlock, ButtonBlock, IconBlock, CountdownBlock, NavigationBlock, HeadlineBlock, DividerBlock, FollowLinksBlock, BulletedListBlock, InlineFormBlock, ImageCaptionBlock, VideoBlock, EmbedBlock];
 
@@ -360,7 +386,7 @@ const bottomContentBlocksField: Field = {
   admin: { hidden: true },
 };
 
-export const SectionBlock: Block = { slug: "Section", labels: { singular: "Section", plural: "Sections" }, admin: { group: "Layout" }, fields: [{ name: "heading", type: "text" }, { name: "background", type: "select", defaultValue: "themeLight", options: [{ label: "Theme light", value: "themeLight" }, { label: "Theme dark", value: "themeDark" }, { label: "Theme surface", value: "themeSurface" }, { label: "Theme primary", value: "themePrimary" }, { label: "Theme secondary", value: "themeSecondary" }, { label: "Theme accent", value: "themeAccent" }, { label: "Muted neutral", value: "muted" }, { label: "Legacy light", value: "light" }, { label: "Legacy dark", value: "dark" }] }, { name: "presentation", type: "select", defaultValue: "wide", options: ["contained", "wide", "fullBleed"] }, { name: "blocks", type: "blocks", blocks: nestedElementBlocks }] };
+export const SectionBlock: Block = { slug: "Section", labels: { singular: "Section", plural: "Sections" }, admin: { group: "Layout" }, fields: [{ name: "heading", type: "text" }, { name: "background", type: "select", defaultValue: "themeLight", options: [{ label: "Theme light", value: "themeLight" }, { label: "Theme dark", value: "themeDark" }, { label: "Theme surface", value: "themeSurface" }, { label: "Theme primary", value: "themePrimary" }, { label: "Theme secondary", value: "themeSecondary" }, { label: "Theme accent", value: "themeAccent" }, { label: "Muted neutral", value: "muted" }, { label: "Legacy light", value: "light" }, { label: "Legacy dark", value: "dark" }] }, { name: "presentation", type: "select", defaultValue: "wide", options: ["contained", "wide", "fullBleed"] }, verticalPaddingField(), { name: "blocks", type: "blocks", blocks: nestedElementBlocks }] };
 export const ColumnBlock: Block = { slug: "Column", labels: { singular: "Column", plural: "Columns" }, admin: { group: "Layout" }, fields: [{ name: "label", type: "text" }, { name: "blocks", type: "blocks", blocks: nestedElementBlocks }] };
 
 export const ButtonRowBlock: Block = {
@@ -370,10 +396,12 @@ export const ButtonRowBlock: Block = {
   fields: [
     { name: "primaryLabel", type: "text" },
     { name: "primaryUrl", type: "text" },
+    accessibleContextField("primaryAccessibleContext"),
     { name: "primaryBackgroundColor", type: "text", defaultValue: "var(--tenant-primary, #E85E27)" },
     { name: "primaryTextColor", type: "text", defaultValue: "var(--tenant-light-text, #F4E8D3)" },
     { name: "secondaryLabel", type: "text" },
     { name: "secondaryUrl", type: "text" },
+    accessibleContextField("secondaryAccessibleContext"),
     { name: "secondaryBackgroundColor", type: "text", defaultValue: "var(--tenant-dark-text, #171614)" },
     { name: "secondaryTextColor", type: "text", defaultValue: "var(--tenant-dark-text, #171614)" },
     { name: "alignment", type: "select", defaultValue: "left", options: ["left", "center", "right"] },
@@ -389,6 +417,7 @@ const campaignItemFields: Field[] = [
   { name: "value", type: "text" },
   { name: "linkLabel", type: "text" },
   { name: "url", type: "text" },
+  accessibleContextField(),
   { name: "icon", type: "text" },
   { name: "attribution", type: "text" },
   { name: "role", type: "text" },
@@ -455,6 +484,7 @@ function createCampaignAltBlock(definition: (typeof campaignAltDefinitions)[numb
     fields: [
       { name: "variant", type: "select", defaultValue: definition.variants[0], options: [...definition.variants] },
       ...(definition.presentations ? [{ name: "presentation", type: "select" as const, defaultValue: definition.presentations[0], options: [...definition.presentations] }] : []),
+      ...(definition.palette !== "elements" ? [verticalPaddingField(definition.type === "HeroAlt" ? "comfortable" : "cozy")] : []),
       { name: "eyebrow", type: "text" },
       { name: "heading", type: "textarea" },
       { name: "body", type: "textarea" },
@@ -462,10 +492,12 @@ function createCampaignAltBlock(definition: (typeof campaignAltDefinitions)[numb
       { name: "backgroundMedia", type: "upload", relationTo: "media" },
       { name: "primaryLabel", type: "text" },
       { name: "primaryUrl", type: "text" },
+      accessibleContextField("primaryAccessibleContext"),
       { name: "primaryButtonColor", type: "text", defaultValue: "var(--tenant-primary, #E85E27)" },
       { name: "primaryButtonTextColor", type: "text", defaultValue: "var(--tenant-light-text, #F4E8D3)" },
       { name: "secondaryLabel", type: "text" },
       { name: "secondaryUrl", type: "text" },
+      accessibleContextField("secondaryAccessibleContext"),
       { name: "secondaryButtonColor", type: "text", defaultValue: "var(--tenant-light-text, #F4E8D3)" },
       { name: "secondaryButtonTextColor", type: "text", defaultValue: "var(--tenant-light-text, #F4E8D3)" },
       { name: "items", type: "array", labels: { singular: "Item", plural: "Items" }, fields: campaignItemFields },
@@ -489,6 +521,7 @@ export const IssuesSectionBlock: Block = {
   labels: { singular: "Issues section", plural: "Issues sections" },
   admin: { group: "Campaign-inspired sections" },
   fields: [
+    verticalPaddingField(),
     { name: "eyebrow", type: "text" },
     { name: "heading", type: "text" },
     { name: "body", type: "textarea" },
@@ -506,6 +539,7 @@ export const IssueCardsBlock: Block = {
   labels: { singular: "Issue cards", plural: "Issue card sections" },
   admin: { group: "Campaign-inspired sections" },
   fields: [
+    verticalPaddingField(),
     { name: "heading", type: "text" },
     { name: "intro", type: "textarea" },
     { name: "variant", type: "select", defaultValue: "cards", options: ["cards", "editorial", "image"] },
@@ -520,6 +554,7 @@ export const IssueCardsBlock: Block = {
         { name: "image", type: "upload", relationTo: "media" },
         { name: "linkLabel", type: "text" },
         { name: "linkUrl", type: "text" },
+        accessibleContextField(),
         { name: "blocks", type: "blocks", blocks: nestedElementBlocks },
       ],
     },
@@ -531,6 +566,7 @@ export const QuoteBlock: Block = {
   labels: { singular: "Quote", plural: "Quotes" },
   admin: { group: "Campaign-inspired sections" },
   fields: [
+    verticalPaddingField(),
     { name: "heading", type: "text" },
     { name: "quote", type: "textarea" },
     { name: "attribution", type: "text" },
@@ -544,6 +580,7 @@ export const ResultsStatsBlock: Block = {
   labels: { singular: "Results stats", plural: "Results stat sections" },
   admin: { group: "Campaign-inspired sections" },
   fields: [
+    verticalPaddingField(),
     { name: "heading", type: "text" },
     { name: "intro", type: "textarea" },
     {
@@ -560,6 +597,7 @@ export const SupporterLogosBlock: Block = {
   labels: { singular: "Supporter logos", plural: "Supporter logo sections" },
   admin: { group: "Campaign-inspired sections" },
   fields: [
+    verticalPaddingField(),
     { name: "heading", type: "text" },
     { name: "intro", type: "textarea" },
     {
@@ -576,6 +614,7 @@ export const ActionTabsBlock: Block = {
   labels: { singular: "Action tabs", plural: "Action tab sections" },
   admin: { group: "Campaign-inspired sections" },
   fields: [
+    verticalPaddingField(),
     { name: "heading", type: "text" },
     { name: "intro", type: "textarea" },
     {
@@ -596,6 +635,7 @@ export const MediaGalleryBlock: Block = {
   labels: { singular: "Media gallery", plural: "Media galleries" },
   admin: { group: "Campaign-inspired sections" },
   fields: [
+    verticalPaddingField(),
     { name: "heading", type: "text" },
     { name: "intro", type: "textarea" },
     {
@@ -619,6 +659,7 @@ export const ContentRowBlock: Block = {
     { name: "layout", type: "select", defaultValue: "two", options: ["one", "two", "leftWide", "rightWide", "three", "four"] },
     { name: "background", type: "select", defaultValue: "themeLight", options: ["themeLight", "themeDark", "themeSurface", "themePrimary", "themeSecondary", "themeAccent", "muted"] },
     { name: "presentation", type: "select", defaultValue: "wide", options: ["contained", "wide", "fullBleed"] },
+    verticalPaddingField(),
     {
       name: "columns",
       type: "array",

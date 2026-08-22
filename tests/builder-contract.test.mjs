@@ -60,3 +60,26 @@ test("width, blank-line, tab-editor, Posts, and MCP contracts stay wired", async
   assert.match(payloadConfig, /collection[s]?:[\s\S]*posts:/);
   assert.match(catalog, /builderData\.zones/);
 });
+
+test("accessible action context and Campaign-style section spacing stay wired across Puck and Payload", async () => {
+  const [config, payloadBlocks, pageData, styles] = await Promise.all([
+    source("puck/config.tsx"),
+    source("blocks/page-blocks.ts"),
+    source("puck/page-data.ts"),
+    source("puck/puck.module.css"),
+  ]);
+
+  assert.match(config, /function actionAccessibleName/);
+  assert.match(config, /aria-label=\{actionAccessibleName/);
+  assert.match(config, /new WeakSet<object>/);
+  assert.match(config, /accessibleContextField\(\)/);
+  assert.match(payloadBlocks, /ACCESSIBLE_CONTEXT_DESCRIPTION/);
+  assert.match(payloadBlocks, /accessibleContextField\("primaryAccessibleContext"\)/);
+  assert.match(config, /label: "Full viewport", value: "viewport"/);
+  assert.match(payloadBlocks, /function verticalPaddingField/);
+  assert.match(pageData, /CAMPAIGN_VERTICAL_PADDING_DEFAULTS/);
+  assert.match(pageData, /typeof props\.verticalPadding !== "string"/);
+  assert.match(styles, /data-vertical-padding="compact"[^\n]*2\.5rem/);
+  assert.match(styles, /data-vertical-padding="spacious"[^\n]*5\.5rem/);
+  assert.match(styles, /data-vertical-padding="viewport"[^\n]*min-height:\s*100svh/);
+});
