@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
-import config from "@payload-config";
-import { getPayload } from "payload";
-
-import { MerchandiseCatalog, type MerchandiseItem } from "@/components/site/MerchandiseCatalog";
-import { sampleMerchandise } from "./sample-data";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Merchandise | NECYPAA XXXVI",
@@ -11,21 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default async function MerchandisePage() {
-  let items: MerchandiseItem[] = [];
-
-  try {
-    const payload = await getPayload({ config });
-    const result = await payload.find({
-      collection: "merchandise",
-      depth: 1,
-      limit: 100,
-      sort: "-featured,name",
-      where: { _status: { equals: "published" } },
-    });
-    items = result.docs as unknown as MerchandiseItem[];
-  } catch {
-    // The empty catalog remains useful before the collection migration runs.
-  }
-
-  return <MerchandiseCatalog items={items.length ? items : sampleMerchandise} />;
+  notFound();
 }

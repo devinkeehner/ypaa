@@ -292,7 +292,7 @@ export function ProgramBoard() {
     : 1;
   return (
     <main className="program-board-page">
-      <header className="program-board-header"><div><Link href="/admin"><ArrowLeft aria-hidden="true" /> Payload admin</Link><h1>Program Board</h1><p>Drag sessions to move them. Click an empty time to add one.</p></div><div><Link href="/program" target="_blank">View public program</Link><button className="program-board-secondary-action" onClick={startCreateRoom} type="button"><Building2 aria-hidden="true" /> Add room</button><button onClick={() => startCreate()} type="button"><Plus aria-hidden="true" /> Add session</button></div></header>
+      <header className="program-board-header"><div><Link href="/admin"><ArrowLeft aria-hidden="true" /> Payload admin</Link><h1>Program Board</h1><p>Drag sessions to move them. Click an empty time to add one.</p></div><div><span aria-live="polite">Public program temporarily unavailable</span><button className="program-board-secondary-action" onClick={startCreateRoom} type="button"><Building2 aria-hidden="true" /> Add room</button><button onClick={() => startCreate()} type="button"><Plus aria-hidden="true" /> Add session</button></div></header>
       <div className="program-board-toolbar"><div role="tablist" aria-label="Convention day">{CONVENTION_DAYS.map((value) => <button aria-selected={day === value} key={value} onClick={() => setDay(value)} role="tab" type="button">{dayLabel(value)}</button>)}</div><p aria-live="polite">{message || `${daySessions.length} sessions · ${rooms.length} rooms`}</p></div>
       {state === "loading" ? <div className="program-board-loading">Loading program records…</div> : (
         <div className="program-board-scroll">
