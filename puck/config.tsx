@@ -1,7 +1,7 @@
 "use client";
 
 import { Render, type ComponentConfig, type Config, type Field } from "@puckeditor/core";
-import { BadgeDollarSign, BriefcaseBusiness, CalendarDays, Check, ChevronDown, ChevronRight, Heading, HeartHandshake, Landmark, MapPin, Megaphone, ShieldCheck, Users, Vote, X } from "lucide-react";
+import { Award, BadgeDollarSign, BookOpen, BriefcaseBusiness, CalendarDays, Check, ChevronDown, ChevronRight, Clock, ExternalLink, Heading, Heart, HeartHandshake, Home, Info, Landmark, Lightbulb, Mail, MapPin, Megaphone, Phone, ShieldCheck, Sparkles, Star, Users, Vote, X } from "lucide-react";
 import { createContext, Fragment, isValidElement, useContext, useId, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { Countdown } from "@/components/site/Countdown";
@@ -102,11 +102,11 @@ type CTA = Base & { eyebrow: string; heading: string; body: string; primaryLabel
 type ImageBlock = Base & { image?: MediaValue | null; caption: string; aspectRatio: "natural" | "landscape" | "portrait" | "square"; width: "full" | "wide" | "content" };
 type FreeText = Base & { text: string; fontSize: string; color: string; fontWeight: string; alignment: "left" | "center" | "right" };
 type TextBlockProps = Base & { text: string; fontSize: string; color: string; alignment: "left" | "center" | "right" };
-type ButtonBlockProps = Base & { label: string; url: string; style: "solid" | "outline" };
+type ButtonBlockProps = Base & { label: string; url: string; style: "solid" | "outline"; backgroundColor: string; textColor: string };
 type CountdownBlockProps = Base & { target: string; label: string };
 type RichTextSection = Base & { content: unknown; fontSize: string; color: string; fontWeight: string; alignment: "left" | "center" | "right" };
 type ProgramSchedule = Base & { heading: string; introduction: string };
-type ButtonRow = Base & { primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; alignment: "left" | "center" | "right" };
+type ButtonRow = Base & { primaryLabel: string; primaryUrl: string; primaryBackgroundColor: string; primaryTextColor: string; secondaryLabel: string; secondaryUrl: string; secondaryBackgroundColor: string; secondaryTextColor: string; alignment: "left" | "center" | "right" };
 type Issue = { title: string; body: string; icon: string };
 type IssuesSection = Base & { eyebrow: string; heading: string; body: string; issues: Issue[] };
 type IssueCard = { label: string; heading: string; body: string; image?: MediaValue | null; linkLabel?: string; linkUrl?: string; blocks?: NestedSlotValue };
@@ -121,7 +121,9 @@ type ActionTabs = Base & { heading: string; intro: string; tabs: ActionTab[] };
 type GalleryItem = { image?: MediaValue | null; caption: string; size: "small" | "medium" | "large" };
 type MediaGallery = Base & { heading: string; intro: string; items: GalleryItem[] };
 type ContentColumn = { label: string; blocks?: NestedSlotValue };
-type Section = Base & { heading: string; background: "light" | "dark" | "muted" | "themeLight" | "themeDark" | "themeSurface" | "themePrimary" | "themeSecondary" | "themeAccent"; blocks?: NestedSlotValue };
+type SectionBackground = "light" | "dark" | "muted" | "themeLight" | "themeDark" | "themeSurface" | "themePrimary" | "themeSecondary" | "themeAccent";
+type SectionPresentation = "contained" | "wide" | "fullBleed";
+type Section = Base & { heading: string; background: SectionBackground; presentation: SectionPresentation; blocks?: NestedSlotValue };
 type Column = Base & { label: string; blocks?: NestedSlotValue };
 type LinkItem = { label: string; url: string };
 type Navigation = Base & { brand: string; links: LinkItem[] };
@@ -134,13 +136,14 @@ type ImageCaption = Base & { image?: MediaValue | null; caption: string };
 type Video = Base & { video?: MediaValue | null; url: string; caption: string };
 type Embed = Base & { url: string; title: string };
 type PayPal = Base & { label: string; url: string; amount: string };
-type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; columns: ContentColumn[]; column1?: NestedSlotValue; column2?: NestedSlotValue; column3?: NestedSlotValue; column4?: NestedSlotValue; puck?: { isEditing?: boolean } };
+type IconElement = Base & { icon: string; label: string; showLabel: boolean; size: "small" | "medium" | "large"; color: string; backgroundColor: string; shape: "none" | "circle" | "rounded" | "square"; alignment: "left" | "center" | "right" };
+type ContentRow = Base & { layout: "one" | "two" | "leftWide" | "rightWide" | "three" | "four"; background: SectionBackground; presentation: SectionPresentation; columns: ContentColumn[]; column1?: NestedSlotValue; column2?: NestedSlotValue; column3?: NestedSlotValue; column4?: NestedSlotValue; puck?: { isEditing?: boolean } };
 type CampaignAltItem = { id?: number | string; label?: string; heading?: string; text?: string; value?: string; linkLabel?: string; url?: string; icon?: string; attribution?: string; role?: string; image?: MediaValue | null };
 type CampaignAltSlotItem = CampaignAltItem & { blocks?: NestedSlotValue };
-type CampaignAltProps = Base & { variant: string; presentation: string; eyebrow: string; heading: string; intro: string; body: string; media?: MediaValue | null; backgroundMedia?: MediaValue | null; headingLogo?: MediaValue | null; qrImage?: MediaValue | null; highlightTitle: string; highlightText: string; backgroundOverlay: string; textPanelColor: string; textPanelOpacity: string; primaryLabel: string; primaryUrl: string; secondaryLabel: string; secondaryUrl: string; quote: string; quoteAttribution: string; electionDay: string; earlyVote: string; phone: string; email: string; website: string; qrCaption: string; disclaimer: string; enableAfterContent?: boolean; afterContent?: NestedSlotValue; bottomContent?: NestedSlotValue; items: CampaignAltItem[]; cards: CampaignAltSlotItem[]; columns: CampaignAltSlotItem[]; tabs: CampaignAltSlotItem[]; puck?: { isEditing?: boolean } };
+type CampaignAltProps = Base & { variant: string; presentation: string; eyebrow: string; heading: string; intro: string; body: string; media?: MediaValue | null; backgroundMedia?: MediaValue | null; headingLogo?: MediaValue | null; qrImage?: MediaValue | null; highlightTitle: string; highlightText: string; backgroundOverlay: string; textPanelColor: string; textPanelOpacity: string; primaryLabel: string; primaryUrl: string; primaryButtonColor: string; primaryButtonTextColor: string; secondaryLabel: string; secondaryUrl: string; secondaryButtonColor: string; secondaryButtonTextColor: string; quote: string; quoteAttribution: string; electionDay: string; earlyVote: string; phone: string; email: string; website: string; qrCaption: string; disclaimer: string; enableAfterContent?: boolean; afterContent?: NestedSlotValue; bottomContent?: NestedSlotValue; items: CampaignAltItem[]; cards: CampaignAltSlotItem[]; columns: CampaignAltSlotItem[]; tabs: CampaignAltSlotItem[]; puck?: { isEditing?: boolean } };
 type CampaignAltComponents = { [K in CampaignAltType]: CampaignAltProps };
 
-type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CTMeetingSchedule: CTMeetingSchedule; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; Text: TextBlockProps; Button: ButtonBlockProps; Countdown: CountdownBlockProps; Section: Section; Column: Column; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; Navigation: Navigation; Headline: Headline; Divider: Divider; FollowLinks: FollowLinks; BulletedList: BulletedList; InlineForm: InlineForm; ImageCaption: ImageCaption; Video: Video; Embed: Embed; PayPal: PayPal; ContentRow: ContentRow; Row: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow } & CampaignAltComponents;
+type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CTMeetingSchedule: CTMeetingSchedule; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; Text: TextBlockProps; Button: ButtonBlockProps; Icon: IconElement; Countdown: CountdownBlockProps; Section: Section; Column: Column; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; Navigation: Navigation; Headline: Headline; Divider: Divider; FollowLinks: FollowLinks; BulletedList: BulletedList; InlineForm: InlineForm; ImageCaption: ImageCaption; Video: Video; Embed: Embed; PayPal: PayPal; ContentRow: ContentRow; Row: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow } & CampaignAltComponents;
 
 const campaignAltEditableFields = Object.fromEntries(campaignAltDefinitions.map((definition) => {
   const fields = ["eyebrow", "heading", "body", "primaryLabel", "secondaryLabel"];
@@ -164,6 +167,7 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   FreeText: ["text"],
   Text: ["text"],
   Button: ["label"],
+  Icon: ["label"],
   Countdown: ["label"],
   Section: ["heading"],
   Column: ["label"],
@@ -327,6 +331,9 @@ const THEME_COLOR_OPTIONS = [
   { label: "Text on dark", value: "var(--tenant-light-text, #F4E8D3)" },
 ] as const;
 
+const DEFAULT_BUTTON_BACKGROUND = "var(--tenant-primary, #E85E27)";
+const DEFAULT_BUTTON_TEXT = "var(--tenant-light-text, #F4E8D3)";
+
 function themeColorField(label: string): Field<string> {
   return {
     type: "custom",
@@ -422,7 +429,28 @@ const columnsField: Field<ContentColumn[]> = {
   getItemSummary: (item) => item.label || "Column",
 };
 
-const contentRowFields = { layout: { type: "select" as const, label: "Columns", options: [{ label: "One column", value: "one" }, { label: "Two equal", value: "two" }, { label: "Left wide", value: "leftWide" }, { label: "Right wide", value: "rightWide" }, { label: "Three equal", value: "three" }, { label: "Four equal", value: "four" }] }, columns: columnsField };
+const SECTION_BACKGROUND_OPTIONS = [
+  { label: "Theme light", value: "themeLight" },
+  { label: "Theme dark", value: "themeDark" },
+  { label: "Theme surface", value: "themeSurface" },
+  { label: "Theme primary", value: "themePrimary" },
+  { label: "Theme secondary", value: "themeSecondary" },
+  { label: "Theme accent", value: "themeAccent" },
+  { label: "Muted neutral", value: "muted" },
+];
+
+const PRESENTATION_OPTIONS = [
+  { label: "Contained", value: "contained" },
+  { label: "Wide", value: "wide" },
+  { label: "Full bleed", value: "fullBleed" },
+];
+
+const contentRowFields = {
+  layout: { type: "select" as const, label: "Columns", options: [{ label: "One column", value: "one" }, { label: "Two equal", value: "two" }, { label: "Left wide", value: "leftWide" }, { label: "Right wide", value: "rightWide" }, { label: "Three equal", value: "three" }, { label: "Four equal", value: "four" }] },
+  background: { type: "select" as const, label: "Background", options: SECTION_BACKGROUND_OPTIONS },
+  presentation: { type: "select" as const, label: "Content width", options: PRESENTATION_OPTIONS },
+  columns: columnsField,
+};
 
 function visibleColumnCount(layout: ContentRow["layout"]) {
   return layoutColumnCount(layout);
@@ -450,7 +478,9 @@ function SlotContent({ content, instruction, label, fallback, minEmptyHeight = 1
 
 function contentRowRender(props: ContentRow) {
   const columns = (props.columns || []).slice(0, visibleColumnCount(props.layout));
-  return <section className={styles.contentRow} data-layout={props.layout} id={props.id}><div className={styles.shell}><div>{columns.map((column, index) => { const label = slotLabel(column.label, `Column ${index + 1}`); return <article key={`${label}-${index}`}>{props.puck?.isEditing ? <span>{label}</span> : null}<SlotContent content={column.blocks} label={label} minEmptyHeight={150} fallback={null} /></article>; })}</div></div></section>;
+  const background = props.background || "themeLight";
+  const tone = ["themeDark", "themePrimary", "themeSecondary", "dark"].includes(background) ? "dark" : "light";
+  return <section className={styles.contentRow} data-background={background} data-layout={props.layout} data-presentation={props.presentation || "wide"} id={props.id}><div className={styles.shell}><div>{columns.map((column, index) => { const label = slotLabel(column.label, `Column ${index + 1}`); return <article key={`${label}-${index}`}>{props.puck?.isEditing ? <span>{label}</span> : null}<SlotContent content={column.blocks} label={label} minEmptyHeight={150} tone={tone} fallback={null} /></article>; })}</div></div></section>;
 }
 
 function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean } }) {
@@ -458,7 +488,7 @@ function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean } }
   const tabs = props.tabs?.length ? props.tabs : [];
   const editing = Boolean(props.puck?.isEditing);
   return (
-    <section className={styles.actionTabs} id={props.id}>
+    <section className={styles.actionTabs} data-editing={editing || undefined} id={props.id}>
       <div className={styles.shell}>
         <Editable as="h2" field="heading" props={props}>{props.heading}</Editable>
         <Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable>
@@ -557,8 +587,17 @@ function RichCopy({ value, as: Tag = "p", className, field, path, props }: { val
   return <RichValue as={Tag} className={className} field={field} path={path} props={props} value={value} />;
 }
 
-function Button({ href, children, outline = false }: { href: string; children: ReactNode; outline?: boolean }) {
-  return <a className={styles.button} data-outline={outline} href={href || "#"}>{children}</a>;
+function buttonColorStyle(backgroundColor?: string, textColor?: string): CSSProperties | undefined {
+  if (!backgroundColor && !textColor) return undefined;
+  return {
+    ...(backgroundColor ? { "--button-background": backgroundColor, "--button-border": backgroundColor } : {}),
+    ...(textColor ? { "--button-text": textColor } : {}),
+  } as CSSProperties;
+}
+
+function Button({ backgroundColor, href, children, id, outline = false, textColor }: { backgroundColor?: string; href: string; children: ReactNode; id?: string; outline?: boolean; textColor?: string }) {
+  const style = buttonColorStyle(backgroundColor, textColor);
+  return <a className={styles.button} data-outline={outline} href={href || "#"} id={id} style={style}>{children}</a>;
 }
 
 function CTMeetingScheduleBlock(props: CTMeetingSchedule) {
@@ -596,7 +635,7 @@ const campaignItemsField: Field<CampaignAltItem[]> = {
   getItemSummary: (item) => itemSummary("Item", item.heading, item.label, item.value),
 };
 
-const campaignIconOptions = ["none", "check", "people", "family", "mapPin", "dollar", "shieldCheck", "landmark", "briefcase", "vote", "handshake", "megaphone", "calendar"].map((value) => ({ label: campaignOptionLabel(value), value }));
+const campaignIconOptions = ["none", "check", "people", "family", "heart", "home", "info", "lightbulb", "star", "sparkles", "award", "book", "mapPin", "phone", "mail", "externalLink", "clock", "dollar", "shieldCheck", "landmark", "briefcase", "vote", "handshake", "megaphone", "calendar"].map((value) => ({ label: campaignOptionLabel(value), value }));
 
 type CampaignItemArrayField = Extract<Field<CampaignAltItem[]>, { type: "array" }>;
 
@@ -629,9 +668,14 @@ function campaignOptionLabel(value: string) {
   return value.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (letter) => letter.toUpperCase());
 }
 
+const ICON_COMPONENTS: Record<string, ElementType> = { award: Award, book: BookOpen, briefcase: BriefcaseBusiness, calendar: CalendarDays, check: Check, clock: Clock, dollar: BadgeDollarSign, externalLink: ExternalLink, family: HeartHandshake, handshake: HeartHandshake, heart: Heart, home: Home, info: Info, landmark: Landmark, lightbulb: Lightbulb, mail: Mail, mapPin: MapPin, megaphone: Megaphone, people: Users, phone: Phone, shieldCheck: ShieldCheck, sparkles: Sparkles, star: Star, vote: Vote };
+
+function iconComponent(name?: string) {
+  return name && name !== "none" ? ICON_COMPONENTS[name] || Check : null;
+}
+
 function CampaignIcon({ name }: { name?: string }) {
-  const icons: Record<string, ElementType> = { briefcase: BriefcaseBusiness, calendar: CalendarDays, check: Check, dollar: BadgeDollarSign, family: HeartHandshake, handshake: HeartHandshake, landmark: Landmark, mapPin: MapPin, megaphone: Megaphone, people: Users, shieldCheck: ShieldCheck, vote: Vote };
-  const Icon = name && name !== "none" ? icons[name] || Check : null;
+  const Icon = iconComponent(name);
   return Icon ? <span className={styles.campaignAltIcon}><Icon aria-hidden="true" /></span> : null;
 }
 
@@ -643,7 +687,7 @@ function CampaignSectionHeader({ props, centered = false }: { props: CampaignAlt
 
 function CampaignActions({ props }: { props: CampaignAltProps }) {
   if (!props.primaryLabel && !props.secondaryLabel) return null;
-  return <div className={styles.actions}>{props.primaryLabel ? <Button href={props.primaryUrl || "#"}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button> : null}{props.secondaryLabel ? <Button href={props.secondaryUrl || "#"} outline><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button> : null}</div>;
+  return <div className={styles.actions}>{props.primaryLabel ? <Button backgroundColor={props.primaryButtonColor} href={props.primaryUrl || "#"} textColor={props.primaryButtonTextColor}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button> : null}{props.secondaryLabel ? <Button backgroundColor={props.secondaryButtonColor} href={props.secondaryUrl || "#"} outline textColor={props.secondaryButtonTextColor}><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button> : null}</div>;
 }
 
 function CampaignImage({ media, className }: { media?: MediaValue | null; className?: string }) {
@@ -754,21 +798,22 @@ function CampaignAltTabs({ props }: { props: CampaignAltProps }) {
   const [active, setActive] = useState(0);
   const reactID = useId().replace(/:/g, "");
   const variant = props.variant || "horizontal";
+  const editing = Boolean(props.puck?.isEditing);
 
-  if (variant === "accordion") return <div className={`${styles.campaignAltTabs} ${styles.campaignAltAccordion}`} data-variant={variant}><div className={styles.campaignAltAccordionList}>{props.tabs.map((tab, index) => {
+  if (variant === "accordion") return <div className={`${styles.campaignAltTabs} ${styles.campaignAltAccordion}`} data-editing={editing || undefined} data-variant={variant}><div className={styles.campaignAltAccordionList}>{props.tabs.map((tab, index) => {
     const tabLabel = slotLabel(tab.label || tab.heading, `Section ${index + 1}`);
     const buttonID = `campaign-accordion-${reactID}-${index}`;
     const panelID = `campaign-accordion-panel-${reactID}-${index}`;
-    const expanded = active === index;
+    const expanded = editing || active === index;
     return <section className={styles.campaignAltAccordionItem} key={`${tabLabel}-${index}`}><h3><button aria-controls={panelID} aria-expanded={expanded} id={buttonID} onClick={(event) => { event.stopPropagation(); setActive(expanded ? -1 : index); }} type="button"><Editable as="span" path={`tabs[${index}].label`} field="label" props={props}>{tab.label || tab.heading || `Section ${index + 1}`}</Editable><ChevronDown aria-hidden="true" className={styles.campaignAltAccordionChevron} /></button></h3><div aria-labelledby={buttonID} className={styles.campaignAltAccordionPanel} hidden={!expanded} id={panelID} role="region"><Editable as="h4" path={`tabs[${index}].heading`} field="heading" props={props}>{tab.heading}</Editable>{tab.text || props.puck?.isEditing ? <Editable as="p" path={`tabs[${index}].text`} field="text" props={props}>{tab.text}</Editable> : null}<SlotContent content={tab.blocks} label={tabLabel} minEmptyHeight={180} fallback={null} /></div></section>;
   })}</div></div>;
 
-  return <div className={styles.campaignAltTabs} data-variant={variant}><div aria-orientation={variant === "sideTabs" ? "vertical" : "horizontal"} className={styles.campaignAltTabList} role="tablist">{props.tabs.map((tab, index) => {
+  return <div className={styles.campaignAltTabs} data-editing={editing || undefined} data-variant={variant}><div aria-orientation={variant === "sideTabs" ? "vertical" : "horizontal"} className={styles.campaignAltTabList} role="tablist">{props.tabs.map((tab, index) => {
     const tabLabel = slotLabel(tab.label || tab.heading, `Tab ${index + 1}`);
     const tabID = `campaign-tab-${reactID}-${index}`;
     const panelID = `campaign-tab-panel-${reactID}-${index}`;
     return <button aria-controls={panelID} aria-selected={active === index} className={styles.campaignAltTabButton} id={tabID} key={`${tabLabel}-${index}`} onClick={(event) => { event.stopPropagation(); setActive(index); }} role="tab" tabIndex={active === index ? 0 : -1} type="button"><Editable as="span" path={`tabs[${index}].label`} field="label" props={props}>{tab.label || tab.heading || `Tab ${index + 1}`}</Editable></button>;
-  })}</div><div className={styles.campaignAltTabPanels}>{props.tabs.map((tab, index) => { const tabLabel = slotLabel(tab.label || tab.heading, `Tab ${index + 1}`); return <section aria-labelledby={`campaign-tab-${reactID}-${index}`} className={styles.campaignAltTabPanel} hidden={active !== index} id={`campaign-tab-panel-${reactID}-${index}`} key={`${tabLabel}-${index}`} role="tabpanel"><Editable as="h3" path={`tabs[${index}].heading`} field="heading" props={props}>{tab.heading}</Editable>{tab.text || props.puck?.isEditing ? <Editable as="p" path={`tabs[${index}].text`} field="text" props={props}>{tab.text}</Editable> : null}<SlotContent content={tab.blocks} label={tabLabel} minEmptyHeight={180} fallback={null} /></section>; })}</div></div>;
+  })}</div><div className={styles.campaignAltTabPanels}>{props.tabs.map((tab, index) => { const tabLabel = slotLabel(tab.label || tab.heading, `Tab ${index + 1}`); return <section aria-labelledby={`campaign-tab-${reactID}-${index}`} className={styles.campaignAltTabPanel} hidden={!editing && active !== index} id={`campaign-tab-panel-${reactID}-${index}`} key={`${tabLabel}-${index}`} role="tabpanel"><Editable as="h3" path={`tabs[${index}].heading`} field="heading" props={props}>{tab.heading}</Editable>{tab.text || props.puck?.isEditing ? <Editable as="p" path={`tabs[${index}].text`} field="text" props={props}>{tab.text}</Editable> : null}<SlotContent content={tab.blocks} label={tabLabel} minEmptyHeight={180} fallback={null} /></section>; })}</div></div>;
 }
 
 function campaignBridgeTone(definition: CampaignAltDefinition, props: CampaignAltProps): SlotTone {
@@ -789,25 +834,30 @@ function CampaignAltRender({ definition, props }: { definition: CampaignAltDefin
   if (definition.type === "TestimonialAlt") return <TestimonialAltRender props={props} />;
   if (definition.type === "PalmCardAlt") return <PalmCardContentRender props={props} />;
   if (definition.type === "PalmCardContactAlt") return <PalmCardContactRender props={props} />;
-  if (definition.type === "InlineRichTextAlt" || definition.type === "TextElementAlt") return <section className={`${styles.campaignAlt} ${styles.richText}`} data-kind="content" data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable field="body" props={props}>{props.body}</Editable></div></section>;
+  if (definition.type === "InlineRichTextAlt" || definition.type === "TextElementAlt") return <section className={`${styles.campaignAlt} ${styles.richText}`} data-block={definition.type} data-kind="content" data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable field="body" props={props}>{props.body}</Editable></div></section>;
 
   const media = normalizeMedia(props.media);
   const background = normalizeMedia(props.backgroundMedia);
   const nestedItems = definition.nestedCollection === "cards" ? props.cards : definition.nestedCollection === "columns" ? props.columns : [];
 
-  if (definition.kind === "tabs") return <section className={styles.campaignAlt} data-kind="tabs" data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable><CampaignPrimaryBridge props={props} type={definition.type as CampaignAltType} /><CampaignAltTabs props={props} /><CampaignBottomBridge props={props} type={definition.type as CampaignAltType} /></div></section>;
+  if (definition.kind === "tabs") return <section className={styles.campaignAlt} data-block={definition.type} data-kind="tabs" data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable><CampaignPrimaryBridge props={props} type={definition.type as CampaignAltType} /><CampaignAltTabs props={props} /><CampaignBottomBridge props={props} type={definition.type as CampaignAltType} /></div></section>;
 
   if (definition.kind === "columns" || definition.nestedCollection === "cards") {
     const collection = definition.nestedCollection === "columns" ? "columns" : "cards";
-    return <section className={styles.campaignAlt} data-kind={definition.kind} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable><CampaignPrimaryBridge props={props} type={definition.type as CampaignAltType} /><div className={styles.campaignAltGrid}>{nestedItems.map((item, index) => { const label = slotLabel(item.label, `${definition.nestedCollection === "columns" ? "Column" : "Card"} ${index + 1}`); return <article key={`${item.heading}-${index}`}><Editable as="span" path={`${collection}[${index}].label`} field="label" props={props}>{item.label || label}</Editable><Editable as="h3" path={`${collection}[${index}].heading`} field="heading" props={props}>{item.heading}</Editable>{item.text ? <Editable path={`${collection}[${index}].text`} field="text" props={props}>{item.text}</Editable> : null}<SlotContent content={item.blocks} label={label} minEmptyHeight={definition.nestedCollection === "columns" ? 150 : 120} fallback={null} /></article>; })}</div><CampaignBottomBridge props={props} type={definition.type as CampaignAltType} /></div></section>;
+    return <section className={styles.campaignAlt} data-block={definition.type} data-kind={definition.kind} data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable><CampaignPrimaryBridge props={props} type={definition.type as CampaignAltType} /><div className={styles.campaignAltGrid}>{nestedItems.map((item, index) => { const label = slotLabel(item.label, `${definition.nestedCollection === "columns" ? "Column" : "Card"} ${index + 1}`); return <article key={`${item.heading}-${index}`}><Editable as="span" path={`${collection}[${index}].label`} field="label" props={props}>{item.label || label}</Editable><Editable as="h3" path={`${collection}[${index}].heading`} field="heading" props={props}>{item.heading}</Editable>{item.text ? <Editable path={`${collection}[${index}].text`} field="text" props={props}>{item.text}</Editable> : null}<SlotContent content={item.blocks} label={label} minEmptyHeight={definition.nestedCollection === "columns" ? 150 : 120} fallback={null} /></article>; })}</div><CampaignBottomBridge props={props} type={definition.type as CampaignAltType} /></div></section>;
+  }
+
+  if (definition.kind === "form") {
+    const buttonStyle = buttonColorStyle(props.primaryButtonColor, props.primaryButtonTextColor);
+    return <section className={styles.campaignAlt} data-block={definition.type} data-kind="form" data-presentation={props.presentation} data-variant={props.variant} id={props.id}><div className={styles.shell}><div className={styles.campaignAltCopy}>{props.eyebrow ? <Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable> : null}<Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable></div><form action={props.primaryUrl || "#"} className={styles.campaignAltForm} method="post" onSubmit={(event) => { if (props.puck?.isEditing) event.preventDefault(); }}>{props.items.map((item, index) => { const label = item.label || item.heading || `Field ${index + 1}`; const type = summaryText(label).toLowerCase().includes("email") ? "email" : "text"; return <label key={campaignItemKey("form-field", item, index)}><Editable as="span" path={`items[${index}].${item.label ? "label" : "heading"}`} field={item.label ? "label" : "heading"} props={props}>{label}</Editable><input aria-label={summaryText(label)} name={`field-${index + 1}`} required={type === "email"} type={type} /></label>; })}<button className={styles.button} style={buttonStyle} type="submit"><Editable field="primaryLabel" props={props}>{props.primaryLabel || "Submit"}</Editable></button>{props.secondaryLabel ? <Button backgroundColor={props.secondaryButtonColor} href={props.secondaryUrl || "#"} outline textColor={props.secondaryButtonTextColor}><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button> : null}</form></div></section>;
   }
 
   const isHero = definition.kind === "hero";
-  return <section className={styles.campaignAlt} data-kind={definition.kind} data-presentation={props.presentation} data-variant={props.variant} id={props.id}>{background ? <img aria-hidden="true" alt="" className={styles.campaignAltBackground} src={background.url} /> : null}<div className={styles.shell}><div className={styles.campaignAltCopy}>{props.eyebrow ? <Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable> : null}<Editable as={isHero ? "h1" : "h2"} field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable>{props.primaryLabel || props.secondaryLabel ? <div className={styles.actions}>{props.primaryLabel ? <Button href={props.primaryUrl || "#"}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button> : null}{props.secondaryLabel ? <Button href={props.secondaryUrl || "#"} outline><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button> : null}</div> : null}</div><CampaignPrimaryBridge props={props} type={definition.type as CampaignAltType} />{media ? <figure><img alt={media.alt || ""} src={media.url} /></figure> : null}{props.items.length ? <div className={styles.campaignAltItems}>{props.items.map((item, index) => <article key={`${item.heading}-${item.label}-${index}`}>{item.image && normalizeMedia(item.image) ? <img alt={normalizeMedia(item.image)?.alt || ""} src={normalizeMedia(item.image)?.url} /> : null}{item.label ? <Editable as="small" path={`items[${index}].label`} field="label" props={props}>{item.label}</Editable> : null}<Editable as="h3" path={`items[${index}].${item.heading ? "heading" : "value"}`} field={item.heading ? "heading" : "value"} props={props}>{item.heading || item.value}</Editable>{item.text ? <Editable as="p" path={`items[${index}].text`} field="text" props={props}>{item.text}</Editable> : null}{item.url ? <a href={item.url}><Editable as="span" path={`items[${index}].linkLabel`} field="linkLabel" props={props}>{item.linkLabel || "Learn more"}</Editable></a> : null}</article>)}</div> : null}<CampaignBottomBridge props={props} type={definition.type as CampaignAltType} /></div></section>;
+  return <section className={styles.campaignAlt} data-block={definition.type} data-kind={definition.kind} data-presentation={props.presentation} data-variant={props.variant} id={props.id}>{background ? <img aria-hidden="true" alt="" className={styles.campaignAltBackground} src={background.url} /> : null}<div className={styles.shell}><div className={styles.campaignAltCopy}>{props.eyebrow ? <Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable> : null}<Editable as={isHero ? "h1" : "h2"} field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable>{props.primaryLabel || props.secondaryLabel ? <div className={styles.actions}>{props.primaryLabel ? <Button backgroundColor={props.primaryButtonColor} href={props.primaryUrl || "#"} textColor={props.primaryButtonTextColor}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button> : null}{props.secondaryLabel ? <Button backgroundColor={props.secondaryButtonColor} href={props.secondaryUrl || "#"} outline textColor={props.secondaryButtonTextColor}><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button> : null}</div> : null}</div><CampaignPrimaryBridge props={props} type={definition.type as CampaignAltType} />{media ? <figure><img alt={media.alt || ""} src={media.url} /></figure> : null}{props.items.length ? <div className={styles.campaignAltItems}>{props.items.map((item, index) => <article key={`${item.heading}-${item.label}-${index}`}>{item.image && normalizeMedia(item.image) ? <img alt={normalizeMedia(item.image)?.alt || ""} src={normalizeMedia(item.image)?.url} /> : null}{item.label ? <Editable as="small" path={`items[${index}].label`} field="label" props={props}>{item.label}</Editable> : null}<Editable as="h3" path={`items[${index}].${item.heading ? "heading" : "value"}`} field={item.heading ? "heading" : "value"} props={props}>{item.heading || item.value}</Editable>{item.text ? <Editable as="p" path={`items[${index}].text`} field="text" props={props}>{item.text}</Editable> : null}{item.url ? <a href={item.url}><Editable as="span" path={`items[${index}].linkLabel`} field="linkLabel" props={props}>{item.linkLabel || "Learn more"}</Editable></a> : null}</article>)}</div> : null}<CampaignBottomBridge props={props} type={definition.type as CampaignAltType} /></div></section>;
 }
 
 function campaignAltDefaults(definition: CampaignAltDefinition): Omit<CampaignAltProps, "id"> {
-  const base = { variant: definition.variants[0], presentation: definition.presentations?.[0] || "contained", eyebrow: "", heading: definition.label, intro: "", body: "Add campaign-facing content here.", media: null, backgroundMedia: null, headingLogo: null, qrImage: null, highlightTitle: "", highlightText: "", backgroundOverlay: "standard", textPanelColor: "primary", textPanelOpacity: "translucent", primaryLabel: "Learn more", primaryUrl: "#", secondaryLabel: "", secondaryUrl: "#", quote: "", quoteAttribution: "", electionDay: "", earlyVote: "", phone: "", email: "", website: "", qrCaption: "", disclaimer: "", enableAfterContent: true, afterContent: [], bottomContent: [], items: [{ label: "", heading: "First item", text: "Add details", value: "", linkLabel: "Learn more", url: "", icon: "check", attribution: "", role: "", image: null }], cards: [], columns: [], tabs: [] };
+  const base = { variant: definition.variants[0], presentation: definition.presentations?.[0] || "contained", eyebrow: "", heading: definition.label, intro: "", body: "Add campaign-facing content here.", media: null, backgroundMedia: null, headingLogo: null, qrImage: null, highlightTitle: "", highlightText: "", backgroundOverlay: "standard", textPanelColor: "primary", textPanelOpacity: "translucent", primaryLabel: "Learn more", primaryUrl: "#", primaryButtonColor: DEFAULT_BUTTON_BACKGROUND, primaryButtonTextColor: DEFAULT_BUTTON_TEXT, secondaryLabel: "", secondaryUrl: "#", secondaryButtonColor: DEFAULT_BUTTON_TEXT, secondaryButtonTextColor: DEFAULT_BUTTON_TEXT, quote: "", quoteAttribution: "", electionDay: "", earlyVote: "", phone: "", email: "", website: "", qrCaption: "", disclaimer: "", enableAfterContent: true, afterContent: [], bottomContent: [], items: [{ label: "", heading: "First item", text: "Add details", value: "", linkLabel: "Learn more", url: "", icon: "check", attribution: "", role: "", image: null }], cards: [], columns: [], tabs: [] };
 
   if (definition.type === "HeroAlt") return { ...base, variant: "civicOutdoors", eyebrow: "NECYPAA XXXVI", heading: "A bold alternate opening", body: "Use the hero variant that best fits the message, media, and call to action.", highlightTitle: "Hartford, Connecticut", highlightText: "Connection, service, and recovery.", primaryLabel: "Register", secondaryLabel: "Learn more" };
   if (definition.type === "AboutAlt") return { ...base, heading: "Our story", intro: "A clear introduction to the people and purpose behind the work.", body: "Use this space for the fuller biography or organizational story.", items: [{ text: "Built through service", icon: "check" }, { text: "Rooted in community", icon: "check" }, { text: "Focused on the next person", icon: "check" }] };
@@ -817,18 +867,20 @@ function campaignAltDefaults(definition: CampaignAltDefinition): Omit<CampaignAl
   if (definition.type === "TestimonialAlt") return { ...base, heading: "What people are saying", intro: "Use quotes for social proof, endorsements, or community voices.", body: "", items: [{ text: "This work is focused on what our community needs right now.", attribution: "Community supporter", role: "Resident", image: null }, { text: "The message is clear, practical, and rooted in local priorities.", attribution: "Local leader", role: "Endorser", image: null }] };
   if (definition.type === "PalmCardAlt") return { ...base, presentation: "wide", heading: "Palm card content", intro: "Use each card for one memorable idea and one short explanation.", body: "", items: [{ icon: "check", heading: "A clear priority", text: "Add one concise sentence explaining why this point matters." }, { icon: "check", heading: "A practical next step", text: "Describe the action or result people should remember." }, { icon: "check", heading: "A reason to get involved", text: "Close with a specific invitation, benefit, or outcome." }] };
   if (definition.type === "PalmCardContactAlt") return { ...base, presentation: "wide", eyebrow: "Voting information", heading: "Everything you need to take action", intro: "Keep essential dates and contact details together.", body: "", electionDay: "Election Day: Nov. 3", earlyVote: "Vote early: Oct. 19 - Nov. 1", website: "example.org", disclaimer: "Paid for by the campaign. Approved by the candidate.", items: [{ label: "Website", value: "example.org", url: "https://example.org" }, { label: "Facebook", value: "Follow the campaign", url: "#" }] };
+  if (definition.kind === "form") return { ...base, heading: "Stay connected", body: "Collect the information you need with a short, focused form.", primaryLabel: "Submit", primaryUrl: "#", items: [{ label: "Name", heading: "", text: "" }, { label: "Email", heading: "", text: "" }] };
   return base;
 }
 
 function campaignAltFields(definition: CampaignAltDefinition) {
   const common = { variant: { type: "select" as const, label: "Variant", options: definition.variants.map((value) => ({ label: campaignOptionLabel(value), value })) }, presentation: { type: "select" as const, label: "Presentation", options: (definition.presentations || ["contained"]).map((value) => ({ label: campaignOptionLabel(value), value })) } };
   const header = { eyebrow: text("Eyebrow"), heading: heading("Heading", "h2"), intro: area("Introduction") };
+  const actions = { primaryLabel: text("Primary action label"), primaryUrl: plainText("Primary action URL"), primaryButtonColor: themeColorField("Primary button color"), primaryButtonTextColor: themeColorField("Primary button text"), secondaryLabel: text("Secondary action label"), secondaryUrl: plainText("Secondary action URL"), secondaryButtonColor: themeColorField("Secondary button color"), secondaryButtonTextColor: themeColorField("Secondary button text") };
   const bridge = AFTER_CONTENT_BLOCK_TYPES.has(definition.type) ? {
     afterContent: { type: "slot" as const, label: "Elements after intro", allow: nestedElementTypes },
     bottomContent: { type: "slot" as const, label: "Section bottom elements", allow: nestedElementTypes },
   } : {};
 
-  if (definition.type === "HeroAlt") return { ...common, eyebrow: text("Eyebrow"), heading: heading("Heading", "h1"), headingLogo: mediaField("Heading logo"), body: area("Body"), highlightTitle: text("Highlight title"), highlightText: area("Highlight text"), media: mediaField("Primary media"), backgroundMedia: mediaField("Background media"), backgroundOverlay: { type: "select", label: "Background overlay", options: ["none", "off", "subtle", "standard", "strong"].map((value) => ({ label: campaignOptionLabel(value), value })) }, textPanelColor: { type: "select", label: "Panel color", options: ["primary", "accent", "foreground", "background", "white"].map((value) => ({ label: campaignOptionLabel(value), value })) }, textPanelOpacity: { type: "select", label: "Panel opacity", options: ["translucent", "solid"].map((value) => ({ label: campaignOptionLabel(value), value })) }, primaryLabel: text("Primary action label"), primaryUrl: plainText("Primary action URL"), secondaryLabel: text("Secondary action label"), secondaryUrl: plainText("Secondary action URL") };
+  if (definition.type === "HeroAlt") return { ...common, eyebrow: text("Eyebrow"), heading: heading("Heading", "h1"), headingLogo: mediaField("Heading logo"), body: area("Body"), highlightTitle: text("Highlight title"), highlightText: area("Highlight text"), media: mediaField("Primary media"), backgroundMedia: mediaField("Background media"), backgroundOverlay: { type: "select", label: "Background overlay", options: ["none", "off", "subtle", "standard", "strong"].map((value) => ({ label: campaignOptionLabel(value), value })) }, textPanelColor: { type: "select", label: "Panel color", options: ["primary", "accent", "foreground", "background", "white"].map((value) => ({ label: campaignOptionLabel(value), value })) }, textPanelOpacity: { type: "select", label: "Panel opacity", options: ["translucent", "solid"].map((value) => ({ label: campaignOptionLabel(value), value })) }, ...actions };
   if (definition.type === "AboutAlt") return { ...common, ...bridge, ...header, body: area("Body"), media: mediaField("Portrait or feature image"), items: bioHighlightsField };
   if (definition.type === "CardsGridAlt") return { ...common, ...bridge, eyebrow: text("Eyebrow"), heading: richTextField("Heading", undefined, "h2"), intro: area("Introduction"), body: area("Body fallback"), items: issueCardsAltField };
   if (definition.type === "PalmCardPointsAlt") return { ...common, ...bridge, ...header, items: palmPointsField };
@@ -836,7 +888,7 @@ function campaignAltFields(definition: CampaignAltDefinition) {
   if (definition.type === "TestimonialAlt") return { ...common, ...bridge, heading: heading("Heading", "h2"), intro: area("Introduction"), items: testimonialsField };
   if (definition.type === "PalmCardAlt") return { ...common, ...bridge, ...header, body: area("Body fallback"), media: mediaField("Photo"), items: palmContentField, quote: area("Quote"), quoteAttribution: text("Quote attribution") };
   if (definition.type === "PalmCardContactAlt") return { ...common, ...bridge, ...header, electionDay: text("Election day"), earlyVote: text("Early vote"), phone: text("Phone"), email: text("Email"), website: text("Website"), items: contactLinksField, qrImage: mediaField("QR image"), qrCaption: text("QR caption"), disclaimer: text("Paid for / disclaimer") };
-  return { ...common, ...bridge, eyebrow: text("Eyebrow"), heading: heading("Heading", definition.kind === "hero" ? "h1" : "h2"), body: area("Body"), media: mediaField("Primary media"), backgroundMedia: mediaField("Background media"), primaryLabel: text("Primary action label"), primaryUrl: plainText("Primary action URL"), secondaryLabel: text("Secondary action label"), secondaryUrl: plainText("Secondary action URL"), items: campaignItemsField };
+  return { ...common, ...bridge, eyebrow: text("Eyebrow"), heading: heading("Heading", definition.kind === "hero" ? "h1" : "h2"), body: area("Body"), media: mediaField("Primary media"), backgroundMedia: mediaField("Background media"), ...actions, items: campaignItemsField };
 }
 
 const campaignAltComponents = Object.fromEntries(campaignAltDefinitions.map((definition) => {
@@ -863,7 +915,7 @@ export const puckConfig: Config<Components> = {
     "Quotes & highlights": { components: ["QuoteBlock", "ResultsStats", "SupporterLogos"] },
     "Actions & tabs": { components: ["ActionTabs", "ButtonRow"] },
     "Media & layout": { components: ["MediaGallery", "ContentRow", "Row", "RowOneColumn", "RowTwoColumns", "RowLeftWide", "RowRightWide", "RowThreeColumns", "RowFourColumns", "Section", "Column"] },
-    "Elements for rows": { components: ["Headline", "Text", "Button", "Countdown", "Image", "RichText", "FreeText", "Divider", "BulletedList", "FollowLinks", "InlineForm", "PayPal", "Navigation", "ImageCaption", "Video", "Embed"] },
+    "Elements for rows": { components: ["Headline", "Text", "Button", "Icon", "Countdown", "Image", "RichText", "FreeText", "Divider", "BulletedList", "FollowLinks", "InlineForm", "Navigation", "ImageCaption", "Video", "Embed"] },
     "Campaign alternatives": { components: campaignAltTypes },
   },
   root: {
@@ -995,9 +1047,9 @@ export const puckConfig: Config<Components> = {
     },
     ButtonRow: {
       label: "Button row",
-      defaultProps: { primaryLabel: "Learn more", primaryUrl: "#", secondaryLabel: "Get involved", secondaryUrl: "#", alignment: "left" },
-      fields: { primaryLabel: text("Primary label"), primaryUrl: plainText("Primary URL"), secondaryLabel: text("Secondary label"), secondaryUrl: plainText("Secondary URL"), alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } },
-      render: (props) => <div className={styles.buttonRow} data-align={props.alignment} id={props.id}><Button href={props.primaryUrl}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button>{props.secondaryLabel ? <Button href={props.secondaryUrl} outline><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button> : null}</div>,
+      defaultProps: { primaryLabel: "Learn more", primaryUrl: "#", primaryBackgroundColor: DEFAULT_BUTTON_BACKGROUND, primaryTextColor: DEFAULT_BUTTON_TEXT, secondaryLabel: "Get involved", secondaryUrl: "#", secondaryBackgroundColor: "var(--tenant-dark-text, #171614)", secondaryTextColor: "var(--tenant-dark-text, #171614)", alignment: "left" },
+      fields: { primaryLabel: text("Primary label"), primaryUrl: plainText("Primary URL"), primaryBackgroundColor: themeColorField("Primary button color"), primaryTextColor: themeColorField("Primary button text"), secondaryLabel: text("Secondary label"), secondaryUrl: plainText("Secondary URL"), secondaryBackgroundColor: themeColorField("Secondary button color"), secondaryTextColor: themeColorField("Secondary button text"), alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } },
+      render: (props) => <div className={styles.buttonRow} data-align={props.alignment} id={props.id}><Button backgroundColor={props.primaryBackgroundColor} href={props.primaryUrl} textColor={props.primaryTextColor}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button>{props.secondaryLabel ? <Button backgroundColor={props.secondaryBackgroundColor} href={props.secondaryUrl} outline textColor={props.secondaryTextColor}><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button> : null}</div>,
     },
     IssuesSection: {
       label: "Feature section",
@@ -1037,9 +1089,28 @@ export const puckConfig: Config<Components> = {
     },
     Navigation: { label: "Navigation", defaultProps: { brand: "NECYPAA XXXVI", links: [{ label: "About", url: "#about" }, { label: "Register", url: "#register" }] }, fields: { brand: text("Brand"), links: { type: "array", label: "Links", arrayFields: { label: text("Label"), url: plainText("URL") } } }, render: (props) => <nav className={styles.navigation} id={props.id}><Editable as="strong" field="brand" props={props}>{props.brand}</Editable><div>{props.links.map((link, index) => <a href={link.url || "#"} key={`${link.label}-${index}`}><RichCopy as="span" path={`links[${index}].label`} field="label" value={link.label} /></a>)}</div></nav> },
     Text: { label: "Text", defaultProps: { text: "Add text", fontSize: "1rem", color: "inherit", alignment: "left" }, fields: { text: area("Text"), fontSize: plainText("Font size"), color: themeColorField("Color"), alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => <div className={styles.freeText} id={props.id} style={{ color: props.color, fontSize: props.fontSize, textAlign: props.alignment }}><Editable as="p" field="text" props={props}>{props.text}</Editable></div> },
-    Button: { label: "Button", defaultProps: { label: "Learn more", url: "#", style: "solid" }, fields: { label: text("Label"), url: plainText("URL"), style: { type: "select", label: "Style", options: [{ label: "Solid", value: "solid" }, { label: "Outline", value: "outline" }] } }, render: (props) => <a className={styles.button} data-outline={props.style === "outline"} href={props.url || "#"} id={props.id}><Editable field="label" props={props}>{props.label}</Editable></a> },
+    Button: { label: "Button", defaultProps: { label: "Learn more", url: "#", style: "solid", backgroundColor: DEFAULT_BUTTON_BACKGROUND, textColor: DEFAULT_BUTTON_TEXT }, fields: { label: text("Label"), url: plainText("URL"), style: { type: "select", label: "Style", options: [{ label: "Solid", value: "solid" }, { label: "Outline", value: "outline" }] }, backgroundColor: themeColorField("Button color"), textColor: themeColorField("Button text") }, render: (props) => <Button backgroundColor={props.backgroundColor} href={props.url} id={props.id} outline={props.style === "outline"} textColor={props.textColor}><Editable field="label" props={props}>{props.label}</Editable></Button> },
+    Icon: {
+      label: "Icon",
+      defaultProps: { icon: "check", label: "Helpful icon", showLabel: false, size: "medium", color: "var(--tenant-light-text, #F4E8D3)", backgroundColor: "var(--tenant-background, #0C0D0E)", shape: "circle", alignment: "left" },
+      fields: {
+        icon: { type: "select", label: "Icon", options: campaignIconOptions.filter((option) => option.value !== "none") },
+        label: text("Accessible label"),
+        showLabel: { type: "radio", label: "Visible label", options: [{ label: "Icon only", value: false }, { label: "Show label", value: true }] },
+        size: { type: "select", label: "Size", options: [{ label: "Small", value: "small" }, { label: "Medium", value: "medium" }, { label: "Large", value: "large" }] },
+        color: themeColorField("Icon color"),
+        backgroundColor: themeColorField("Background color"),
+        shape: { type: "select", label: "Shape", options: [{ label: "None", value: "none" }, { label: "Circle", value: "circle" }, { label: "Rounded", value: "rounded" }, { label: "Square", value: "square" }] },
+        alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] },
+      },
+      render: (props) => {
+        const Glyph = iconComponent(props.icon) || Check;
+        const label = summaryText(props.label).trim();
+        return <div className={styles.iconElement} data-align={props.alignment} data-size={props.size} id={props.id}><span aria-hidden={label ? undefined : true} aria-label={label || undefined} className={styles.iconElementGlyph} data-shape={props.shape} role={label ? "img" : undefined} style={{ backgroundColor: props.shape === "none" ? "transparent" : props.backgroundColor, color: props.color }}><Glyph aria-hidden="true" /></span>{props.showLabel ? <Editable as="span" className={styles.iconElementLabel} field="label" props={props}>{props.label}</Editable> : null}</div>;
+      },
+    },
     Countdown: { label: "Countdown", defaultProps: { target: "2026-12-31T17:00:00-05:00", label: "Time remaining" }, fields: { target: plainText("Target ISO date"), label: text("Label") }, render: (props) => <div className={styles.standaloneCountdown} id={props.id}><Editable field="label" props={props}>{props.label}</Editable><Countdown target={props.target} /></div> },
-    Section: { label: "Section", defaultProps: { heading: "Section heading", background: "themeLight", blocks: [] }, fields: { heading: heading("Heading", "h2"), background: { type: "select", label: "Background", options: [{ label: "Theme light", value: "themeLight" }, { label: "Theme dark", value: "themeDark" }, { label: "Theme surface", value: "themeSurface" }, { label: "Theme primary", value: "themePrimary" }, { label: "Theme secondary", value: "themeSecondary" }, { label: "Theme accent", value: "themeAccent" }, { label: "Muted neutral", value: "muted" }] }, blocks: { type: "slot", allow: nestedElementTypes } }, render: (props) => <section className={styles.builderSection} data-background={props.background} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><SlotContent content={props.blocks} label="section" minEmptyHeight={150} tone={["themeDark", "themePrimary", "themeSecondary"].includes(props.background) ? "dark" : "light"} fallback={<div />}/></div></section> },
+    Section: { label: "Section", defaultProps: { heading: "Section heading", background: "themeLight", presentation: "wide", blocks: [] }, fields: { heading: heading("Heading", "h2"), background: { type: "select", label: "Background", options: SECTION_BACKGROUND_OPTIONS }, presentation: { type: "select", label: "Content width", options: PRESENTATION_OPTIONS }, blocks: { type: "slot", allow: nestedElementTypes } }, render: (props) => <section className={styles.builderSection} data-background={props.background || "themeLight"} data-presentation={props.presentation || "wide"} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><SlotContent content={props.blocks} label="section" minEmptyHeight={150} tone={["themeDark", "themePrimary", "themeSecondary", "dark"].includes(props.background) ? "dark" : "light"} fallback={<div />}/></div></section> },
     Column: { label: "Column", defaultProps: { label: "Column", blocks: [] }, fields: { label: plainText("Editor label"), blocks: { type: "slot", allow: nestedElementTypes } }, render: (props) => <div className={styles.builderColumn} data-label={props.label} id={props.id}><SlotContent content={props.blocks} label={props.label} minEmptyHeight={150} fallback={<div />}/></div> },
     Headline: { label: "Headline", defaultProps: { text: "Add a headline", level: "h2", alignment: "left" }, fields: { text: heading("Headline", "h2"), level: { type: "select", label: "Default heading size", options: [{ label: "Heading 1", value: "h1" }, { label: "Heading 2", value: "h2" }, { label: "Heading 3", value: "h3" }] }, alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => <Editable as={props.level} className={styles.headline} field="text" props={{ ...props, textTextAlign: props.alignment } as unknown as Base}>{props.text}</Editable> },
     Divider: { label: "Divider", defaultProps: { style: "solid", color: "var(--tenant-dark-text, #171614)" }, fields: { style: { type: "select", label: "Style", options: [{ label: "Solid", value: "solid" }, { label: "Dashed", value: "dashed" }, { label: "Dotted", value: "dotted" }] }, color: themeColorField("Color") }, render: (props) => <hr className={styles.divider} id={props.id} style={{ borderTopStyle: props.style, borderTopColor: props.color }} /> },
@@ -1058,17 +1129,17 @@ export const puckConfig: Config<Components> = {
     },
     ContentRow: {
       label: "Content row",
-      defaultProps: { layout: "two", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] },
+      defaultProps: { layout: "two", background: "themeLight", presentation: "wide", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] },
       fields: contentRowFields,
       render: contentRowRender,
     },
-    Row: { label: "Row", defaultProps: { layout: "two", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
-    RowOneColumn: { label: "1 column row", defaultProps: { layout: "one", columns: [{ label: "Column 1", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
-    RowTwoColumns: { label: "2 column row", defaultProps: { layout: "two", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
-    RowLeftWide: { label: "left wide row", defaultProps: { layout: "leftWide", columns: [{ label: "Main column", blocks: [] }, { label: "Side column", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
-    RowRightWide: { label: "right wide row", defaultProps: { layout: "rightWide", columns: [{ label: "Side column", blocks: [] }, { label: "Main column", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
-    RowThreeColumns: { label: "3 column row", defaultProps: { layout: "three", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }, { label: "Column 3", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
-    RowFourColumns: { label: "4 column row", defaultProps: { layout: "four", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }, { label: "Column 3", blocks: [] }, { label: "Column 4", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    Row: { label: "Row", defaultProps: { layout: "two", background: "themeLight", presentation: "wide", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowOneColumn: { label: "1 column row", defaultProps: { layout: "one", background: "themeLight", presentation: "wide", columns: [{ label: "Column 1", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowTwoColumns: { label: "2 column row", defaultProps: { layout: "two", background: "themeLight", presentation: "wide", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowLeftWide: { label: "left wide row", defaultProps: { layout: "leftWide", background: "themeLight", presentation: "wide", columns: [{ label: "Main column", blocks: [] }, { label: "Side column", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowRightWide: { label: "right wide row", defaultProps: { layout: "rightWide", background: "themeLight", presentation: "wide", columns: [{ label: "Side column", blocks: [] }, { label: "Main column", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowThreeColumns: { label: "3 column row", defaultProps: { layout: "three", background: "themeLight", presentation: "wide", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }, { label: "Column 3", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowFourColumns: { label: "4 column row", defaultProps: { layout: "four", background: "themeLight", presentation: "wide", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }, { label: "Column 3", blocks: [] }, { label: "Column 4", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
     ...campaignAltComponents,
   },
 };

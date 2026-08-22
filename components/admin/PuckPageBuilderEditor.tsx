@@ -3,7 +3,7 @@
 import "@puckeditor/core/puck.css";
 
 import { Drawer, fieldsPlugin, Puck, type Config, type Data, type Plugin } from "@puckeditor/core";
-import { ArrowLeft, BarChart3, Box, Clipboard, ClipboardPaste, Columns2, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, MousePointerClick, Palette, Quote, Save, Search, TextQuote, Type } from "lucide-react";
+import { ArrowLeft, BarChart3, Box, Clipboard, ClipboardPaste, Columns2, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, MousePointerClick, Palette, Quote, Save, Search, Sparkles, TextQuote, Type } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 import { normalizePuckRichTextData, puckConfig } from "@/puck/config";
@@ -192,6 +192,7 @@ const BLOCK_LIBRARY: Record<string, { icon?: React.ReactNode; label: string; row
   Row: { icon: <Columns2 />, label: "Row" },
   Text: { icon: <Type />, label: "Text" },
   Button: { icon: <MousePointerClick />, label: "Button" },
+  Icon: { icon: <Sparkles />, label: "Icon" },
   Countdown: { icon: <LayoutTemplate />, label: "Countdown" },
   Headline: { icon: <Type />, label: "Headline" },
   Divider: { icon: <Box />, label: "Divider" },
@@ -201,7 +202,6 @@ const BLOCK_LIBRARY: Record<string, { icon?: React.ReactNode; label: string; row
   ImageCaption: { icon: <ImageIcon />, label: "Image + Caption" },
   Video: { icon: <GalleryHorizontal />, label: "Video" },
   Embed: { icon: <Box />, label: "Embed" },
-  PayPal: { icon: <MousePointerClick />, label: "PayPal Button" },
   ContentRow: { icon: <Columns2 />, label: "Custom Row" },
   RowOneColumn: { label: "1 Column", rowColumns: [1] },
   RowTwoColumns: { label: "2 Columns", rowColumns: [1, 1] },

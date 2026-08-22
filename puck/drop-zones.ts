@@ -5,6 +5,11 @@
 export const ELEMENT_DROP_TYPES = [
   "Headline",
   "Text",
+  "Button",
+  "Icon",
+  "Image",
+  "RichText",
+  "FreeText",
   "ImageCaption",
   "ButtonRow",
   "Divider",
@@ -13,7 +18,8 @@ export const ELEMENT_DROP_TYPES = [
   "Countdown",
   "FollowLinks",
   "InlineForm",
-  "PayPal",
+  "Navigation",
+  "BulletedList",
 ] as string[];
 
 /**

@@ -30,6 +30,7 @@ const COMPONENT_TYPES = new Set([
   "FreeText",
   "Text",
   "Button",
+  "Icon",
   "Countdown",
   "Section",
   "Column",
@@ -82,6 +83,21 @@ function payloadBlockType(type: string) {
   if (type.startsWith("Row")) return "ContentRow";
   if (type === "Text") return "FreeText";
   return type;
+}
+
+function editorComponentType(type: string) {
+  return type === "PayPal" ? "Button" : type;
+}
+
+function legacyEditorProps(type: string, value: unknown) {
+  const props = isRecord(value) ? value : {};
+  if (type !== "PayPal") return props;
+  return {
+    ...props,
+    style: "solid",
+    backgroundColor: "var(--tenant-primary, #E85E27)",
+    textColor: "var(--tenant-light-text, #F4E8D3)",
+  };
 }
 
 const STYLE_SUFFIXES = ["Color", "FontSize", "FontWeight", "TextAlign"];
@@ -271,8 +287,9 @@ function nestedLayoutToContent(value: unknown): ComponentData<Record<string, unk
   return value.flatMap((block, index) => {
     if (!isRecord(block) || typeof block.blockType !== "string" || !COMPONENT_TYPES.has(block.blockType)) return [];
     const { blockType, ...storedProps } = block;
-    const id = typeof block.id === "string" ? block.id : `${blockType}-nested-${index}`;
-    return [{ type: blockType, props: { ...normalizeProps(blockType, expandTextStyles(storedProps)), id } } as ComponentData<Record<string, unknown>>];
+    const editorType = editorComponentType(blockType);
+    const id = typeof block.id === "string" ? block.id : `${editorType}-nested-${index}`;
+    return [{ type: editorType, props: { ...normalizeProps(editorType, legacyEditorProps(blockType, expandTextStyles(storedProps))), id } } as ComponentData<Record<string, unknown>>];
   });
 }
 
@@ -284,6 +301,7 @@ function layoutToContent(layout: unknown): { content: ComponentData<Record<strin
     if (!isRecord(block) || typeof block.blockType !== "string") return [];
     if (!COMPONENT_TYPES.has(block.blockType)) return [];
     const { blockType, ...storedProps } = block;
+    const editorType = editorComponentType(blockType);
     delete storedProps.blockName;
     const id = typeof block.id === "string" ? block.id : `${blockType}-${index}`;
     if (DIRECT_NESTED_TYPES.has(blockType) && Array.isArray(storedProps.blocks)) {
@@ -308,12 +326,12 @@ function layoutToContent(layout: unknown): { content: ComponentData<Record<strin
       });
     }
 
-    const props = normalizeProps(blockType, {
-      ...expandTextStyles(storedProps),
+    const props = normalizeProps(editorType, {
+      ...legacyEditorProps(blockType, expandTextStyles(storedProps)),
       id,
     });
 
-    return [{ type: blockType, props: { ...props, id } } as ComponentData<Record<string, unknown>>];
+    return [{ type: editorType, props: { ...props, id } } as ComponentData<Record<string, unknown>>];
   });
 
   return { content, zones };
@@ -330,16 +348,27 @@ export function normalizePuckData(value: unknown): NECYPAAData {
     if (!isRecord(item) || typeof item.type !== "string" || !COMPONENT_TYPES.has(item.type)) {
       return [];
     }
-    const props = normalizeProps(item.type, item.props);
-    const id = typeof props.id === "string" ? props.id : `${item.type}-${index}`;
-    return [{ ...item, type: item.type, props: { ...props, id } }];
+    const editorType = editorComponentType(item.type);
+    const props = normalizeProps(editorType, legacyEditorProps(item.type, item.props));
+    const id = typeof props.id === "string" ? props.id : `${editorType}-${index}`;
+    return [{ ...item, type: editorType, props: { ...props, id } }];
   });
+
+  const zones = isRecord(value.zones)
+    ? Object.fromEntries(Object.entries(value.zones).map(([zone, items]) => [zone, Array.isArray(items) ? items.map((item, index) => {
+      if (!isRecord(item) || typeof item.type !== "string" || !COMPONENT_TYPES.has(item.type)) return item;
+      const editorType = editorComponentType(item.type);
+      const props = normalizeProps(editorType, legacyEditorProps(item.type, item.props));
+      const id = typeof props.id === "string" ? props.id : `${editorType}-zone-${index}`;
+      return { ...item, type: editorType, props: { ...props, id } };
+    }) : items]))
+    : {};
 
   return {
     ...value,
     root: isRecord(value.root) ? value.root : { props: {} },
     content,
-    zones: isRecord(value.zones) ? value.zones : {},
+    zones,
   } as NECYPAAData;
 }
 
@@ -428,7 +457,7 @@ export function puckDataToLayout(value: unknown): Array<Record<string, unknown>>
     }
     const materializedProps = materializePuckRichText(withNested) as Record<string, unknown>;
     const packed = stripNativeRichTextForPayload(packMedia(item.type, packTextStyles(materializedProps))) as Record<string, unknown>;
-    return [{ ...packed, id, blockType: item.type }];
+    return [{ ...packed, id, blockType: payloadBlockType(item.type) }];
   });
 }
 
