@@ -58,11 +58,12 @@ export default async function FrontendLayout({
           url: typeof item?.url === "string" ? item.url : "/",
           style: item?.style === "button" ? "button" : "link",
           newTab: item?.newTab === true,
+          showWarning: item?.showWarning === true,
         })) : defaultHeaderNavigation,
         footer: {
           heading: typeof footer.heading === "string" ? footer.heading : defaultFooter.heading,
           text: typeof footer.text === "string" ? footer.text : defaultFooter.text,
-          links: Array.isArray(footer.links) ? footer.links.filter((item): item is Record<string, unknown> => Boolean(item && typeof item === "object")).map((item) => ({ label: typeof item.label === "string" ? item.label : "Link", url: typeof item.url === "string" ? item.url : "/", newTab: item.newTab === true })) : defaultFooter.links,
+          links: Array.isArray(footer.links) ? footer.links.filter((item): item is Record<string, unknown> => Boolean(item && typeof item === "object")).map((item) => ({ label: typeof item.label === "string" ? item.label : "Link", url: typeof item.url === "string" ? item.url : "/", newTab: item.newTab === true, showWarning: item.showWarning === true })) : defaultFooter.links,
           legal: typeof footer.legal === "string" ? footer.legal : defaultFooter.legal,
         },
     };

@@ -17,6 +17,7 @@ export const Footer: GlobalConfig = {
         { name: "label", type: "text", required: true },
         { name: "url", type: "text", required: true },
         { name: "newTab", label: "Open in a new tab", type: "checkbox", defaultValue: false },
+        { name: "showWarning", label: "Show leaving-site warning", type: "checkbox", defaultValue: false },
       ],
     },
     { name: "legal", label: "Copyright / legal text", type: "text", required: true, defaultValue: "NECYPAA XXXVI · Northeast Convention of Young People in Alcoholics Anonymous" },

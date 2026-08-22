@@ -17,8 +17,8 @@ export type TenantTheme = {
   footer: FooterSettings;
 };
 
-export type HeaderNavigationItem = { label: string; url: string; style: "link" | "button"; newTab?: boolean };
-export type FooterLink = { label: string; url: string; newTab?: boolean };
+export type HeaderNavigationItem = { label: string; url: string; style: "link" | "button"; newTab?: boolean; showWarning?: boolean };
+export type FooterLink = { label: string; url: string; newTab?: boolean; showWarning?: boolean };
 export type FooterSettings = { heading: string; text: string; links: FooterLink[]; legal: string };
 
 export const defaultHeaderNavigation: HeaderNavigationItem[] = [

@@ -241,12 +241,20 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             registerAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            registerShowWarning?: boolean | null;
             hotelLabel?: string | null;
             hotelUrl?: string | null;
             /**
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             hotelAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            hotelShowWarning?: boolean | null;
             /**
              * The transparent artwork layered in front of the hero.
              */
@@ -328,6 +336,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             actionAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            actionShowWarning?: boolean | null;
             importantDates?:
               | {
                   date?: string | null;
@@ -531,12 +543,20 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             secondaryLabel?: string | null;
             secondaryUrl?: string | null;
             /**
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             image?: (string | null) | Media;
             textStyles?:
               | {
@@ -640,6 +660,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryBackgroundColor?: string | null;
             primaryTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -648,6 +672,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryBackgroundColor?: string | null;
             secondaryTextColor?: string | null;
             alignment?: ('left' | 'center' | 'right') | null;
@@ -816,6 +844,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             accessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            showWarning?: boolean | null;
                             style?: ('solid' | 'outline' | 'text') | null;
                             backgroundColor?: string | null;
                             textColor?: string | null;
@@ -1125,6 +1157,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryBackgroundColor?: string | null;
                             primaryTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -1133,6 +1169,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryBackgroundColor?: string | null;
                             secondaryTextColor?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
@@ -1162,6 +1202,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -1170,6 +1214,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -1226,6 +1274,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -1234,6 +1286,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -1291,6 +1347,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -1299,6 +1359,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -1355,6 +1419,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -1363,6 +1431,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -1628,6 +1700,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             accessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            showWarning?: boolean | null;
                             style?: ('solid' | 'outline' | 'text') | null;
                             backgroundColor?: string | null;
                             textColor?: string | null;
@@ -1937,6 +2013,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryBackgroundColor?: string | null;
                             primaryTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -1945,6 +2025,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryBackgroundColor?: string | null;
                             secondaryTextColor?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
@@ -1974,6 +2058,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -1982,6 +2070,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -2038,6 +2130,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -2046,6 +2142,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -2103,6 +2203,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -2111,6 +2215,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -2167,6 +2275,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -2175,6 +2287,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -2397,6 +2513,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             accessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            showWarning?: boolean | null;
                             style?: ('solid' | 'outline' | 'text') | null;
                             backgroundColor?: string | null;
                             textColor?: string | null;
@@ -2706,6 +2826,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryBackgroundColor?: string | null;
                             primaryTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -2714,6 +2838,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryBackgroundColor?: string | null;
                             secondaryTextColor?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
@@ -2743,6 +2871,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -2751,6 +2883,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -2807,6 +2943,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -2815,6 +2955,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -2872,6 +3016,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -2880,6 +3028,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -2936,6 +3088,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -2944,6 +3100,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -3090,6 +3250,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             accessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            showWarning?: boolean | null;
             style?: ('solid' | 'outline' | 'text') | null;
             backgroundColor?: string | null;
             textColor?: string | null;
@@ -3289,6 +3453,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -3598,6 +3766,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -3606,6 +3778,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -3635,6 +3811,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -3643,6 +3823,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -3699,6 +3883,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -3707,6 +3895,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -3764,6 +3956,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -3772,6 +3968,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -3828,6 +4028,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -3836,6 +4040,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -3996,6 +4204,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -4305,6 +4517,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -4313,6 +4529,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -4342,6 +4562,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -4350,6 +4574,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -4406,6 +4634,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -4414,6 +4646,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -4471,6 +4707,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -4479,6 +4719,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -4535,6 +4779,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -4543,6 +4791,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -4793,6 +5045,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             accessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            showWarning?: boolean | null;
             amount?: string | null;
             puckRichText?:
               | {
@@ -4820,6 +5076,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -4828,6 +5088,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -4884,6 +5148,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -4892,6 +5160,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -4949,6 +5221,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -4957,6 +5233,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -5013,6 +5293,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -5021,6 +5305,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -5093,6 +5381,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -5101,6 +5393,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -5165,6 +5461,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -5173,6 +5473,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -5305,6 +5609,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -5614,6 +5922,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -5622,6 +5934,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -5651,6 +5967,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -5659,6 +5979,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -5715,6 +6039,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -5723,6 +6051,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -5780,6 +6112,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -5788,6 +6124,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -5844,6 +6184,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -5852,6 +6196,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -5997,6 +6345,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -6306,6 +6658,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -6314,6 +6670,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -6343,6 +6703,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -6351,6 +6715,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -6407,6 +6775,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -6415,6 +6787,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -6472,6 +6848,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -6480,6 +6860,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -6536,6 +6920,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -6544,6 +6932,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -6617,6 +7009,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -6625,6 +7021,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -6683,6 +7083,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -6691,6 +7095,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -6823,6 +7231,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -7132,6 +7544,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -7140,6 +7556,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -7169,6 +7589,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -7177,6 +7601,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -7233,6 +7661,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -7241,6 +7673,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -7298,6 +7734,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -7306,6 +7746,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -7362,6 +7806,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -7370,6 +7818,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -7515,6 +7967,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -7824,6 +8280,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -7832,6 +8292,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -7861,6 +8325,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -7869,6 +8337,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -7925,6 +8397,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -7933,6 +8409,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -7990,6 +8470,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -7998,6 +8482,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -8054,6 +8542,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -8062,6 +8554,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -8135,6 +8631,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -8143,6 +8643,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -8276,6 +8780,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -8585,6 +9093,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -8593,6 +9105,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -8622,6 +9138,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -8630,6 +9150,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -8686,6 +9210,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -8694,6 +9222,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -8751,6 +9283,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -8759,6 +9295,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -8815,6 +9355,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -8823,6 +9367,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -8968,6 +9516,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -9277,6 +9829,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -9285,6 +9841,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -9314,6 +9874,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -9322,6 +9886,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -9378,6 +9946,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -9386,6 +9958,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -9443,6 +10019,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -9451,6 +10031,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -9507,6 +10091,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -9515,6 +10103,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -9588,6 +10180,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -9596,6 +10192,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -9727,6 +10327,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -10036,6 +10640,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -10044,6 +10652,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -10073,6 +10685,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -10081,6 +10697,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -10137,6 +10757,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -10145,6 +10769,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -10202,6 +10830,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -10210,6 +10842,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -10266,6 +10902,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -10274,6 +10914,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -10419,6 +11063,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -10728,6 +11376,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -10736,6 +11388,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -10765,6 +11421,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -10773,6 +11433,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -10829,6 +11493,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -10837,6 +11505,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -10894,6 +11566,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -10902,6 +11578,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -10958,6 +11638,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -10966,6 +11650,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -11039,6 +11727,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -11047,6 +11739,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -11187,6 +11883,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -11496,6 +12196,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -11504,6 +12208,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -11533,6 +12241,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -11541,6 +12253,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -11597,6 +12313,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -11605,6 +12325,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -11662,6 +12386,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -11670,6 +12398,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -11726,6 +12458,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -11734,6 +12470,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -11879,6 +12619,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -12188,6 +12932,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -12196,6 +12944,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -12225,6 +12977,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -12233,6 +12989,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -12289,6 +13049,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -12297,6 +13061,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -12354,6 +13122,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -12362,6 +13134,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -12418,6 +13194,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -12426,6 +13206,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -12499,6 +13283,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -12507,6 +13295,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -12641,6 +13433,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -12950,6 +13746,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -12958,6 +13758,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -12987,6 +13791,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -12995,6 +13803,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -13051,6 +13863,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -13059,6 +13875,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -13116,6 +13936,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -13124,6 +13948,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -13180,6 +14008,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -13188,6 +14020,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -13333,6 +14169,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -13642,6 +14482,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -13650,6 +14494,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -13679,6 +14527,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -13687,6 +14539,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -13743,6 +14599,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -13751,6 +14611,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -13808,6 +14672,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -13816,6 +14684,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -13872,6 +14744,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -13880,6 +14756,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -13953,6 +14833,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -13961,6 +14845,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -14092,6 +14980,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -14401,6 +15293,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -14409,6 +15305,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -14438,6 +15338,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -14446,6 +15350,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -14502,6 +15410,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -14510,6 +15422,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -14567,6 +15483,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -14575,6 +15495,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -14631,6 +15555,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -14639,6 +15567,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -14784,6 +15716,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -15093,6 +16029,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -15101,6 +16041,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -15130,6 +16074,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -15138,6 +16086,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -15194,6 +16146,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -15202,6 +16158,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -15259,6 +16219,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -15267,6 +16231,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -15323,6 +16291,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -15331,6 +16303,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -15404,6 +16380,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -15412,6 +16392,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -15544,6 +16528,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -15853,6 +16841,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -15861,6 +16853,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -15890,6 +16886,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -15898,6 +16898,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -15954,6 +16958,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -15962,6 +16970,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -16019,6 +17031,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -16027,6 +17043,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -16083,6 +17103,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -16091,6 +17115,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -16236,6 +17264,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -16545,6 +17577,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -16553,6 +17589,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -16582,6 +17622,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -16590,6 +17634,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -16646,6 +17694,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -16654,6 +17706,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -16711,6 +17767,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -16719,6 +17779,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -16775,6 +17839,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -16783,6 +17851,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -16856,6 +17928,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -16864,6 +17940,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -17000,6 +18080,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             accessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            showWarning?: boolean | null;
                             style?: ('solid' | 'outline' | 'text') | null;
                             backgroundColor?: string | null;
                             textColor?: string | null;
@@ -17309,6 +18393,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryBackgroundColor?: string | null;
                             primaryTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -17317,6 +18405,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryBackgroundColor?: string | null;
                             secondaryTextColor?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
@@ -17346,6 +18438,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -17354,6 +18450,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -17410,6 +18510,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -17418,6 +18522,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -17475,6 +18583,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -17483,6 +18595,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -17539,6 +18655,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -17547,6 +18667,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -17705,6 +18829,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -18014,6 +19142,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -18022,6 +19154,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -18051,6 +19187,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -18059,6 +19199,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -18115,6 +19259,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -18123,6 +19271,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -18180,6 +19332,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -18188,6 +19344,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -18244,6 +19404,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -18252,6 +19416,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -18397,6 +19565,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -18706,6 +19878,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -18714,6 +19890,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -18743,6 +19923,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -18751,6 +19935,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -18807,6 +19995,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -18815,6 +20007,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -18872,6 +20068,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -18880,6 +20080,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -18936,6 +20140,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -18944,6 +20152,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -19017,6 +20229,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -19025,6 +20241,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -19157,6 +20377,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -19466,6 +20690,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -19474,6 +20702,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -19503,6 +20735,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -19511,6 +20747,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -19567,6 +20807,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -19575,6 +20819,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -19632,6 +20880,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -19640,6 +20892,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -19696,6 +20952,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -19704,6 +20964,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -19849,6 +21113,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -20158,6 +21426,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -20166,6 +21438,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -20195,6 +21471,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -20203,6 +21483,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -20259,6 +21543,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -20267,6 +21555,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -20324,6 +21616,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -20332,6 +21628,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -20388,6 +21688,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -20396,6 +21700,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -20469,6 +21777,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -20477,6 +21789,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -20608,6 +21924,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -20917,6 +22237,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -20925,6 +22249,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -20954,6 +22282,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -20962,6 +22294,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -21018,6 +22354,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -21026,6 +22366,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -21083,6 +22427,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -21091,6 +22439,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -21147,6 +22499,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -21155,6 +22511,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -21300,6 +22660,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -21609,6 +22973,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -21617,6 +22985,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -21646,6 +23018,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -21654,6 +23030,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -21710,6 +23090,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -21718,6 +23102,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -21775,6 +23163,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -21783,6 +23175,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -21839,6 +23235,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -21847,6 +23247,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -21920,6 +23324,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -21928,6 +23336,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -22059,6 +23471,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -22368,6 +23784,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -22376,6 +23796,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -22405,6 +23829,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -22413,6 +23841,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -22469,6 +23901,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -22477,6 +23913,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -22534,6 +23974,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -22542,6 +23986,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -22598,6 +24046,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -22606,6 +24058,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -22751,6 +24207,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -23060,6 +24520,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -23068,6 +24532,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -23097,6 +24565,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -23105,6 +24577,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -23161,6 +24637,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -23169,6 +24649,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -23226,6 +24710,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -23234,6 +24722,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -23290,6 +24782,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -23298,6 +24794,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -23371,6 +24871,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -23379,6 +24883,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -23437,6 +24945,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -23445,6 +24957,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -23576,6 +25092,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -23885,6 +25405,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -23893,6 +25417,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -23922,6 +25450,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -23930,6 +25462,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -23986,6 +25522,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -23994,6 +25534,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -24051,6 +25595,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -24059,6 +25607,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -24115,6 +25667,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -24123,6 +25679,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -24268,6 +25828,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -24577,6 +26141,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -24585,6 +26153,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -24614,6 +26186,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -24622,6 +26198,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -24678,6 +26258,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -24686,6 +26270,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -24743,6 +26331,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -24751,6 +26343,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -24807,6 +26403,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -24815,6 +26415,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -24890,6 +26494,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -24898,6 +26506,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -25034,6 +26646,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             accessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            showWarning?: boolean | null;
                             style?: ('solid' | 'outline' | 'text') | null;
                             backgroundColor?: string | null;
                             textColor?: string | null;
@@ -25343,6 +26959,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryBackgroundColor?: string | null;
                             primaryTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -25351,6 +26971,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryBackgroundColor?: string | null;
                             secondaryTextColor?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
@@ -25380,6 +27004,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -25388,6 +27016,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -25444,6 +27076,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -25452,6 +27088,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -25509,6 +27149,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -25517,6 +27161,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -25573,6 +27221,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -25581,6 +27233,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -25666,6 +27322,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -25674,6 +27334,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -25810,6 +27474,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             accessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            showWarning?: boolean | null;
                             style?: ('solid' | 'outline' | 'text') | null;
                             backgroundColor?: string | null;
                             textColor?: string | null;
@@ -26119,6 +27787,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryBackgroundColor?: string | null;
                             primaryTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -26127,6 +27799,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryBackgroundColor?: string | null;
                             secondaryTextColor?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
@@ -26156,6 +27832,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -26164,6 +27844,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -26220,6 +27904,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -26228,6 +27916,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -26285,6 +27977,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -26293,6 +27989,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -26349,6 +28049,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             primaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            primaryShowWarning?: boolean | null;
                             primaryButtonColor?: string | null;
                             primaryButtonTextColor?: string | null;
                             secondaryLabel?: string | null;
@@ -26357,6 +28061,10 @@ export interface Page {
                              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                              */
                             secondaryAccessibleContext?: string | null;
+                            /**
+                             * Pause before navigation and show a leaving-site warning.
+                             */
+                            secondaryShowWarning?: boolean | null;
                             secondaryButtonColor?: string | null;
                             secondaryButtonTextColor?: string | null;
                             items?:
@@ -26515,6 +28223,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -26824,6 +28536,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -26832,6 +28548,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -26861,6 +28581,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -26869,6 +28593,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -26925,6 +28653,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -26933,6 +28665,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -26990,6 +28726,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -26998,6 +28738,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -27054,6 +28798,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -27062,6 +28810,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -27207,6 +28959,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -27516,6 +29272,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -27524,6 +29284,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -27553,6 +29317,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -27561,6 +29329,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -27617,6 +29389,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -27625,6 +29401,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -27682,6 +29462,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -27690,6 +29474,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -27746,6 +29534,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -27754,6 +29546,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -27826,6 +29622,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -27834,6 +29634,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -27965,6 +29769,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -28274,6 +30082,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -28282,6 +30094,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -28311,6 +30127,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -28319,6 +30139,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -28375,6 +30199,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -28383,6 +30211,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -28440,6 +30272,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -28448,6 +30284,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -28504,6 +30344,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -28512,6 +30356,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -28657,6 +30505,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -28966,6 +30818,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -28974,6 +30830,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -29003,6 +30863,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -29011,6 +30875,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -29067,6 +30935,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -29075,6 +30947,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -29132,6 +31008,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -29140,6 +31020,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -29196,6 +31080,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -29204,6 +31092,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -29277,6 +31169,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -29285,6 +31181,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -29416,6 +31316,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -29725,6 +31629,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -29733,6 +31641,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -29762,6 +31674,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -29770,6 +31686,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -29826,6 +31746,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -29834,6 +31758,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -29891,6 +31819,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -29899,6 +31831,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -29955,6 +31891,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -29963,6 +31903,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -30108,6 +32052,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -30417,6 +32365,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -30425,6 +32377,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -30454,6 +32410,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -30462,6 +32422,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -30518,6 +32482,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -30526,6 +32494,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -30583,6 +32555,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -30591,6 +32567,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -30647,6 +32627,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -30655,6 +32639,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -30728,6 +32716,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -30736,6 +32728,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -30794,6 +32790,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -30802,6 +32802,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -30933,6 +32937,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -31242,6 +33250,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -31250,6 +33262,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -31279,6 +33295,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -31287,6 +33307,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -31343,6 +33367,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -31351,6 +33379,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -31408,6 +33440,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -31416,6 +33452,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -31472,6 +33512,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -31480,6 +33524,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -31625,6 +33673,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -31934,6 +33986,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -31942,6 +33998,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -31971,6 +34031,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -31979,6 +34043,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -32035,6 +34103,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -32043,6 +34115,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -32100,6 +34176,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -32108,6 +34188,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -32164,6 +34248,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -32172,6 +34260,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -32245,6 +34337,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -32253,6 +34349,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -32311,6 +34411,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -32319,6 +34423,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -32450,6 +34558,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -32759,6 +34871,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -32767,6 +34883,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -32796,6 +34916,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -32804,6 +34928,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -32860,6 +34988,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -32868,6 +35000,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -32925,6 +35061,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -32933,6 +35073,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -32989,6 +35133,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -32997,6 +35145,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -33142,6 +35294,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -33451,6 +35607,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -33459,6 +35619,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -33488,6 +35652,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -33496,6 +35664,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -33552,6 +35724,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -33560,6 +35736,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -33617,6 +35797,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -33625,6 +35809,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -33681,6 +35869,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -33689,6 +35881,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -33762,6 +35958,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -33770,6 +35970,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -33901,6 +36105,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -34210,6 +36418,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -34218,6 +36430,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -34247,6 +36463,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -34255,6 +36475,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -34311,6 +36535,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -34319,6 +36547,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -34376,6 +36608,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -34384,6 +36620,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -34440,6 +36680,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -34448,6 +36692,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -34593,6 +36841,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       accessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      showWarning?: boolean | null;
                       style?: ('solid' | 'outline' | 'text') | null;
                       backgroundColor?: string | null;
                       textColor?: string | null;
@@ -34902,6 +37154,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryBackgroundColor?: string | null;
                       primaryTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -34910,6 +37166,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryBackgroundColor?: string | null;
                       secondaryTextColor?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -34939,6 +37199,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -34947,6 +37211,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -35003,6 +37271,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -35011,6 +37283,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -35068,6 +37344,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -35076,6 +37356,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -35132,6 +37416,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       primaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      primaryShowWarning?: boolean | null;
                       primaryButtonColor?: string | null;
                       primaryButtonTextColor?: string | null;
                       secondaryLabel?: string | null;
@@ -35140,6 +37428,10 @@ export interface Page {
                        * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
                        */
                       secondaryAccessibleContext?: string | null;
+                      /**
+                       * Pause before navigation and show a leaving-site warning.
+                       */
+                      secondaryShowWarning?: boolean | null;
                       secondaryButtonColor?: string | null;
                       secondaryButtonTextColor?: string | null;
                       items?:
@@ -35213,6 +37505,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             primaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            primaryShowWarning?: boolean | null;
             primaryButtonColor?: string | null;
             primaryButtonTextColor?: string | null;
             secondaryLabel?: string | null;
@@ -35221,6 +37517,10 @@ export interface Page {
              * Optional context for repeated labels. For example, ‘about Al-Anon’ makes ‘Learn more’ announce as ‘Learn more — about Al-Anon’. A full label beginning with the visible text is also accepted.
              */
             secondaryAccessibleContext?: string | null;
+            /**
+             * Pause before navigation and show a leaving-site warning.
+             */
+            secondaryShowWarning?: boolean | null;
             secondaryButtonColor?: string | null;
             secondaryButtonTextColor?: string | null;
             items?:
@@ -35945,9 +38245,11 @@ export interface PagesSelect<T extends boolean = true> {
               registerLabel?: T;
               registerUrl?: T;
               registerAccessibleContext?: T;
+              registerShowWarning?: T;
               hotelLabel?: T;
               hotelUrl?: T;
               hotelAccessibleContext?: T;
+              hotelShowWarning?: T;
               foregroundImage?: T;
               backgroundImage?: T;
               backgroundPosterImage?: T;
@@ -35984,6 +38286,7 @@ export interface PagesSelect<T extends boolean = true> {
               actionLabel?: T;
               actionUrl?: T;
               actionAccessibleContext?: T;
+              actionShowWarning?: T;
               importantDates?:
                 | T
                 | {
@@ -36086,9 +38389,11 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               image?: T;
               textStyles?: T;
               puckRichText?: T;
@@ -36136,11 +38441,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryBackgroundColor?: T;
               primaryTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryBackgroundColor?: T;
               secondaryTextColor?: T;
               alignment?: T;
@@ -36240,6 +38547,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 accessibleContext?: T;
+                                showWarning?: T;
                                 style?: T;
                                 backgroundColor?: T;
                                 textColor?: T;
@@ -36394,11 +38702,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryBackgroundColor?: T;
                                 primaryTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryBackgroundColor?: T;
                                 secondaryTextColor?: T;
                                 alignment?: T;
@@ -36418,11 +38728,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -36458,11 +38770,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -36499,11 +38813,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -36539,11 +38855,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -36691,6 +39009,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 accessibleContext?: T;
+                                showWarning?: T;
                                 style?: T;
                                 backgroundColor?: T;
                                 textColor?: T;
@@ -36845,11 +39164,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryBackgroundColor?: T;
                                 primaryTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryBackgroundColor?: T;
                                 secondaryTextColor?: T;
                                 alignment?: T;
@@ -36869,11 +39190,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -36909,11 +39232,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -36950,11 +39275,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -36990,11 +39317,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -37111,6 +39440,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 accessibleContext?: T;
+                                showWarning?: T;
                                 style?: T;
                                 backgroundColor?: T;
                                 textColor?: T;
@@ -37265,11 +39595,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryBackgroundColor?: T;
                                 primaryTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryBackgroundColor?: T;
                                 secondaryTextColor?: T;
                                 alignment?: T;
@@ -37289,11 +39621,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -37329,11 +39663,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -37370,11 +39706,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -37410,11 +39748,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -37489,6 +39829,7 @@ export interface PagesSelect<T extends boolean = true> {
               label?: T;
               url?: T;
               accessibleContext?: T;
+              showWarning?: T;
               style?: T;
               backgroundColor?: T;
               textColor?: T;
@@ -37583,6 +39924,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -37737,11 +40079,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -37761,11 +40105,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -37801,11 +40147,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -37842,11 +40190,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -37882,11 +40232,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -37974,6 +40326,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -38128,11 +40481,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -38152,11 +40507,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -38192,11 +40549,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -38233,11 +40592,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -38273,11 +40634,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -38411,6 +40774,7 @@ export interface PagesSelect<T extends boolean = true> {
               label?: T;
               url?: T;
               accessibleContext?: T;
+              showWarning?: T;
               amount?: T;
               puckRichText?: T;
               id?: T;
@@ -38428,11 +40792,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -38468,11 +40834,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -38509,11 +40877,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -38549,11 +40919,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -38591,11 +40963,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -38639,11 +41013,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -38720,6 +41096,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -38874,11 +41251,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -38898,11 +41277,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -38938,11 +41319,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -38979,11 +41362,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -39019,11 +41404,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -39103,6 +41490,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -39257,11 +41645,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -39281,11 +41671,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -39321,11 +41713,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -39362,11 +41756,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -39402,11 +41798,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -39449,11 +41847,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -39491,11 +41891,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -39572,6 +41974,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -39726,11 +42129,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -39750,11 +42155,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -39790,11 +42197,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -39831,11 +42240,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -39871,11 +42282,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -39955,6 +42368,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -40109,11 +42523,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -40133,11 +42549,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -40173,11 +42591,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -40214,11 +42634,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -40254,11 +42676,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -40301,11 +42725,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -40383,6 +42809,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -40537,11 +42964,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -40561,11 +42990,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -40601,11 +43032,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -40642,11 +43075,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -40682,11 +43117,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -40766,6 +43203,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -40920,11 +43358,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -40944,11 +43384,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -40984,11 +43426,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -41025,11 +43469,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -41065,11 +43511,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -41112,11 +43560,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -41192,6 +43642,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -41346,11 +43797,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -41370,11 +43823,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -41410,11 +43865,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -41451,11 +43908,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -41491,11 +43950,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -41575,6 +44036,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -41729,11 +44191,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -41753,11 +44217,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -41793,11 +44259,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -41834,11 +44302,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -41874,11 +44344,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -41921,11 +44393,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -42010,6 +44484,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -42164,11 +44639,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -42188,11 +44665,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -42228,11 +44707,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -42269,11 +44750,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -42309,11 +44792,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -42393,6 +44878,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -42547,11 +45033,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -42571,11 +45059,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -42611,11 +45101,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -42652,11 +45144,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -42692,11 +45186,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -42739,11 +45235,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -42822,6 +45320,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -42976,11 +45475,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -43000,11 +45501,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -43040,11 +45543,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -43081,11 +45586,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -43121,11 +45628,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -43205,6 +45714,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -43359,11 +45869,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -43383,11 +45895,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -43423,11 +45937,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -43464,11 +45980,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -43504,11 +46022,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -43551,11 +46071,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -43631,6 +46153,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -43785,11 +46308,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -43809,11 +46334,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -43849,11 +46376,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -43890,11 +46419,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -43930,11 +46461,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -44014,6 +46547,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -44168,11 +46702,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -44192,11 +46728,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -44232,11 +46770,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -44273,11 +46813,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -44313,11 +46855,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -44360,11 +46904,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -44441,6 +46987,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -44595,11 +47142,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -44619,11 +47168,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -44659,11 +47210,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -44700,11 +47253,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -44740,11 +47295,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -44824,6 +47381,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -44978,11 +47536,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -45002,11 +47562,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -45042,11 +47604,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -45083,11 +47647,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -45123,11 +47689,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -45170,11 +47738,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -45256,6 +47826,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 accessibleContext?: T;
+                                showWarning?: T;
                                 style?: T;
                                 backgroundColor?: T;
                                 textColor?: T;
@@ -45410,11 +47981,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryBackgroundColor?: T;
                                 primaryTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryBackgroundColor?: T;
                                 secondaryTextColor?: T;
                                 alignment?: T;
@@ -45434,11 +48007,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -45474,11 +48049,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -45515,11 +48092,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -45555,11 +48134,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -45643,6 +48224,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -45797,11 +48379,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -45821,11 +48405,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -45861,11 +48447,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -45902,11 +48490,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -45942,11 +48532,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -46026,6 +48618,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -46180,11 +48773,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -46204,11 +48799,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -46244,11 +48841,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -46285,11 +48884,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -46325,11 +48926,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -46372,11 +48975,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -46453,6 +49058,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -46607,11 +49213,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -46631,11 +49239,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -46671,11 +49281,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -46712,11 +49324,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -46752,11 +49366,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -46836,6 +49452,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -46990,11 +49607,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -47014,11 +49633,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -47054,11 +49675,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -47095,11 +49718,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -47135,11 +49760,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -47182,11 +49809,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -47262,6 +49891,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -47416,11 +50046,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -47440,11 +50072,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -47480,11 +50114,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -47521,11 +50157,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -47561,11 +50199,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -47645,6 +50285,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -47799,11 +50440,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -47823,11 +50466,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -47863,11 +50508,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -47904,11 +50551,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -47944,11 +50593,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -47991,11 +50642,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -48071,6 +50724,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -48225,11 +50879,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -48249,11 +50905,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -48289,11 +50947,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -48330,11 +50990,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -48370,11 +51032,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -48454,6 +51118,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -48608,11 +51273,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -48632,11 +51299,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -48672,11 +51341,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -48713,11 +51384,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -48753,11 +51426,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -48800,11 +51475,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -48842,11 +51519,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -48922,6 +51601,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -49076,11 +51756,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -49100,11 +51782,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -49140,11 +51824,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -49181,11 +51867,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -49221,11 +51909,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -49305,6 +51995,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -49459,11 +52150,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -49483,11 +52176,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -49523,11 +52218,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -49564,11 +52261,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -49604,11 +52303,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -49651,11 +52352,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -49737,6 +52440,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 accessibleContext?: T;
+                                showWarning?: T;
                                 style?: T;
                                 backgroundColor?: T;
                                 textColor?: T;
@@ -49891,11 +52595,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryBackgroundColor?: T;
                                 primaryTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryBackgroundColor?: T;
                                 secondaryTextColor?: T;
                                 alignment?: T;
@@ -49915,11 +52621,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -49955,11 +52663,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -49996,11 +52706,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -50036,11 +52748,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -50086,11 +52800,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -50172,6 +52888,7 @@ export interface PagesSelect<T extends boolean = true> {
                                 label?: T;
                                 url?: T;
                                 accessibleContext?: T;
+                                showWarning?: T;
                                 style?: T;
                                 backgroundColor?: T;
                                 textColor?: T;
@@ -50326,11 +53043,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryBackgroundColor?: T;
                                 primaryTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryBackgroundColor?: T;
                                 secondaryTextColor?: T;
                                 alignment?: T;
@@ -50350,11 +53069,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -50390,11 +53111,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -50431,11 +53154,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -50471,11 +53196,13 @@ export interface PagesSelect<T extends boolean = true> {
                                 primaryLabel?: T;
                                 primaryUrl?: T;
                                 primaryAccessibleContext?: T;
+                                primaryShowWarning?: T;
                                 primaryButtonColor?: T;
                                 primaryButtonTextColor?: T;
                                 secondaryLabel?: T;
                                 secondaryUrl?: T;
                                 secondaryAccessibleContext?: T;
+                                secondaryShowWarning?: T;
                                 secondaryButtonColor?: T;
                                 secondaryButtonTextColor?: T;
                                 items?:
@@ -50559,6 +53286,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -50713,11 +53441,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -50737,11 +53467,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -50777,11 +53509,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -50818,11 +53552,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -50858,11 +53594,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -50942,6 +53680,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -51096,11 +53835,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -51120,11 +53861,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -51160,11 +53903,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -51201,11 +53946,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -51241,11 +53988,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -51287,11 +54036,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -51367,6 +54118,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -51521,11 +54273,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -51545,11 +54299,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -51585,11 +54341,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -51626,11 +54384,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -51666,11 +54426,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -51750,6 +54512,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -51904,11 +54667,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -51928,11 +54693,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -51968,11 +54735,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -52009,11 +54778,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -52049,11 +54820,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -52096,11 +54869,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -52176,6 +54951,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -52330,11 +55106,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -52354,11 +55132,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -52394,11 +55174,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -52435,11 +55217,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -52475,11 +55259,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -52559,6 +55345,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -52713,11 +55500,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -52737,11 +55526,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -52777,11 +55568,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -52818,11 +55611,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -52858,11 +55653,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -52905,11 +55702,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -52947,11 +55746,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -53027,6 +55828,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -53181,11 +55983,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -53205,11 +56009,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -53245,11 +56051,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -53286,11 +56094,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -53326,11 +56136,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -53410,6 +56222,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -53564,11 +56377,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -53588,11 +56403,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -53628,11 +56445,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -53669,11 +56488,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -53709,11 +56530,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -53756,11 +56579,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -53798,11 +56623,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -53878,6 +56705,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -54032,11 +56860,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -54056,11 +56886,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -54096,11 +56928,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -54137,11 +56971,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -54177,11 +57013,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -54261,6 +57099,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -54415,11 +57254,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -54439,11 +57280,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -54479,11 +57322,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -54520,11 +57365,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -54560,11 +57407,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -54607,11 +57456,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -54687,6 +57538,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -54841,11 +57693,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -54865,11 +57719,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -54905,11 +57761,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -54946,11 +57804,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -54986,11 +57846,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -55070,6 +57932,7 @@ export interface PagesSelect<T extends boolean = true> {
                           label?: T;
                           url?: T;
                           accessibleContext?: T;
+                          showWarning?: T;
                           style?: T;
                           backgroundColor?: T;
                           textColor?: T;
@@ -55224,11 +58087,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryBackgroundColor?: T;
                           primaryTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryBackgroundColor?: T;
                           secondaryTextColor?: T;
                           alignment?: T;
@@ -55248,11 +58113,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -55288,11 +58155,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -55329,11 +58198,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -55369,11 +58240,13 @@ export interface PagesSelect<T extends boolean = true> {
                           primaryLabel?: T;
                           primaryUrl?: T;
                           primaryAccessibleContext?: T;
+                          primaryShowWarning?: T;
                           primaryButtonColor?: T;
                           primaryButtonTextColor?: T;
                           secondaryLabel?: T;
                           secondaryUrl?: T;
                           secondaryAccessibleContext?: T;
+                          secondaryShowWarning?: T;
                           secondaryButtonColor?: T;
                           secondaryButtonTextColor?: T;
                           items?:
@@ -55416,11 +58289,13 @@ export interface PagesSelect<T extends boolean = true> {
               primaryLabel?: T;
               primaryUrl?: T;
               primaryAccessibleContext?: T;
+              primaryShowWarning?: T;
               primaryButtonColor?: T;
               primaryButtonTextColor?: T;
               secondaryLabel?: T;
               secondaryUrl?: T;
               secondaryAccessibleContext?: T;
+              secondaryShowWarning?: T;
               secondaryButtonColor?: T;
               secondaryButtonTextColor?: T;
               items?:
@@ -55800,6 +58675,7 @@ export interface Header {
         url: string;
         style?: ('link' | 'button') | null;
         newTab?: boolean | null;
+        showWarning?: boolean | null;
         id?: string | null;
       }[]
     | null;
@@ -55819,6 +58695,7 @@ export interface Footer {
         label: string;
         url: string;
         newTab?: boolean | null;
+        showWarning?: boolean | null;
         id?: string | null;
       }[]
     | null;
@@ -55840,6 +58717,7 @@ export interface HeaderSelect<T extends boolean = true> {
         url?: T;
         style?: T;
         newTab?: T;
+        showWarning?: T;
         id?: T;
       };
   updatedAt?: T;
@@ -55859,6 +58737,7 @@ export interface FooterSelect<T extends boolean = true> {
         label?: T;
         url?: T;
         newTab?: T;
+        showWarning?: T;
         id?: T;
       };
   legal?: T;

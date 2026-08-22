@@ -31,6 +31,10 @@ function accessibleContextField(name = "accessibleContext"): Field {
   return { name, type: "text", admin: { description: ACCESSIBLE_CONTEXT_DESCRIPTION } };
 }
 
+function leavingSiteWarningField(name = "showWarning"): Field {
+  return { name, type: "checkbox", defaultValue: false, admin: { description: "Pause before navigation and show a leaving-site warning." } };
+}
+
 const verticalPaddingOptions = [
   { label: "None", value: "none" },
   { label: "Compact", value: "compact" },
@@ -76,9 +80,11 @@ export const HeroCountdownBlock: Block = {
     { name: "registerLabel", type: "text" },
     { name: "registerUrl", type: "text" },
     accessibleContextField("registerAccessibleContext"),
+    leavingSiteWarningField("registerShowWarning"),
     { name: "hotelLabel", type: "text" },
     { name: "hotelUrl", type: "text" },
     accessibleContextField("hotelAccessibleContext"),
+    leavingSiteWarningField("hotelShowWarning"),
     {
       name: "foregroundImage",
       type: "upload",
@@ -144,6 +150,7 @@ export const MeetingInfoBlock: Block = {
     { name: "actionLabel", type: "text" },
     { name: "actionUrl", type: "text" },
     accessibleContextField("actionAccessibleContext"),
+    leavingSiteWarningField("actionShowWarning"),
     {
       name: "importantDates",
       type: "array",
@@ -255,9 +262,11 @@ export const CallToActionBlock: Block = {
     { name: "primaryLabel", type: "text" },
     { name: "primaryUrl", type: "text" },
     accessibleContextField("primaryAccessibleContext"),
+    leavingSiteWarningField("primaryShowWarning"),
     { name: "secondaryLabel", type: "text" },
     { name: "secondaryUrl", type: "text" },
     accessibleContextField("secondaryAccessibleContext"),
+    leavingSiteWarningField("secondaryShowWarning"),
     { name: "image", type: "upload", relationTo: "media" },
     textStyles,
   ],
@@ -353,7 +362,7 @@ export const ProgramScheduleBlock: Block = {
 };
 
 export const TextBlock: Block = { slug: "Text", labels: { singular: "Text", plural: "Text blocks" }, admin: { group: "Flexible content" }, fields: [{ name: "text", type: "textarea" }, { name: "fontSize", type: "text", defaultValue: "1rem" }, { name: "color", type: "text", defaultValue: "inherit" }, { name: "alignment", type: "select", defaultValue: "left", options: ["left", "center", "right"] }] };
-export const ButtonBlock: Block = { slug: "Button", labels: { singular: "Button", plural: "Buttons" }, admin: { group: "Flexible content" }, fields: [{ name: "label", type: "text" }, { name: "url", type: "text" }, accessibleContextField(), { name: "style", type: "select", defaultValue: "solid", options: ["solid", "outline", "text"] }, { name: "backgroundColor", type: "text", defaultValue: "var(--tenant-primary, #E85E27)" }, { name: "textColor", type: "text" }, { name: "alignment", type: "select", defaultValue: "left", options: ["left", "center", "right"] }] };
+export const ButtonBlock: Block = { slug: "Button", labels: { singular: "Button", plural: "Buttons" }, admin: { group: "Flexible content" }, fields: [{ name: "label", type: "text" }, { name: "url", type: "text" }, accessibleContextField(), leavingSiteWarningField(), { name: "style", type: "select", defaultValue: "solid", options: ["solid", "outline", "text"] }, { name: "backgroundColor", type: "text", defaultValue: "var(--tenant-primary, #E85E27)" }, { name: "textColor", type: "text" }, { name: "alignment", type: "select", defaultValue: "left", options: ["left", "center", "right"] }] };
 export const IconBlock: Block = { slug: "Icon", labels: { singular: "Icon", plural: "Icons" }, admin: { group: "Flexible content" }, fields: [{ name: "icon", type: "select", defaultValue: "check", options: ["award", "book", "briefcase", "calendar", "check", "clock", "dollar", "externalLink", "family", "handshake", "heart", "home", "info", "landmark", "lightbulb", "mail", "mapPin", "megaphone", "people", "phone", "shieldCheck", "sparkles", "star", "vote"] }, { name: "label", type: "text", defaultValue: "Helpful icon" }, { name: "showLabel", type: "checkbox", defaultValue: false }, { name: "size", type: "select", defaultValue: "medium", options: ["small", "medium", "large"] }, { name: "color", type: "text", defaultValue: "var(--tenant-light-text, #F4E8D3)" }, { name: "backgroundColor", type: "text", defaultValue: "var(--tenant-background, #0C0D0E)" }, { name: "shape", type: "select", defaultValue: "circle", options: ["none", "circle", "rounded", "square"] }, { name: "alignment", type: "select", defaultValue: "left", options: ["left", "center", "right"] }] };
 export const CountdownBlock: Block = { slug: "Countdown", labels: { singular: "Countdown", plural: "Countdowns" }, admin: { group: "Flexible content" }, fields: [{ name: "target", type: "text" }, { name: "label", type: "text" }] };
 
@@ -368,7 +377,7 @@ export const InlineFormBlock: Block = { slug: "InlineForm", labels: { singular: 
 export const ImageCaptionBlock: Block = { slug: "ImageCaption", labels: { singular: "Image + caption", plural: "Images + captions" }, admin: { group: "Page blocks" }, fields: [{ name: "image", type: "upload", relationTo: "media", required: true }, { name: "caption", type: "text" }] };
 export const VideoBlock: Block = { slug: "Video", labels: { singular: "Video", plural: "Videos" }, admin: { group: "Page blocks" }, fields: [{ name: "video", type: "upload", relationTo: "media" }, { name: "url", type: "text" }, { name: "caption", type: "text" }] };
 export const EmbedBlock: Block = { slug: "Embed", labels: { singular: "Embed", plural: "Embeds" }, admin: { group: "Page blocks" }, fields: [{ name: "url", type: "text" }, { name: "title", type: "text" }] };
-export const PayPalBlock: Block = { slug: "PayPal", labels: { singular: "Legacy PayPal button", plural: "Legacy PayPal buttons" }, admin: { group: "Legacy compatibility" }, fields: [{ name: "label", type: "text", defaultValue: "Donate" }, { name: "url", type: "text" }, accessibleContextField(), { name: "amount", type: "text" }] };
+export const PayPalBlock: Block = { slug: "PayPal", labels: { singular: "Legacy PayPal button", plural: "Legacy PayPal buttons" }, admin: { group: "Legacy compatibility" }, fields: [{ name: "label", type: "text", defaultValue: "Donate" }, { name: "url", type: "text" }, accessibleContextField(), leavingSiteWarningField(), { name: "amount", type: "text" }] };
 
 const nestedElementBlocks: Block[] = [ImageBlock, RichTextBlock, FreeTextBlock, TextBlock, ButtonBlock, IconBlock, CountdownBlock, NavigationBlock, HeadlineBlock, DividerBlock, FollowLinksBlock, BulletedListBlock, InlineFormBlock, ImageCaptionBlock, VideoBlock, EmbedBlock];
 
@@ -397,11 +406,13 @@ export const ButtonRowBlock: Block = {
     { name: "primaryLabel", type: "text" },
     { name: "primaryUrl", type: "text" },
     accessibleContextField("primaryAccessibleContext"),
+    leavingSiteWarningField("primaryShowWarning"),
     { name: "primaryBackgroundColor", type: "text", defaultValue: "var(--tenant-primary, #E85E27)" },
     { name: "primaryTextColor", type: "text", defaultValue: "var(--tenant-light-text, #F4E8D3)" },
     { name: "secondaryLabel", type: "text" },
     { name: "secondaryUrl", type: "text" },
     accessibleContextField("secondaryAccessibleContext"),
+    leavingSiteWarningField("secondaryShowWarning"),
     { name: "secondaryBackgroundColor", type: "text", defaultValue: "var(--tenant-dark-text, #171614)" },
     { name: "secondaryTextColor", type: "text", defaultValue: "var(--tenant-dark-text, #171614)" },
     { name: "alignment", type: "select", defaultValue: "left", options: ["left", "center", "right"] },
@@ -493,11 +504,13 @@ function createCampaignAltBlock(definition: (typeof campaignAltDefinitions)[numb
       { name: "primaryLabel", type: "text" },
       { name: "primaryUrl", type: "text" },
       accessibleContextField("primaryAccessibleContext"),
+      leavingSiteWarningField("primaryShowWarning"),
       { name: "primaryButtonColor", type: "text", defaultValue: "var(--tenant-primary, #E85E27)" },
       { name: "primaryButtonTextColor", type: "text", defaultValue: "var(--tenant-light-text, #F4E8D3)" },
       { name: "secondaryLabel", type: "text" },
       { name: "secondaryUrl", type: "text" },
       accessibleContextField("secondaryAccessibleContext"),
+      leavingSiteWarningField("secondaryShowWarning"),
       { name: "secondaryButtonColor", type: "text", defaultValue: "var(--tenant-light-text, #F4E8D3)" },
       { name: "secondaryButtonTextColor", type: "text", defaultValue: "var(--tenant-light-text, #F4E8D3)" },
       { name: "items", type: "array", labels: { singular: "Item", plural: "Items" }, fields: campaignItemFields },

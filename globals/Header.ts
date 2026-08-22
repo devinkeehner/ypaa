@@ -33,6 +33,7 @@ export const Header: GlobalConfig = {
           ],
         },
         { name: "newTab", label: "Open in a new tab", type: "checkbox", defaultValue: false },
+        { name: "showWarning", label: "Show leaving-site warning", type: "checkbox", defaultValue: false },
       ],
     },
   ],
