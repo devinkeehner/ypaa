@@ -112,8 +112,14 @@ export interface Config {
     defaultIDType: string;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    header: Header;
+    footer: Footer;
+  };
+  globalsSelect: {
+    header: HeaderSelect<false> | HeaderSelect<true>;
+    footer: FooterSelect<false> | FooterSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -35389,36 +35395,6 @@ export interface Merchandise {
 export interface Tenant {
   id: string;
   name: string;
-  /**
-   * Header logo. Leave blank to use the NECYPAA 36 fallback mark.
-   */
-  logo?: (string | null) | Media;
-  logoAlt?: string | null;
-  /**
-   * Links shown in the global header. Button-style items appear as header actions.
-   */
-  headerNavigation?:
-    | {
-        label: string;
-        url: string;
-        style?: ('link' | 'button') | null;
-        newTab?: boolean | null;
-        id?: string | null;
-      }[]
-    | null;
-  footer?: {
-    heading?: string | null;
-    text?: string | null;
-    links?:
-      | {
-          label: string;
-          url: string;
-          newTab?: boolean | null;
-          id?: string | null;
-        }[]
-      | null;
-    legal?: string | null;
-  };
   theme: {
     /**
      * Choose a color or paste an exact six-digit hex code.
@@ -55534,32 +55510,6 @@ export interface MerchandiseSelect<T extends boolean = true> {
  */
 export interface TenantsSelect<T extends boolean = true> {
   name?: T;
-  logo?: T;
-  logoAlt?: T;
-  headerNavigation?:
-    | T
-    | {
-        label?: T;
-        url?: T;
-        style?: T;
-        newTab?: T;
-        id?: T;
-      };
-  footer?:
-    | T
-    | {
-        heading?: T;
-        text?: T;
-        links?:
-          | T
-          | {
-              label?: T;
-              url?: T;
-              newTab?: T;
-              id?: T;
-            };
-        legal?: T;
-      };
   theme?:
     | T
     | {
@@ -55829,6 +55779,92 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header".
+ */
+export interface Header {
+  id: string;
+  /**
+   * Logo displayed in the global public header.
+   */
+  logo?: (string | null) | Media;
+  logoAlt: string;
+  /**
+   * Link items appear in the primary navigation. Button-style items appear as header actions.
+   */
+  navigation?:
+    | {
+        label: string;
+        url: string;
+        style?: ('link' | 'button') | null;
+        newTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: string;
+  heading: string;
+  text?: string | null;
+  links?:
+    | {
+        label: string;
+        url: string;
+        newTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  legal: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header_select".
+ */
+export interface HeaderSelect<T extends boolean = true> {
+  logo?: T;
+  logoAlt?: T;
+  navigation?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        style?: T;
+        newTab?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  heading?: T;
+  text?: T;
+  links?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        newTab?: T;
+        id?: T;
+      };
+  legal?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

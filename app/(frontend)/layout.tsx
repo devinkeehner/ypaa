@@ -32,13 +32,19 @@ export default async function FrontendLayout({
   let tenant: TenantTheme = defaultTenantTheme;
   try {
     const payload = await getPayload({ config });
-    const result = await payload.find({ collection: "tenants", depth: 1, limit: 1, sort: "createdAt" });
+    const [result, headerGlobal, footerGlobal] = await Promise.all([
+      payload.find({ collection: "tenants", depth: 1, limit: 1, sort: "createdAt" }),
+      payload.findGlobal({ slug: "header", depth: 1 }),
+      payload.findGlobal({ slug: "footer", depth: 1 }),
+    ]);
     const settings = result.docs[0] as unknown as Record<string, unknown> | undefined;
+    const header = headerGlobal as unknown as Record<string, unknown>;
+    const footer = footerGlobal as unknown as Record<string, unknown>;
+    const headerItems = Array.isArray(header.navigation) ? header.navigation : [];
     const theme = settings?.theme as Record<string, unknown> | undefined;
-    if (settings) {
-      tenant = {
-        logoUrl: mediaUrl(settings.logo),
-        logoAlt: typeof settings.logoAlt === "string" ? settings.logoAlt : defaultTenantTheme.logoAlt,
+    tenant = {
+        logoUrl: mediaUrl(header.logo),
+        logoAlt: typeof header.logoAlt === "string" ? header.logoAlt : defaultTenantTheme.logoAlt,
         primary: typeof theme?.primary === "string" ? theme.primary : defaultTenantTheme.primary,
         secondary: typeof theme?.secondary === "string" ? theme.secondary : defaultTenantTheme.secondary,
         accent: typeof theme?.accent === "string" ? theme.accent : defaultTenantTheme.accent,
@@ -47,20 +53,19 @@ export default async function FrontendLayout({
         lightBackground: typeof theme?.lightBackground === "string" ? theme.lightBackground : defaultTenantTheme.lightBackground,
         darkText: typeof theme?.darkText === "string" ? theme.darkText : defaultTenantTheme.darkText,
         lightText: typeof theme?.lightText === "string" ? theme.lightText : defaultTenantTheme.lightText,
-        headerNavigation: Array.isArray(settings.headerNavigation) && settings.headerNavigation.length ? settings.headerNavigation.map((item) => ({
+        headerNavigation: Array.isArray(headerItems) && headerItems.length ? headerItems.map((item) => ({
           label: typeof item?.label === "string" ? item.label : "Link",
           url: typeof item?.url === "string" ? item.url : "/",
           style: item?.style === "button" ? "button" : "link",
           newTab: item?.newTab === true,
         })) : defaultHeaderNavigation,
         footer: {
-          heading: typeof (settings.footer as Record<string, unknown> | undefined)?.heading === "string" ? (settings.footer as Record<string, unknown>).heading as string : defaultFooter.heading,
-          text: typeof (settings.footer as Record<string, unknown> | undefined)?.text === "string" ? (settings.footer as Record<string, unknown>).text as string : defaultFooter.text,
-          links: Array.isArray((settings.footer as Record<string, unknown> | undefined)?.links) ? ((settings.footer as Record<string, unknown>).links as unknown[]).filter((item): item is Record<string, unknown> => Boolean(item && typeof item === "object")).map((item) => ({ label: typeof item.label === "string" ? item.label : "Link", url: typeof item.url === "string" ? item.url : "/", newTab: item.newTab === true })) : defaultFooter.links,
-          legal: typeof (settings.footer as Record<string, unknown> | undefined)?.legal === "string" ? (settings.footer as Record<string, unknown>).legal as string : defaultFooter.legal,
+          heading: typeof footer.heading === "string" ? footer.heading : defaultFooter.heading,
+          text: typeof footer.text === "string" ? footer.text : defaultFooter.text,
+          links: Array.isArray(footer.links) ? footer.links.filter((item): item is Record<string, unknown> => Boolean(item && typeof item === "object")).map((item) => ({ label: typeof item.label === "string" ? item.label : "Link", url: typeof item.url === "string" ? item.url : "/", newTab: item.newTab === true })) : defaultFooter.links,
+          legal: typeof footer.legal === "string" ? footer.legal : defaultFooter.legal,
         },
-      };
-    }
+    };
   } catch {
     // Defaults keep the public site usable before the settings migration is applied.
   }

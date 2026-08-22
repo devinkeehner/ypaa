@@ -19,6 +19,8 @@ import { ProgramSessions } from "./collections/ProgramSessions";
 import { VenueMaps } from "./collections/VenueMaps";
 import { ensureProgramSeed } from "./lib/program-seed";
 import { pageBuilderCatalogResource } from "./mcp/block-catalog";
+import { Header } from "./globals/Header";
+import { Footer } from "./globals/Footer";
 
 const r2PublicBaseUrl = process.env.R2_PUBLIC_BASE_URL?.replace(/\/+$/, "");
 
@@ -46,6 +48,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Pages, Posts, Merchandise, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, Rooms, ProgramSessions, VenueMaps],
+  globals: [Header, Footer],
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || "",
   }),
