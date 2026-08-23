@@ -151,13 +151,13 @@ type ActionTabs = Base & SectionSpacing & { heading: string; intro: string; tabs
 type GalleryItem = { image?: MediaValue | null; caption: string; size: "small" | "medium" | "large" };
 type MediaGallery = Base & SectionSpacing & { heading: string; intro: string; items: GalleryItem[] };
 type ContentColumn = { label: string; blocks?: NestedSlotValue };
-type SectionBackground = "light" | "dark" | "muted" | "themeLight" | "themeDark" | "themeSurface" | "themePrimary" | "themeSecondary" | "themeAccent";
+type SectionBackground = "adaptive" | "adaptiveSurface" | "light" | "dark" | "muted" | "themeLight" | "themeDark" | "themeSurface" | "themePrimary" | "themeSecondary" | "themeAccent";
 type SectionPresentation = "contained" | "wide" | "fullBleed";
 type Section = Base & SectionSpacing & { heading: string; background: SectionBackground; presentation: SectionPresentation; blocks?: NestedSlotValue };
 type Column = Base & { label: string; blocks?: NestedSlotValue };
 type LinkItem = { label: string; url: string; accessibleContext?: string };
 type Navigation = Base & { brand: string; links: LinkItem[] };
-type Headline = Base & { text: string; level: "h1" | "h2" | "h3"; alignment: "left" | "center" | "right" };
+type Headline = Base & { text: string; level: "h1" | "h2" | "h3" | "h4"; alignment: "left" | "center" | "right" };
 type Divider = Base & { style: "solid" | "dashed" | "dotted"; color: string };
 type FollowLinks = Base & { heading: string; links: LinkItem[] };
 type BulletedList = Base & { items: { text: string }[] };
@@ -246,6 +246,61 @@ const area = (label: string) => richTextField(label, undefined, undefined, 144);
 const heading = (label = "Heading", level: Extract<LexicalBlockType, "h1" | "h2" | "h3" | "h4"> = "h2") => richTextField(label, undefined, level, 92);
 const plainText = (label: string) => ({ type: "text" as const, label });
 const accessibleContextField = () => plainText("Accessibility context (optional)");
+
+const TYPE_ROLE_OPTIONS = [
+  { label: "Heading 1", value: "h1" },
+  { label: "Heading 2", value: "h2" },
+  { label: "Heading 3", value: "h3" },
+  { label: "Heading 4", value: "h4" },
+  { label: "Subheading / explanation", value: "subheading" },
+  { label: "Paragraph", value: "body" },
+  { label: "Quote", value: "quote" },
+  { label: "Statistic / display value", value: "stat" },
+  { label: "Small / caption", value: "small" },
+  { label: "Eyebrow / utility label", value: "eyebrow" },
+] as const;
+const TYPE_ROLE_VALUES = new Set<string>(TYPE_ROLE_OPTIONS.map((option) => option.value));
+const LEGACY_BODY_SIZES = new Set(["1rem", "16px", "medium", "normal"]);
+
+function normalizedTypeRole(value: unknown, fallback = "body") {
+  if (typeof value !== "string" || !value.trim()) return fallback;
+  const normalized = value.trim();
+  if (TYPE_ROLE_VALUES.has(normalized)) return normalized;
+  if (LEGACY_BODY_SIZES.has(normalized.toLowerCase())) return fallback;
+  return normalized;
+}
+
+function fontSizeForRole(value: unknown, fallback = "body") {
+  const normalized = normalizedTypeRole(value, fallback);
+  return TYPE_ROLE_VALUES.has(normalized) ? `var(--type-${normalized})` : normalized;
+}
+
+function defaultTypeRoleForField(field: string) {
+  if (/quote/i.test(field)) return "quote";
+  if (/eyebrow/i.test(field)) return "eyebrow";
+  if (/^(body|intro|introduction|upcomingBody|advisoryBody|highlightText)$/i.test(field)) return "subheading";
+  return "body";
+}
+
+function textRoleField(label = "Text size"): Field<string> {
+  return {
+    type: "custom",
+    label,
+    render: ({ value, onChange, readOnly }) => {
+      const normalized = normalizedTypeRole(value);
+      const isLegacyCustom = !TYPE_ROLE_VALUES.has(normalized);
+      return (
+        <label style={{ display: "grid", gap: 7 }}>
+          <select disabled={readOnly} onChange={(event) => onChange(event.currentTarget.value)} value={normalized}>
+            {isLegacyCustom ? <option value={normalized}>Legacy custom size — {normalized}</option> : null}
+            {TYPE_ROLE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+          </select>
+          <small>Uses the shared type scale and follows the visitor’s A / A+ / A++ setting.</small>
+        </label>
+      );
+    },
+  };
+}
 const warningField = (label = "Show leaving-site warning"): Field<boolean | undefined> => ({
   type: "custom",
   label,
@@ -361,7 +416,7 @@ const meetingsField: Field<MeetingListing[]> = {
 };
 
 const THEME_COLOR_OPTIONS = [
-  { label: "Inherit section", value: "inherit" },
+  { label: "Auto / inherit section", value: "inherit" },
   { label: "Primary", value: "var(--tenant-primary, #E85E27)" },
   { label: "Secondary", value: "var(--tenant-secondary, #31275A)" },
   { label: "Accent", value: "var(--tenant-accent, #FFD76A)" },
@@ -372,8 +427,9 @@ const THEME_COLOR_OPTIONS = [
   { label: "Text on dark", value: "var(--tenant-light-text, #F4E8D3)" },
 ] as const;
 
-const DEFAULT_BUTTON_BACKGROUND = "var(--tenant-primary, #E85E27)";
-const DEFAULT_BUTTON_TEXT = "var(--tenant-light-text, #F4E8D3)";
+const DEFAULT_BUTTON_BACKGROUND = "inherit";
+const DEFAULT_BUTTON_TEXT = "inherit";
+const LEGACY_DEFAULT_BUTTON_TEXT = "var(--tenant-light-text, #F4E8D3)";
 
 function themeColorField(label: string): Field<string> {
   return {
@@ -382,7 +438,7 @@ function themeColorField(label: string): Field<string> {
     render: ({ value, onChange, readOnly }) => {
       const selected = typeof value === "string" ? value : "";
       const customValue = /^#[0-9a-f]{6}$/i.test(selected) ? selected : "#171614";
-      return <div className={styles.themeColorField}><div>{THEME_COLOR_OPTIONS.map((option) => <button aria-label={`${label}: ${option.label}`} aria-pressed={selected === option.value} disabled={readOnly} key={option.value} onClick={() => onChange(option.value)} type="button"><span aria-hidden="true" style={{ background: option.value }} /><b>{option.label}</b></button>)}</div><label><span>Custom</span><input aria-label={`${label}: custom color`} disabled={readOnly} onChange={(event) => onChange(event.currentTarget.value)} type="color" value={customValue} /></label></div>;
+      return <div className={styles.themeColorField}><div>{THEME_COLOR_OPTIONS.map((option) => <button aria-label={`${label}: ${option.label}`} aria-pressed={selected === option.value} disabled={readOnly} key={option.value} onClick={() => onChange(option.value)} type="button"><span aria-hidden="true" style={{ background: option.value }} /><b>{option.label}</b></button>)}</div><label><span>Custom</span><input aria-label={`${label}: custom color`} disabled={readOnly} onChange={(event) => onChange(event.currentTarget.value)} type="color" value={customValue} /></label><small>Auto inherits a contrast-safe color from the containing section. Review custom colors in both preview themes.</small></div>;
     },
   };
 }
@@ -472,9 +528,11 @@ const columnsField: Field<ContentColumn[]> = {
 };
 
 const SECTION_BACKGROUND_OPTIONS = [
-  { label: "Theme light", value: "themeLight" },
-  { label: "Theme dark", value: "themeDark" },
-  { label: "Theme surface", value: "themeSurface" },
+  { label: "Adaptive canvas — follows visitor theme", value: "adaptive" },
+  { label: "Adaptive surface — follows visitor theme", value: "adaptiveSurface" },
+  { label: "Always light", value: "themeLight" },
+  { label: "Always dark", value: "themeDark" },
+  { label: "Always dark surface", value: "themeSurface" },
   { label: "Theme primary", value: "themePrimary" },
   { label: "Theme secondary", value: "themeSecondary" },
   { label: "Theme accent", value: "themeAccent" },
@@ -536,13 +594,14 @@ function SlotContent({ content, instruction, label, fallback, minEmptyHeight = 1
 
 function contentRowRender(props: ContentRow) {
   const columns = (props.columns || []).slice(0, visibleColumnCount(props.layout));
-  const background = props.background || "themeLight";
-  const tone = ["themeDark", "themePrimary", "themeSecondary", "dark"].includes(background) ? "dark" : "light";
+  const background = props.background || "adaptiveSurface";
+  const tone = ["adaptive", "adaptiveSurface", "themeDark", "themePrimary", "themeSecondary", "dark"].includes(background) ? "dark" : "light";
   return <section className={styles.contentRow} data-background={background} data-layout={props.layout} data-presentation={props.presentation || "wide"} data-vertical-padding={props.verticalPadding || "cozy"} id={props.id}><div className={styles.shell}><div>{columns.map((column, index) => { const label = slotLabel(column.label, `Column ${index + 1}`); return <article key={`${label}-${index}`}>{props.puck?.isEditing ? <span>{label}</span> : null}<SlotContent content={column.blocks} label={label} minEmptyHeight={150} tone={tone} fallback={null} /></article>; })}</div></div></section>;
 }
 
 function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean } }) {
   const [active, setActive] = useState(0);
+  const reactID = useId().replace(/:/g, "");
   const tabs = props.tabs?.length ? props.tabs : [];
   const editing = Boolean(props.puck?.isEditing);
   return (
@@ -550,10 +609,12 @@ function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean } }
       <div className={styles.shell}>
         <Editable as="h2" field="heading" props={props}>{props.heading}</Editable>
         <Editable as="p" className={styles.body} field="intro" props={props}>{props.intro}</Editable>
-        <div className={styles.tabList} role="tablist">
+        <div aria-orientation="horizontal" className={styles.tabList} role="tablist">
           {tabs.map((tab, index) => {
+            const tabID = `action-tab-${reactID}-${index}`;
+            const panelID = `action-tab-panel-${reactID}-${index}`;
             return (
-              <button aria-selected={active === index} key={`${tab.label || index}-${index}`} onClick={() => setActive(index)} role="tab" type="button">
+              <button aria-controls={panelID} aria-selected={active === index} id={tabID} key={`${tab.label || index}-${index}`} onClick={() => setActive(index)} onKeyDown={(event) => moveTabFocus(event, index, tabs.length, setActive)} role="tab" tabIndex={active === index ? 0 : -1} type="button">
                 <RichCopy as="span" path={`tabs[${index}].label`} field="label" props={props} value={tab.label || `Tab ${index + 1}`} />
               </button>
             );
@@ -562,7 +623,7 @@ function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean } }
         <div className={styles.tabPanels}>
           {tabs.map((tab, index) => (editing || active === index)
             ? (
-                <section aria-label={slotLabel(tab.label, `Tab ${index + 1}`)} className={styles.tabPanel} hidden={!editing && active !== index} key={`${tab.label || index}-${index}`}>
+                <section aria-labelledby={`action-tab-${reactID}-${index}`} className={styles.tabPanel} hidden={!editing && active !== index} id={`action-tab-panel-${reactID}-${index}`} key={`${tab.label || index}-${index}`} role="tabpanel">
                 <RichCopy as="p" path={`tabs[${index}].description`} field="description" props={props} value={tab.description} />
                 <SlotContent content={tab.blocks} label={slotLabel(tab.label, `Tab ${index + 1}`)} minEmptyHeight={180} fallback={null} />
               </section>
@@ -574,6 +635,22 @@ function ActionTabsRender(props: ActionTabs & { puck?: { isEditing?: boolean } }
   );
 }
 
+function moveTabFocus(event: React.KeyboardEvent<HTMLButtonElement>, index: number, count: number, setActive: (index: number) => void, vertical = false) {
+  if (!count) return;
+  const previousKey = vertical ? "ArrowUp" : "ArrowLeft";
+  const nextKey = vertical ? "ArrowDown" : "ArrowRight";
+  let next = index;
+  if (event.key === previousKey) next = (index - 1 + count) % count;
+  else if (event.key === nextKey) next = (index + 1) % count;
+  else if (event.key === "Home") next = 0;
+  else if (event.key === "End") next = count - 1;
+  else return;
+  event.preventDefault();
+  setActive(next);
+  const buttons = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>("[role='tab']");
+  buttons?.[next]?.focus();
+}
+
 function styleFor(props: Base, field: string): CSSProperties {
   const values = props as unknown as Record<string, unknown>;
   const cap = `${field.charAt(0).toUpperCase()}${field.slice(1)}`;
@@ -581,8 +658,9 @@ function styleFor(props: Base, field: string): CSSProperties {
   const color = values[`${field}Color`];
   const fontWeight = values[`${field}FontWeight`];
   const textAlign = values[`${field}TextAlign`];
+  const legacyHeadingSize = typeof fontSize === "string" && LEGACY_BODY_SIZES.has(fontSize.trim().toLowerCase()) && /(heading|title)$/i.test(field);
   return {
-    fontSize: typeof fontSize === "string" ? fontSize : undefined,
+    fontSize: typeof fontSize === "string" && !legacyHeadingSize ? fontSizeForRole(fontSize, defaultTypeRoleForField(field)) : undefined,
     color: typeof color === "string" ? color : undefined,
     fontWeight: typeof fontWeight === "string" ? fontWeight : undefined,
     textAlign: textAlign === "center" || textAlign === "right" ? textAlign : undefined,
@@ -646,13 +724,12 @@ function RichCopy({ value, as: Tag = "p", className, field, path, props }: { val
 }
 
 function buttonColorStyle(backgroundColor?: string, textColor?: string, appearance: "solid" | "outline" | "text" = "solid"): CSSProperties | undefined {
-  const accentColor = backgroundColor && backgroundColor !== "inherit" ? backgroundColor : undefined;
+  const accentColor = backgroundColor && !["inherit", "auto"].includes(backgroundColor) ? backgroundColor : undefined;
+  const customTextColor = textColor && !["inherit", "auto", LEGACY_DEFAULT_BUTTON_TEXT].includes(textColor) ? textColor : undefined;
   // Outline and text buttons use the accent for their label by default. Older
   // saved buttons used the solid-button light label value, so treat that as
   // automatic rather than rendering an unreadable light outline on a light page.
-  const labelColor = appearance === "solid"
-    ? textColor || DEFAULT_BUTTON_TEXT
-    : textColor && textColor !== DEFAULT_BUTTON_TEXT ? textColor : accentColor;
+  const labelColor = customTextColor || (appearance === "solid" ? undefined : accentColor);
   if (!accentColor && !labelColor) return undefined;
   return {
     ...(accentColor ? { "--button-background": accentColor, "--button-border": accentColor } : {}),
@@ -878,7 +955,7 @@ function CampaignAltTabs({ props }: { props: CampaignAltProps }) {
     const tabLabel = slotLabel(tab.label || tab.heading, `Tab ${index + 1}`);
     const tabID = `campaign-tab-${reactID}-${index}`;
     const panelID = `campaign-tab-panel-${reactID}-${index}`;
-    return <button aria-controls={panelID} aria-selected={active === index} className={styles.campaignAltTabButton} id={tabID} key={`${tabLabel}-${index}`} onClick={(event) => { event.stopPropagation(); setActive(index); }} role="tab" tabIndex={active === index ? 0 : -1} type="button"><Editable as="span" path={`tabs[${index}].label`} field="label" props={props}>{tab.label || tab.heading || `Tab ${index + 1}`}</Editable></button>;
+    return <button aria-controls={panelID} aria-selected={active === index} className={styles.campaignAltTabButton} id={tabID} key={`${tabLabel}-${index}`} onClick={(event) => { event.stopPropagation(); setActive(index); }} onKeyDown={(event) => moveTabFocus(event, index, props.tabs.length, setActive, variant === "sideTabs")} role="tab" tabIndex={active === index ? 0 : -1} type="button"><Editable as="span" path={`tabs[${index}].label`} field="label" props={props}>{tab.label || tab.heading || `Tab ${index + 1}`}</Editable></button>;
   })}</div><div className={styles.campaignAltTabPanels}>{props.tabs.map((tab, index) => { const tabLabel = slotLabel(tab.label || tab.heading, `Tab ${index + 1}`); return <section aria-labelledby={`campaign-tab-${reactID}-${index}`} className={styles.campaignAltTabPanel} hidden={!editing && active !== index} id={`campaign-tab-panel-${reactID}-${index}`} key={`${tabLabel}-${index}`} role="tabpanel"><Editable as="h3" path={`tabs[${index}].heading`} field="heading" props={props}>{tab.heading}</Editable>{tab.text || props.puck?.isEditing ? <Editable as="p" path={`tabs[${index}].text`} field="text" props={props}>{tab.text}</Editable> : null}<SlotContent content={tab.blocks} label={tabLabel} minEmptyHeight={180} fallback={null} /></section>; })}</div></div>;
 }
 
@@ -923,7 +1000,7 @@ function CampaignAltRender({ definition, props }: { definition: CampaignAltDefin
 }
 
 function campaignAltDefaults(definition: CampaignAltDefinition): Omit<CampaignAltProps, "id"> {
-  const base = { variant: definition.variants[0], presentation: definition.presentations?.[0] || "contained", verticalPadding: definition.palette === "elements" ? "none" as const : definition.type === "HeroAlt" ? "comfortable" as const : "cozy" as const, eyebrow: "", heading: definition.label, intro: "", body: "Add campaign-facing content here.", media: null, backgroundMedia: null, headingLogo: null, qrImage: null, highlightTitle: "", highlightText: "", backgroundOverlay: "standard", textPanelColor: "primary", textPanelOpacity: "translucent", primaryLabel: "Learn more", primaryUrl: "#", primaryAccessibleContext: "", primaryButtonColor: DEFAULT_BUTTON_BACKGROUND, primaryButtonTextColor: DEFAULT_BUTTON_TEXT, secondaryLabel: "", secondaryUrl: "#", secondaryAccessibleContext: "", secondaryButtonColor: DEFAULT_BUTTON_TEXT, secondaryButtonTextColor: DEFAULT_BUTTON_TEXT, quote: "", quoteAttribution: "", electionDay: "", earlyVote: "", phone: "", email: "", website: "", qrCaption: "", disclaimer: "", enableAfterContent: true, afterContent: [], bottomContent: [], items: [{ label: "", heading: "First item", text: "Add details", value: "", linkLabel: "Learn more", url: "", accessibleContext: "", icon: "check", attribution: "", role: "", image: null }], cards: [], columns: [], tabs: [] };
+  const base = { variant: definition.variants[0], presentation: definition.presentations?.[0] || "contained", verticalPadding: definition.palette === "elements" ? "none" as const : definition.type === "HeroAlt" ? "comfortable" as const : "cozy" as const, eyebrow: "", heading: definition.label, intro: "", body: "Add campaign-facing content here.", media: null, backgroundMedia: null, headingLogo: null, qrImage: null, highlightTitle: "", highlightText: "", backgroundOverlay: "standard", textPanelColor: "primary", textPanelOpacity: "translucent", primaryLabel: "Learn more", primaryUrl: "#", primaryAccessibleContext: "", primaryButtonColor: DEFAULT_BUTTON_BACKGROUND, primaryButtonTextColor: DEFAULT_BUTTON_TEXT, secondaryLabel: "", secondaryUrl: "#", secondaryAccessibleContext: "", secondaryButtonColor: DEFAULT_BUTTON_BACKGROUND, secondaryButtonTextColor: DEFAULT_BUTTON_TEXT, quote: "", quoteAttribution: "", electionDay: "", earlyVote: "", phone: "", email: "", website: "", qrCaption: "", disclaimer: "", enableAfterContent: true, afterContent: [], bottomContent: [], items: [{ label: "", heading: "First item", text: "Add details", value: "", linkLabel: "Learn more", url: "", accessibleContext: "", icon: "check", attribution: "", role: "", image: null }], cards: [], columns: [], tabs: [] };
 
   if (definition.type === "HeroAlt") return { ...base, variant: "civicOutdoors", eyebrow: "NECYPAA XXXVI", heading: "A bold alternate opening", body: "Use the hero variant that best fits the message, media, and call to action.", highlightTitle: "Hartford, Connecticut", highlightText: "Connection, service, and recovery.", primaryLabel: "Register", secondaryLabel: "Learn more" };
   if (definition.type === "AboutAlt") return { ...base, heading: "Our story", intro: "A clear introduction to the people and purpose behind the work.", body: "Use this space for the fuller biography or organizational story.", items: [{ text: "Built through service", icon: "check" }, { text: "Rooted in community", icon: "check" }, { text: "Focused on the next person", icon: "check" }] };
@@ -1095,15 +1172,15 @@ export const puckConfig: Config<Components> = {
     },
     RichText: {
       label: "Rich text",
-      defaultProps: { content: "Write rich text here.", fontSize: "1rem", color: "inherit", fontWeight: "400", alignment: "left" },
-      fields: { content: richTextPlaceholder, fontSize: plainText("Font size"), color: themeColorField("Color"), fontWeight: { type: "select", label: "Weight", options: [{ label: "Regular", value: "400" }, { label: "Bold", value: "700" }] }, alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } },
-      render: (props) => <div className={styles.richText} id={props.id} style={{ color: props.color, fontSize: props.fontSize, fontWeight: props.fontWeight, textAlign: props.alignment }}><Editable as="p" field="content" props={props}>{props.content as ReactNode}</Editable></div>,
+      defaultProps: { content: "Write rich text here.", fontSize: "body", color: "inherit", fontWeight: "400", alignment: "left" },
+      fields: { content: richTextPlaceholder, fontSize: textRoleField(), color: themeColorField("Color"), fontWeight: { type: "select", label: "Weight", options: [{ label: "Regular", value: "400" }, { label: "Bold", value: "700" }] }, alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } },
+      render: (props) => <div className={styles.richText} data-type-role={normalizedTypeRole(props.fontSize)} id={props.id} style={{ color: props.color, fontSize: fontSizeForRole(props.fontSize), fontWeight: props.fontWeight, textAlign: props.alignment }}><Editable as="p" field="content" props={props}>{props.content as ReactNode}</Editable></div>,
     },
     FreeText: {
       label: "Free text",
-      defaultProps: { text: "Click to edit this text.", fontSize: "1rem", color: "var(--tenant-dark-text, #171614)", fontWeight: "400", alignment: "left" },
-      fields: { text: area("Text"), fontSize: plainText("Font size"), color: themeColorField("Color"), fontWeight: plainText("Weight"), alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } },
-      render: (props) => <section className={styles.freeText}><Editable as="p" field="text" props={{ ...props, textFontSize: props.fontSize, textColor: props.color, textFontWeight: props.fontWeight, textTextAlign: props.alignment } as unknown as Base}>{props.text}</Editable></section>,
+      defaultProps: { text: "Click to edit this text.", fontSize: "body", color: "inherit", fontWeight: "400", alignment: "left" },
+      fields: { text: area("Text"), fontSize: textRoleField(), color: themeColorField("Color"), fontWeight: { type: "select", label: "Weight", options: [{ label: "Regular", value: "400" }, { label: "Bold", value: "700" }] }, alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } },
+      render: (props) => <section className={styles.freeText} data-type-role={normalizedTypeRole(props.fontSize)}><Editable as="p" field="text" props={{ ...props, textFontSize: fontSizeForRole(props.fontSize), textColor: props.color, textFontWeight: props.fontWeight, textTextAlign: props.alignment } as unknown as Base}>{props.text}</Editable></section>,
     },
     ProgramSchedule: {
       label: "Live program",
@@ -1113,7 +1190,7 @@ export const puckConfig: Config<Components> = {
     },
     ButtonRow: {
       label: "Button row",
-      defaultProps: { primaryLabel: "Learn more", primaryUrl: "#", primaryAccessibleContext: "", primaryShowWarning: false, primaryBackgroundColor: DEFAULT_BUTTON_BACKGROUND, primaryTextColor: DEFAULT_BUTTON_TEXT, secondaryLabel: "Get involved", secondaryUrl: "#", secondaryAccessibleContext: "", secondaryShowWarning: false, secondaryBackgroundColor: "var(--tenant-dark-text, #171614)", secondaryTextColor: "var(--tenant-dark-text, #171614)", alignment: "left" },
+      defaultProps: { primaryLabel: "Learn more", primaryUrl: "#", primaryAccessibleContext: "", primaryShowWarning: false, primaryBackgroundColor: DEFAULT_BUTTON_BACKGROUND, primaryTextColor: DEFAULT_BUTTON_TEXT, secondaryLabel: "Get involved", secondaryUrl: "#", secondaryAccessibleContext: "", secondaryShowWarning: false, secondaryBackgroundColor: DEFAULT_BUTTON_BACKGROUND, secondaryTextColor: DEFAULT_BUTTON_TEXT, alignment: "left" },
       fields: { primaryLabel: text("Primary label"), primaryUrl: plainText("Primary URL"), primaryAccessibleContext: accessibleContextField(), primaryShowWarning: warningField(), primaryBackgroundColor: themeColorField("Primary button color"), primaryTextColor: themeColorField("Primary button text"), secondaryLabel: text("Secondary label"), secondaryUrl: plainText("Secondary URL"), secondaryAccessibleContext: accessibleContextField(), secondaryShowWarning: warningField(), secondaryBackgroundColor: themeColorField("Secondary button color"), secondaryTextColor: themeColorField("Secondary button text"), alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } },
       render: (props) => <div className={styles.buttonRow} data-align={props.alignment} id={props.id}><Button accessibleLabel={actionAccessibleName(props.primaryLabel, props.primaryAccessibleContext)} backgroundColor={props.primaryBackgroundColor} href={props.primaryUrl} showWarning={props.primaryShowWarning} textColor={props.primaryTextColor}><Editable field="primaryLabel" props={props}>{props.primaryLabel}</Editable></Button>{props.secondaryLabel ? <Button accessibleLabel={actionAccessibleName(props.secondaryLabel, props.secondaryAccessibleContext)} backgroundColor={props.secondaryBackgroundColor} href={props.secondaryUrl} outline showWarning={props.secondaryShowWarning} textColor={props.secondaryTextColor}><Editable field="secondaryLabel" props={props}>{props.secondaryLabel}</Editable></Button> : null}</div>,
     },
@@ -1154,11 +1231,11 @@ export const puckConfig: Config<Components> = {
       render: ActionTabsRender,
     },
     Navigation: { label: "Navigation", defaultProps: { brand: "NECYPAA XXXVI", links: [{ label: "About", url: "#about", accessibleContext: "" }, { label: "Register", url: "#register", accessibleContext: "" }] }, fields: { brand: text("Brand"), links: { type: "array", label: "Links", arrayFields: { label: text("Label"), url: plainText("URL"), accessibleContext: accessibleContextField() } } }, render: (props) => <nav className={styles.navigation} id={props.id}><Editable as="strong" field="brand" props={props}>{props.brand}</Editable><div>{props.links.map((link, index) => <a aria-label={actionAccessibleName(link.label, link.accessibleContext)} href={link.url || "#"} key={`${link.label}-${index}`}><RichCopy as="span" path={`links[${index}].label`} field="label" value={link.label} /></a>)}</div></nav> },
-    Text: { label: "Text", defaultProps: { text: "Add text", fontSize: "1rem", color: "inherit", alignment: "left" }, fields: { text: area("Text"), fontSize: plainText("Font size"), color: themeColorField("Color"), alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => <div className={styles.freeText} id={props.id} style={{ color: props.color, fontSize: props.fontSize, textAlign: props.alignment }}><Editable as="p" field="text" props={props}>{props.text}</Editable></div> },
-    Button: { label: "Button", defaultProps: { label: "Learn more", url: "#", accessibleContext: "", showWarning: false, style: "solid", backgroundColor: DEFAULT_BUTTON_BACKGROUND, textColor: "", alignment: "left" }, fields: { label: text("Label"), url: plainText("URL"), accessibleContext: accessibleContextField(), showWarning: warningField(), style: { type: "select", label: "Appearance", options: [{ label: "Solid — filled button", value: "solid" }, { label: "Outline — border only", value: "outline" }, { label: "Text link — no box", value: "text" }] }, backgroundColor: themeColorField("Accent / border color"), textColor: themeColorField("Label color (optional)"), alignment: { type: "select", label: "Justify", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => <div className={styles.buttonElement} data-align={props.alignment} id={props.id}><Button accessibleLabel={actionAccessibleName(props.label, props.accessibleContext)} appearance={props.style} backgroundColor={props.backgroundColor} href={props.url} showWarning={props.showWarning} textColor={props.textColor}><Editable field="label" props={props}>{props.label}</Editable></Button></div> },
+    Text: { label: "Text", defaultProps: { text: "Add text", fontSize: "body", color: "inherit", alignment: "left" }, fields: { text: area("Text"), fontSize: textRoleField(), color: themeColorField("Color"), alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => <div className={styles.freeText} data-type-role={normalizedTypeRole(props.fontSize)} id={props.id} style={{ color: props.color, fontSize: fontSizeForRole(props.fontSize), textAlign: props.alignment }}><Editable as="p" field="text" props={props}>{props.text}</Editable></div> },
+    Button: { label: "Button", defaultProps: { label: "Learn more", url: "#", accessibleContext: "", showWarning: false, style: "solid", backgroundColor: "inherit", textColor: "inherit", alignment: "left" }, fields: { label: text("Label"), url: plainText("URL"), accessibleContext: accessibleContextField(), showWarning: warningField(), style: { type: "select", label: "Appearance", options: [{ label: "Solid — filled button", value: "solid" }, { label: "Outline — border only", value: "outline" }, { label: "Text link — no box", value: "text" }] }, backgroundColor: themeColorField("Accent / border color"), textColor: themeColorField("Label color (optional)"), alignment: { type: "select", label: "Justify", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => <div className={styles.buttonElement} data-align={props.alignment} id={props.id}><Button accessibleLabel={actionAccessibleName(props.label, props.accessibleContext)} appearance={props.style} backgroundColor={props.backgroundColor} href={props.url} showWarning={props.showWarning} textColor={props.textColor}><Editable field="label" props={props}>{props.label}</Editable></Button></div> },
     Icon: {
       label: "Icon",
-      defaultProps: { icon: "check", label: "Helpful icon", showLabel: false, size: "medium", color: "var(--tenant-light-text, #F4E8D3)", backgroundColor: "var(--tenant-background, #0C0D0E)", shape: "circle", alignment: "left" },
+      defaultProps: { icon: "check", label: "Helpful icon", showLabel: false, size: "medium", color: "var(--canvas-on-action)", backgroundColor: "var(--canvas-action)", shape: "circle", alignment: "left" },
       fields: {
         icon: { type: "select", label: "Icon", options: campaignIconOptions.filter((option) => option.value !== "none") },
         label: text("Accessible label"),
@@ -1176,10 +1253,10 @@ export const puckConfig: Config<Components> = {
       },
     },
     Countdown: { label: "Countdown", defaultProps: { target: "2026-12-31T17:00:00-05:00", label: "Time remaining" }, fields: { target: plainText("Target ISO date"), label: text("Label") }, render: (props) => <div className={styles.standaloneCountdown} id={props.id}><Editable field="label" props={props}>{props.label}</Editable><Countdown target={props.target} /></div> },
-    Section: { label: "Section", defaultProps: { heading: "Section heading", background: "themeLight", presentation: "wide", verticalPadding: "cozy", blocks: [] }, fields: { heading: heading("Heading", "h2"), background: { type: "select", label: "Background", options: SECTION_BACKGROUND_OPTIONS }, presentation: { type: "select", label: "Content width", options: PRESENTATION_OPTIONS }, verticalPadding: verticalPaddingField, blocks: { type: "slot", allow: nestedElementTypes } }, render: (props) => <section className={styles.builderSection} data-background={props.background || "themeLight"} data-presentation={props.presentation || "wide"} data-vertical-padding={props.verticalPadding || "cozy"} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><SlotContent content={props.blocks} label="section" minEmptyHeight={150} tone={["themeDark", "themePrimary", "themeSecondary", "dark"].includes(props.background) ? "dark" : "light"} fallback={<div />}/></div></section> },
+    Section: { label: "Section", defaultProps: { heading: "Section heading", background: "adaptiveSurface", presentation: "wide", verticalPadding: "cozy", blocks: [] }, fields: { heading: heading("Heading", "h2"), background: { type: "select", label: "Background", options: SECTION_BACKGROUND_OPTIONS }, presentation: { type: "select", label: "Content width", options: PRESENTATION_OPTIONS }, verticalPadding: verticalPaddingField, blocks: { type: "slot", allow: nestedElementTypes } }, render: (props) => <section className={styles.builderSection} data-background={props.background || "adaptiveSurface"} data-presentation={props.presentation || "wide"} data-vertical-padding={props.verticalPadding || "cozy"} id={props.id}><div className={styles.shell}><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><SlotContent content={props.blocks} label="section" minEmptyHeight={150} tone={["adaptive", "adaptiveSurface", "themeDark", "themePrimary", "themeSecondary", "dark"].includes(props.background) ? "dark" : "light"} fallback={<div />}/></div></section> },
     Column: { label: "Column", defaultProps: { label: "Column", blocks: [] }, fields: { label: plainText("Editor label"), blocks: { type: "slot", allow: nestedElementTypes } }, render: (props) => <div className={styles.builderColumn} data-label={props.label} id={props.id}><SlotContent content={props.blocks} label={props.label} minEmptyHeight={150} fallback={<div />}/></div> },
-    Headline: { label: "Headline", defaultProps: { text: "Add a headline", level: "h2", alignment: "left" }, fields: { text: heading("Headline", "h2"), level: { type: "select", label: "Default heading size", options: [{ label: "Heading 1", value: "h1" }, { label: "Heading 2", value: "h2" }, { label: "Heading 3", value: "h3" }] }, alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => <Editable as={props.level} className={styles.headline} field="text" props={{ ...props, textTextAlign: props.alignment } as unknown as Base}>{props.text}</Editable> },
-    Divider: { label: "Divider", defaultProps: { style: "solid", color: "var(--tenant-dark-text, #171614)" }, fields: { style: { type: "select", label: "Style", options: [{ label: "Solid", value: "solid" }, { label: "Dashed", value: "dashed" }, { label: "Dotted", value: "dotted" }] }, color: themeColorField("Color") }, render: (props) => <hr className={styles.divider} id={props.id} style={{ borderTopStyle: props.style, borderTopColor: props.color }} /> },
+    Headline: { label: "Headline", defaultProps: { text: "Add a headline", level: "h2", alignment: "left" }, fields: { text: heading("Headline", "h2"), level: { type: "select", label: "Heading level and size", options: [{ label: "Heading 1", value: "h1" }, { label: "Heading 2", value: "h2" }, { label: "Heading 3", value: "h3" }, { label: "Heading 4", value: "h4" }] }, alignment: { type: "select", label: "Alignment", options: [{ label: "Left", value: "left" }, { label: "Center", value: "center" }, { label: "Right", value: "right" }] } }, render: (props) => <Editable as={props.level} className={styles.headline} field="text" props={{ ...props, textTextAlign: props.alignment } as unknown as Base}>{props.text}</Editable> },
+    Divider: { label: "Divider", defaultProps: { style: "solid", color: "var(--canvas-border)" }, fields: { style: { type: "select", label: "Style", options: [{ label: "Solid", value: "solid" }, { label: "Dashed", value: "dashed" }, { label: "Dotted", value: "dotted" }] }, color: themeColorField("Color") }, render: (props) => <hr className={styles.divider} id={props.id} style={{ borderTopStyle: props.style, borderTopColor: props.color }} /> },
     FollowLinks: { label: "Follow links", defaultProps: { heading: "Follow along", links: [{ label: "Instagram", url: "#", accessibleContext: "" }, { label: "Facebook", url: "#", accessibleContext: "" }] }, fields: { heading: text("Heading"), links: { type: "array", label: "Links", arrayFields: { label: text("Label"), url: plainText("URL"), accessibleContext: accessibleContextField() } } }, render: (props) => <section className={styles.followLinks} id={props.id}><Editable as="strong" field="heading" props={props}>{props.heading}</Editable><div>{props.links.map((link, index) => <a aria-label={actionAccessibleName(link.label, link.accessibleContext)} href={link.url || "#"} key={`${link.label}-${index}`}><RichCopy as="span" path={`links[${index}].label`} field="label" value={link.label} /></a>)}</div></section> },
     BulletedList: { label: "Bulleted list", defaultProps: { items: [{ text: "Add a list item" }] }, fields: { items: { type: "array", label: "Items", arrayFields: { text: text("Item") } } }, render: (props) => <ul className={styles.bulletedList} id={props.id}>{props.items.map((item, index) => <li key={`${item.text}-${index}`}><RichCopy as="span" path={`items[${index}].text`} field="text" value={item.text} /></li>)}</ul> },
     InlineForm: { label: "Inline form", defaultProps: { heading: "Stay in the loop", intro: "Get updates from the campaign.", submitLabel: "Submit", submitAccessibleContext: "", actionUrl: "#", fields: [{ label: "Email", name: "email", type: "email" }] }, fields: { heading: heading("Heading", "h2"), intro: area("Introduction"), submitLabel: text("Submit label"), submitAccessibleContext: accessibleContextField(), actionUrl: plainText("Action URL"), fields: { type: "array", label: "Fields", arrayFields: { label: text("Label"), name: plainText("Name"), type: { type: "select", label: "Type", options: [{ label: "Text", value: "text" }, { label: "Email", value: "email" }] } } } }, render: (props) => <form action={props.actionUrl || "#"} className={styles.inlineForm} id={props.id} method="post"><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="intro" props={props}>{props.intro}</Editable>{props.fields.map((field, index) => <label key={`${field.name}-${index}`}><RichCopy as="span" path={`fields[${index}].label`} field="label" value={field.label} /><input name={field.name || `field-${index}`} type={field.type} /></label>)}<button aria-label={actionAccessibleName(props.submitLabel, props.submitAccessibleContext)} className={styles.button} type="submit"><Editable field="submitLabel" props={props}>{props.submitLabel}</Editable></button></form> },
@@ -1195,17 +1272,17 @@ export const puckConfig: Config<Components> = {
     },
     ContentRow: {
       label: "Content row",
-      defaultProps: { layout: "two", background: "themeLight", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] },
+      defaultProps: { layout: "two", background: "adaptiveSurface", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] },
       fields: contentRowFields,
       render: contentRowRender,
     },
-    Row: { label: "Row", defaultProps: { layout: "two", background: "themeLight", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
-    RowOneColumn: { label: "1 column row", defaultProps: { layout: "one", background: "themeLight", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Column 1", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
-    RowTwoColumns: { label: "2 column row", defaultProps: { layout: "two", background: "themeLight", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
-    RowLeftWide: { label: "left wide row", defaultProps: { layout: "leftWide", background: "themeLight", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Main column", blocks: [] }, { label: "Side column", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
-    RowRightWide: { label: "right wide row", defaultProps: { layout: "rightWide", background: "themeLight", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Side column", blocks: [] }, { label: "Main column", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
-    RowThreeColumns: { label: "3 column row", defaultProps: { layout: "three", background: "themeLight", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }, { label: "Column 3", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
-    RowFourColumns: { label: "4 column row", defaultProps: { layout: "four", background: "themeLight", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }, { label: "Column 3", blocks: [] }, { label: "Column 4", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    Row: { label: "Row", defaultProps: { layout: "two", background: "adaptiveSurface", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowOneColumn: { label: "1 column row", defaultProps: { layout: "one", background: "adaptiveSurface", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Column 1", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowTwoColumns: { label: "2 column row", defaultProps: { layout: "two", background: "adaptiveSurface", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowLeftWide: { label: "left wide row", defaultProps: { layout: "leftWide", background: "adaptiveSurface", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Main column", blocks: [] }, { label: "Side column", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowRightWide: { label: "right wide row", defaultProps: { layout: "rightWide", background: "adaptiveSurface", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Side column", blocks: [] }, { label: "Main column", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowThreeColumns: { label: "3 column row", defaultProps: { layout: "three", background: "adaptiveSurface", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }, { label: "Column 3", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
+    RowFourColumns: { label: "4 column row", defaultProps: { layout: "four", background: "adaptiveSurface", presentation: "wide", verticalPadding: "cozy", columns: [{ label: "Column 1", blocks: [] }, { label: "Column 2", blocks: [] }, { label: "Column 3", blocks: [] }, { label: "Column 4", blocks: [] }] }, fields: contentRowFields, render: contentRowRender },
     ...campaignAltComponents,
   },
 };

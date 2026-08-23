@@ -3,7 +3,7 @@
 import "@puckeditor/core/puck.css";
 
 import { Drawer, fieldsPlugin, Puck, type Config, type Data, type Plugin } from "@puckeditor/core";
-import { ArrowLeft, BarChart3, Box, Clipboard, ClipboardPaste, Columns2, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, MousePointerClick, Palette, Quote, Save, Search, Sparkles, TextQuote, Type } from "lucide-react";
+import { ArrowLeft, BarChart3, Box, Clipboard, ClipboardPaste, Columns2, Contrast, FileText, GalleryHorizontal, HandHeart, ImageIcon, LayoutTemplate, ListTree, Moon, MousePointerClick, Palette, Quote, Save, Search, Sparkles, Sun, TextQuote, Type } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 import { normalizePuckRichTextData, puckConfig } from "@/puck/config";
@@ -16,6 +16,8 @@ import styles from "./puck-builder.module.css";
 import { usePuck } from "./puck-context";
 
 type ThemeColors = Pick<TenantTheme, "primary" | "secondary" | "accent" | "background" | "surface" | "lightBackground" | "darkText" | "lightText">;
+type PreviewMode = "dark" | "light";
+type ThemePreview = { colors: ThemeColors; contrast: boolean; mode: PreviewMode };
 const THEME_FIELDS: Array<{ key: keyof ThemeColors; label: string }> = [
   { key: "primary", label: "Primary" },
   { key: "secondary", label: "Secondary" },
@@ -27,7 +29,7 @@ const THEME_FIELDS: Array<{ key: keyof ThemeColors; label: string }> = [
   { key: "lightText", label: "Text on dark" },
 ];
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
-const ThemePreviewContext = createContext<ThemeColors | null>(null);
+const ThemePreviewContext = createContext<ThemePreview | null>(null);
 
 function themeColors(theme: TenantTheme): ThemeColors {
   return { primary: theme.primary, secondary: theme.secondary, accent: theme.accent, background: theme.background, surface: theme.surface, lightBackground: theme.lightBackground, darkText: theme.darkText, lightText: theme.lightText };
@@ -47,18 +49,41 @@ function themeVariables(colors: ThemeColors) {
 }
 
 function ThemePreviewFrame({ children }: { children: React.ReactNode }) {
-  const colors = useContext(ThemePreviewContext);
-  return <div className="tenant-theme" style={colors ? themeVariables(colors) : undefined}>{children}</div>;
+  const preview = useContext(ThemePreviewContext);
+  const className = preview ? `tenant-theme theme-${preview.mode}${preview.contrast ? " high-contrast" : ""}` : "tenant-theme theme-dark";
+  return <div className={className} style={preview ? themeVariables(preview.colors) : undefined}>{children}</div>;
 }
 
 function colorPickerValue(value: string) {
   return HEX_COLOR.test(value) ? value : "#000000";
 }
 
+function relativeLuminance(hex: string) {
+  const channels = [hex.slice(1, 3), hex.slice(3, 5), hex.slice(5, 7)].map((channel) => {
+    const value = Number.parseInt(channel, 16) / 255;
+    return value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4;
+  });
+  return .2126 * channels[0] + .7152 * channels[1] + .0722 * channels[2];
+}
+
+function contrastRatio(first: string, second: string) {
+  if (!HEX_COLOR.test(first) || !HEX_COLOR.test(second)) return 0;
+  const [lighter, darker] = [relativeLuminance(first), relativeLuminance(second)].sort((a, b) => b - a);
+  return (lighter + .05) / (darker + .05);
+}
+
 function ThemePanel({ initialTheme, initialTenantId, onPreviewTheme }: { initialTheme: TenantTheme; initialTenantId?: string; onPreviewTheme: (colors: ThemeColors) => void }) {
   const [tenantId, setTenantId] = useState(initialTenantId);
   const [colors, setColors] = useState<ThemeColors>(() => themeColors(initialTheme));
   const [status, setStatus] = useState("");
+  const contrastWarnings = useMemo(() => [
+    { background: colors.background, foreground: colors.lightText, label: "Text on dark background" },
+    { background: colors.surface, foreground: colors.lightText, label: "Text on dark surface" },
+    { background: colors.lightBackground, foreground: colors.darkText, label: "Text on light background" },
+    { background: colors.primary, foreground: colors.lightText, label: "Text on primary buttons" },
+    { background: colors.secondary, foreground: colors.lightText, label: "Text on secondary backgrounds" },
+    { background: colors.accent, foreground: colors.darkText, label: "Text on accent backgrounds" },
+  ].map((pair) => ({ ...pair, ratio: contrastRatio(pair.background, pair.foreground) })).filter((pair) => pair.ratio < 4.5), [colors]);
 
   const updateColor = useCallback((key: keyof ThemeColors, value: string) => {
     const next = { ...colors, [key]: value.toUpperCase() };
@@ -85,11 +110,15 @@ function ThemePanel({ initialTheme, initialTenantId, onPreviewTheme }: { initial
     }
   }
 
-  return <div className={styles.themePlugin}><section aria-label="Site theme defaults" className={styles.themePanel}><div className={styles.themePanelHeading}><strong>Theme colors</strong><span>Changes preview instantly. Save when you want them applied across the entire site.</span></div><div className={styles.themeFields}>{THEME_FIELDS.map(({ key, label }) => <label key={key}><span>{label}</span><div><input aria-label={`${label} color picker`} onChange={(event) => updateColor(key, event.target.value)} type="color" value={colorPickerValue(colors[key])} /><input aria-invalid={!HEX_COLOR.test(colors[key])} aria-label={`${label} hex code`} maxLength={7} onChange={(event) => updateColor(key, event.target.value)} value={colors[key]} /></div></label>)}</div><footer><span aria-live="polite">{status}</span><button onClick={() => void saveTheme()} type="button"><Save /> Save theme</button></footer></section></div>;
+  return <div className={styles.themePlugin}><section aria-label="Site theme defaults" className={styles.themePanel}><div className={styles.themePanelHeading}><strong>Theme colors</strong><span>Changes preview instantly. Save when you want them applied across the entire site.</span></div><div className={styles.themeFields}>{THEME_FIELDS.map(({ key, label }) => <label key={key}><span>{label}</span><div><input aria-label={`${label} color picker`} onChange={(event) => updateColor(key, event.target.value)} type="color" value={colorPickerValue(colors[key])} /><input aria-invalid={!HEX_COLOR.test(colors[key])} aria-label={`${label} hex code`} maxLength={7} onChange={(event) => updateColor(key, event.target.value)} value={colors[key]} /></div></label>)}</div>{contrastWarnings.length ? <div aria-live="polite" className={styles.contrastWarnings}><strong>Contrast review</strong><p>These pairs are below 4.5:1 for normal text:</p><ul>{contrastWarnings.map((warning) => <li key={warning.label}>{warning.label}: {warning.ratio.toFixed(2)}:1</li>)}</ul></div> : <p className={styles.contrastPass}>All standard text pairs meet 4.5:1 contrast.</p>}<footer><span aria-live="polite">{status}</span><button onClick={() => void saveTheme()} type="button"><Save /> Save theme</button></footer></section></div>;
 }
 
-function BuilderHeader({ children, pageId, pageTitle }: { children: React.ReactNode; pageId: string; pageTitle: string }) {
-  return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><div className={styles.headerControls}>{children}</div></div><div className={styles.richToolbarRow}><span className={styles.richToolbarHint}>Click any text in the preview to edit and format it.</span><div className={styles.richToolbarHost} id="necypaa-puck-rich-toolbar" /></div></header>;
+function PreviewControls({ contrast, mode, onContrastChange, onModeChange }: { contrast: boolean; mode: PreviewMode; onContrastChange: (value: boolean) => void; onModeChange: (mode: PreviewMode) => void }) {
+  return <div aria-label="Preview display" className={styles.previewControls} role="group"><button aria-label="Preview dark theme" aria-pressed={mode === "dark"} onClick={() => onModeChange("dark")} title="Dark preview" type="button"><Moon /></button><button aria-label="Preview light theme" aria-pressed={mode === "light"} onClick={() => onModeChange("light")} title="Light preview" type="button"><Sun /></button><button aria-label="Preview extra contrast" aria-pressed={contrast} onClick={() => onContrastChange(!contrast)} title="Extra contrast preview" type="button"><Contrast /></button></div>;
+}
+
+function BuilderHeader({ children, contrast, mode, onContrastChange, onModeChange, pageId, pageTitle }: { children: React.ReactNode; contrast: boolean; mode: PreviewMode; onContrastChange: (value: boolean) => void; onModeChange: (mode: PreviewMode) => void; pageId: string; pageTitle: string }) {
+  return <header className={styles.header}><div className={styles.topline}><div className={styles.identity}><a aria-label="Back to page" href={`/admin/collections/pages/${pageId}`}><ArrowLeft /></a><div><span>Visual builder</span><strong>{pageTitle}</strong></div></div><PreviewControls contrast={contrast} mode={mode} onContrastChange={onContrastChange} onModeChange={onModeChange} /><div className={styles.headerControls}>{children}</div></div><div className={styles.richToolbarRow}><span className={styles.richToolbarHint}>Click any text in the preview to edit and format it.</span><div className={styles.richToolbarHost} id="necypaa-puck-rich-toolbar" /></div></header>;
 }
 
 type SelectedLocation = { index: number; zone?: string } | null;
@@ -310,6 +339,9 @@ function createBlockLibraryPlugin(palette: (typeof BLOCK_PALETTES)[number]): Plu
 export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle, tenantId, tenantTheme }: { initialData: NECYPAAData; pageId: string; pageSlug: string; pageTitle: string; tenantId?: string; tenantTheme: TenantTheme }) {
   const data = useMemo(() => normalizePuckRichTextData(initialData, true), [initialData]);
   const [previewTheme, setPreviewTheme] = useState<ThemeColors>(() => themeColors(tenantTheme));
+  const [previewMode, setPreviewMode] = useState<PreviewMode>("dark");
+  const [previewContrast, setPreviewContrast] = useState(false);
+  const preview = useMemo(() => ({ colors: previewTheme, contrast: previewContrast, mode: previewMode }), [previewContrast, previewMode, previewTheme]);
   const latest = useRef(data);
   const lastSaved = useRef(JSON.stringify(data));
   const timer = useRef<number | null>(null);
@@ -386,14 +418,14 @@ export function PuckPageBuilderEditor({ initialData, pageId, pageSlug, pageTitle
   }, [scheduleSave]);
 
   const overrides = useMemo(() => ({
-    header: ({ children }: { children: React.ReactNode }) => <BuilderHeader pageId={pageId} pageTitle={pageTitle}>{children}</BuilderHeader>,
+    header: ({ children }: { children: React.ReactNode }) => <BuilderHeader contrast={previewContrast} mode={previewMode} onContrastChange={setPreviewContrast} onModeChange={setPreviewMode} pageId={pageId} pageTitle={pageTitle}>{children}</BuilderHeader>,
     headerActions: () => <BuilderHeaderActions message={messageRef.current} onPublish={publishLatest} />,
     iframe: ThemePreviewFrame,
-  }), [pageId, pageSlug, pageTitle, publishLatest]);
+  }), [pageId, pageTitle, previewContrast, previewMode, publishLatest]);
   const plugins = useMemo<Plugin[]>(() => [
     ...BLOCK_PALETTES.map(createBlockLibraryPlugin),
     fieldsPlugin({ desktopSideBar: "left" }),
     ...(pageSlug === "home" ? [{ name: "theme", label: "Theme", icon: <Palette />, render: () => <ThemePanel initialTenantId={tenantId} initialTheme={tenantTheme} onPreviewTheme={setPreviewTheme} /> }] : []),
   ], [pageSlug, tenantId, tenantTheme]);
-  return <ThemePreviewContext.Provider value={previewTheme}><div className={`${styles.wrapper} tenant-theme`} style={themeVariables(previewTheme)}><Puck config={puckConfig as unknown as Config} data={data} height="100dvh" onChange={handleDataChange} onPublish={publishLatest} overrides={overrides} permissions={{ delete: true, drag: true, duplicate: true, edit: true, insert: true }} plugins={plugins} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></ThemePreviewContext.Provider>;
+  return <ThemePreviewContext.Provider value={preview}><div className={`${styles.wrapper} tenant-theme theme-${previewMode}${previewContrast ? " high-contrast" : ""}`} style={themeVariables(previewTheme)}><Puck config={puckConfig as unknown as Config} data={data} height="100dvh" onChange={handleDataChange} onPublish={publishLatest} overrides={overrides} permissions={{ delete: true, drag: true, duplicate: true, edit: true, insert: true }} plugins={plugins} viewports={[{ width: 390, height: "auto", label: "Mobile" }, { width: 768, height: "auto", label: "Tablet" }, { width: 1280, height: "auto", label: "Desktop" }]} /></div></ThemePreviewContext.Provider>;
 }

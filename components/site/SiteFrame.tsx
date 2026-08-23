@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type MouseEventHandler } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEventHandler } from "react";
 import { Menu, Settings, X } from "lucide-react";
 import Link from "next/link";
 import type { NavigationWarningDetail } from "./navigation-warning";
@@ -8,6 +8,12 @@ import { useTenantTheme, type HeaderNavigationItem, type FooterLink } from "./Te
 
 type Theme = "dark" | "light";
 type Scale = "default" | "large" | "largest";
+
+const FOCUSABLE_SELECTOR = "a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])";
+
+function focusableElements(container: HTMLElement | null) {
+  return container ? Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter((element) => !element.hidden) : [];
+}
 
 const fallbackNavItems: HeaderNavigationItem[] = [
   { label: "About", url: "/#about", style: "link" },
@@ -31,7 +37,7 @@ function FooterLinkItem({ item, onClick }: { item: FooterLink; onClick?: MouseEv
 
 function isDisabledPublicSurface(url: string) {
   const pathname = url.split(/[?#]/, 1)[0];
-  return pathname === "/program" || pathname === "/merch" || pathname.startsWith("/merch/") || pathname === "/cart";
+  return pathname === "/program";
 }
 
 export function SiteFrame({ children, mainId }: { children: React.ReactNode; mainId: string }) {
@@ -49,11 +55,18 @@ export function SiteFrame({ children, mainId }: { children: React.ReactNode; mai
   const [settings, setSettings] = useState(false);
   const [menu, setMenu] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState<{ label: string; url: string; newTab?: boolean } | null>(null);
+  const settingsButtonRef = useRef<HTMLButtonElement>(null);
+  const settingsPanelRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLElement>(null);
+  const leaveDialogRef = useRef<HTMLElement>(null);
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const handleWarning = (event: Event) => {
       const warningEvent = event as CustomEvent<NavigationWarningDetail>;
       warningEvent.preventDefault();
+      restoreFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
       setPendingNavigation(warningEvent.detail);
     };
     window.addEventListener("ypaa:confirm-navigation", handleWarning);
@@ -63,8 +76,24 @@ export function SiteFrame({ children, mainId }: { children: React.ReactNode; mai
   function confirmNavigation(item: { label: string; url: string; newTab?: boolean; showWarning?: boolean }, event: React.MouseEvent<HTMLAnchorElement>) {
     if (!item.showWarning) return;
     event.preventDefault();
+    restoreFocusRef.current = event.currentTarget;
     setPendingNavigation({ label: item.label, url: item.url, newTab: item.newTab });
   }
+
+  const closeLeaveDialog = useCallback(() => {
+    setPendingNavigation(null);
+    window.requestAnimationFrame(() => restoreFocusRef.current?.focus());
+  }, []);
+
+  const closeSettings = useCallback(() => {
+    setSettings(false);
+    window.requestAnimationFrame(() => settingsButtonRef.current?.focus());
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    setMenu(false);
+    window.requestAnimationFrame(() => menuButtonRef.current?.focus());
+  }, []);
 
   function continueNavigation() {
     if (!pendingNavigation) return;
@@ -80,6 +109,45 @@ export function SiteFrame({ children, mainId }: { children: React.ReactNode; mai
     localStorage.setItem("necypaa-contrast", String(contrast));
   }, [theme, scale, contrast]);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove("necypaa-text-large", "necypaa-text-largest");
+    if (scale !== "default") root.classList.add(`necypaa-text-${scale}`);
+    return () => root.classList.remove("necypaa-text-large", "necypaa-text-largest");
+  }, [scale]);
+
+  useEffect(() => {
+    const container = settings ? settingsPanelRef.current : pendingNavigation ? leaveDialogRef.current : null;
+    if (!container) return;
+    const focusable = focusableElements(container);
+    focusable[0]?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        if (settings) closeSettings();
+        else closeLeaveDialog();
+        return;
+      }
+      if (event.key !== "Tab" || !focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [closeLeaveDialog, closeSettings, pendingNavigation, settings]);
+
+  useEffect(() => {
+    if (!menu || !menuRef.current) return;
+    focusableElements(menuRef.current)[0]?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); closeMenu(); }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [closeMenu, menu]);
+
   const className = useMemo(() => `cms-site theme-${theme} text-${scale}${contrast ? " high-contrast" : ""}`, [theme, scale, contrast]);
 
   return (
@@ -90,14 +158,14 @@ export function SiteFrame({ children, mainId }: { children: React.ReactNode; mai
           {tenant.logoUrl ? <img alt={tenant.logoAlt} src={tenant.logoUrl} /> : <><span>36</span><strong>NECYPAA</strong></>}
         </Link>
         <nav aria-label="Primary navigation">{navLinks.map((item) => <NavLink item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}</nav>
-        <div className="cms-actions">{actionItems.map((item) => <NavLink className={item.style === "button" && item.label.toLowerCase().includes("hotel") ? "cms-hotel" : "cms-register"} item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}<button className="cms-menu-button" aria-expanded={menu} aria-controls="cms-mobile-menu" aria-label={menu ? "Close navigation" : "Open navigation"} onClick={() => setMenu((value) => !value)} type="button">{menu ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button></div>
-        {menu ? <nav className="cms-mobile-menu" id="cms-mobile-menu" aria-label="Mobile navigation">{navItems.map((item) => <NavLink item={item} key={`${item.url}-${item.label}`} onClick={(event) => { confirmNavigation(item, event); setMenu(false); }} />)}</nav> : null}
+        <div className="cms-actions">{actionItems.map((item) => <NavLink className={item.style === "button" && item.label.toLowerCase().includes("hotel") ? "cms-hotel" : "cms-register"} item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}<button className="cms-menu-button" aria-expanded={menu} aria-controls="cms-mobile-menu" aria-label={menu ? "Close navigation" : "Open navigation"} onClick={() => { if (menu) closeMenu(); else { setSettings(false); setMenu(true); } }} ref={menuButtonRef} type="button">{menu ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button></div>
+        {menu ? <nav className="cms-mobile-menu" id="cms-mobile-menu" aria-label="Mobile navigation" ref={menuRef}>{navItems.map((item) => <NavLink item={item} key={`${item.url}-${item.label}`} onClick={(event) => { confirmNavigation(item, event); setMenu(false); }} />)}</nav> : null}
       </header>
       {children}
       <footer className="cms-footer"><div className="cms-footer-inner"><div><p className="cms-footer-kicker">{tenant.footer.heading}</p><p>{tenant.footer.text}</p></div>{tenant.footer.links.filter((item) => !isDisabledPublicSurface(item.url)).length ? <nav aria-label="Footer navigation">{tenant.footer.links.filter((item) => !isDisabledPublicSurface(item.url)).map((item) => <FooterLinkItem item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}</nav> : null}</div><p className="cms-footer-legal">{tenant.footer.legal}</p></footer>
-      {pendingNavigation ? <div className="cms-leave-backdrop" role="presentation"><section aria-describedby="cms-leave-description" aria-labelledby="cms-leave-title" aria-modal="true" className="cms-leave-dialog" role="dialog"><h2 id="cms-leave-title">You are leaving this site</h2><p id="cms-leave-description">You are about to follow “{pendingNavigation.label}” to another page. Continue?</p><div className="cms-leave-actions"><button onClick={() => setPendingNavigation(null)} type="button">Stay here</button><button autoFocus onClick={continueNavigation} type="button">Continue to link</button></div></section></div> : null}
-      <button className="display-gear" aria-expanded={settings} aria-label="Display and accessibility settings" onClick={() => setSettings((value) => !value)} type="button"><Settings aria-hidden="true" /></button>
-      {settings ? <aside className="display-panel" aria-label="Display settings"><button aria-label="Close display settings" onClick={() => setSettings(false)} type="button"><X aria-hidden="true" /></button><h2>Display settings</h2><fieldset><legend>Theme</legend><button aria-pressed={theme === "light"} onClick={() => setTheme("light")} type="button">Light</button><button aria-pressed={theme === "dark"} onClick={() => setTheme("dark")} type="button">Dark</button></fieldset><fieldset><legend>Text size</legend><button aria-pressed={scale === "default"} onClick={() => setScale("default")} type="button">A</button><button aria-pressed={scale === "large"} onClick={() => setScale("large")} type="button">A+</button><button aria-pressed={scale === "largest"} onClick={() => setScale("largest")} type="button">A++</button></fieldset><label><input checked={contrast} onChange={(event) => setContrast(event.target.checked)} type="checkbox" /> Extra contrast</label><p>Motion follows your device’s reduced-motion setting.</p></aside> : null}
+      {pendingNavigation ? <div className="cms-leave-backdrop" role="presentation"><section aria-describedby="cms-leave-description" aria-labelledby="cms-leave-title" aria-modal="true" className="cms-leave-dialog" ref={leaveDialogRef} role="dialog"><h2 id="cms-leave-title">You are leaving this site</h2><p id="cms-leave-description">You are about to follow “{pendingNavigation.label}” to another page. Continue?</p><div className="cms-leave-actions"><button onClick={closeLeaveDialog} type="button">Stay here</button><button onClick={continueNavigation} type="button">Continue to link</button></div></section></div> : null}
+      <button className="display-gear" aria-expanded={settings} aria-haspopup="dialog" aria-label="Display and accessibility settings" onClick={() => { if (settings) closeSettings(); else { setMenu(false); setSettings(true); } }} ref={settingsButtonRef} type="button"><Settings aria-hidden="true" /></button>
+      {settings ? <aside aria-label="Display settings" aria-modal="true" className="display-panel" ref={settingsPanelRef} role="dialog"><button aria-label="Close display settings" onClick={closeSettings} type="button"><X aria-hidden="true" /></button><h2>Display settings</h2><fieldset><legend>Theme</legend><button aria-pressed={theme === "light"} onClick={() => setTheme("light")} type="button">Light</button><button aria-pressed={theme === "dark"} onClick={() => setTheme("dark")} type="button">Dark</button></fieldset><fieldset><legend>Text size</legend><button aria-pressed={scale === "default"} onClick={() => setScale("default")} type="button">A</button><button aria-pressed={scale === "large"} onClick={() => setScale("large")} type="button">A+</button><button aria-pressed={scale === "largest"} onClick={() => setScale("largest")} type="button">A++</button></fieldset><label><input checked={contrast} onChange={(event) => setContrast(event.target.checked)} type="checkbox" /> Extra contrast</label><p>Motion follows your device’s reduced-motion setting.</p></aside> : null}
     </div>
   );
 }

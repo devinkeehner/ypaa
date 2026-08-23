@@ -87,3 +87,49 @@ test("accessible action context and Campaign-style section spacing stay wired ac
   assert.match(styles, /data-vertical-padding="spacious"[^\n]*5\.5rem/);
   assert.match(styles, /data-vertical-padding="viewport"[^\n]*min-height:\s*100svh/);
 });
+
+test("public pages and the builder share adaptive theme and accessibility contracts", async () => {
+  const [config, payloadBlocks, styles, siteFrame, builder] = await Promise.all([
+    source("puck/config.tsx"),
+    source("blocks/page-blocks.ts"),
+    source("puck/puck.module.css"),
+    source("components/site/SiteFrame.tsx"),
+    source("components/admin/PuckPageBuilderEditor.tsx"),
+  ]);
+
+  assert.match(styles, /\.canvas,\s*\n\.publicCanvas\s*\{/);
+  assert.match(styles, /--canvas-bg:/);
+  assert.match(styles, /theme-dark\.high-contrast/);
+  assert.match(config, /value: "adaptiveSurface"/);
+  assert.match(payloadBlocks, /defaultValue: "adaptiveSurface"/);
+  assert.match(config, /function moveTabFocus/);
+  assert.match(config, /event\.key === "Home"/);
+  assert.match(siteFrame, /necypaa-text-largest/);
+  assert.match(siteFrame, /FOCUSABLE_SELECTOR/);
+  assert.match(builder, /Preview extra contrast/);
+  assert.match(builder, /contrastRatio/);
+});
+
+test("every block shares semantic typography roles and adaptive special surfaces", async () => {
+  const [config, payloadBlocks, styles] = await Promise.all([
+    source("puck/config.tsx"),
+    source("blocks/page-blocks.ts"),
+    source("puck/puck.module.css"),
+  ]);
+
+  for (const role of ["h1", "h2", "h3", "h4", "subheading", "body", "quote", "stat", "small", "eyebrow"]) {
+    assert.match(styles, new RegExp(`--type-${role}:`));
+    assert.match(config, new RegExp(`value: "${role}"`));
+  }
+
+  assert.match(config, /function fontSizeForRole/);
+  assert.match(config, /Legacy custom size/);
+  assert.match(config, /fontSize: "body"/);
+  assert.match(config, /Heading 4/);
+  assert.match(payloadBlocks, /TEXT_ROLE_DESCRIPTION/);
+  assert.match(payloadBlocks, /options: \["h1", "h2", "h3", "h4"\]/);
+  assert.match(styles, /campaignAltForm \{ background: var\(--canvas-elevated\)/);
+  assert.match(styles, /campaignAltTabPanel \{ background: var\(--canvas-elevated\)/);
+  assert.match(styles, /testimonialsAltGrid figure \{ background: var\(--canvas-elevated\)/);
+  assert.match(styles, /high-contrast[\s\S]*campaignAltAccordionPanel/);
+});
