@@ -431,8 +431,13 @@
   pointer-events: none;
   position: absolute;
 }
-.meeting { display: block; }
-.meetingHeading { margin-bottom: clamp(34px, 5vw, 64px); max-width: 820px; }
+.meeting { align-items: start; display: grid; gap: clamp(52px, 7vw, 96px); grid-template-columns: minmax(0, .82fr) minmax(420px, 1.18fr); }
+.meeting > div:first-child { max-width: 620px; }
+.meeting .body { color: var(--cream-muted); max-width: 610px; }
+.meeting dl { display: grid; gap: 0; margin: 32px 0; max-width: 560px; }
+.meeting dl div { border-bottom: 1px solid var(--line-dark); display: grid; gap: 18px; grid-template-columns: 76px 1fr; padding: 12px 0; }
+.meeting dt { color: var(--ember-bright); font: 800 .66rem/1.4 var(--font-geist-mono), monospace; letter-spacing: .1em; text-transform: uppercase; }
+.meeting dd { font-weight: 700; margin: 0; }
 .dates {
   border: 1px solid var(--gold);
   clip-path: polygon(0 0, 44% 0, 48% 18px, 52% 0, 100% 0, 100% 100%, 0 100%);
@@ -440,9 +445,8 @@
   width: 100%;
 }
 .dates > strong { color: var(--ember-bright); display: block; font: 800 .72rem/1.2 var(--font-geist-mono), monospace; letter-spacing: .14em; margin-bottom: 20px; text-transform: uppercase; }
-.dates ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); list-style: none; margin: 0; padding: 0; }
-.dates li { border-left: 1px solid color-mix(in srgb, var(--gold), transparent 48%); line-height: 1.45; padding: 22px clamp(18px, 2.5vw, 36px); }
-.dates li:first-child { border-left: 0; padding-left: 0; }
+.dates ul { list-style: none; margin: 0; padding: 0; }
+.dates li { border-top: 1px solid color-mix(in srgb, var(--gold), transparent 48%); line-height: 1.45; padding: 22px 0; }
 .dates li strong { color: var(--cream); font-family: Georgia, "Times New Roman", serif; font-size: var(--type-h4); font-weight: 500; line-height: 1.1; }
 
 /* Events */
@@ -674,8 +678,6 @@
   .artPlaceholder { aspect-ratio: 6 / 5; border-radius: 34% 7% 32% 8% / 10% 32% 8% 30%; }
   .meeting { gap: 54px; }
   .dates { padding: 34px 24px; }
-  .dates ul { grid-template-columns: 1fr; }
-  .dates li { border-left: 0; border-top: 1px solid color-mix(in srgb, var(--gold), transparent 48%); padding-inline: 0; }
   .upcoming { padding-top: 30px; }
   .flyer { margin: 0 auto; max-width: 420px; width: 100%; }
   .upcoming h3 { font-size: var(--type-h3); }

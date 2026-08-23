@@ -41,7 +41,10 @@ function summaryText(value: unknown): string {
     seen.add(entry);
 
     if (Array.isArray(entry)) return entry.map((item) => visit(item, depth + 1)).filter(Boolean).join(" ");
-    if (isValidElement(entry)) return visit((entry.props as { children?: unknown }).children, depth + 1);
+    if (isValidElement(entry)) {
+      const elementProps = entry.props as { children?: unknown; value?: unknown };
+      return visit(elementProps.value, depth + 1) || visit(elementProps.children, depth + 1);
+    }
 
     const record = entry as Record<string, unknown>;
     if (typeof record.text === "string") return record.text.trim();
@@ -75,6 +78,13 @@ function actionAccessibleName(visibleLabel: unknown, context: unknown): string |
 type Base = { id?: string };
 type CanvasBase = Base & { puck?: { isEditing?: boolean } };
 const PuckRenderPropsContext = createContext<CanvasBase | undefined>(undefined);
+
+function listForRender<T>(props: Base, value: unknown, normalize: (source: unknown) => T[]): T[] {
+  if (Boolean((props as CanvasBase).puck?.isEditing) && Array.isArray(value)) {
+    return value.filter((item) => Boolean(item) && typeof item === "object") as T[];
+  }
+  return normalize(value);
+}
 
 function PuckRenderContent({ render, props }: { render: (props: Record<string, unknown>) => ReactNode; props: Record<string, unknown> }) {
   return <>{render(props)}</>;
@@ -123,7 +133,7 @@ type Hero = Base & {
 };
 type About = Base & { eyebrow: string; heading: string; body: string; advisoryHeading: string; advisoryBody: string; image?: MediaValue | null };
 type MeetingDate = { date: string };
-type Meeting = Base & { eyebrow: string; heading: string; importantDates: MeetingDate[] };
+type Meeting = Base & { eyebrow: string; heading: string; body: string; date: string; time: string; location: string; actionLabel: string; actionUrl: string; actionAccessibleContext: string; actionShowWarning?: boolean; importantDates: MeetingDate[] };
 type Events = Base & { eyebrow: string; heading: string; upcomingLabel: string; upcomingTitle: string; upcomingBody: string; upcomingDate: string; upcomingLocation: string; upcomingImage?: MediaValue | null; upcomingEvents: UpcomingEvent[]; pastEvents: PastEvent[] };
 type Directory = Base & { eyebrow: string; heading: string; body: string; meetings: MeetingListing[] };
 type CTMeetingSchedule = Base & { heading: string; introduction: string; meetings: ScheduleMeeting[] };
@@ -188,7 +198,7 @@ const campaignAltEditableFields = Object.fromEntries(campaignAltDefinitions.map(
 export const editableFieldsByType: Record<keyof Components, string[]> = {
   HeroCountdown: ["eyebrow", "heading", "body", "eventDate", "eventLocation", "registerLabel", "hotelLabel"],
   About: ["eyebrow", "heading", "body", "advisoryHeading", "advisoryBody"],
-  MeetingInfo: ["eyebrow", "heading"],
+  MeetingInfo: ["eyebrow", "heading", "body", "date", "time", "location", "actionLabel"],
   Events: ["eyebrow", "heading", "upcomingLabel", "upcomingTitle", "upcomingBody", "upcomingDate", "upcomingLocation"],
   MeetingDirectory: ["eyebrow", "heading", "body"],
   CTMeetingSchedule: ["heading", "introduction"],
@@ -744,15 +754,15 @@ function Button({ accessibleLabel, appearance, backgroundColor, href, children, 
   return <a aria-label={accessibleLabel} className={styles.button} data-appearance={resolvedAppearance} data-outline={resolvedAppearance === "outline"} href={href || "#"} id={id} onClick={(event) => requestNavigationWarning(event, { label: accessibleLabel || "this link", showWarning, url: href || "#" })} style={style}>{children}</a>;
 }
 
-function MeetingDatesBlock(props: Meeting) {
-  const meetingDates = normalizeImportantDates(props.importantDates).filter((item) => Boolean(summaryText(item.date)));
-  return <section className={styles.light} id={props.id}><div className={`${styles.shell} ${styles.meeting}`}><header className={styles.meetingHeading}><Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable></header>{meetingDates.length ? <aside className={styles.dates}><strong>Meeting dates</strong><ul>{meetingDates.map((item, index) => <li key={`${item.date}-${index}`}><RichCopy as="strong" path={`importantDates[${index}].date`} field="date" value={item.date} /></li>)}</ul></aside> : null}</div></section>;
+function BusinessMeetingBlock(props: Meeting) {
+  const meetingDates = listForRender(props, props.importantDates, normalizeImportantDates).filter((item) => Boolean(summaryText(item.date)));
+  return <section className={styles.light} id={props.id}><div className={`${styles.shell} ${styles.meeting}`}><div><Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="body" props={props}>{props.body}</Editable><dl><div><dt>Date</dt><dd><Editable field="date" props={props}>{props.date}</Editable></dd></div><div><dt>Time</dt><dd><Editable field="time" props={props}>{props.time}</Editable></dd></div><div><dt>Where</dt><dd><Editable field="location" props={props}>{props.location}</Editable></dd></div></dl><Button accessibleLabel={actionAccessibleName(props.actionLabel, props.actionAccessibleContext)} href={props.actionUrl} showWarning={props.actionShowWarning}><Editable field="actionLabel" props={props}>{props.actionLabel}</Editable></Button></div>{meetingDates.length ? <aside className={styles.dates}><strong>Meeting dates</strong><ul>{meetingDates.map((item, index) => <li key={`${item.date}-${index}`}><RichCopy as="strong" path={`importantDates[${index}].date`} field="date" value={item.date} /></li>)}</ul></aside> : null}</div></section>;
 }
 
 function EventsSection(props: Events) {
   const upcomingImage = normalizeMedia(props.upcomingImage);
-  const upcomingEvents = normalizeUpcomingEvents(props.upcomingEvents);
-  const pastEvents = normalizePastEvents(props.pastEvents);
+  const upcomingEvents = listForRender(props, props.upcomingEvents, normalizeUpcomingEvents);
+  const pastEvents = listForRender(props, props.pastEvents, normalizePastEvents);
   const hasFeaturedUpcoming = Boolean(upcomingImage || [props.upcomingLabel, props.upcomingTitle, props.upcomingBody, props.upcomingDate, props.upcomingLocation].some((value) => summaryText(value)));
   const hasEventContent = hasFeaturedUpcoming || upcomingEvents.length > 0 || pastEvents.length > 0;
 
@@ -760,11 +770,12 @@ function EventsSection(props: Events) {
 }
 
 function MeetingDirectorySection(props: Directory) {
-  return <section className={styles.directory} id={props.id}><div className={`${styles.shell} ${styles.twoCol}`}><div><Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable></div><ul>{normalizeMeetings(props.meetings).map((item, index) => <li key={`${item.name}-${item.location}-${index}`}><div>{item.url ? <a aria-label={actionAccessibleName(item.name, item.accessibleContext)} href={item.url} rel="noreferrer" target="_blank"><RichCopy as="strong" className={styles.directoryTitle} path={`meetings[${index}].name`} field="name" value={item.name} /></a> : <RichCopy as="strong" className={styles.directoryTitle} path={`meetings[${index}].name`} field="name" value={item.name} />}<RichCopy as="span" path={`meetings[${index}].location`} field="location" value={item.location} />{item.date ? <RichCopy as="small" path={`meetings[${index}].date`} field="date" value={item.date} /> : null}</div></li>)}</ul></div></section>;
+  const meetings = listForRender(props, props.meetings, normalizeMeetings);
+  return <section className={styles.directory} id={props.id}><div className={`${styles.shell} ${styles.twoCol}`}><div><Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable></div><ul>{meetings.map((item, index) => <li key={`${summaryText(item.name)}-${summaryText(item.location)}-${index}`}><div>{item.url ? <a aria-label={actionAccessibleName(item.name, item.accessibleContext)} href={item.url} rel="noreferrer" target="_blank"><RichCopy as="strong" className={styles.directoryTitle} path={`meetings[${index}].name`} field="name" value={item.name} /></a> : <RichCopy as="strong" className={styles.directoryTitle} path={`meetings[${index}].name`} field="name" value={item.name} />}<RichCopy as="span" path={`meetings[${index}].location`} field="location" value={item.location} />{summaryText(item.date) ? <RichCopy as="small" path={`meetings[${index}].date`} field="date" value={item.date} /> : null}</div></li>)}</ul></div></section>;
 }
 
 function CTMeetingScheduleBlock(props: CTMeetingSchedule) {
-  const meetings = normalizeScheduleMeetings(props.meetings);
+  const meetings = listForRender(props, props.meetings, normalizeScheduleMeetings);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   return <section className={styles.schedule} id={props.id}><div className={styles.shell}>
     <Editable as="h2" field="heading" props={props}>{props.heading}</Editable>
@@ -773,7 +784,7 @@ function CTMeetingScheduleBlock(props: CTMeetingSchedule) {
       <div className={styles.scheduleHeader} role="row"><span role="columnheader">Day</span><span role="columnheader">Time</span><span role="columnheader">Meeting</span><span role="columnheader">Location</span><span role="columnheader">City</span><span role="columnheader">Attendance</span><span aria-label="Details" role="columnheader" /> </div>
       {meetings.map((item, index) => {
         const isOpen = openIndex === index;
-        return <Fragment key={`${item.day}-${item.time}-${item.name}-${index}`}>
+        return <Fragment key={`${summaryText(item.day)}-${summaryText(item.time)}-${summaryText(item.name)}-${index}`}>
           <div className={styles.scheduleRow} role="row">
             <span data-label="Day" role="cell"><RichCopy as="span" path={`meetings[${index}].day`} field="day" props={props} value={item.day} /></span>
             <span data-label="Time" role="cell"><RichCopy as="span" path={`meetings[${index}].time`} field="time" props={props} value={item.time} /></span>
@@ -781,7 +792,7 @@ function CTMeetingScheduleBlock(props: CTMeetingSchedule) {
             <span data-label="Location" role="cell"><RichCopy as="span" path={`meetings[${index}].location`} field="location" props={props} value={item.location} /></span>
             <span data-label="City" role="cell"><RichCopy as="span" path={`meetings[${index}].city`} field="city" props={props} value={item.city} /></span>
             <span data-label="Attendance" role="cell"><RichCopy as="span" path={`meetings[${index}].attendance`} field="attendance" props={props} value={item.attendance} /></span>
-            <span className={styles.scheduleDetailsToggle} role="cell"><button aria-expanded={isOpen} aria-label={`${isOpen ? "Collapse" : "Expand"} details for ${item.name}`} onClick={() => setOpenIndex(isOpen ? null : index)} type="button">{isOpen ? <ChevronDown aria-hidden="true" /> : <ChevronRight aria-hidden="true" />}</button></span>
+            <span className={styles.scheduleDetailsToggle} role="cell"><button aria-expanded={isOpen} aria-label={`${isOpen ? "Collapse" : "Expand"} details for ${summaryText(item.name)}`} onClick={() => setOpenIndex(isOpen ? null : index)} type="button">{isOpen ? <ChevronDown aria-hidden="true" /> : <ChevronRight aria-hidden="true" />}</button></span>
           </div>
           {isOpen ? <div className={styles.scheduleDetails} role="row"><div role="cell"><strong>Address</strong><RichCopy as="span" path={`meetings[${index}].address`} field="address" props={props} value={item.address || "Not listed"} /></div><div role="cell"><strong>Meeting types</strong><RichCopy as="span" path={`meetings[${index}].types`} field="types" props={props} value={item.types || "Not listed"} /></div></div> : null}
         </Fragment>;
@@ -1155,10 +1166,10 @@ export const puckConfig: Config<Components> = {
       render: (props) => { const image = normalizeMedia(props.image); return <section className={styles.dark} id={props.id}><div className={`${styles.shell} ${styles.twoCol}`}><div className={styles.artPlaceholder} data-has-image={Boolean(image)}>{image ? <img alt={image.alt || ""} src={image.url} /> : <span>Mad Realm imagery</span>}</div><div><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="body" props={props}>{props.body}</Editable><aside className={styles.advisory}><Editable as="h3" field="advisoryHeading" props={props}>{props.advisoryHeading}</Editable><Editable as="p" field="advisoryBody" props={props}>{props.advisoryBody}</Editable></aside></div></div></section>; },
     },
     MeetingInfo: {
-      label: "Meeting dates",
-      defaultProps: { eyebrow: "Host committee", heading: "Meeting dates", importantDates: [] },
-      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), importantDates: meetingDatesField },
-      render: (props) => <MeetingDatesBlock {...props} />,
+      label: "Business meeting",
+      defaultProps: { eyebrow: "Host committee", heading: "Business meeting", body: "Join the host committee.", date: "Date", time: "Time", location: "Zoom", actionLabel: "Join on Zoom", actionUrl: "#", actionAccessibleContext: "", actionShowWarning: false, importantDates: [] },
+      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Body"), date: text("Date"), time: text("Time"), location: text("Location"), actionLabel: text("Action label"), actionUrl: plainText("Action URL"), actionAccessibleContext: accessibleContextField(), actionShowWarning: warningField(), importantDates: meetingDatesField },
+      render: (props) => <BusinessMeetingBlock {...props} />,
     },
     Events: {
       label: "Upcoming + past events",

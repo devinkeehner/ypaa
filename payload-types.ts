@@ -345,7 +345,6 @@ export interface Page {
             importantDates?:
               | {
                   date?: string | null;
-                  label?: string | null;
                   puckRichText?:
                     | {
                         [k: string]: unknown;
@@ -619,6 +618,9 @@ export interface Page {
               };
               [k: string]: unknown;
             } | null;
+            /**
+             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+             */
             fontSize?: string | null;
             color?: string | null;
             fontWeight?: ('400' | '700') | null;
@@ -638,6 +640,9 @@ export interface Page {
           }
         | {
             text?: string | null;
+            /**
+             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+             */
             fontSize?: string | null;
             color?: string | null;
             fontWeight?: ('400' | '700') | null;
@@ -785,6 +790,9 @@ export interface Page {
                               };
                               [k: string]: unknown;
                             } | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
@@ -804,6 +812,9 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
@@ -823,6 +834,9 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
@@ -969,7 +983,7 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
-                            level?: ('h1' | 'h2' | 'h3') | null;
+                            level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
                             puckRichText?:
                               | {
@@ -1641,6 +1655,9 @@ export interface Page {
                               };
                               [k: string]: unknown;
                             } | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
@@ -1660,6 +1677,9 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
@@ -1679,6 +1699,9 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
@@ -1825,7 +1848,7 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
-                            level?: ('h1' | 'h2' | 'h3') | null;
+                            level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
                             puckRichText?:
                               | {
@@ -2456,6 +2479,9 @@ export interface Page {
                               };
                               [k: string]: unknown;
                             } | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
@@ -2475,6 +2501,9 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
@@ -2494,6 +2523,9 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
@@ -2640,7 +2672,7 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
-                            level?: ('h1' | 'h2' | 'h3') | null;
+                            level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
                             puckRichText?:
                               | {
@@ -3231,6 +3263,9 @@ export interface Page {
           }
         | {
             text?: string | null;
+            /**
+             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+             */
             fontSize?: string | null;
             color?: string | null;
             alignment?: ('left' | 'center' | 'right') | null;
@@ -3398,6 +3433,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -3417,6 +3455,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -3436,6 +3477,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -3582,7 +3626,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -4149,6 +4193,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -4168,6 +4215,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -4187,6 +4237,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -4333,7 +4386,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -4861,7 +4914,7 @@ export interface Page {
           }
         | {
             text?: string | null;
-            level?: ('h1' | 'h2' | 'h3') | null;
+            level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
             alignment?: ('left' | 'center' | 'right') | null;
             puckRichText?:
               | {
@@ -5554,6 +5607,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -5573,6 +5629,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -5592,6 +5651,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -5738,7 +5800,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -6290,6 +6352,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -6309,6 +6374,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -6328,6 +6396,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -6474,7 +6545,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -7176,6 +7247,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -7195,6 +7269,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -7214,6 +7291,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -7360,7 +7440,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -7912,6 +7992,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -7931,6 +8014,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -7950,6 +8036,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -8096,7 +8185,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -8725,6 +8814,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -8744,6 +8836,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -8763,6 +8858,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -8909,7 +9007,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -9461,6 +9559,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -9480,6 +9581,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -9499,6 +9603,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -9645,7 +9752,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -10272,6 +10379,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -10291,6 +10401,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -10310,6 +10423,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -10456,7 +10572,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -11008,6 +11124,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -11027,6 +11146,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -11046,6 +11168,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -11192,7 +11317,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -11828,6 +11953,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -11847,6 +11975,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -11866,6 +11997,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -12012,7 +12146,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -12564,6 +12698,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -12583,6 +12720,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -12602,6 +12742,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -12748,7 +12891,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -13378,6 +13521,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -13397,6 +13543,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -13416,6 +13565,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -13562,7 +13714,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -14114,6 +14266,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -14133,6 +14288,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -14152,6 +14310,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -14298,7 +14459,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -14925,6 +15086,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -14944,6 +15108,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -14963,6 +15130,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -15109,7 +15279,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -15661,6 +15831,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -15680,6 +15853,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -15699,6 +15875,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -15845,7 +16024,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -16473,6 +16652,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -16492,6 +16674,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -16511,6 +16696,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -16657,7 +16845,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -17209,6 +17397,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -17228,6 +17419,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -17247,6 +17441,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -17393,7 +17590,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -18025,6 +18222,9 @@ export interface Page {
                               };
                               [k: string]: unknown;
                             } | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
@@ -18044,6 +18244,9 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
@@ -18063,6 +18266,9 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
@@ -18209,7 +18415,7 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
-                            level?: ('h1' | 'h2' | 'h3') | null;
+                            level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
                             puckRichText?:
                               | {
@@ -18774,6 +18980,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -18793,6 +19002,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -18812,6 +19024,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -18958,7 +19173,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -19510,6 +19725,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -19529,6 +19747,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -19548,6 +19769,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -19694,7 +19918,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -20322,6 +20546,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -20341,6 +20568,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -20360,6 +20590,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -20506,7 +20739,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -21058,6 +21291,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -21077,6 +21313,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -21096,6 +21335,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -21242,7 +21484,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -21869,6 +22111,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -21888,6 +22133,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -21907,6 +22155,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -22053,7 +22304,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -22605,6 +22856,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -22624,6 +22878,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -22643,6 +22900,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -22789,7 +23049,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -23416,6 +23676,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -23435,6 +23698,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -23454,6 +23720,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -23600,7 +23869,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -24152,6 +24421,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -24171,6 +24443,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -24190,6 +24465,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -24336,7 +24614,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -25037,6 +25315,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -25056,6 +25337,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -25075,6 +25359,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -25221,7 +25508,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -25773,6 +26060,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -25792,6 +26082,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -25811,6 +26104,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -25957,7 +26253,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -26591,6 +26887,9 @@ export interface Page {
                               };
                               [k: string]: unknown;
                             } | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
@@ -26610,6 +26909,9 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
@@ -26629,6 +26931,9 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
@@ -26775,7 +27080,7 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
-                            level?: ('h1' | 'h2' | 'h3') | null;
+                            level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
                             puckRichText?:
                               | {
@@ -27419,6 +27724,9 @@ export interface Page {
                               };
                               [k: string]: unknown;
                             } | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
@@ -27438,6 +27746,9 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             fontWeight?: ('400' | '700') | null;
@@ -27457,6 +27768,9 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
+                            /**
+                             * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                             */
                             fontSize?: string | null;
                             color?: string | null;
                             alignment?: ('left' | 'center' | 'right') | null;
@@ -27603,7 +27917,7 @@ export interface Page {
                           }
                         | {
                             text?: string | null;
-                            level?: ('h1' | 'h2' | 'h3') | null;
+                            level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                             alignment?: ('left' | 'center' | 'right') | null;
                             puckRichText?:
                               | {
@@ -28168,6 +28482,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -28187,6 +28504,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -28206,6 +28526,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -28352,7 +28675,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -28904,6 +29227,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -28923,6 +29249,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -28942,6 +29271,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -29088,7 +29420,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -29714,6 +30046,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -29733,6 +30068,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -29752,6 +30090,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -29898,7 +30239,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -30450,6 +30791,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -30469,6 +30813,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -30488,6 +30835,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -30634,7 +30984,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -31261,6 +31611,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -31280,6 +31633,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -31299,6 +31655,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -31445,7 +31804,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -31997,6 +32356,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -32016,6 +32378,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -32035,6 +32400,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -32181,7 +32549,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -32882,6 +33250,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -32901,6 +33272,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -32920,6 +33294,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -33066,7 +33443,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -33618,6 +33995,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -33637,6 +34017,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -33656,6 +34039,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -33802,7 +34188,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -34503,6 +34889,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -34522,6 +34911,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -34541,6 +34933,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -34687,7 +35082,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -35239,6 +35634,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -35258,6 +35656,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -35277,6 +35678,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -35423,7 +35827,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -36050,6 +36454,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -36069,6 +36476,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -36088,6 +36498,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -36234,7 +36647,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -36786,6 +37199,9 @@ export interface Page {
                         };
                         [k: string]: unknown;
                       } | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -36805,6 +37221,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       fontWeight?: ('400' | '700') | null;
@@ -36824,6 +37243,9 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
+                      /**
+                       * Use a shared role: h1, h2, h3, h4, subheading, body, quote, stat, small, or eyebrow. Legacy CSS sizes remain supported until the block is updated.
+                       */
                       fontSize?: string | null;
                       color?: string | null;
                       alignment?: ('left' | 'center' | 'right') | null;
@@ -36970,7 +37392,7 @@ export interface Page {
                     }
                   | {
                       text?: string | null;
-                      level?: ('h1' | 'h2' | 'h3') | null;
+                      level?: ('h1' | 'h2' | 'h3' | 'h4') | null;
                       alignment?: ('left' | 'center' | 'right') | null;
                       puckRichText?:
                         | {
@@ -38339,7 +38761,6 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     date?: T;
-                    label?: T;
                     puckRichText?: T;
                     id?: T;
                   };
@@ -58732,6 +59153,9 @@ export interface Header {
    * Logo displayed in the global public header.
    */
   logo?: (string | null) | Media;
+  /**
+   * Describe the logo for visitors using screen readers.
+   */
   logoAlt: string;
   /**
    * Link items appear in the primary navigation. Button-style items appear as header actions.
@@ -58741,6 +59165,7 @@ export interface Header {
         label: string;
         url: string;
         style?: ('link' | 'button') | null;
+        appearance?: ('solid' | 'outline') | null;
         newTab?: boolean | null;
         showWarning?: boolean | null;
         id?: string | null;
@@ -58783,6 +59208,7 @@ export interface HeaderSelect<T extends boolean = true> {
         label?: T;
         url?: T;
         style?: T;
+        appearance?: T;
         newTab?: T;
         showWarning?: T;
         id?: T;

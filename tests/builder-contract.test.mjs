@@ -134,7 +134,7 @@ test("every block shares semantic typography roles and adaptive special surfaces
   assert.match(styles, /high-contrast[\s\S]*campaignAltAccordionPanel/);
 });
 
-test("header controls and legacy convention blocks keep their simplified accessible contracts", async () => {
+test("header controls and convention blocks keep their accessible builder contracts", async () => {
   const [header, layout, siteFrame, globalStyles, config, payloadBlocks, blockStyles] = await Promise.all([
     source("globals/Header.ts"),
     source("app/(frontend)/layout.tsx"),
@@ -151,12 +151,22 @@ test("header controls and legacy convention blocks keep their simplified accessi
   assert.match(siteFrame, /cms-header-action-\$\{appearance\}/);
   assert.match(globalStyles, /\.cms-header-action-outline/);
 
-  assert.match(config, /function MeetingDatesBlock/);
+  assert.match(config, /function BusinessMeetingBlock/);
+  assert.match(config, /field="body" props=\{props\}/);
+  assert.match(config, /href=\{props\.actionUrl\}/);
   assert.match(config, /<strong>Meeting dates<\/strong>/);
   assert.match(config, /label: "Meeting dates"/);
+  assert.match(config, /label: "Business meeting"/);
   assert.match(payloadBlocks, /label: "Meeting dates"/);
+  assert.match(payloadBlocks, /name: "actionUrl"/);
   assert.doesNotMatch(config, /<RichCopy as="span" path=\{`importantDates/);
 
+  assert.match(config, /function listForRender/);
+  assert.match(config, /elementProps\.value/);
+  assert.match(config, /listForRender\(props, props\.importantDates, normalizeImportantDates\)/);
+  assert.match(config, /listForRender\(props, props\.pastEvents, normalizePastEvents\)/);
+  assert.match(config, /listForRender\(props, props\.meetings, normalizeMeetings\)/);
+  assert.match(config, /listForRender\(props, props\.meetings, normalizeScheduleMeetings\)/);
   assert.match(config, /const hasFeaturedUpcoming = Boolean/);
   assert.match(config, /hasEventContent \? <div className=\{styles\.eventBlend\}/);
   assert.doesNotMatch(config, /: "Upcoming flyer"/);

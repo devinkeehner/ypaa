@@ -36,7 +36,13 @@ export const defaultPageData: NECYPAAData = {
       props: {
         id: "business-meeting",
         eyebrow: "Host committee",
-        heading: "Meeting dates",
+        heading: "Business meeting",
+        body: "See how the convention is built through committee work, updates, votes, and fellowship. No title or commitment is required—just show up.",
+        date: "Sunday, August 16, 2026",
+        time: "2:00 PM Eastern",
+        location: "Online via Zoom",
+        actionLabel: "Join on Zoom",
+        actionUrl: "https://www.necypaact.com/service",
         importantDates: [
           { date: "Aug 16", label: "" },
           { date: "Aug 22", label: "" },
