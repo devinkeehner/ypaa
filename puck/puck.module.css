@@ -1241,6 +1241,7 @@
   .heroAltCivicPanel + .heroAltMedia { margin-top: 0; }
   .heroAltMediaAccent { display: none; }
   .issuesCardsAltGrid,
+  .issuesCardsAlt[data-count="2"] .issuesCardsAltGrid,
   .issuesCardsAlt[data-variant="editorialGrid"] .issuesCardsAltGrid,
   .palmPointsAlt[data-variant="iconCards"] .palmPointsGrid,
   .palmPointsAlt[data-variant="twoColumn"] .palmPointsGrid,
