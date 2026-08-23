@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type MouseEventHandler } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEventHandler } from "react";
 import { Menu, Settings, X } from "lucide-react";
 import Link from "next/link";
 import type { NavigationWarningDetail } from "./navigation-warning";
+import { CartLink } from "./CartLink";
 import { useTenantTheme, type HeaderNavigationItem, type FooterLink } from "./TenantThemeProvider";
 
 type Theme = "dark" | "light";
@@ -51,6 +52,7 @@ export function SiteFrame({ children, mainId }: { children: React.ReactNode; mai
   const navItems = (tenant.headerNavigation?.length ? tenant.headerNavigation : fallbackNavItems).filter((item) => !isDisabledPublicSurface(item.url));
   const navLinks = navItems.filter((item) => item.style !== "button");
   const actionItems = navItems.filter((item) => item.style === "button");
+  const mobileActionRows = Math.max(1, Math.ceil(actionItems.length / 2));
   const [theme, setTheme] = useState<Theme>(() => typeof window !== "undefined" && localStorage.getItem("necypaa-theme") === "light" ? "light" : "dark");
   const [scale, setScale] = useState<Scale>(() => {
     if (typeof window === "undefined") return "default";
@@ -154,10 +156,11 @@ export function SiteFrame({ children, mainId }: { children: React.ReactNode; mai
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [closeMenu, menu]);
 
-  const className = useMemo(() => `cms-site theme-${theme} text-${scale}${contrast ? " high-contrast" : ""}`, [theme, scale, contrast]);
+  const className = useMemo(() => `cms-site theme-${theme} text-${scale}${contrast ? " high-contrast" : ""}${actionItems.length ? " has-mobile-actions" : ""}`, [actionItems.length, theme, scale, contrast]);
+  const siteStyle = actionItems.length ? { "--cms-mobile-action-rows": mobileActionRows } as CSSProperties : undefined;
 
   return (
-    <div className={className}>
+    <div className={className} style={siteStyle}>
       <a className="skip-link" href={`#${mainId}`}>Skip to main content</a>
       <header className="cms-header">
         <Link className="cms-brand" href="/#hero">
@@ -165,11 +168,12 @@ export function SiteFrame({ children, mainId }: { children: React.ReactNode; mai
           <strong aria-hidden={tenant.logoUrl ? true : undefined}>NECYPAA</strong>
         </Link>
         <nav aria-label="Primary navigation">{navLinks.map((item) => <NavLink item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}</nav>
-        <div className="cms-actions">{actionItems.map((item) => <NavLink className={headerActionClassName(item)} item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}<button className="cms-menu-button" aria-expanded={menu} aria-controls="cms-mobile-menu" aria-label={menu ? "Close navigation" : "Open navigation"} onClick={() => { if (menu) closeMenu(); else { setSettings(false); setMenu(true); } }} ref={menuButtonRef} type="button">{menu ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button></div>
+        <div className="cms-actions">{actionItems.map((item) => <NavLink className={headerActionClassName(item)} item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}<CartLink /><button className="cms-menu-button" aria-expanded={menu} aria-controls="cms-mobile-menu" aria-label={menu ? "Close navigation" : "Open navigation"} onClick={() => { if (menu) closeMenu(); else { setSettings(false); setMenu(true); } }} ref={menuButtonRef} type="button">{menu ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button></div>
         {menu ? <nav className="cms-mobile-menu" id="cms-mobile-menu" aria-label="Mobile navigation" ref={menuRef}>{navItems.map((item) => <NavLink item={item} key={`${item.url}-${item.label}`} onClick={(event) => { confirmNavigation(item, event); setMenu(false); }} />)}</nav> : null}
       </header>
       {children}
       <footer className="cms-footer"><div className="cms-footer-inner"><div><p className="cms-footer-kicker">{tenant.footer.heading}</p><p>{tenant.footer.text}</p></div>{tenant.footer.links.filter((item) => !isDisabledPublicSurface(item.url)).length ? <nav aria-label="Footer navigation">{tenant.footer.links.filter((item) => !isDisabledPublicSurface(item.url)).map((item) => <FooterLinkItem item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}</nav> : null}</div><p className="cms-footer-legal">{tenant.footer.legal}</p></footer>
+      {actionItems.length ? <nav aria-label="Quick actions" className="cms-mobile-actions" data-action-count={actionItems.length}>{actionItems.map((item) => <NavLink className={headerActionClassName(item)} item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}</nav> : null}
       {pendingNavigation ? <div className="cms-leave-backdrop" role="presentation"><section aria-describedby="cms-leave-description" aria-labelledby="cms-leave-title" aria-modal="true" className="cms-leave-dialog" ref={leaveDialogRef} role="dialog"><h2 id="cms-leave-title">You are leaving this site</h2><p id="cms-leave-description">You are about to follow “{pendingNavigation.label}” to another page. Continue?</p><div className="cms-leave-actions"><button onClick={closeLeaveDialog} type="button">Stay here</button><button onClick={continueNavigation} type="button">Continue to link</button></div></section></div> : null}
       <button className="display-gear" aria-expanded={settings} aria-haspopup="dialog" aria-label="Display and accessibility settings" onClick={() => { if (settings) closeSettings(); else { setMenu(false); setSettings(true); } }} ref={settingsButtonRef} type="button"><Settings aria-hidden="true" /></button>
       {settings ? <aside aria-label="Display settings" aria-modal="true" className="display-panel" ref={settingsPanelRef} role="dialog"><button aria-label="Close display settings" onClick={closeSettings} type="button"><X aria-hidden="true" /></button><h2>Display settings</h2><fieldset><legend>Theme</legend><button aria-pressed={theme === "light"} onClick={() => setTheme("light")} type="button">Light</button><button aria-pressed={theme === "dark"} onClick={() => setTheme("dark")} type="button">Dark</button></fieldset><fieldset><legend>Text size</legend><button aria-pressed={scale === "default"} onClick={() => setScale("default")} type="button">A</button><button aria-pressed={scale === "large"} onClick={() => setScale("large")} type="button">A+</button><button aria-pressed={scale === "largest"} onClick={() => setScale("largest")} type="button">A++</button></fieldset><label><input checked={contrast} onChange={(event) => setContrast(event.target.checked)} type="checkbox" /> Extra contrast</label><p>Motion follows your device’s reduced-motion setting.</p></aside> : null}

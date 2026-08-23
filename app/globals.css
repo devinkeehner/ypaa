@@ -42,6 +42,7 @@ html.necypaa-text-largest { font-size: 125%; }
 .cms-menu-button svg { height: 20px; width: 20px; }
 .cms-mobile-menu { background: #101214; border-top: 1px solid #f4e8d323; display: grid; grid-column: 1 / -1; grid-template-columns: repeat(4, 1fr); margin: 0 calc(-1 * max(22px, calc((100vw - 1320px) / 2))) -10px; padding: 12px max(22px, calc((100vw - 1320px) / 2)); }
 .cms-mobile-menu a { min-height: 42px; align-items: center; display: flex; justify-content: center; }
+.cms-mobile-actions { display: none; }
 .cms-footer { background: var(--tenant-surface, #15181a); border-top: 1px solid color-mix(in srgb, var(--tenant-light-text, #f4e8d3), transparent 82%); color: var(--tenant-light-text, #f4e8d3); padding: 56px max(22px, calc((100vw - 1320px) / 2)) 24px; }
 .cms-footer-inner { align-items: start; display: flex; gap: 40px; justify-content: space-between; margin: 0 auto 34px; max-width: 1320px; }
 .cms-footer p { margin: 0; max-width: 480px; }
@@ -76,14 +77,14 @@ html.necypaa-text-largest { font-size: 125%; }
 .theme-light .cms-header nav a, .theme-light .cms-brand { color: var(--tenant-dark-text, #171614); }
 .theme-light .cms-header-action-outline, .theme-light .cms-menu-button { border-color: #c64c1e; color: var(--tenant-dark-text, #171614); }
 .theme-light .cms-actions .cms-cart { border-color: #17161455; color: var(--tenant-dark-text, #171614); }
-.theme-light .cms-mobile-menu { background: #f7f0e4; border-color: #171b2020; }
+.theme-light :is(.cms-mobile-menu, .cms-mobile-actions) { background: #f7f0e4; border-color: #171b2020; }
 .theme-light .cms-footer { background: #eee4d3; color: var(--tenant-dark-text, #171614); }
 .high-contrast .cms-header, .high-contrast .display-panel { border-width: 3px; }
 .high-contrast a:focus-visible, .high-contrast button:focus-visible { outline: 4px solid #ffcf40; outline-offset: 4px; }
 .theme-dark.high-contrast { background: #000; color: #fff; }
 .theme-light.high-contrast { background: #fff; color: #000; }
-.theme-dark.high-contrast :is(.cms-header, .cms-footer, .cms-mobile-menu) { background: #000; border-color: #fff; color: #fff; }
-.theme-light.high-contrast :is(.cms-header, .cms-footer, .cms-mobile-menu) { background: #fff; border-color: #000; color: #000; }
+.theme-dark.high-contrast :is(.cms-header, .cms-footer, .cms-mobile-menu, .cms-mobile-actions) { background: #000; border-color: #fff; color: #fff; }
+.theme-light.high-contrast :is(.cms-header, .cms-footer, .cms-mobile-menu, .cms-mobile-actions) { background: #fff; border-color: #000; color: #000; }
 .high-contrast :is(.cms-header nav a, .cms-footer a, .cms-header-action-outline, .cms-menu-button, .cms-actions .cms-cart) { color: inherit; }
 @media (max-width: 980px) {
   .cms-header { grid-template-columns: 1fr auto; }
@@ -91,15 +92,21 @@ html.necypaa-text-largest { font-size: 125%; }
   .cms-menu-button { display: inline-flex; }
 }
 @media (max-width: 660px) {
+  .cms-site.has-mobile-actions { padding-bottom: calc(var(--cms-mobile-action-rows, 1) * 72px + env(safe-area-inset-bottom)); }
   .cms-header { min-height: 68px; padding: 8px 14px; }
   .cms-brand { gap: 8px; min-width: 0; }
   .cms-brand strong { display: block; font-size: .82rem; letter-spacing: .05em; white-space: nowrap; }
   .cms-brand span { height: 44px; width: 44px; }
   .cms-brand img { height: 40px; max-width: 72px; }
   .cms-actions a { font-size: .67rem; min-height: 42px; min-width: 0; padding: 0 11px; }
-  .cms-actions .cms-hotel { display: none; }
+  .cms-actions .cms-header-action { display: none; }
   .cms-actions .cms-cart span { display: none; }
   .cms-mobile-menu { grid-template-columns: 1fr 1fr; margin: 0 -14px -8px; padding: 10px 14px; }
+  .cms-mobile-actions { background: #0b0d0ef5; border-top: 1px solid #f4e8d323; bottom: 0; display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); left: 0; padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); position: fixed; right: 0; z-index: 75; }
+  .cms-mobile-actions[data-action-count="1"] { grid-template-columns: minmax(0, 1fr); }
+  .cms-mobile-actions a { align-items: center; border-radius: 2px; display: flex; font-size: .7rem; font-weight: 820; justify-content: center; min-height: 46px; padding: 0 12px; text-align: center; text-decoration: none; }
+  .cms-site.has-mobile-actions .display-gear { bottom: calc(var(--cms-mobile-action-rows, 1) * 72px + 16px + env(safe-area-inset-bottom)); }
+  .cms-site.has-mobile-actions .display-panel { bottom: calc(var(--cms-mobile-action-rows, 1) * 72px + 82px + env(safe-area-inset-bottom)); }
   .cms-footer-inner { flex-direction: column; gap: 28px; }
 }
 

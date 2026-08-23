@@ -20,5 +20,7 @@ export function CartLink() {
     };
   }, []);
 
+  if (!count) return null;
+
   return <Link className="cms-cart" href="/cart" aria-label={`Cart with ${count} ${count === 1 ? "item" : "items"}`}><ShoppingBag aria-hidden="true" /><span>Cart</span>{count ? <b>{count}</b> : null}</Link>;
 }

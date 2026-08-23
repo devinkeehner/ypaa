@@ -42,7 +42,7 @@
   --schedule-text: var(--canvas-text);
   --schedule-muted: color-mix(in srgb, var(--schedule-text), transparent 30%);
   --schedule-line: color-mix(in srgb, var(--schedule-text), transparent 78%);
-  --schedule-link: var(--canvas-link);
+  --schedule-link: var(--canvas-action);
   --schedule-hover: color-mix(in srgb, var(--canvas-surface), var(--canvas-action) 12%);
   background: var(--canvas-bg);
   color: var(--canvas-text);
@@ -158,7 +158,7 @@
   margin: 0 0 18px;
   text-transform: uppercase;
 }
-.eyebrowDark { color: var(--canvas-link); }
+.eyebrowDark { color: var(--canvas-action); }
 :is(.canvas, .publicCanvas) :is(.lede, .body) {
   font-size: var(--type-subheading);
   line-height: 1.72;
@@ -535,8 +535,8 @@
 .directory li { align-items: center; border-bottom: 1px solid var(--line-dark); counter-increment: meeting; display: grid; gap: 15px; grid-template-columns: 38px 1fr auto; min-height: 96px; padding: 18px 8px; position: relative; }
 .directory li:nth-child(odd) { border-right: 1px solid var(--line-dark); padding-right: 28px; }
 .directory li:nth-child(even) { padding-left: 28px; }
-.directory li::before { color: var(--violet); content: counter(meeting, decimal-leading-zero); font: 700 .7rem/1 var(--font-geist-mono), monospace; }
-.directory li::after { color: var(--violet); content: "↗"; font-size: 1.15rem; }
+.directory li::before { color: var(--canvas-action); content: counter(meeting, decimal-leading-zero); font: 700 .7rem/1 var(--font-geist-mono), monospace; }
+.directory li::after { color: var(--canvas-action); content: "↗"; font-size: 1.15rem; }
 .directory li > div { display: grid; gap: 6px; }
 .directory li strong,
 .directoryTitle { color: var(--cream); font-family: Georgia, "Times New Roman", serif; font-size: var(--type-h4); font-weight: 500; line-height: 1.2; }
@@ -1267,6 +1267,9 @@
   .testimonialsAlt[data-variant="spotlight"] .testimonialsAltGrid figure[data-lead="true"] figcaption { grid-column: auto; }
   .palmContactDetails { grid-template-columns: 1fr; }
   .palmContactQr { width: min(220px, 100%); }
+  .campaignAltTabs[data-variant="horizontal"] .campaignAltTabList { border: 1px solid var(--canvas-border); display: grid; overflow: visible; }
+  .campaignAltTabs[data-variant="horizontal"] .campaignAltTabButton { border-bottom: 1px solid var(--canvas-border); border-left: 4px solid transparent; min-width: 0; white-space: normal; width: 100%; }
+  .campaignAltTabs[data-variant="horizontal"] .campaignAltTabButton[aria-selected="true"] { background: var(--canvas-elevated); border-left-color: var(--canvas-action); border-bottom-color: var(--canvas-border); }
   .campaignAltTabs[data-variant="sideTabs"] { grid-template-columns: 1fr; }
   .campaignAltTabs[data-variant="sideTabs"] .campaignAltTabList { flex-direction: row; overflow-x: auto; }
   .campaignAltTabs[data-variant="sideTabs"] .campaignAltTabButton { border-bottom: 3px solid transparent; border-left: 0; min-width: max-content; width: auto; }
