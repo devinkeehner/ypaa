@@ -22,9 +22,15 @@ const fallbackNavItems: HeaderNavigationItem[] = [
   { label: "Program", url: "/program", style: "link" },
   { label: "YPAA near you", url: "/#ypaa", style: "link" },
   { label: "Merch", url: "/merch", style: "link" },
-  { label: "Register", url: "/register", style: "button" },
-  { label: "Book a hotel room", url: "https://www.necypaact.com/hotel", style: "button", newTab: true },
+  { label: "Register", url: "/register", style: "button", appearance: "solid" },
+  { label: "Book a hotel room", url: "https://www.necypaact.com/hotel", style: "button", appearance: "outline", newTab: true },
 ];
+
+function headerActionClassName(item: HeaderNavigationItem) {
+  const appearance = item.appearance === "outline" ? "outline" : "solid";
+  const hotelClass = item.label.toLowerCase().includes("hotel") ? " cms-hotel" : "";
+  return `cms-header-action cms-header-action-${appearance}${hotelClass}`;
+}
 
 function NavLink({ item, onClick, className }: { item: HeaderNavigationItem; onClick?: MouseEventHandler<HTMLAnchorElement>; className?: string }) {
   const props = { className, onClick, target: item.newTab ? "_blank" : undefined, rel: item.newTab ? "noreferrer" : undefined };
@@ -158,7 +164,7 @@ export function SiteFrame({ children, mainId }: { children: React.ReactNode; mai
           {tenant.logoUrl ? <img alt={tenant.logoAlt} src={tenant.logoUrl} /> : <><span>36</span><strong>NECYPAA</strong></>}
         </Link>
         <nav aria-label="Primary navigation">{navLinks.map((item) => <NavLink item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}</nav>
-        <div className="cms-actions">{actionItems.map((item) => <NavLink className={item.style === "button" && item.label.toLowerCase().includes("hotel") ? "cms-hotel" : "cms-register"} item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}<button className="cms-menu-button" aria-expanded={menu} aria-controls="cms-mobile-menu" aria-label={menu ? "Close navigation" : "Open navigation"} onClick={() => { if (menu) closeMenu(); else { setSettings(false); setMenu(true); } }} ref={menuButtonRef} type="button">{menu ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button></div>
+        <div className="cms-actions">{actionItems.map((item) => <NavLink className={headerActionClassName(item)} item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}<button className="cms-menu-button" aria-expanded={menu} aria-controls="cms-mobile-menu" aria-label={menu ? "Close navigation" : "Open navigation"} onClick={() => { if (menu) closeMenu(); else { setSettings(false); setMenu(true); } }} ref={menuButtonRef} type="button">{menu ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button></div>
         {menu ? <nav className="cms-mobile-menu" id="cms-mobile-menu" aria-label="Mobile navigation" ref={menuRef}>{navItems.map((item) => <NavLink item={item} key={`${item.url}-${item.label}`} onClick={(event) => { confirmNavigation(item, event); setMenu(false); }} />)}</nav> : null}
       </header>
       {children}

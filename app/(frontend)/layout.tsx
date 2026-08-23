@@ -57,6 +57,7 @@ export default async function FrontendLayout({
           label: typeof item?.label === "string" ? item.label : "Link",
           url: typeof item?.url === "string" ? item.url : "/",
           style: item?.style === "button" ? "button" : "link",
+          appearance: item?.appearance === "outline" ? "outline" : "solid",
           newTab: item?.newTab === true,
           showWarning: item?.showWarning === true,
         })) : defaultHeaderNavigation,

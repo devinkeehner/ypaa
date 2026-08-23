@@ -60,7 +60,7 @@ export function ProductDetail({ item }: { item: MerchandiseItem }) {
               </div>
 
               {added ? <div className="product-added" role="status"><Check aria-hidden="true" /><span>Added to your cart.</span><Link href="/cart">View cart</Link></div> : null}
-              <p className="product-payment-note">Your selections will be saved in the cart. Payment is not active yet.</p>
+              <p className="product-payment-note">Your selections stay in this cart until you continue to the NECYPAA registration checkout.</p>
             </section>
           </div>
         </div>

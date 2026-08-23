@@ -71,8 +71,8 @@ export function MerchandiseCatalog({ items }: { items: MerchandiseItem[] }) {
               <h1>Wear the<br /><em>Mad Realm.</em></h1>
             </div>
             <div className="merch-intro">
-              <p>Browse convention designs and compare every available item and price. Ordering will open in a future update.</p>
-              <span><ShoppingBag aria-hidden="true" /> Catalog only — payment is not active yet</span>
+              <p>Browse convention designs, choose your options, and complete payment through the NECYPAA registration checkout.</p>
+              <span><ShoppingBag aria-hidden="true" /> Cash and card checkout available</span>
             </div>
           </div>
         </section>

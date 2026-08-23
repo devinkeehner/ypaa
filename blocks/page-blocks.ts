@@ -139,26 +139,18 @@ export const AboutBlock: Block = {
 
 export const MeetingInfoBlock: Block = {
   slug: "MeetingInfo",
-  labels: { singular: "Business meeting", plural: "Business meetings" },
+  labels: { singular: "Meeting dates", plural: "Meeting date sections" },
   admin: { group: "Convention sections" },
   fields: [
     { name: "eyebrow", type: "text" },
     { name: "heading", type: "text" },
-    { name: "body", type: "textarea" },
-    { name: "date", type: "text" },
-    { name: "time", type: "text" },
-    { name: "location", type: "text" },
-    { name: "actionLabel", type: "text" },
-    { name: "actionUrl", type: "text" },
-    accessibleContextField("actionAccessibleContext"),
-    leavingSiteWarningField("actionShowWarning"),
     {
       name: "importantDates",
+      label: "Meeting dates",
       type: "array",
-      labels: { singular: "Important date", plural: "Important dates" },
+      labels: { singular: "Meeting date", plural: "Meeting dates" },
       fields: [
         { name: "date", type: "text" },
-        { name: "label", type: "text" },
       ],
     },
     textStyles,

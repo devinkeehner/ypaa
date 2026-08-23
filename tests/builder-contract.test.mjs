@@ -133,3 +133,35 @@ test("every block shares semantic typography roles and adaptive special surfaces
   assert.match(styles, /testimonialsAltGrid figure \{ background: var\(--canvas-elevated\)/);
   assert.match(styles, /high-contrast[\s\S]*campaignAltAccordionPanel/);
 });
+
+test("header controls and legacy convention blocks keep their simplified accessible contracts", async () => {
+  const [header, layout, siteFrame, globalStyles, config, payloadBlocks, blockStyles] = await Promise.all([
+    source("globals/Header.ts"),
+    source("app/(frontend)/layout.tsx"),
+    source("components/site/SiteFrame.tsx"),
+    source("app/globals.css"),
+    source("puck/config.tsx"),
+    source("blocks/page-blocks.ts"),
+    source("puck/puck.module.css"),
+  ]);
+
+  assert.match(header, /type: "row"[\s\S]*name: "logo"[\s\S]*name: "logoAlt"/);
+  assert.match(header, /name: "appearance"[\s\S]*value: "outline"/);
+  assert.match(layout, /appearance: item\?\.appearance === "outline" \? "outline" : "solid"/);
+  assert.match(siteFrame, /cms-header-action-\$\{appearance\}/);
+  assert.match(globalStyles, /\.cms-header-action-outline/);
+
+  assert.match(config, /function MeetingDatesBlock/);
+  assert.match(config, /<strong>Meeting dates<\/strong>/);
+  assert.match(config, /label: "Meeting dates"/);
+  assert.match(payloadBlocks, /label: "Meeting dates"/);
+  assert.doesNotMatch(config, /<RichCopy as="span" path=\{`importantDates/);
+
+  assert.match(config, /const hasFeaturedUpcoming = Boolean/);
+  assert.match(config, /hasEventContent \? <div className=\{styles\.eventBlend\}/);
+  assert.doesNotMatch(config, /: "Upcoming flyer"/);
+
+  assert.match(config, /className=\{styles\.directoryTitle\}[\s\S]*path=\{`meetings\[\$\{index\}\]\.name`\}/);
+  assert.match(blockStyles, /\.directoryTitle \{ color: var\(--cream\);[\s\S]*font-size: var\(--type-h4\)/);
+  assert.match(blockStyles, /\.richInline \* \{ color: inherit !important; \}/);
+});

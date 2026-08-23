@@ -33,6 +33,14 @@ export function CartPage() {
   };
 
   const subtotal = useMemo(() => items.reduce((sum, item) => sum + item.price * item.quantity, 0), [items]);
+  const checkoutHref = useMemo(() => {
+    const merchandise = items.map((item) => ({
+      slug: item.slug,
+      variantId: item.variantId,
+      quantity: item.quantity,
+    }));
+    return `https://reg.necypaact.com/?merch=${encodeURIComponent(JSON.stringify(merchandise))}`;
+  }, [items]);
 
   return (
     <SiteFrame mainId="cart-main">
@@ -49,7 +57,7 @@ export function CartPage() {
                 <button className="cart-remove" type="button" onClick={() => remove(item.key)} aria-label={`Remove ${item.name}`}><Trash2 aria-hidden="true" /></button>
               </article>)}
             </div>
-            <aside className="cart-summary"><p>Order summary</p><div><span>Subtotal</span><strong>{formatMerchandisePrice(subtotal)}</strong></div><button disabled type="button">Checkout coming soon</button><small>No payment will be collected yet. Your cart stays saved on this device.</small></aside>
+            <aside className="cart-summary"><p>Order summary</p><div><span>Subtotal</span><strong>{formatMerchandisePrice(subtotal)}</strong></div><a className="cart-checkout-link" href={checkoutHref}>Continue to checkout</a><small>Registration, breakfast tickets, and cash or card payment can be added on the secure checkout site.</small></aside>
           </div> : loaded ? <div className="cart-empty"><ShoppingBag aria-hidden="true" /><h2>Your cart is empty.</h2><p>Choose an item from the merchandise collection to get started.</p><Link href="/merch">Browse merchandise</Link></div> : null}
         </div>
       </main>

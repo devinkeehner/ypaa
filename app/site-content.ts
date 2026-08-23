@@ -58,7 +58,7 @@ export const siteContent: SiteContent = {
     venue: "Hartford Marriott Downtown",
     dateRange: "December 31, 2026 – January 3, 2027",
     countdownIso: "2026-12-31T17:00:00-05:00",
-    registerUrl: "https://register.necypaact.com/en/register",
+    registerUrl: "https://reg.necypaact.com",
     hotelUrl: "https://www.necypaact.com/hotel",
   },
   about: {

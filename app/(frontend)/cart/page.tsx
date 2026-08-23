@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+
+import { CartPage } from "@/components/site/CartPage";
 
 export const metadata: Metadata = {
   title: "Cart | NECYPAA XXXVI",
-  description: "Review your NECYPAA XXXVI merchandise selections.",
+  description: "Review merchandise and continue to the NECYPAA registration checkout.",
 };
 
 export default function Cart() {
-  notFound();
+  return <CartPage />;
 }

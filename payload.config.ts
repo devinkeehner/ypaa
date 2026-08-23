@@ -9,6 +9,7 @@ import { Media } from "./collections/Media";
 import { Pages } from "./collections/Pages";
 import { Posts } from "./collections/Posts";
 import { Merchandise } from "./collections/Merchandise";
+import { MerchandiseOrders } from "./collections/MerchandiseOrders";
 import { Tenants } from "./collections/Tenants";
 import { AccessCodes } from "./collections/AccessCodes";
 import { CashTransactions } from "./collections/CashTransactions";
@@ -47,7 +48,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [Users, Media, Pages, Posts, Merchandise, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, Rooms, ProgramSessions, VenueMaps],
+  collections: [Users, Media, Pages, Posts, Merchandise, MerchandiseOrders, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, Rooms, ProgramSessions, VenueMaps],
   globals: [Header, Footer],
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || "",

@@ -17,7 +17,7 @@ export type TenantTheme = {
   footer: FooterSettings;
 };
 
-export type HeaderNavigationItem = { label: string; url: string; style: "link" | "button"; newTab?: boolean; showWarning?: boolean };
+export type HeaderNavigationItem = { label: string; url: string; style: "link" | "button"; appearance?: "solid" | "outline"; newTab?: boolean; showWarning?: boolean };
 export type FooterLink = { label: string; url: string; newTab?: boolean; showWarning?: boolean };
 export type FooterSettings = { heading: string; text: string; links: FooterLink[]; legal: string };
 
@@ -28,8 +28,8 @@ export const defaultHeaderNavigation: HeaderNavigationItem[] = [
   { label: "Program", url: "/program", style: "link" },
   { label: "YPAA near you", url: "/#ypaa", style: "link" },
   { label: "Merch", url: "/merch", style: "link" },
-  { label: "Register", url: "/register", style: "button" },
-  { label: "Book a hotel room", url: "https://www.necypaact.com/hotel", style: "button", newTab: true },
+  { label: "Register", url: "/register", style: "button", appearance: "solid" },
+  { label: "Book a hotel room", url: "https://www.necypaact.com/hotel", style: "button", appearance: "outline", newTab: true },
 ];
 
 export const defaultFooter: FooterSettings = {

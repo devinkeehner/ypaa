@@ -73,6 +73,7 @@ export interface Config {
     pages: Page;
     posts: Post;
     merchandise: Merchandise;
+    'merchandise-orders': MerchandiseOrder;
     tenants: Tenant;
     'access-codes': AccessCode;
     'cash-transactions': CashTransaction;
@@ -94,6 +95,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     merchandise: MerchandiseSelect<false> | MerchandiseSelect<true>;
+    'merchandise-orders': MerchandiseOrdersSelect<false> | MerchandiseOrdersSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
     'access-codes': AccessCodesSelect<false> | AccessCodesSelect<true>;
     'cash-transactions': CashTransactionsSelect<false> | CashTransactionsSelect<true>;
@@ -2399,6 +2401,8 @@ export interface Page {
             layout?: ('one' | 'two' | 'leftWide' | 'rightWide' | 'three' | 'four') | null;
             background?:
               | (
+                  | 'adaptive'
+                  | 'adaptiveSurface'
                   | 'themeLight'
                   | 'themeDark'
                   | 'themeSurface'
@@ -3340,6 +3344,8 @@ export interface Page {
             heading?: string | null;
             background?:
               | (
+                  | 'adaptive'
+                  | 'adaptiveSurface'
                   | 'themeLight'
                   | 'themeDark'
                   | 'themeSurface'
@@ -37687,6 +37693,44 @@ export interface Merchandise {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Merchandise orders fulfilled by the separate NECYPAA Registration Site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "merchandise-orders".
+ */
+export interface MerchandiseOrder {
+  id: string;
+  sourceKey: string;
+  purchaserName: string;
+  purchaserEmail: string;
+  paymentSource: 'stripe' | 'cash';
+  fulfillmentMethod: 'receive_now' | 'event_pickup' | 'shipping';
+  shippingAddress?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  items:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  merchandiseSubtotalCents: number;
+  shippingCents: number;
+  status: 'processing' | 'fulfilled' | 'failed';
+  failureMessage?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Branding shared by the homepage, registration, cash entry, merchandise, and cart.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -38094,6 +38138,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'merchandise';
         value: string | Merchandise;
+      } | null)
+    | ({
+        relationTo: 'merchandise-orders';
+        value: string | MerchandiseOrder;
       } | null)
     | ({
         relationTo: 'tenants';
@@ -58378,6 +58426,25 @@ export interface MerchandiseSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "merchandise-orders_select".
+ */
+export interface MerchandiseOrdersSelect<T extends boolean = true> {
+  sourceKey?: T;
+  purchaserName?: T;
+  purchaserEmail?: T;
+  paymentSource?: T;
+  fulfillmentMethod?: T;
+  shippingAddress?: T;
+  items?: T;
+  merchandiseSubtotalCents?: T;
+  shippingCents?: T;
+  status?: T;
+  failureMessage?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

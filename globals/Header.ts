@@ -9,12 +9,24 @@ export const Header: GlobalConfig = {
   },
   fields: [
     {
-      name: "logo",
-      type: "upload",
-      relationTo: "media",
-      admin: { description: "Logo displayed in the global public header." },
+      type: "row",
+      fields: [
+        {
+          name: "logo",
+          type: "upload",
+          relationTo: "media",
+          admin: { description: "Logo displayed in the global public header.", width: "50%" },
+        },
+        {
+          name: "logoAlt",
+          label: "Logo alt text",
+          type: "text",
+          required: true,
+          defaultValue: "NECYPAA XXXVI",
+          admin: { description: "Describe the logo for visitors using screen readers.", width: "50%" },
+        },
+      ],
     },
-    { name: "logoAlt", type: "text", required: true, defaultValue: "NECYPAA XXXVI" },
     {
       name: "navigation",
       label: "Navigation items",
@@ -31,6 +43,17 @@ export const Header: GlobalConfig = {
             { label: "Navigation link", value: "link" },
             { label: "Button / action", value: "button" },
           ],
+        },
+        {
+          name: "appearance",
+          label: "Button appearance",
+          type: "select",
+          defaultValue: "solid",
+          options: [
+            { label: "Solid", value: "solid" },
+            { label: "Outline", value: "outline" },
+          ],
+          admin: { condition: (_data, siblingData) => siblingData?.style === "button" },
         },
         { name: "newTab", label: "Open in a new tab", type: "checkbox", defaultValue: false },
         { name: "showWarning", label: "Show leaving-site warning", type: "checkbox", defaultValue: false },

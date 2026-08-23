@@ -20,7 +20,7 @@ import {
   normalizeScheduleMeetings,
   normalizeUpcomingEvents,
 } from "@/puck/list-values";
-import type { ImportantDate, MediaValue, MeetingListing, PastEvent, ScheduleMeeting, UpcomingEvent } from "@/puck/list-values";
+import type { MediaValue, MeetingListing, PastEvent, ScheduleMeeting, UpcomingEvent } from "@/puck/list-values";
 import { ctMeetingSchedule } from "@/puck/ct-meeting-schedule-data";
 import { campaignAltDefinitions, campaignAltTypes, campaignAltTypesByPalette, type CampaignAltDefinition, type CampaignAltType } from "@/puck/campaign-alt-definitions";
 import { AFTER_CONTENT_BLOCK_TYPES, ELEMENT_DROP_TYPES } from "@/puck/drop-zones";
@@ -122,7 +122,8 @@ type Hero = Base & {
   image?: MediaValue | null;
 };
 type About = Base & { eyebrow: string; heading: string; body: string; advisoryHeading: string; advisoryBody: string; image?: MediaValue | null };
-type Meeting = Base & { eyebrow: string; heading: string; body: string; date: string; time: string; location: string; actionLabel: string; actionUrl: string; actionAccessibleContext: string; actionShowWarning?: boolean; importantDates: ImportantDate[] };
+type MeetingDate = { date: string };
+type Meeting = Base & { eyebrow: string; heading: string; importantDates: MeetingDate[] };
 type Events = Base & { eyebrow: string; heading: string; upcomingLabel: string; upcomingTitle: string; upcomingBody: string; upcomingDate: string; upcomingLocation: string; upcomingImage?: MediaValue | null; upcomingEvents: UpcomingEvent[]; pastEvents: PastEvent[] };
 type Directory = Base & { eyebrow: string; heading: string; body: string; meetings: MeetingListing[] };
 type CTMeetingSchedule = Base & { heading: string; introduction: string; meetings: ScheduleMeeting[] };
@@ -187,7 +188,7 @@ const campaignAltEditableFields = Object.fromEntries(campaignAltDefinitions.map(
 export const editableFieldsByType: Record<keyof Components, string[]> = {
   HeroCountdown: ["eyebrow", "heading", "body", "eventDate", "eventLocation", "registerLabel", "hotelLabel"],
   About: ["eyebrow", "heading", "body", "advisoryHeading", "advisoryBody"],
-  MeetingInfo: ["eyebrow", "heading", "body", "date", "time", "location", "actionLabel"],
+  MeetingInfo: ["eyebrow", "heading"],
   Events: ["eyebrow", "heading", "upcomingLabel", "upcomingTitle", "upcomingBody", "upcomingDate", "upcomingLocation"],
   MeetingDirectory: ["eyebrow", "heading", "body"],
   CTMeetingSchedule: ["heading", "introduction"],
@@ -391,12 +392,12 @@ const mediaField = (label: string, allowVideo = false): Field<MediaValue | null 
 
 const richTextPlaceholder = richTextField("Rich text", "Write rich text here.", "paragraph");
 
-const importantDatesField: Field<ImportantDate[]> = {
+const meetingDatesField: Field<MeetingDate[]> = {
   type: "array",
-  label: "Important dates",
-  defaultItemProps: { date: "", label: "" },
-  arrayFields: { date: text("Date"), label: text("Details") },
-  getItemSummary: (item) => item.label || item.date || "Important date",
+  label: "Meeting dates",
+  defaultItemProps: { date: "" },
+  arrayFields: { date: text("Date") },
+  getItemSummary: (item) => item.date || "Meeting date",
 };
 
 const pastEventsField: Field<PastEvent[]> = {
@@ -741,6 +742,25 @@ function Button({ accessibleLabel, appearance, backgroundColor, href, children, 
   const resolvedAppearance = appearance || (outline ? "outline" : "solid");
   const style = buttonColorStyle(backgroundColor, textColor, resolvedAppearance);
   return <a aria-label={accessibleLabel} className={styles.button} data-appearance={resolvedAppearance} data-outline={resolvedAppearance === "outline"} href={href || "#"} id={id} onClick={(event) => requestNavigationWarning(event, { label: accessibleLabel || "this link", showWarning, url: href || "#" })} style={style}>{children}</a>;
+}
+
+function MeetingDatesBlock(props: Meeting) {
+  const meetingDates = normalizeImportantDates(props.importantDates).filter((item) => Boolean(summaryText(item.date)));
+  return <section className={styles.light} id={props.id}><div className={`${styles.shell} ${styles.meeting}`}><header className={styles.meetingHeading}><Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable></header>{meetingDates.length ? <aside className={styles.dates}><strong>Meeting dates</strong><ul>{meetingDates.map((item, index) => <li key={`${item.date}-${index}`}><RichCopy as="strong" path={`importantDates[${index}].date`} field="date" value={item.date} /></li>)}</ul></aside> : null}</div></section>;
+}
+
+function EventsSection(props: Events) {
+  const upcomingImage = normalizeMedia(props.upcomingImage);
+  const upcomingEvents = normalizeUpcomingEvents(props.upcomingEvents);
+  const pastEvents = normalizePastEvents(props.pastEvents);
+  const hasFeaturedUpcoming = Boolean(upcomingImage || [props.upcomingLabel, props.upcomingTitle, props.upcomingBody, props.upcomingDate, props.upcomingLocation].some((value) => summaryText(value)));
+  const hasEventContent = hasFeaturedUpcoming || upcomingEvents.length > 0 || pastEvents.length > 0;
+
+  return <section className={styles.events} id={props.id}><div className={styles.shell}><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable>{hasEventContent ? <div className={styles.eventBlend}>{hasFeaturedUpcoming ? <article className={styles.upcoming} data-has-flyer={Boolean(upcomingImage)}>{upcomingImage ? <div className={styles.flyer} data-has-image="true"><img alt={upcomingImage.alt || ""} src={upcomingImage.url} /></div> : null}<div>{summaryText(props.upcomingLabel) ? <Editable as="p" className={styles.eventLabel} field="upcomingLabel" props={props}>{props.upcomingLabel}</Editable> : null}{summaryText(props.upcomingTitle) ? <Editable as="h3" field="upcomingTitle" props={props}>{props.upcomingTitle}</Editable> : null}{summaryText(props.upcomingBody) ? <Editable as="p" field="upcomingBody" props={props}>{props.upcomingBody}</Editable> : null}{summaryText(props.upcomingDate) ? <Editable as="strong" field="upcomingDate" props={props}>{props.upcomingDate}</Editable> : null}{summaryText(props.upcomingLocation) ? <Editable as="span" field="upcomingLocation" props={props}>{props.upcomingLocation}</Editable> : null}</div></article> : null}{upcomingEvents.length ? <div className={styles.futureEvents}><span>More upcoming events</span><ul>{upcomingEvents.map((item, index) => <li key={`${item.title}-${item.date}-${index}`}><RichCopy as="strong" path={`upcomingEvents[${index}].title`} field="title" value={item.title} /><RichCopy as="time" path={`upcomingEvents[${index}].date`} field="date" value={item.date} /></li>)}</ul></div> : null}{pastEvents.length ? <div className={styles.archive}><span>From the archive</span><div>{pastEvents.map((item, index) => { const image = normalizeMedia(item.image); return <article key={`${item.title}-${item.date}-${index}`}><div data-has-image={Boolean(image)}>{image ? <img alt={image.alt || ""} src={image.url} /> : "Event flyer"}</div><RichCopy as="small" path={`pastEvents[${index}].date`} field="date" value={item.date} /><RichCopy as="strong" path={`pastEvents[${index}].title`} field="title" value={item.title} /></article>; })}</div></div> : null}</div> : null}</div></section>;
+}
+
+function MeetingDirectorySection(props: Directory) {
+  return <section className={styles.directory} id={props.id}><div className={`${styles.shell} ${styles.twoCol}`}><div><Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable></div><ul>{normalizeMeetings(props.meetings).map((item, index) => <li key={`${item.name}-${item.location}-${index}`}><div>{item.url ? <a aria-label={actionAccessibleName(item.name, item.accessibleContext)} href={item.url} rel="noreferrer" target="_blank"><RichCopy as="strong" className={styles.directoryTitle} path={`meetings[${index}].name`} field="name" value={item.name} /></a> : <RichCopy as="strong" className={styles.directoryTitle} path={`meetings[${index}].name`} field="name" value={item.name} />}<RichCopy as="span" path={`meetings[${index}].location`} field="location" value={item.location} />{item.date ? <RichCopy as="small" path={`meetings[${index}].date`} field="date" value={item.date} /> : null}</div></li>)}</ul></div></section>;
 }
 
 function CTMeetingScheduleBlock(props: CTMeetingSchedule) {
@@ -1135,22 +1155,22 @@ export const puckConfig: Config<Components> = {
       render: (props) => { const image = normalizeMedia(props.image); return <section className={styles.dark} id={props.id}><div className={`${styles.shell} ${styles.twoCol}`}><div className={styles.artPlaceholder} data-has-image={Boolean(image)}>{image ? <img alt={image.alt || ""} src={image.url} /> : <span>Mad Realm imagery</span>}</div><div><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="body" props={props}>{props.body}</Editable><aside className={styles.advisory}><Editable as="h3" field="advisoryHeading" props={props}>{props.advisoryHeading}</Editable><Editable as="p" field="advisoryBody" props={props}>{props.advisoryBody}</Editable></aside></div></div></section>; },
     },
     MeetingInfo: {
-      label: "Business meeting",
-      defaultProps: { eyebrow: "Host committee", heading: "Business meeting", body: "Join the host committee.", date: "Date", time: "Time", location: "Zoom", actionLabel: "Join on Zoom", actionUrl: "#", actionAccessibleContext: "", actionShowWarning: false, importantDates: [{ date: "Date", label: "Details" }] },
-      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Body"), date: text("Date"), time: text("Time"), location: text("Location"), actionLabel: text("Action label"), actionUrl: plainText("Action URL"), actionAccessibleContext: accessibleContextField(), actionShowWarning: warningField(), importantDates: importantDatesField },
-      render: (props) => <section className={styles.light} id={props.id}><div className={`${styles.shell} ${styles.meeting}`}><div><Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" className={styles.body} field="body" props={props}>{props.body}</Editable><dl><div><dt>Date</dt><dd><Editable field="date" props={props}>{props.date}</Editable></dd></div><div><dt>Time</dt><dd><Editable field="time" props={props}>{props.time}</Editable></dd></div><div><dt>Where</dt><dd><Editable field="location" props={props}>{props.location}</Editable></dd></div></dl><Button accessibleLabel={actionAccessibleName(props.actionLabel, props.actionAccessibleContext)} href={props.actionUrl} showWarning={props.actionShowWarning}><Editable field="actionLabel" props={props}>{props.actionLabel}</Editable></Button></div><aside className={styles.dates}><strong>Important dates</strong><ul>{normalizeImportantDates(props.importantDates).map((item, index) => <li key={`${item.date}-${item.label}-${index}`}><RichCopy as="strong" path={`importantDates[${index}].date`} field="date" value={item.date} />{item.label ? <div className={styles.dateDetails}><span aria-hidden="true">—</span><RichCopy as="span" path={`importantDates[${index}].label`} field="label" value={item.label} /></div> : null}</li>)}</ul></aside></div></section>,
+      label: "Meeting dates",
+      defaultProps: { eyebrow: "Host committee", heading: "Meeting dates", importantDates: [] },
+      fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), importantDates: meetingDatesField },
+      render: (props) => <MeetingDatesBlock {...props} />,
     },
     Events: {
       label: "Upcoming + past events",
-      defaultProps: { eyebrow: "Gather with us", heading: "Upcoming and past events", upcomingLabel: "Next up", upcomingTitle: "Upcoming event", upcomingBody: "Event details", upcomingDate: "Date", upcomingLocation: "Location", upcomingImage: null, upcomingEvents: [], pastEvents: [{ title: "Past event", date: "Date", image: null }] },
+      defaultProps: { eyebrow: "Gather with us", heading: "Upcoming and past events", upcomingLabel: "", upcomingTitle: "", upcomingBody: "", upcomingDate: "", upcomingLocation: "", upcomingImage: null, upcomingEvents: [], pastEvents: [] },
       fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), upcomingLabel: text("Upcoming label"), upcomingTitle: text("Upcoming title"), upcomingBody: area("Upcoming description"), upcomingDate: text("Upcoming date"), upcomingLocation: text("Upcoming location"), upcomingImage: mediaField("Upcoming flyer"), upcomingEvents: upcomingEventsField, pastEvents: pastEventsField },
-      render: (props) => { const upcomingImage = normalizeMedia(props.upcomingImage); const upcomingEvents = normalizeUpcomingEvents(props.upcomingEvents); return <section className={styles.events} id={props.id}><div className={styles.shell}><Editable as="p" className={styles.eyebrow} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><div className={styles.eventBlend}><article className={styles.upcoming}><div className={styles.flyer} data-has-image={Boolean(upcomingImage)}>{upcomingImage ? <img alt={upcomingImage.alt || ""} src={upcomingImage.url} /> : "Upcoming flyer"}</div><div><Editable as="p" className={styles.eventLabel} field="upcomingLabel" props={props}>{props.upcomingLabel}</Editable><Editable as="h3" field="upcomingTitle" props={props}>{props.upcomingTitle}</Editable><Editable as="p" field="upcomingBody" props={props}>{props.upcomingBody}</Editable><Editable as="strong" field="upcomingDate" props={props}>{props.upcomingDate}</Editable><Editable as="span" field="upcomingLocation" props={props}>{props.upcomingLocation}</Editable></div></article>{upcomingEvents.length ? <div className={styles.futureEvents}><span>More upcoming events</span><ul>{upcomingEvents.map((item, index) => <li key={`${item.title}-${item.date}-${index}`}><RichCopy as="strong" path={`upcomingEvents[${index}].title`} field="title" value={item.title} /><RichCopy as="time" path={`upcomingEvents[${index}].date`} field="date" value={item.date} /></li>)}</ul></div> : null}<div className={styles.archive}><span>From the archive</span><div>{normalizePastEvents(props.pastEvents).map((item, index) => { const image = normalizeMedia(item.image); return <article key={`${item.title}-${item.date}-${index}`}><div data-has-image={Boolean(image)}>{image ? <img alt={image.alt || ""} src={image.url} /> : "Event flyer"}</div><RichCopy as="small" path={`pastEvents[${index}].date`} field="date" value={item.date} /><RichCopy as="strong" path={`pastEvents[${index}].title`} field="title" value={item.title} /></article>; })}</div></div></div></div></section>; },
+      render: (props) => <EventsSection {...props} />,
     },
     MeetingDirectory: {
       label: "YPAA directory",
       defaultProps: { eyebrow: "Across the Northeast", heading: "YPAA meetings near you", body: "Find fellowship near you.", meetings: [{ name: "Connecticut YPAA", location: "Connecticut", accessibleContext: "" }] },
       fields: { eyebrow: text("Eyebrow"), heading: text("Heading"), body: area("Body"), meetings: meetingsField },
-      render: (props) => <section className={styles.directory} id={props.id}><div className={`${styles.shell} ${styles.twoCol}`}><div><Editable as="p" className={styles.eyebrowDark} field="eyebrow" props={props}>{props.eyebrow}</Editable><Editable as="h2" field="heading" props={props}>{props.heading}</Editable><Editable as="p" field="body" props={props}>{props.body}</Editable></div><ul>{normalizeMeetings(props.meetings).map((item, index) => <li key={`${item.name}-${item.location}-${index}`}><div>{item.url ? <a aria-label={actionAccessibleName(item.name, item.accessibleContext)} href={item.url} rel="noreferrer" target="_blank"><RichCopy as="span" path={`meetings[${index}].name`} field="name" value={item.name} /></a> : <RichCopy as="strong" path={`meetings[${index}].name`} field="name" value={item.name} />}<RichCopy as="span" path={`meetings[${index}].location`} field="location" value={item.location} />{item.date ? <RichCopy as="small" path={`meetings[${index}].date`} field="date" value={item.date} /> : null}</div></li>)}</ul></div></section>,
+      render: (props) => <MeetingDirectorySection {...props} />,
     },
     CTMeetingSchedule: {
       label: "CT Meeting schedule",

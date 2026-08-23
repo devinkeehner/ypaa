@@ -1,6 +1,5 @@
-import { RegistrationPortal } from "@/components/site/RegistrationPortal";
-import { SiteFrame } from "@/components/site/SiteFrame";
+import { redirect } from "next/navigation";
 
 export default function RegisterPage() {
-  return <SiteFrame mainId="register-main"><main id="register-main"><RegistrationPortal /></main></SiteFrame>;
+  redirect("https://reg.necypaact.com");
 }
