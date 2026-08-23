@@ -19,7 +19,7 @@ export const CheckoutOrders: CollectionConfig = {
     { name: "totalCents", type: "number", required: true, min: 0 },
     { name: "paymentSource", type: "select", required: true, options: ["stripe", "cash"] },
     { name: "paymentStatus", type: "select", required: true, options: ["paid", "recorded", "refunded", "disputed", "voided"] },
-    { name: "dataOrigin", type: "select", required: true, options: ["stripe_webhook", "stripe_backfill", "cash_checkout"] },
+    { name: "dataOrigin", type: "select", required: true, options: ["live_checkout", "stripe_webhook", "stripe_backfill", "cash_checkout"] },
     { name: "purchasedAt", type: "date", required: true, index: true },
     { name: "stripeCheckoutSessionId", type: "text", index: true },
     { name: "stripePaymentIntentId", type: "text", index: true },

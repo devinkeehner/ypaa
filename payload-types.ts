@@ -38170,7 +38170,7 @@ export interface CheckoutOrder {
   totalCents: number;
   paymentSource: 'stripe' | 'cash';
   paymentStatus: 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
-  dataOrigin: 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout';
+  dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout';
   purchasedAt: string;
   stripeCheckoutSessionId?: string | null;
   stripePaymentIntentId?: string | null;
