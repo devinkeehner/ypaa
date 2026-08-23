@@ -74,6 +74,7 @@ export interface Config {
     posts: Post;
     merchandise: Merchandise;
     'merchandise-orders': MerchandiseOrder;
+    'checkout-orders': CheckoutOrder;
     tenants: Tenant;
     'access-codes': AccessCode;
     'cash-transactions': CashTransaction;
@@ -96,6 +97,7 @@ export interface Config {
     posts: PostsSelect<false> | PostsSelect<true>;
     merchandise: MerchandiseSelect<false> | MerchandiseSelect<true>;
     'merchandise-orders': MerchandiseOrdersSelect<false> | MerchandiseOrdersSelect<true>;
+    'checkout-orders': CheckoutOrdersSelect<false> | CheckoutOrdersSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
     'access-codes': AccessCodesSelect<false> | AccessCodesSelect<true>;
     'cash-transactions': CashTransactionsSelect<false> | CashTransactionsSelect<true>;
@@ -38153,6 +38155,49 @@ export interface MerchandiseOrder {
   createdAt: string;
 }
 /**
+ * One paid checkout record, linked by source key to its attendee, breakfast, and merchandise records.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "checkout-orders".
+ */
+export interface CheckoutOrder {
+  id: string;
+  sourceKey: string;
+  purchaserName: string;
+  purchaserEmail: string;
+  subtotalCents: number;
+  processingFeeCents: number;
+  totalCents: number;
+  paymentSource: 'stripe' | 'cash';
+  paymentStatus: 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
+  dataOrigin: 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout';
+  purchasedAt: string;
+  stripeCheckoutSessionId?: string | null;
+  stripePaymentIntentId?: string | null;
+  stripeChargeId?: string | null;
+  stripeCustomerId?: string | null;
+  order:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  rawMetadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Branding shared by the homepage, registration, cash entry, merchandise, and cart.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -38564,6 +38609,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'merchandise-orders';
         value: string | MerchandiseOrder;
+      } | null)
+    | ({
+        relationTo: 'checkout-orders';
+        value: string | CheckoutOrder;
       } | null)
     | ({
         relationTo: 'tenants';
@@ -58864,6 +58913,30 @@ export interface MerchandiseOrdersSelect<T extends boolean = true> {
   shippingCents?: T;
   status?: T;
   failureMessage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "checkout-orders_select".
+ */
+export interface CheckoutOrdersSelect<T extends boolean = true> {
+  sourceKey?: T;
+  purchaserName?: T;
+  purchaserEmail?: T;
+  subtotalCents?: T;
+  processingFeeCents?: T;
+  totalCents?: T;
+  paymentSource?: T;
+  paymentStatus?: T;
+  dataOrigin?: T;
+  purchasedAt?: T;
+  stripeCheckoutSessionId?: T;
+  stripePaymentIntentId?: T;
+  stripeChargeId?: T;
+  stripeCustomerId?: T;
+  order?: T;
+  rawMetadata?: T;
   updatedAt?: T;
   createdAt?: T;
 }

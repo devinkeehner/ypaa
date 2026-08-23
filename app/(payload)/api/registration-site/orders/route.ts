@@ -57,6 +57,9 @@ export async function POST(request: Request) {
       stripeCustomerId: text(context.stripeCustomerId),
       rawMetadata: metadata(context.rawMetadata),
       breakfastUnitPriceCents: Math.max(0, Math.min(100000, Math.floor(Number(context.breakfastUnitPriceCents) || 0))),
+      subtotalCents: Math.max(0, Math.min(10000000, Math.floor(Number(context.subtotalCents) || 0))),
+      processingFeeCents: Math.max(0, Math.min(10000000, Math.floor(Number(context.processingFeeCents) || 0))),
+      totalCents: Math.max(0, Math.min(10000000, Math.floor(Number(context.totalCents) || 0))),
     });
     return NextResponse.json({ success: true });
   } catch (error) {

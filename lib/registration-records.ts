@@ -4,6 +4,7 @@ import type { Payload } from "payload";
 import {
   BREAKFASTS,
   BREAKFAST_PRICE_CENTS,
+  orderSubtotalCents,
   POLICY_KEYS,
   REGISTRATION_PRICE_CENTS,
   type RegistrationOrder,
@@ -23,6 +24,9 @@ type RecordContext = {
   cashTransactionId?: string;
   rawMetadata?: Record<string, string>;
   breakfastUnitPriceCents?: number;
+  subtotalCents?: number;
+  processingFeeCents?: number;
+  totalCents?: number;
 };
 
 const bool = (value: string | undefined) => value === "true" || value === "1" || value === "yes";
@@ -35,7 +39,35 @@ async function findBySourceKey(payload: Payload, collection: "attendees" | "brea
   return result.docs[0] as { id: string } | undefined;
 }
 
+async function recordCheckoutOrder(payload: Payload, order: RegistrationOrder, context: RecordContext) {
+  const subtotalCents = Math.max(0, Math.floor(context.subtotalCents ?? orderSubtotalCents(order)));
+  const processingFeeCents = Math.max(0, Math.floor(context.processingFeeCents ?? 0));
+  const totalCents = Math.max(subtotalCents + processingFeeCents, Math.floor(context.totalCents ?? 0));
+  const data = {
+    sourceKey: context.sourceKey,
+    purchaserName: order.purchaserName,
+    purchaserEmail: order.purchaserEmail,
+    subtotalCents,
+    processingFeeCents,
+    totalCents,
+    paymentSource: context.paymentSource,
+    paymentStatus: context.paymentStatus,
+    dataOrigin: context.dataOrigin,
+    purchasedAt: context.purchasedAt,
+    stripeCheckoutSessionId: context.stripeCheckoutSessionId,
+    stripePaymentIntentId: context.stripePaymentIntentId,
+    stripeChargeId: context.stripeChargeId,
+    stripeCustomerId: context.stripeCustomerId,
+    order,
+    rawMetadata: context.rawMetadata,
+  } as const;
+  const result = await payload.find({ collection: "checkout-orders", overrideAccess: true, limit: 1, where: { sourceKey: { equals: context.sourceKey } } });
+  if (result.docs[0]) await payload.update({ collection: "checkout-orders", id: result.docs[0].id, overrideAccess: true, data });
+  else await payload.create({ collection: "checkout-orders", overrideAccess: true, data });
+}
+
 export async function recordRegistrationOrder(payload: Payload, order: RegistrationOrder, context: RecordContext) {
+  await recordCheckoutOrder(payload, order, context);
   let attendeeId: string | undefined;
   if (order.selfRegistration) {
     const sourceKey = `${context.sourceKey}:registration:1`;
