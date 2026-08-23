@@ -92,9 +92,10 @@ html.necypaa-text-largest { font-size: 125%; }
 }
 @media (max-width: 660px) {
   .cms-header { min-height: 68px; padding: 8px 14px; }
-  .cms-brand strong { display: none; }
+  .cms-brand { gap: 8px; min-width: 0; }
+  .cms-brand strong { display: block; font-size: .82rem; letter-spacing: .05em; white-space: nowrap; }
   .cms-brand span { height: 44px; width: 44px; }
-  .cms-brand img { height: 44px; max-width: 118px; }
+  .cms-brand img { height: 40px; max-width: 72px; }
   .cms-actions a { font-size: .67rem; min-height: 42px; min-width: 0; padding: 0 11px; }
   .cms-actions .cms-hotel { display: none; }
   .cms-actions .cms-cart span { display: none; }

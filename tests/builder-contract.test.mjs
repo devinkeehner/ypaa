@@ -148,8 +148,12 @@ test("header controls and convention blocks keep their accessible builder contra
   assert.match(header, /type: "row"[\s\S]*name: "logo"[\s\S]*name: "logoAlt"/);
   assert.match(header, /name: "appearance"[\s\S]*value: "outline"/);
   assert.match(layout, /appearance: item\?\.appearance === "outline" \? "outline" : "solid"/);
+  assert.match(siteFrame, /tenant\.logoUrl \? <img alt=\{tenant\.logoAlt\} src=\{tenant\.logoUrl\} \/> : <span>36<\/span>/);
+  assert.match(siteFrame, /<strong aria-hidden=\{tenant\.logoUrl \? true : undefined\}>NECYPAA<\/strong>/);
   assert.match(siteFrame, /cms-header-action-\$\{appearance\}/);
   assert.match(globalStyles, /\.cms-header-action-outline/);
+  assert.match(globalStyles, /\.cms-brand strong \{ display: block; font-size: \.82rem;/);
+  assert.doesNotMatch(globalStyles, /\.cms-brand strong \{ display: none; \}/);
 
   assert.match(config, /function BusinessMeetingBlock/);
   assert.match(config, /field="body" props=\{props\}/);

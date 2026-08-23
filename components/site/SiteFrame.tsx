@@ -161,7 +161,8 @@ export function SiteFrame({ children, mainId }: { children: React.ReactNode; mai
       <a className="skip-link" href={`#${mainId}`}>Skip to main content</a>
       <header className="cms-header">
         <Link className="cms-brand" href="/#hero">
-          {tenant.logoUrl ? <img alt={tenant.logoAlt} src={tenant.logoUrl} /> : <><span>36</span><strong>NECYPAA</strong></>}
+          {tenant.logoUrl ? <img alt={tenant.logoAlt} src={tenant.logoUrl} /> : <span>36</span>}
+          <strong aria-hidden={tenant.logoUrl ? true : undefined}>NECYPAA</strong>
         </Link>
         <nav aria-label="Primary navigation">{navLinks.map((item) => <NavLink item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}</nav>
         <div className="cms-actions">{actionItems.map((item) => <NavLink className={headerActionClassName(item)} item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}<button className="cms-menu-button" aria-expanded={menu} aria-controls="cms-mobile-menu" aria-label={menu ? "Close navigation" : "Open navigation"} onClick={() => { if (menu) closeMenu(); else { setSettings(false); setMenu(true); } }} ref={menuButtonRef} type="button">{menu ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button></div>
