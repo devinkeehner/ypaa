@@ -1,5 +1,5 @@
 import config from "@payload-config";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getPayload } from "payload";
 
 import { PublicPage } from "@/components/site/PublicPage";
@@ -34,5 +34,5 @@ export default async function SlugPage({ params }: PageProps) {
 
   if (data) return <PublicPage data={data} />;
   if (slug === "home") return <PublicPage data={defaultPageData} />;
-  notFound();
+  redirect("/");
 }
