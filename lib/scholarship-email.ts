@@ -37,7 +37,17 @@ export async function sendCashScholarshipRequestedNotification(payload: Payload,
   const configuration = emailConfiguration();
   if (!configuration) return "pending_configuration" as const;
 
-  const result = await payload.find({
+  // This collection is registered in Payload config. Keep this narrow local type
+  // so deployment does not depend on unrelated pending generated-type updates.
+  const notificationRecipients = payload as unknown as {
+    find: (options: {
+      collection: "notification-recipients";
+      overrideAccess: true;
+      pagination: false;
+      where: unknown;
+    }) => Promise<{ docs: Array<{ email?: string | null }> }>;
+  };
+  const result = await notificationRecipients.find({
     collection: "notification-recipients",
     overrideAccess: true,
     pagination: false,
