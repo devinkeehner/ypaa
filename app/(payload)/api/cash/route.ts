@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 
 import { buildMetadata, normalizeOrder, orderSubtotalCents, validateOrder } from "@/lib/registration";
-import { sendScholarshipNotification } from "@/lib/scholarship-email";
+import { sendCashScholarshipRequestedNotification, sendScholarshipNotification } from "@/lib/scholarship-email";
 import { getStripe } from "@/lib/stripe-server";
 import { recordRegistrationOrder } from "@/lib/registration-records";
 import { buildCashRegistrationId, maskCashCode, normalizeCashCode, redeemExternalCashCode, type ExternalRedemptionResult } from "@/lib/cash-access";
@@ -122,7 +122,7 @@ export async function POST(request: Request) {
         accessCode: accessCode.id,
         order,
         metadata,
-        notificationStatus: order.scholarship.enabled && order.scholarship.kind === "specific" ? "pending_configuration" : "not_required",
+        notificationStatus: order.scholarship.enabled ? "pending_configuration" : "not_required",
         sourceKey: externalRedemption ? `external:${buildCashRegistrationId({ code, email: order.attendee.email, name: order.attendee.name })}` : undefined,
       },
     });
@@ -146,9 +146,12 @@ export async function POST(request: Request) {
       rawMetadata: metadata,
     });
 
-    if (order.scholarship.enabled && order.scholarship.kind === "specific") {
+    if (order.scholarship.enabled) {
       try {
-        const status = await sendScholarshipNotification({ recipientEmail: order.scholarship.recipientEmail, recipientName: order.scholarship.recipientName, purchaserName: order.purchaserName });
+        if (order.scholarship.kind === "specific") {
+          await sendScholarshipNotification({ recipientEmail: order.scholarship.recipientEmail, recipientName: order.scholarship.recipientName, purchaserName: order.purchaserName });
+        }
+        const status = await sendCashScholarshipRequestedNotification(payload, { scholarshipAmountCents: order.scholarship.amountCents });
         await payload.update({ collection: "cash-transactions", id: transaction.id, overrideAccess: true, data: { notificationStatus: status } });
       } catch {
         await payload.update({ collection: "cash-transactions", id: transaction.id, overrideAccess: true, data: { notificationStatus: "failed" } });

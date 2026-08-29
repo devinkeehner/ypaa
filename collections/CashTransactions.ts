@@ -18,6 +18,6 @@ export const CashTransactions: CollectionConfig = {
     { name: "sourceKey", type: "text", unique: true, index: true, admin: { readOnly: true } },
     { name: "order", type: "json", required: true },
     { name: "metadata", type: "json", required: true },
-    { name: "notificationStatus", type: "select", defaultValue: "not_required", options: ["not_required", "sent", "pending_configuration", "failed"] },
+    { name: "notificationStatus", label: "Cash scholarship alert status", type: "select", defaultValue: "not_required", options: ["not_required", "sent", "pending_configuration", "failed"], admin: { description: "Delivery status for the internal cash-scholarship alert." } },
   ],
 };

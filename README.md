@@ -21,6 +21,7 @@ Generated issuer codes are redeemed through the external service. The fallback e
 - Use **Tenant / site settings** to upload the header logo and set the site palette with six-digit hex codes.
 - Use **Access Codes** to create the codes accepted by `/cash`, including activation and redemption limits.
 - Cash orders appear under **Cash Transactions**.
+- Use **Notification Recipients** to add internal addresses and choose the alerts each address should receive. Add an address with the **Cash scholarship requested** trigger to receive the scholarship amount for cash scholarship requests.
 - **Attendees** is the working roster. It includes self-registrants and identified scholarship recipients from both card and cash orders, plus attendees added manually in Payload. General-fund contributions do not create an attendee until a person is identified.
 - Attendee records include attendance/payment source, accessibility information, all policy acknowledgments and signature status, Stripe or cash references, and editable internal notes.
 - Every breakfast admission gets its own **Breakfast Tickets** record, so individual tickets can later be marked used, refunded, or voided.
@@ -42,7 +43,7 @@ SCHOLARSHIP_FROM_EMAIL
 PAYLOAD_SECRET
 ```
 
-Configure the Stripe webhook endpoint as `/api/stripe/webhook` and subscribe it to `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Successful Stripe and cash orders are materialized into the Attendees and Breakfast Tickets collections. Named scholarship notices are sent only after Stripe confirms payment; cash scholarship notices are sent after the authorized cash record is created. If the email variables are absent, the transaction still records and the notification remains marked as awaiting configuration.
+Configure the Stripe webhook endpoint as `/api/stripe/webhook` and subscribe it to `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Successful Stripe and cash orders are materialized into the Attendees and Breakfast Tickets collections. Named scholarship notices are sent only after Stripe confirms payment. After an authorized cash scholarship record is created, each active **Notification Recipient** assigned to the **Cash scholarship requested** trigger receives a short email containing only the scholarship amount (no fees). If the Resend variables or a matching recipient are absent, the transaction still records and the cash alert remains marked as awaiting configuration.
 
 Historical Stripe data can be imported into Payload in batches through `POST /api/admin/stripe-backfill`, authenticated with the `x-backfill-secret` header. The request accepts `limit`, optional `createdGte` (a Unix timestamp), and the previous response's `nextStartingAfter` cursor. Stripe remains the source of the historical data. Stable source keys make the import idempotent, so rerunning a batch updates matching records instead of duplicating them.
 
