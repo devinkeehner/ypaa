@@ -22,6 +22,7 @@ Generated issuer codes are redeemed through the external service. The fallback e
 - Use **Access Codes** to create the codes accepted by `/cash`, including activation and redemption limits.
 - Cash orders appear under **Cash Transactions**.
 - Use **Notification Recipients** to add internal addresses and choose the alerts each address should receive. Add an address with the **Cash scholarship requested** trigger to receive the scholarship amount for cash scholarship requests.
+- Use **Email Tests** to send a one-time sample scholarship email to an address you enter. Each record shows whether Resend sent it, still needs configuration, or failed.
 - **Attendees** is the working roster. It includes self-registrants and identified scholarship recipients from both card and cash orders, plus attendees added manually in Payload. General-fund contributions do not create an attendee until a person is identified.
 - Attendee records include attendance/payment source, accessibility information, all policy acknowledgments and signature status, Stripe or cash references, and editable internal notes.
 - Every breakfast admission gets its own **Breakfast Tickets** record, so individual tickets can later be marked used, refunded, or voided.

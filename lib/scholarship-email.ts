@@ -33,6 +33,18 @@ export async function sendScholarshipNotification(input: { recipientEmail: strin
   return "sent" as const;
 }
 
+export async function sendCashScholarshipAlert(input: { recipientEmail: string; scholarshipAmountCents: number }) {
+  const configuration = emailConfiguration();
+  if (!configuration) return "pending_configuration" as const;
+  const amount = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(input.scholarshipAmountCents / 100);
+  await sendEmail(configuration, {
+    to: input.recipientEmail,
+    subject: "Cash scholarship requested",
+    text: `Cash scholarship amount: ${amount}`,
+  });
+  return "sent" as const;
+}
+
 export async function sendCashScholarshipRequestedNotification(payload: Payload, input: { scholarshipAmountCents: number }) {
   const configuration = emailConfiguration();
   if (!configuration) return "pending_configuration" as const;
@@ -61,11 +73,6 @@ export async function sendCashScholarshipRequestedNotification(payload: Payload,
   const recipients = result.docs.map((recipient) => recipient.email).filter((email): email is string => Boolean(email));
   if (recipients.length === 0) return "pending_configuration" as const;
 
-  const amount = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(input.scholarshipAmountCents / 100);
-  await Promise.all(recipients.map((to) => sendEmail(configuration, {
-    to,
-    subject: "Cash scholarship requested",
-    text: `Cash scholarship amount: ${amount}`,
-  })));
+  await Promise.all(recipients.map((recipientEmail) => sendCashScholarshipAlert({ recipientEmail, scholarshipAmountCents: input.scholarshipAmountCents })));
   return "sent" as const;
 }

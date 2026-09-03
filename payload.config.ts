@@ -21,6 +21,7 @@ import { ProgramSessions } from "./collections/ProgramSessions";
 import { VenueMaps } from "./collections/VenueMaps";
 import { ensureProgramSeed } from "./lib/program-seed";
 import { NotificationRecipients } from "./collections/NotificationRecipients";
+import { EmailTests } from "./collections/EmailTests";
 import { pageBuilderCatalogResource } from "./mcp/block-catalog";
 import { Header } from "./globals/Header";
 import { Footer } from "./globals/Footer";
@@ -50,7 +51,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [Users, Media, Pages, Posts, Merchandise, MerchandiseOrders, CheckoutOrders, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, Rooms, ProgramSessions, VenueMaps, NotificationRecipients],
+  collections: [Users, Media, Pages, Posts, Merchandise, MerchandiseOrders, CheckoutOrders, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests],
   globals: [Header, Footer],
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || "",
