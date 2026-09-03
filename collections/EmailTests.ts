@@ -14,24 +14,18 @@ export const EmailTests: CollectionConfig = {
     description: "Create a test to send one real email. Tests never notify the internal recipient list.",
   },
   hooks: {
-    afterChange: [async ({ doc, operation, req }) => {
-      if (operation !== "create") return doc;
+    beforeChange: [async ({ data, operation }) => {
+      if (operation !== "create") return data;
       let deliveryStatus: "sent" | "pending_configuration" | "failed" = "failed";
       let deliveryError = "";
       try {
-        deliveryStatus = doc.notificationType === "cash_scholarship_requested"
-          ? await sendCashScholarshipAlert({ recipientEmail: doc.recipientEmail, scholarshipAmountCents: Number(doc.scholarshipAmountCents || 4000) })
-          : await sendScholarshipNotification({ recipientEmail: doc.recipientEmail, recipientName: doc.recipientName || "Test recipient", purchaserName: doc.purchaserName || "Test purchaser" });
+        deliveryStatus = data.notificationType === "cash_scholarship_requested"
+          ? await sendCashScholarshipAlert({ recipientEmail: data.recipientEmail, scholarshipAmountCents: Number(data.scholarshipAmountCents || 4000) })
+          : await sendScholarshipNotification({ recipientEmail: data.recipientEmail, recipientName: data.recipientName || "Test recipient", purchaserName: data.purchaserName || "Test purchaser" });
       } catch (error) {
         deliveryError = error instanceof Error ? error.message : "The test email could not be sent.";
       }
-      await (req.payload as unknown as { update: (input: unknown) => Promise<unknown> }).update({
-        collection: "email-tests",
-        id: doc.id,
-        overrideAccess: true,
-        data: { deliveryStatus, deliveryError: deliveryError || undefined },
-      });
-      return doc;
+      return { ...data, deliveryStatus, deliveryError: deliveryError || undefined };
     }],
   },
   fields: [
