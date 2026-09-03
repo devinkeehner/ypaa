@@ -71,6 +71,8 @@ export async function POST(request: Request) {
         if (quantity) items.push(`${breakfast.name} × ${quantity} — ${new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format((quantity * BREAKFAST_PRICE_CENTS) / 100)}`);
       }
       if (order.scholarship.enabled) items.push(`${order.scholarship.kind === "specific" ? `Registration scholarship for ${order.scholarship.recipientName}` : "General registration scholarship fund"} — ${new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(order.scholarship.amountCents / 100)}`);
+      const processingFeeCents = Math.max(0, Math.min(10000000, Math.floor(Number(context.processingFeeCents) || 0)));
+      if (processingFeeCents) items.push(`Card processing fee — ${new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(processingFeeCents / 100)}`);
       const rawMerchandise = body.order && typeof body.order === "object" && !Array.isArray(body.order)
         ? (body.order as { merchandise?: unknown }).merchandise
         : null;

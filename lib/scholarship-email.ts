@@ -43,6 +43,7 @@ export async function sendPurchaserConfirmation(input: PurchaserConfirmation) {
   const configuration = emailConfiguration();
   if (!configuration) return "pending_configuration" as const;
   const paymentLabel = input.paymentMethod === "cash" ? "Cash registration recorded" : "Card payment received";
+  const confirmationId = `NEC-${input.reference.replace(/[^a-z0-9]/gi, "").slice(-12).toUpperCase()}`;
   const itemLines = input.items.length ? input.items.map((item) => `• ${item}`).join("\n") : "• NECYPAA XXXVI order";
   const htmlItems = input.items.length
     ? input.items.map((item) => `<li style="margin:0 0 8px">${escapeHtml(item)}</li>`).join("")
@@ -51,8 +52,8 @@ export async function sendPurchaserConfirmation(input: PurchaserConfirmation) {
   await sendEmail(configuration, {
     to: input.recipientEmail,
     subject: "Your NECYPAA XXXVI order is confirmed",
-    text: `Hi ${input.purchaserName},\n\nThank you for your NECYPAA XXXVI order. ${paymentLabel}.\n\nOrder details\n${itemLines}\n\nTotal: ${total}\nConfirmation reference: ${input.reference}\n\nPlease keep this email for your records. The NECYPAA Host Committee will share additional event information as it becomes available.\n\nNECYPAA XXXVI`,
-    html: `<div style="background:#f6f7f9;padding:32px 16px;font-family:Arial,sans-serif;color:#1f2937"><div style="max-width:600px;margin:0 auto;background:#ffffff;padding:32px;border-radius:12px"><h1 style="margin:0 0 16px;font-size:26px">Your order is confirmed</h1><p>Hi ${escapeHtml(input.purchaserName)},</p><p>Thank you for your NECYPAA XXXVI order. <strong>${escapeHtml(paymentLabel)}.</strong></p><h2 style="font-size:18px;margin:28px 0 12px">Order details</h2><ul style="padding-left:20px">${htmlItems}</ul><p style="font-size:18px"><strong>Total: ${escapeHtml(total)}</strong></p><p>Confirmation reference: ${escapeHtml(input.reference)}</p><p>Please keep this email for your records. The NECYPAA Host Committee will share additional event information as it becomes available.</p><p style="margin:28px 0 0">NECYPAA XXXVI</p></div></div>`,
+    text: `Hi ${input.purchaserName},\n\nThank you for your NECYPAA XXXVI order. ${paymentLabel}.\n\nOrder details\n${itemLines}\n\nTotal: ${total}\nConfirmation ID: ${confirmationId}\n\nEvent details\nNECYPAA XXXVI\nDecember 31, 2026 – January 3, 2027\nHartford Marriott Downtown · Hartford, Connecticut\nhttps://necypaact.com/\n\nPlease keep this email for your records. The NECYPAA Host Committee will share additional event information as it becomes available.`,
+    html: `<div style="background:#f6f7f9;padding:32px 16px;font-family:Arial,sans-serif;color:#1f2937"><div style="max-width:600px;margin:0 auto;background:#ffffff;padding:32px;border-radius:12px"><h1 style="margin:0 0 16px;font-size:26px">Your order is confirmed</h1><p>Hi ${escapeHtml(input.purchaserName)},</p><p>Thank you for your NECYPAA XXXVI order. <strong>${escapeHtml(paymentLabel)}.</strong></p><h2 style="font-size:18px;margin:28px 0 12px">Order details</h2><ul style="padding-left:20px">${htmlItems}</ul><p style="font-size:18px"><strong>Total: ${escapeHtml(total)}</strong></p><p>Confirmation ID: <strong>${escapeHtml(confirmationId)}</strong></p><div style="background:#f3f4f6;padding:18px;border-radius:8px"><strong>NECYPAA XXXVI</strong><br>December 31, 2026 – January 3, 2027<br>Hartford Marriott Downtown · Hartford, Connecticut<br><a href="https://necypaact.com/">necypaact.com</a></div><p>Please keep this email for your records. The NECYPAA Host Committee will share additional event information as it becomes available.</p></div></div>`,
     idempotencyKey: `purchaser-confirmation:${input.reference}`,
   });
   return "sent" as const;
@@ -64,7 +65,8 @@ export async function sendScholarshipNotification(input: { recipientEmail: strin
   await sendEmail(configuration, {
     to: input.recipientEmail,
     subject: "A NECYPAA XXXVI registration scholarship has been reserved for you",
-    text: `Hi ${input.recipientName},\n\n${input.purchaserName} reserved a registration scholarship for you for NECYPAA XXXVI in Hartford, Connecticut, December 31, 2026 through January 3, 2027.\n\nThe NECYPAA Host Committee will follow up with registration details.`,
+    text: `Hi ${input.recipientName},\n\n${input.purchaserName} reserved a registration scholarship for you for NECYPAA XXXVI.\n\nNECYPAA XXXVI\nDecember 31, 2026 – January 3, 2027\nHartford Marriott Downtown · Hartford, Connecticut\nhttps://necypaact.com/\n\nThe NECYPAA Host Committee will follow up with registration details.`,
+    html: `<div style="background:#f6f7f9;padding:32px 16px;font-family:Arial,sans-serif;color:#1f2937"><div style="max-width:600px;margin:0 auto;background:#ffffff;padding:32px;border-radius:12px"><h1 style="margin:0 0 16px;font-size:26px">A registration scholarship has been reserved for you</h1><p>Hi ${escapeHtml(input.recipientName)},</p><p>${escapeHtml(input.purchaserName)} reserved a registration scholarship for you for NECYPAA XXXVI.</p><div style="background:#f3f4f6;padding:18px;border-radius:8px"><strong>NECYPAA XXXVI</strong><br>December 31, 2026 – January 3, 2027<br>Hartford Marriott Downtown · Hartford, Connecticut</div><p>The NECYPAA Host Committee will follow up with registration details.</p><p><a href="https://necypaact.com/">Visit NECYPAA XXXVI</a></p></div></div>`,
   });
   return "sent" as const;
 }
@@ -75,8 +77,9 @@ export async function sendCashScholarshipAlert(input: { recipientEmail: string; 
   const amount = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(input.scholarshipAmountCents / 100);
   await sendEmail(configuration, {
     to: input.recipientEmail,
-    subject: "Cash scholarship requested",
-    text: `Cash scholarship amount: ${amount}`,
+    subject: `Cash scholarship request — ${amount}`,
+    text: `A cash scholarship request was submitted.\n\nScholarship amount: ${amount}\n\nNECYPAA XXXVI · December 31, 2026 – January 3, 2027 · Hartford Marriott Downtown\nhttps://necypaact.com/`,
+    html: `<div style="background:#f6f7f9;padding:32px 16px;font-family:Arial,sans-serif;color:#1f2937"><div style="max-width:600px;margin:0 auto;background:#ffffff;padding:32px;border-radius:12px"><h1 style="margin:0 0 8px;font-size:26px">Cash scholarship request</h1><p style="margin:0 0 24px">A new request was submitted.</p><div style="background:#eff6ff;padding:24px;border-radius:10px;text-align:center"><div style="font-size:14px;text-transform:uppercase;letter-spacing:.08em">Scholarship amount</div><div style="font-size:38px;font-weight:700;margin-top:8px">${escapeHtml(amount)}</div></div><p style="margin:24px 0 0"><strong>NECYPAA XXXVI</strong><br>December 31, 2026 – January 3, 2027<br>Hartford Marriott Downtown · Hartford, Connecticut</p><p><a href="https://necypaact.com/">Visit NECYPAA XXXVI</a></p></div></div>`,
   });
   return "sent" as const;
 }
