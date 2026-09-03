@@ -8,18 +8,54 @@ function emailConfiguration(): EmailConfiguration | null {
   return apiKey && from ? { apiKey, from } : null;
 }
 
-async function sendEmail(configuration: EmailConfiguration, message: { to: string; subject: string; text: string }) {
+async function sendEmail(configuration: EmailConfiguration, message: { to: string; subject: string; text: string; html?: string; idempotencyKey?: string }) {
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: { Authorization: `Bearer ${configuration.apiKey}`, "Content-Type": "application/json" },
+    headers: {
+      Authorization: `Bearer ${configuration.apiKey}`,
+      "Content-Type": "application/json",
+      ...(message.idempotencyKey ? { "Idempotency-Key": message.idempotencyKey } : {}),
+    },
     body: JSON.stringify({
       from: configuration.from,
       to: [message.to],
       subject: message.subject,
       text: message.text,
+      ...(message.html ? { html: message.html } : {}),
     }),
   });
   if (!response.ok) throw new Error("Scholarship notification could not be sent.");
+}
+
+type PurchaserConfirmation = {
+  recipientEmail: string;
+  purchaserName: string;
+  paymentMethod: "card" | "cash";
+  reference: string;
+  totalCents: number;
+  items: string[];
+};
+
+const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character] || character);
+const currency = (cents: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
+
+export async function sendPurchaserConfirmation(input: PurchaserConfirmation) {
+  const configuration = emailConfiguration();
+  if (!configuration) return "pending_configuration" as const;
+  const paymentLabel = input.paymentMethod === "cash" ? "Cash registration recorded" : "Card payment received";
+  const itemLines = input.items.length ? input.items.map((item) => `• ${item}`).join("\n") : "• NECYPAA XXXVI order";
+  const htmlItems = input.items.length
+    ? input.items.map((item) => `<li style="margin:0 0 8px">${escapeHtml(item)}</li>`).join("")
+    : "<li>NECYPAA XXXVI order</li>";
+  const total = currency(input.totalCents);
+  await sendEmail(configuration, {
+    to: input.recipientEmail,
+    subject: "Your NECYPAA XXXVI order is confirmed",
+    text: `Hi ${input.purchaserName},\n\nThank you for your NECYPAA XXXVI order. ${paymentLabel}.\n\nOrder details\n${itemLines}\n\nTotal: ${total}\nConfirmation reference: ${input.reference}\n\nPlease keep this email for your records. The NECYPAA Host Committee will share additional event information as it becomes available.\n\nNECYPAA XXXVI`,
+    html: `<div style="background:#f6f7f9;padding:32px 16px;font-family:Arial,sans-serif;color:#1f2937"><div style="max-width:600px;margin:0 auto;background:#ffffff;padding:32px;border-radius:12px"><h1 style="margin:0 0 16px;font-size:26px">Your order is confirmed</h1><p>Hi ${escapeHtml(input.purchaserName)},</p><p>Thank you for your NECYPAA XXXVI order. <strong>${escapeHtml(paymentLabel)}.</strong></p><h2 style="font-size:18px;margin:28px 0 12px">Order details</h2><ul style="padding-left:20px">${htmlItems}</ul><p style="font-size:18px"><strong>Total: ${escapeHtml(total)}</strong></p><p>Confirmation reference: ${escapeHtml(input.reference)}</p><p>Please keep this email for your records. The NECYPAA Host Committee will share additional event information as it becomes available.</p><p style="margin:28px 0 0">NECYPAA XXXVI</p></div></div>`,
+    idempotencyKey: `purchaser-confirmation:${input.reference}`,
+  });
+  return "sent" as const;
 }
 
 export async function sendScholarshipNotification(input: { recipientEmail: string; recipientName: string; purchaserName: string }) {
