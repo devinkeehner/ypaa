@@ -24,7 +24,10 @@ async function sendEmail(configuration: EmailConfiguration, message: { to: strin
       ...(message.html ? { html: message.html } : {}),
     }),
   });
-  if (!response.ok) throw new Error("Scholarship notification could not be sent.");
+  if (!response.ok) {
+    const reason = (await response.text()).trim().slice(0, 400);
+    throw new Error(reason ? `Resend rejected this email: ${reason}` : "Resend rejected this email.");
+  }
 }
 
 type PurchaserConfirmation = {

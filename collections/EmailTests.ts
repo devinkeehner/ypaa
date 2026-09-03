@@ -22,7 +22,7 @@ export const EmailTests: CollectionConfig = {
         deliveryStatus = data.notificationType === "cash_scholarship_requested"
           ? await sendCashScholarshipAlert({ recipientEmail: data.recipientEmail, scholarshipAmountCents: Number(data.scholarshipAmountCents || 4000) })
           : data.notificationType === "purchaser_confirmation"
-            ? await sendPurchaserConfirmation({ recipientEmail: data.recipientEmail, purchaserName: data.purchaserName || "Test purchaser", paymentMethod: "card", reference: "test-confirmation", totalCents: 6500, items: ["NECYPAA XXXVI Registration", "Breakfast - Saturday"] })
+            ? await sendPurchaserConfirmation({ recipientEmail: data.recipientEmail, purchaserName: data.purchaserName || "Test purchaser", paymentMethod: "card", reference: `test-confirmation-${Date.now()}`, totalCents: 6500, items: ["NECYPAA XXXVI Registration", "Breakfast - Saturday"] })
             : await sendScholarshipNotification({ recipientEmail: data.recipientEmail, recipientName: data.recipientName || "Test recipient", purchaserName: data.purchaserName || "Test purchaser" });
       } catch (error) {
         deliveryError = error instanceof Error ? error.message : "The test email could not be sent.";
