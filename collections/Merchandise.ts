@@ -16,7 +16,7 @@ export const Merchandise: CollectionConfig = {
   },
   admin: {
     useAsTitle: "name",
-    defaultColumns: ["name", "featured", "_status", "updatedAt"],
+    defaultColumns: ["name", "showInMainStore", "showInQuickCheckout", "_status", "updatedAt"],
     description: "Each entry is one sellable item and appears as one card in the merchandise portal.",
   },
   fields: [
@@ -107,6 +107,26 @@ export const Merchandise: CollectionConfig = {
       type: "checkbox",
       defaultValue: true,
       admin: { position: "sidebar" },
+    },
+    {
+      name: "showInMainStore",
+      label: "Show in main store and registration checkout",
+      type: "checkbox",
+      defaultValue: true,
+      admin: {
+        position: "sidebar",
+        description: "Turn this off for items that should only appear at the in-person merchandise table.",
+      },
+    },
+    {
+      name: "showInQuickCheckout",
+      label: "Show in in-person quick checkout",
+      type: "checkbox",
+      defaultValue: false,
+      admin: {
+        position: "sidebar",
+        description: "Makes this item available on the QR-code merchandise checkout page.",
+      },
     },
     {
       name: "searchTerms",

@@ -23,5 +23,8 @@ export default async function MerchandisePage() {
       and: [{ _status: { equals: "published" } }, { available: { equals: true } }],
     },
   });
-  return <MerchandiseCatalog items={result.docs as unknown as MerchandiseItem[]} />;
+  const items = result.docs.filter(
+    (doc) => (doc as typeof doc & { showInMainStore?: boolean | null }).showInMainStore !== false,
+  );
+  return <MerchandiseCatalog items={items as unknown as MerchandiseItem[]} />;
 }

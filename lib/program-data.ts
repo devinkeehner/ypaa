@@ -23,12 +23,13 @@ function roomFromDoc(doc: Record<string, unknown>): ProgramRoom {
   };
 }
 
-export async function getPublishedProgramData(): Promise<ProgramData> {
+async function getProgramData(includeDrafts: boolean): Promise<ProgramData> {
   const payload = await getPayload({ config });
+  const visibleStatuses = includeDrafts ? ["published", "draft"] : ["published"];
   const [roomResult, sessionResult, mapResult] = await Promise.all([
     payload.find({ collection: "rooms", depth: 0, limit: 100, sort: "displayOrder", overrideAccess: true }),
-    payload.find({ collection: "program-sessions", depth: 1, limit: 500, sort: "startAt", where: { status: { equals: "published" } }, overrideAccess: true }),
-    payload.find({ collection: "venue-maps", depth: 1, limit: 20, sort: "displayOrder", where: { status: { equals: "published" } }, overrideAccess: true }),
+    payload.find({ collection: "program-sessions", depth: 1, limit: 500, sort: "startAt", where: { status: { in: visibleStatuses } }, overrideAccess: true }),
+    payload.find({ collection: "venue-maps", depth: 1, limit: 20, sort: "displayOrder", where: { status: { in: visibleStatuses } }, overrideAccess: true }),
   ]);
 
   const rooms = roomResult.docs.map((doc) => roomFromDoc(doc as unknown as Record<string, unknown>));
@@ -72,4 +73,12 @@ export async function getPublishedProgramData(): Promise<ProgramData> {
   });
 
   return { rooms, sessions, maps };
+}
+
+export function getPublishedProgramData(): Promise<ProgramData> {
+  return getProgramData(false);
+}
+
+export function getProgramPreviewData(): Promise<ProgramData> {
+  return getProgramData(true);
 }

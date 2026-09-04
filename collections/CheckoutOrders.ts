@@ -25,6 +25,7 @@ export const CheckoutOrders: CollectionConfig = {
     { name: "stripePaymentIntentId", type: "text", index: true },
     { name: "stripeChargeId", type: "text", index: true },
     { name: "stripeCustomerId", type: "text", index: true },
+    { name: "checkoutLineItemSummary", type: "textarea" },
     { name: "order", type: "json", required: true },
     { name: "rawMetadata", type: "json" },
   ],

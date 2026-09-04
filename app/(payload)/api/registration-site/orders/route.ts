@@ -58,6 +58,7 @@ export async function POST(request: Request) {
       stripeChargeId: text(context.stripeChargeId),
       stripeCustomerId: text(context.stripeCustomerId),
       rawMetadata: metadata(context.rawMetadata),
+      checkoutLineItemSummary: text(context.checkoutLineItemSummary, 4000),
       breakfastUnitPriceCents: Math.max(0, Math.min(100000, Math.floor(Number(context.breakfastUnitPriceCents) || 0))),
       subtotalCents: Math.max(0, Math.min(10000000, Math.floor(Number(context.subtotalCents) || 0))),
       processingFeeCents: Math.max(0, Math.min(10000000, Math.floor(Number(context.processingFeeCents) || 0))),

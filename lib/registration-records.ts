@@ -21,6 +21,7 @@ type RecordContext = {
   stripePaymentIntentId?: string;
   stripeChargeId?: string;
   stripeCustomerId?: string;
+  checkoutLineItemSummary?: string;
   cashTransactionId?: string;
   rawMetadata?: Record<string, string>;
   breakfastUnitPriceCents?: number;
@@ -58,6 +59,7 @@ async function recordCheckoutOrder(payload: Payload, order: RegistrationOrder, c
     stripePaymentIntentId: context.stripePaymentIntentId,
     stripeChargeId: context.stripeChargeId,
     stripeCustomerId: context.stripeCustomerId,
+    checkoutLineItemSummary: context.checkoutLineItemSummary,
     order,
     rawMetadata: context.rawMetadata,
   } as const;

@@ -23,7 +23,8 @@ async function findProduct(slug: string) {
       ],
     },
   });
-  return result.docs[0] as unknown as MerchandiseItem | undefined;
+  const item = result.docs[0] as (MerchandiseItem & { showInMainStore?: boolean | null }) | undefined;
+  return item?.showInMainStore === false ? undefined : item;
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {

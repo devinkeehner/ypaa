@@ -6,6 +6,7 @@ import { getPayload } from "payload";
 type RequestedItem = { slug?: unknown; variantId?: unknown; quantity?: unknown };
 type FulfillmentBody = {
   action?: unknown;
+  channel?: unknown;
   items?: unknown;
   sourceKey?: unknown;
   purchaserName?: unknown;
@@ -45,7 +46,9 @@ function normalizedShippingAddress(value: unknown): Record<string, string> | nul
   };
 }
 
-async function catalog(request: Request) {
+type CatalogChannel = "main" | "quick" | "all";
+
+async function catalog(request: Request, channel: CatalogChannel = "main") {
   const payload = await getPayload({ config });
   const result = await payload.find({
     collection: "merchandise",
@@ -58,7 +61,14 @@ async function catalog(request: Request) {
       and: [{ _status: { equals: "published" } }, { available: { equals: true } }],
     },
   });
-  return result.docs.map((doc) => ({
+  return result.docs
+    .filter((doc) => {
+      const visibility = doc as typeof doc & { showInMainStore?: boolean | null; showInQuickCheckout?: boolean | null };
+      if (channel === "all") return true;
+      if (channel === "quick") return visibility.showInQuickCheckout === true;
+      return visibility.showInMainStore !== false;
+    })
+    .map((doc) => ({
     id: String(doc.id),
     name: doc.name,
     slug: doc.slug,
@@ -66,6 +76,8 @@ async function catalog(request: Request) {
     type: doc.type,
     priceCents: Math.round(Number(doc.price || 0) * 100),
     featured: Boolean(doc.featured),
+    showInMainStore: (doc as typeof doc & { showInMainStore?: boolean | null }).showInMainStore !== false,
+    showInQuickCheckout: (doc as typeof doc & { showInQuickCheckout?: boolean | null }).showInQuickCheckout === true,
     image: absoluteMediaUrl(request, doc.image),
     inventory: (doc.inventory || []).map((variant) => ({
       id: String(variant.id || ""),
@@ -77,7 +89,7 @@ async function catalog(request: Request) {
   }));
 }
 
-async function quoteItems(request: Request, rawItems: unknown) {
+async function quoteItems(request: Request, rawItems: unknown, channel: CatalogChannel = "main") {
   const requested = Array.isArray(rawItems) ? (rawItems as RequestedItem[]) : [];
   const sanitized = requested
     .map((value) => {
@@ -99,7 +111,7 @@ async function quoteItems(request: Request, rawItems: unknown) {
   const normalized = [...grouped.values()];
   if (!normalized.length) return { lines: [], subtotalCents: 0 };
 
-  const items = await catalog(request);
+  const items = await catalog(request, channel);
   const lines = normalized.map((requestedItem) => {
     const item = items.find((candidate) => candidate.slug === requestedItem.slug);
     if (!item) throw new Error("A selected merchandise item is no longer available.");
@@ -130,7 +142,8 @@ async function quoteItems(request: Request, rawItems: unknown) {
 export async function GET(request: Request) {
   if (!authorized(request)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
-    return NextResponse.json({ items: await catalog(request) });
+    const channel = new URL(request.url).searchParams.get("channel") === "quick" ? "quick" : "main";
+    return NextResponse.json({ items: await catalog(request, channel) });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Merchandise could not be loaded." },
@@ -143,7 +156,8 @@ export async function POST(request: Request) {
   if (!authorized(request)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
     const body = (await request.json()) as FulfillmentBody;
-    const quote = await quoteItems(request, body.items);
+    const channel: CatalogChannel = body.action === "fulfill" ? "all" : body.channel === "quick" ? "quick" : "main";
+    const quote = await quoteItems(request, body.items, channel);
     if (body.action !== "fulfill") return NextResponse.json(quote);
 
     const sourceKey = String(body.sourceKey || "").trim().slice(0, 200);

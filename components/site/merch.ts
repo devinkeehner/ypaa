@@ -11,6 +11,8 @@ export type MerchandiseItem = {
   price: number;
   inventory?: InventoryOption[] | null;
   available?: boolean | null;
+  showInMainStore?: boolean | null;
+  showInQuickCheckout?: boolean | null;
 };
 
 export type InventoryOption = {

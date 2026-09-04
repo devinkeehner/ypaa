@@ -799,9 +799,12 @@ footer p { color: #aeb4c5; }
 .program-board-header a { align-items: center; color: #d8d2c8; display: inline-flex; font-size: .72rem; font-weight: 800; gap: 7px; text-decoration: none; }
 .program-board-header a svg { height: 16px; width: 16px; }
 .program-board-header > div:last-child { align-items: center; display: flex; gap: 12px; }
-.program-board-header button, .program-board-gate a { align-items: center; background: var(--tenant-primary, #e85e27); border: 0; color: #fff; display: inline-flex; font-size: .72rem; font-weight: 900; gap: 8px; min-height: 44px; padding: 0 16px; text-decoration: none; text-transform: uppercase; }
+.program-board-header button, .program-board-header .program-board-preview-action, .program-board-gate a { align-items: center; background: var(--tenant-primary, #e85e27); border: 0; color: #fff; display: inline-flex; font-size: .72rem; font-weight: 900; gap: 8px; min-height: 44px; padding: 0 16px; text-decoration: none; text-transform: uppercase; }
 .program-board-header .program-board-secondary-action { background: #292d30; }
-.program-board-header button svg { height: 17px; width: 17px; }
+.program-board-header :is(button, .program-board-preview-action) svg { height: 17px; width: 17px; }
+.program-preview-banner { align-items: center; background: #fff4ce; border-bottom: 1px solid #c99b24; color: #382d12; display: flex; font: 650 .78rem/1.45 var(--font-geist-sans), sans-serif; gap: 24px; justify-content: space-between; padding: 12px max(22px, calc((100vw - 1320px) / 2)); }
+.program-preview-banner p { margin: 0; }
+.program-preview-banner a { color: inherit; flex: none; font-weight: 850; }
 .program-board-toolbar { align-items: center; background: #fff; border-bottom: 1px solid #d8d6d0; display: flex; justify-content: space-between; padding: 0 max(24px, calc((100vw - 1500px) / 2)); position: sticky; top: 0; z-index: 20; }
 .program-board-toolbar > div { display: flex; overflow-x: auto; }
 .program-board-toolbar button { background: transparent; border: 0; border-bottom: 3px solid transparent; color: #706d67; cursor: pointer; font-size: .73rem; font-weight: 800; min-height: 58px; padding: 0 20px; }
