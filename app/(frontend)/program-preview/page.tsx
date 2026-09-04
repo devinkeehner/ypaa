@@ -34,8 +34,8 @@ export default async function ProgramPreviewPage() {
   return (
     <main>
       <div className="program-preview-banner">
-        <p><strong>Private preview</strong> Draft and published sessions are shown here. The public Program page remains hidden.</p>
-        <Link href="/program-editor">Back to Program Board</Link>
+        <p><strong>Private preview</strong><span> Draft and published sessions are shown here. The public Program page remains hidden.</span></p>
+        <Link href="/program-editor"><span aria-hidden="true">←</span> Program Board</Link>
       </div>
       <ProgramExplorer initialData={data} />
     </main>

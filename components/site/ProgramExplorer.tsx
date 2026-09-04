@@ -138,9 +138,9 @@ function MobileProgram({
 }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [roomIndex, setRoomIndex] = useState(0);
-  const swipeStartXRef = useRef<number | null>(null);
-  const daySessions = useMemo(() => data.sessions.filter((session) => !selectedDay || dateKey(session.startAt) === selectedDay), [data.sessions, selectedDay]);
-  const rooms = useMemo(() => data.rooms.filter((candidate) => daySessions.some((session) => String(session.room.id) === String(candidate.id))), [data.rooms, daySessions]);
+  const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
+  const filtersActive = Boolean(search.trim() || type !== "all");
+  const rooms = useMemo(() => data.rooms.filter((candidate) => sessions.some((session) => String(session.room.id) === String(candidate.id))), [data.rooms, sessions]);
   const sessionsByRoom = useMemo(() => {
     const grouped = new Map<string, ProgramSession[]>();
     for (const session of sessions) {
@@ -169,16 +169,18 @@ function MobileProgram({
   }
 
   function beginRoomSwipe(event: PointerEvent<HTMLDivElement>) {
-    swipeStartXRef.current = event.clientX;
+    swipeStartRef.current = { x: event.clientX, y: event.clientY };
   }
 
   function finishRoomSwipe(event: PointerEvent<HTMLDivElement>) {
-    const startX = swipeStartXRef.current;
-    swipeStartXRef.current = null;
-    if (startX == null) return;
-    const distance = event.clientX - startX;
-    if (distance <= -44) goToRoom(roomIndex + 1);
-    else if (distance >= 44) goToRoom(roomIndex - 1);
+    const start = swipeStartRef.current;
+    swipeStartRef.current = null;
+    if (!start) return;
+    const distanceX = event.clientX - start.x;
+    const distanceY = event.clientY - start.y;
+    if (Math.abs(distanceX) < 44 || Math.abs(distanceX) < Math.abs(distanceY) * 1.2) return;
+    if (distanceX < 0) goToRoom(roomIndex + 1);
+    else goToRoom(roomIndex - 1);
   }
 
   return (
@@ -186,15 +188,15 @@ function MobileProgram({
       <div className="program-mobile-sticky">
         <header className="program-mobile-appbar">
           <div><strong>NECYPAA XXXVI</strong><span>Convention program</span></div>
-          <button aria-expanded={filtersOpen} aria-label="Search and filter sessions" onClick={() => setFiltersOpen((value) => !value)} type="button"><SlidersHorizontal aria-hidden="true" /><span>Filter</span></button>
+          <button aria-expanded={filtersOpen} aria-label="Search and filter sessions" data-active={filtersActive} onClick={() => setFiltersOpen((value) => !value)} type="button"><SlidersHorizontal aria-hidden="true" /><span>Filter</span>{filtersActive ? <i aria-hidden="true" /> : null}</button>
         </header>
-        <div aria-label="Program day" className="program-mobile-days" role="tablist">
+        <div aria-label="Program day" className="program-mobile-days" role="tablist" style={{ "--program-day-count": Math.max(days.length, 1) } as React.CSSProperties}>
           {days.map((value) => {
             const label = shortDayLabel(value);
             return <button aria-selected={selectedDay === value} key={value} onClick={() => onDayChange(value)} role="tab" type="button"><span>{label.weekday}</span><strong>{label.day}</strong></button>;
           })}
         </div>
-        {filtersOpen ? <div className="program-mobile-filters"><label><Search aria-hidden="true" /><span className="sr-only">Search sessions</span><input autoFocus onChange={(event) => onSearchChange(event.target.value)} placeholder="Search sessions or topics" value={search} /></label><label><span className="sr-only">Session type</span><select onChange={(event) => onTypeChange(event.target.value)} value={type}><option value="all">All session types</option>{sessionTypes.map((value) => <option key={value} value={value}>{typeLabel(value)}</option>)}</select></label></div> : null}
+        {filtersOpen ? <div className="program-mobile-filters"><label><Search aria-hidden="true" /><span className="sr-only">Search sessions</span><input autoFocus onChange={(event) => onSearchChange(event.target.value)} placeholder="Search sessions or topics" value={search} /></label><label><span className="sr-only">Session type</span><select onChange={(event) => onTypeChange(event.target.value)} value={type}><option value="all">All session types</option>{sessionTypes.map((value) => <option key={value} value={value}>{typeLabel(value)}</option>)}</select></label>{filtersActive ? <button className="program-mobile-filter-clear" onClick={() => { onSearchChange(""); onTypeChange("all"); }} type="button">Clear filters</button> : null}</div> : null}
         {activeRoom ? <div className="program-mobile-room-nav">
           <button aria-label="Previous room" disabled={roomIndex === 0} onClick={() => goToRoom(roomIndex - 1)} type="button"><ChevronLeft aria-hidden="true" /></button>
           <div aria-live="polite"><strong>{activeRoom.name}</strong><span>{roomIndex + 1} of {rooms.length}{activeRoom.floor ? ` · ${activeRoom.floor}` : ""}</span></div>
@@ -202,12 +204,12 @@ function MobileProgram({
         </div> : null}
       </div>
 
-      {activeRoom ? <div aria-label="Swipe between program rooms" className="program-mobile-room-stage" onPointerCancel={() => { swipeStartXRef.current = null; }} onPointerDown={beginRoomSwipe} onPointerUp={finishRoomSwipe}>
+      {activeRoom ? <div aria-label="Swipe between program rooms" className="program-mobile-room-stage" data-room-position={`${roomIndex + 1}-${rooms.length}`} onPointerCancel={() => { swipeStartRef.current = null; }} onPointerDown={beginRoomSwipe} onPointerUp={finishRoomSwipe} role="region">
         <section aria-label={`${activeRoom.name} schedule`} className="program-mobile-room-panel" key={activeRoom.id}>
           <div className="program-mobile-room-context"><span style={{ background: activeRoom.color || undefined }} /><p>{roomIndex < rooms.length - 1 ? "Swipe left for the next room" : roomIndex > 0 ? "Swipe right for the previous room" : "Only room for this day"}</p></div>
           {activeRoomSessions.length ? <div className="program-mobile-agenda">{activeRoomSessions.map((session) => <button className="program-mobile-session" key={session.id} onClick={() => onOpen(session)} type="button"><time dateTime={session.startAt}><strong>{timeLabel(session.startAt)}</strong><span>{timeLabel(session.endAt)}</span></time><span className="program-mobile-session-marker" style={{ background: activeRoom.color || undefined }} /><span className="program-mobile-session-copy"><small>{typeLabel(session.sessionType)}</small><strong>{session.title}</strong>{session.shortDescription ? <span>{session.shortDescription}</span> : null}</span><ChevronRight aria-hidden="true" /></button>)}</div> : <div className="program-empty">No sessions in this room match your filters.</div>}
         </section>
-      </div> : <div className="program-empty">No rooms or sessions are scheduled for this day.</div>}
+      </div> : <div className="program-empty program-mobile-empty">{filtersActive ? "No sessions match your filters." : "No rooms or sessions are scheduled for this day."}{filtersActive ? <button onClick={() => { onSearchChange(""); onTypeChange("all"); }} type="button">Clear filters</button> : null}</div>}
       <div className="program-mobile-map"><VenueMapView data={data} /></div>
     </div>
   );
