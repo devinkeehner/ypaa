@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { Accessibility, CalendarDays, Clock3, Grid3X3, List, Map, MapPin, Search, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type PointerEvent, type ReactNode } from "react";
+import { Accessibility, CalendarDays, ChevronLeft, ChevronRight, Clock3, Grid3X3, List, Map as MapIcon, MapPin, Search, SlidersHorizontal, X } from "lucide-react";
 
 import type { ProgramData, ProgramRoom, ProgramSession } from "./program-types";
 import { SESSION_TYPE_LABELS } from "./program-types";
@@ -32,6 +32,14 @@ function minutesInDay(value: string) {
 
 function typeLabel(type: string) {
   return SESSION_TYPE_LABELS[type] || type.replaceAll("_", " ");
+}
+
+function shortDayLabel(key: string) {
+  const value = new Date(`${key}T12:00:00-05:00`);
+  return {
+    weekday: new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, weekday: "short" }).format(value),
+    day: new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, day: "numeric" }).format(value),
+  };
 }
 
 function SessionCard({ session, onOpen, compact = false }: { session: ProgramSession; onOpen: (session: ProgramSession) => void; compact?: boolean }) {
@@ -103,6 +111,108 @@ function VenueMapView({ data }: { data: ProgramData }) {
   );
 }
 
+function MobileProgram({
+  data,
+  days,
+  selectedDay,
+  onDayChange,
+  search,
+  onSearchChange,
+  type,
+  onTypeChange,
+  sessionTypes,
+  sessions,
+  onOpen,
+}: {
+  data: ProgramData;
+  days: string[];
+  selectedDay: string;
+  onDayChange: (value: string) => void;
+  search: string;
+  onSearchChange: (value: string) => void;
+  type: string;
+  onTypeChange: (value: string) => void;
+  sessionTypes: string[];
+  sessions: ProgramSession[];
+  onOpen: (session: ProgramSession) => void;
+}) {
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [roomIndex, setRoomIndex] = useState(0);
+  const swipeStartXRef = useRef<number | null>(null);
+  const daySessions = useMemo(() => data.sessions.filter((session) => !selectedDay || dateKey(session.startAt) === selectedDay), [data.sessions, selectedDay]);
+  const rooms = useMemo(() => data.rooms.filter((candidate) => daySessions.some((session) => String(session.room.id) === String(candidate.id))), [data.rooms, daySessions]);
+  const sessionsByRoom = useMemo(() => {
+    const grouped = new Map<string, ProgramSession[]>();
+    for (const session of sessions) {
+      const key = String(session.room.id);
+      const values = grouped.get(key);
+      if (values) values.push(session);
+      else grouped.set(key, [session]);
+    }
+    return grouped;
+  }, [sessions]);
+  const activeRoom = rooms[roomIndex] || rooms[0];
+  const activeRoomSessions = activeRoom ? sessionsByRoom.get(String(activeRoom.id)) || [] : [];
+
+  useEffect(() => {
+    setRoomIndex(0);
+  }, [selectedDay]);
+
+  useEffect(() => {
+    if (roomIndex < rooms.length) return;
+    setRoomIndex(Math.max(0, rooms.length - 1));
+  }, [roomIndex, rooms.length]);
+
+  function goToRoom(index: number) {
+    const next = Math.max(0, Math.min(index, rooms.length - 1));
+    setRoomIndex(next);
+  }
+
+  function beginRoomSwipe(event: PointerEvent<HTMLDivElement>) {
+    swipeStartXRef.current = event.clientX;
+  }
+
+  function finishRoomSwipe(event: PointerEvent<HTMLDivElement>) {
+    const startX = swipeStartXRef.current;
+    swipeStartXRef.current = null;
+    if (startX == null) return;
+    const distance = event.clientX - startX;
+    if (distance <= -44) goToRoom(roomIndex + 1);
+    else if (distance >= 44) goToRoom(roomIndex - 1);
+  }
+
+  return (
+    <div className="program-mobile-app">
+      <div className="program-mobile-sticky">
+        <header className="program-mobile-appbar">
+          <div><strong>NECYPAA XXXVI</strong><span>Convention program</span></div>
+          <button aria-expanded={filtersOpen} aria-label="Search and filter sessions" onClick={() => setFiltersOpen((value) => !value)} type="button"><SlidersHorizontal aria-hidden="true" /><span>Filter</span></button>
+        </header>
+        <div aria-label="Program day" className="program-mobile-days" role="tablist">
+          {days.map((value) => {
+            const label = shortDayLabel(value);
+            return <button aria-selected={selectedDay === value} key={value} onClick={() => onDayChange(value)} role="tab" type="button"><span>{label.weekday}</span><strong>{label.day}</strong></button>;
+          })}
+        </div>
+        {filtersOpen ? <div className="program-mobile-filters"><label><Search aria-hidden="true" /><span className="sr-only">Search sessions</span><input autoFocus onChange={(event) => onSearchChange(event.target.value)} placeholder="Search sessions or topics" value={search} /></label><label><span className="sr-only">Session type</span><select onChange={(event) => onTypeChange(event.target.value)} value={type}><option value="all">All session types</option>{sessionTypes.map((value) => <option key={value} value={value}>{typeLabel(value)}</option>)}</select></label></div> : null}
+        {activeRoom ? <div className="program-mobile-room-nav">
+          <button aria-label="Previous room" disabled={roomIndex === 0} onClick={() => goToRoom(roomIndex - 1)} type="button"><ChevronLeft aria-hidden="true" /></button>
+          <div aria-live="polite"><strong>{activeRoom.name}</strong><span>{roomIndex + 1} of {rooms.length}{activeRoom.floor ? ` · ${activeRoom.floor}` : ""}</span></div>
+          <button aria-label="Next room" disabled={roomIndex === rooms.length - 1} onClick={() => goToRoom(roomIndex + 1)} type="button"><ChevronRight aria-hidden="true" /></button>
+        </div> : null}
+      </div>
+
+      {activeRoom ? <div aria-label="Swipe between program rooms" className="program-mobile-room-stage" onPointerCancel={() => { swipeStartXRef.current = null; }} onPointerDown={beginRoomSwipe} onPointerUp={finishRoomSwipe}>
+        <section aria-label={`${activeRoom.name} schedule`} className="program-mobile-room-panel" key={activeRoom.id}>
+          <div className="program-mobile-room-context"><span style={{ background: activeRoom.color || undefined }} /><p>{roomIndex < rooms.length - 1 ? "Swipe left for the next room" : roomIndex > 0 ? "Swipe right for the previous room" : "Only room for this day"}</p></div>
+          {activeRoomSessions.length ? <div className="program-mobile-agenda">{activeRoomSessions.map((session) => <button className="program-mobile-session" key={session.id} onClick={() => onOpen(session)} type="button"><time dateTime={session.startAt}><strong>{timeLabel(session.startAt)}</strong><span>{timeLabel(session.endAt)}</span></time><span className="program-mobile-session-marker" style={{ background: activeRoom.color || undefined }} /><span className="program-mobile-session-copy"><small>{typeLabel(session.sessionType)}</small><strong>{session.title}</strong>{session.shortDescription ? <span>{session.shortDescription}</span> : null}</span><ChevronRight aria-hidden="true" /></button>)}</div> : <div className="program-empty">No sessions in this room match your filters.</div>}
+        </section>
+      </div> : <div className="program-empty">No rooms or sessions are scheduled for this day.</div>}
+      <div className="program-mobile-map"><VenueMapView data={data} /></div>
+    </div>
+  );
+}
+
 export function ProgramExplorer({ initialData, heading = "Your weekend, mapped out", introduction = "Search the convention program, compare rooms, and open any session for details.", embedded = false }: { initialData?: ProgramData; heading?: ReactNode; introduction?: ReactNode; embedded?: boolean }) {
   const [data, setData] = useState(initialData || EMPTY_DATA);
   const [loading, setLoading] = useState(!initialData);
@@ -126,16 +236,16 @@ export function ProgramExplorer({ initialData, heading = "Your weekend, mapped o
   const days = useMemo(() => Array.from(new Set(data.sessions.map((session) => dateKey(session.startAt)))).sort(), [data.sessions]);
   const selectedDay = day || days[0] || "";
   const sessionTypes = useMemo(() => Array.from(new Set(data.sessions.map((session) => session.sessionType))).sort(), [data.sessions]);
-  const filtered = useMemo(() => {
+  const mobileFiltered = useMemo(() => {
     const needle = search.trim().toLowerCase();
     return data.sessions.filter((session) => {
       if (selectedDay && dateKey(session.startAt) !== selectedDay) return false;
       if (type !== "all" && session.sessionType !== type) return false;
-      if (room !== "all" && String(session.room.id) !== room) return false;
       if (needle && ![session.title, session.shortDescription, session.room.name, ...(session.tracks || [])].join(" ").toLowerCase().includes(needle)) return false;
       return true;
     }).sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
-  }, [data.sessions, room, search, selectedDay, type]);
+  }, [data.sessions, search, selectedDay, type]);
+  const filtered = useMemo(() => mobileFiltered.filter((session) => room === "all" || String(session.room.id) === room), [mobileFiltered, room]);
 
   useEffect(() => {
     if (!selected) return;
@@ -147,9 +257,10 @@ export function ProgramExplorer({ initialData, heading = "Your weekend, mapped o
   return (
     <div className={embedded ? "program-embed" : "program-page"}>
       {!embedded ? <section className="program-hero" id="program"><div className="program-shell"><div><CalendarDays aria-hidden="true" /><h1>Convention<br /><em>program</em></h1></div>{typeof introduction === "string" ? <p>{introduction}</p> : introduction}</div></section> : null}
-      <section className="program-explorer-section">
+      {!embedded ? <MobileProgram data={data} days={days} onDayChange={setDay} onOpen={setSelected} onSearchChange={setSearch} onTypeChange={setType} search={search} selectedDay={selectedDay} sessionTypes={sessionTypes} sessions={mobileFiltered} type={type} /> : null}
+      <section className={`program-explorer-section${embedded ? "" : " program-desktop-only"}`}>
         <div className="program-shell">
-          <div className="program-heading"><div><p>NECYPAA XXXVI</p>{typeof heading === "string" ? <h2>{heading}</h2> : heading}{embedded ? typeof introduction === "string" ? <p className="program-heading-description">{introduction}</p> : introduction : null}</div>{!embedded ? <a href="#hotel-map"><Map aria-hidden="true" /> Hotel map</a> : null}</div>
+          <div className="program-heading"><div><p>NECYPAA XXXVI</p>{typeof heading === "string" ? <h2>{heading}</h2> : heading}{embedded ? typeof introduction === "string" ? <p className="program-heading-description">{introduction}</p> : introduction : null}</div>{!embedded ? <a href="#hotel-map"><MapIcon aria-hidden="true" /> Hotel map</a> : null}</div>
           <div className="program-day-tabs" role="tablist" aria-label="Program day">
             {days.map((value) => <button aria-selected={selectedDay === value} key={value} onClick={() => setDay(value)} role="tab" type="button">{dayLabel(value)}</button>)}
           </div>
@@ -162,7 +273,7 @@ export function ProgramExplorer({ initialData, heading = "Your weekend, mapped o
           {loading ? <div className="program-empty">Loading the program…</div> : view === "grid" ? <ScheduleGrid onOpen={setSelected} rooms={data.rooms} sessions={filtered} /> : <Agenda onOpen={setSelected} sessions={filtered} />}
         </div>
       </section>
-      {!embedded ? <div className="program-shell"><VenueMapView data={data} /></div> : null}
+      {!embedded ? <div className="program-shell program-desktop-only"><VenueMapView data={data} /></div> : null}
       {selected ? <div className="program-dialog-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelected(null); }}><section aria-labelledby="program-dialog-title" aria-modal="true" className="program-dialog" role="dialog"><button aria-label="Close session details" onClick={() => setSelected(null)} type="button"><X aria-hidden="true" /></button><p>{typeLabel(selected.sessionType)}</p><h2 id="program-dialog-title">{selected.title}</h2><dl><div><dt><Clock3 aria-hidden="true" />Time</dt><dd>{dayLabel(dateKey(selected.startAt))}, {timeLabel(selected.startAt)}–{timeLabel(selected.endAt)}</dd></div><div><dt><MapPin aria-hidden="true" />Room</dt><dd>{selected.room.name}{selected.room.floor ? ` · ${selected.room.floor}` : ""}</dd></div>{selected.accessibility ? <div><dt><Accessibility aria-hidden="true" />Accessibility</dt><dd>{selected.accessibility}</dd></div> : null}</dl>{selected.shortDescription ? <p className="program-dialog-description">{selected.shortDescription}</p> : null}{selected.tracks?.length ? <ul>{selected.tracks.map((track) => <li key={track}>{track}</li>)}</ul> : null}</section></div> : null}
     </div>
   );
