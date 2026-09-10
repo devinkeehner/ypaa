@@ -3,8 +3,8 @@ import { validPlayDate } from '../lib/wordle';
 
 export const WordlePuzzles: CollectionConfig = {
   slug: 'wordle-puzzles',
-  labels: { singular: 'Wordle puzzle', plural: 'Wordle puzzles' },
-  admin: { group: 'Website', useAsTitle: 'word', defaultColumns: ['word', 'playDate'], description: 'Schedule the daily YPAA Wordle at /wordle. One puzzle per Eastern calendar date.' },
+  labels: { singular: 'Daily word puzzle', plural: 'Daily word puzzles' },
+  admin: { group: 'Website', useAsTitle: 'word', defaultColumns: ['word', 'playDate'], description: 'Schedule One Word at a Time at /one-word-at-a-time. One puzzle per Eastern calendar date.' },
   access: {
     read: ({ req }) => Boolean(req.user),
     create: ({ req }) => Boolean(req.user) && !('role' in (req.user || {}) && (req.user as { role?: string }).role === 'viewer'),

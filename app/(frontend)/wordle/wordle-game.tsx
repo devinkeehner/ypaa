@@ -6,7 +6,7 @@ import { checkGuesses } from './actions';
 import styles from './wordle.module.css';
 
 const keys = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
-const symbols = { correct: '🟩', present: '🟨', absent: '⬛' };
+const symbols = { correct: '🟣', present: '🟠', absent: '⚪' };
 const labels = { correct: 'correct position', present: 'in the word, different position', absent: 'not in the word' };
 
 type Game = { guesses: string[]; scores: LetterState[][]; won: boolean; answer?: string };
@@ -82,10 +82,10 @@ export function WordleGame({ date, length, puzzleKey }: { date: string; length: 
   });
 
   async function share(results: boolean, native = false) {
-    const url = `${window.location.origin}/wordle`;
-    const text = results ? `YPAA Wordle · ${date}\n${game.won ? game.guesses.length : 'X'}/${MAX_GUESSES}\n\n${game.scores.map(row => row.map(state => symbols[state]).join('')).join('\n')}\n\nPlay with me: ${url}` : `A little wordplay. A little fellowship. Play YPAA Wordle with me: ${url}`;
+    const url = `${window.location.origin}/one-word-at-a-time`;
+    const text = results ? `One Word at a Time · ${date}\n${game.won ? game.guesses.length : 'X'}/${MAX_GUESSES}\n\n${game.scores.map(row => row.map(state => symbols[state]).join('')).join('\n')}\n\nPlay with me: ${url}` : `A little wordplay. A little fellowship. Play One Word at a Time with me: ${url}`;
     try {
-      if (native && navigator.share) await navigator.share({ title: 'YPAA Wordle', text });
+      if (native && navigator.share) await navigator.share({ title: 'One Word at a Time', text });
       else { await navigator.clipboard.writeText(text); setMessage(results ? 'Results copied! Paste them to a friend.' : 'Invite copied! Paste it to a friend.'); }
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') return;
@@ -122,6 +122,6 @@ export function WordleGame({ date, length, puzzleKey }: { date: string; length: 
     </div>
     <div className={styles.actions}>{finished ? <><button type="button" onClick={() => void share(true, true)}>Share results ↗</button><button type="button" onClick={() => void share(true)}>Copy results</button></> : null}<button type="button" onClick={() => void share(false, true)}>Invite a friend ↗</button></div>
     {shareFallback ? <textarea className={styles.shareText} aria-label="Text to copy and share" readOnly value={shareFallback} onFocus={event => event.target.select()} /> : null}
-    <details className={styles.rules}><summary>How to play</summary><p>Guess the daily YPAA or recovery-themed word in six tries. Each guess must use {length} letters. Acronyms and letter combinations are welcome.</p><ul><li><strong>Green ●</strong> — right letter, right spot.</li><li><strong>Gold ◆</strong> — right letter, different spot.</li><li><strong>Gray –</strong> — no remaining match for this letter.</li></ul><p>Repeated letters only get credit for the number of times they appear in the answer. Progress saves in this browser. Shared results never include your guesses or the answer.</p></details>
+    <details className={styles.rules}><summary>How to play</summary><p>Guess the daily YPAA or recovery-themed word in six tries. Each guess must use {length} letters. Acronyms and letter combinations are welcome.</p><ul><li><strong>Purple ●</strong> — right letter, right spot.</li><li><strong>Orange ◆</strong> — right letter, different spot.</li><li><strong>Pale gray –</strong> — no remaining match for this letter.</li></ul><p>Repeated letters only get credit for the number of times they appear in the answer. Progress saves in this browser. Shared results never include your guesses or the answer.</p></details>
   </section>;
 }
