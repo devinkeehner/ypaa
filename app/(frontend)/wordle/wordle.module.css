@@ -1,0 +1,40 @@
+.page { min-height: 85vh; padding: 126px 16px 64px; background: #f7f5ee; color: #162f29; }
+.shell { max-width: 620px; margin: 0 auto; }
+.header { text-align: center; margin-bottom: 30px; }
+.eyebrow { font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.header h1 { font-size: clamp(40px, 9vw, 64px); font-weight: 900; line-height: 1.1; letter-spacing: -.06em; margin: 14px 0; }
+.header h1 span { color: #bd4a24; }
+.header p { margin: 0 0 16px; color: #52645d; }
+.header time { display: inline-block; border: 1px solid #cbd1c7; border-radius: 30px; padding: 7px 15px; font-size: 12px; }
+.game { max-width: 520px; margin: auto; }
+.instructions { text-align: center; margin-bottom: 22px; font-size: 15px; }
+.board { display: grid; gap: 6px; max-width: 420px; margin: auto; }
+.row { display: grid; gap: 6px; }
+.tile { position: relative; display: flex; align-items: center; justify-content: center; aspect-ratio: 1; max-height: 65px; border: 2px solid #d1d7cc; border-radius: 5px; background: #fffef9; font-size: clamp(18px, 5vw, 29px); font-weight: 850; }
+.tile small { position: absolute; bottom: 1px; right: 4px; font-size: 8px; }
+.filled { border-color: #536a5e; }
+.correct { background: #276548 !important; color: white !important; border-color: #276548 !important; }
+.present { background: #8a6413 !important; color: white !important; border-color: #8a6413 !important; }
+.absent { background: #59615d !important; color: white !important; border-color: #59615d !important; }
+.status { min-height: 48px; margin: 20px 0 10px; text-align: center; font-size: 13px; line-height: 1.5; }
+.keyboard { display: grid; gap: 7px; }
+.keyRow { display: flex; justify-content: center; gap: 5px; }
+.keyRow button { flex: 1; max-width: 46px; height: 53px; border: 0; border-radius: 5px; font-size: 14px; font-weight: 800; background: #dce2d8; color: #162f29; cursor: pointer; touch-action: manipulation; }
+.keyRow .wideKey { flex: 1.6; max-width: 68px; font-size: 12px; }
+.game button:focus-visible, .rules summary:focus-visible { outline: 3px solid #c64e26; outline-offset: 3px; }
+.game button:disabled { cursor: default; opacity: .7; }
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 26px 0; }
+.actions button { border: 1px solid #bac6ba; border-radius: 30px; padding: 12px 18px; font-size: 13px; font-weight: 700; cursor: pointer; background: #fffef9; }
+.actions button:first-child { background: #163f31; color: #fff; border-color: #163f31; }
+.rules { border-top: 1px solid #cbd1c7; padding-top: 20px; font-size: 14px; line-height: 1.7; color: #465b50; }
+.rules summary { font-weight: 800; cursor: pointer; color: #162f29; }
+.rules p { margin: 12px 0; }
+.rules ul { padding-left: 22px; }
+.shareText { width: 100%; min-height: 200px; padding: 12px; background: white; border: 1px solid #bac6ba; }
+.footnote { text-align: center; font-size: 11px; color: #52645d; margin-top: 30px; }
+.empty { text-align: center; padding: 45px 24px; border: 1px dashed #aab9aa; border-radius: 15px; }
+.empty h2 { font-size: 26px; margin-bottom: 10px; }
+@media (max-width: 400px) { .page { padding: 106px 10px 36px; } .keyRow { gap: 3px; } .keyRow button { font-size: 12px; } .tile { border-width: 1px; } }
+
+.page p { color: #465b50; }
+.page .status { color: #163f31; }

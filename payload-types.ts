@@ -72,6 +72,7 @@ export interface Config {
     media: Media;
     pages: Page;
     posts: Post;
+    'wordle-puzzles': WordlePuzzle;
     merchandise: Merchandise;
     'merchandise-orders': MerchandiseOrder;
     'checkout-orders': CheckoutOrder;
@@ -95,6 +96,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    'wordle-puzzles': WordlePuzzlesSelect<false> | WordlePuzzlesSelect<true>;
     merchandise: MerchandiseSelect<false> | MerchandiseSelect<true>;
     'merchandise-orders': MerchandiseOrdersSelect<false> | MerchandiseOrdersSelect<true>;
     'checkout-orders': CheckoutOrdersSelect<false> | CheckoutOrdersSelect<true>;
@@ -38603,6 +38605,10 @@ export interface PayloadLockedDocument {
         value: string | Post;
       } | null)
     | ({
+        relationTo: 'wordle-puzzles';
+        value: string | WordlePuzzle;
+      } | null)
+    | ({
         relationTo: 'merchandise';
         value: string | Merchandise;
       } | null)
@@ -59332,4 +59338,24 @@ export interface Auth {
 
 declare module 'payload' {
   export interface GeneratedTypes extends Config {}
+}
+export interface WordlePuzzle {
+  id: string;
+  /**
+   * A YPAA or recovery-themed word. The board adapts to its length.
+   */
+  word: string;
+  /**
+   * YYYY-MM-DD. Opens at midnight America/New_York. Only one word can be scheduled per date.
+   */
+  playDate: string;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface WordlePuzzlesSelect<T extends boolean = true> {
+  word?: T;
+  playDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
