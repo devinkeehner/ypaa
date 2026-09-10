@@ -17,4 +17,6 @@ Add `/one-word-at-a-time` to the Header or Footer global to include it in your s
 
 Validation: `npx tsx --test tests/wordle.test.ts` and `npx tsc --noEmit`.
 
-The title visually replaces a crossed-out “day” with handwritten “word.” Purple indicates a correct position, burnt orange a misplaced letter, and pale gray a missed letter. Shared results use purple, orange, and white circles. The old `/wordle` address redirects permanently to `/one-word-at-a-time`; existing saved progress and collection records are preserved.
+The title visually replaces a crossed-out “day” with handwritten “word.” Purple indicates a correct position, apricot orange a misplaced letter, and pale gray a missed letter. Shared results use purple, orange, and white circles. The old `/wordle` address redirects permanently to `/one-word-at-a-time`; existing saved progress and collection records are preserved.
+
+The game uses a deep plum background, warm off-white text, lavender correct tiles, apricot orange misplaced tiles, and pale gray missed tiles. Tile text uses dark ink for contrast on the bright result colors.

@@ -1,48 +1,48 @@
-.page { min-height: 85vh; padding: 126px 16px 64px; background: #fcf6f0; color: #34264c; }
+.page { min-height: 85vh; padding: 126px 16px 64px; background: #17121f; color-scheme: dark; color: #f6eefb; }
 .shell { max-width: 620px; margin: 0 auto; }
 .header { text-align: center; margin-bottom: 30px; }
 .eyebrow { font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
 .header h1 { font-size: clamp(40px, 9vw, 64px); font-weight: 900; line-height: 1.1; letter-spacing: -.06em; margin: 14px 0; }
 
-.header p { margin: 0 0 16px; color: #655b72; }
-.header time { display: inline-block; border: 1px solid #d7cbdc; border-radius: 30px; padding: 7px 15px; font-size: 12px; }
+.header p { margin: 0 0 16px; color: #c1b5cf; }
+.header time { display: inline-block; border: 1px solid #766584; border-radius: 30px; padding: 7px 15px; font-size: 12px; }
 .game { max-width: 520px; margin: auto; }
 .instructions { text-align: center; margin-bottom: 22px; font-size: 15px; }
 .board { display: grid; gap: 6px; max-width: 420px; margin: auto; }
 .row { display: grid; gap: 6px; }
-.tile { position: relative; display: flex; align-items: center; justify-content: center; aspect-ratio: 1; max-height: 65px; border: 2px solid #d7cbdc; border-radius: 12px; background: #fffcf8; font-size: clamp(18px, 5vw, 29px); font-weight: 850; }
+.tile { position: relative; display: flex; align-items: center; justify-content: center; aspect-ratio: 1; max-height: 65px; border: 2px solid #766584; border-radius: 12px; background: #241c30; font-size: clamp(18px, 5vw, 29px); font-weight: 850; }
 .tile small { position: absolute; bottom: 1px; right: 4px; font-size: 8px; }
-.filled { border-color: #8464a7; }
-.correct { background: #6942a0 !important; color: white !important; border-color: #6942a0 !important; }
-.present { background: #b64a1c !important; color: white !important; border-color: #b64a1c !important; }
-.absent { background: #d9d7e1 !important; color: #34264c !important; border-color: #d9d7e1 !important; }
+.filled { border-color: #c4a2ff; }
+.correct { background: #c4a2ff !important; color: #241832 !important; border-color: #c4a2ff !important; }
+.present { background: #ffaf78 !important; color: #2d1c14 !important; border-color: #ffaf78 !important; }
+.absent { background: #b6adbf !important; color: #211a2b !important; border-color: #b6adbf !important; }
 .status { min-height: 48px; margin: 20px 0 10px; text-align: center; font-size: 13px; line-height: 1.5; }
 .keyboard { display: grid; gap: 7px; }
 .keyRow { display: flex; justify-content: center; gap: 5px; }
-.keyRow button { flex: 1; max-width: 46px; height: 53px; border: 0; border-radius: 5px; font-size: 14px; font-weight: 800; background: #e9e0ef; color: #34264c; cursor: pointer; touch-action: manipulation; }
+.keyRow button { flex: 1; max-width: 46px; height: 53px; border: 0; border-radius: 5px; font-size: 14px; font-weight: 800; background: #40334f; color: #f6eefb; cursor: pointer; touch-action: manipulation; }
 .keyRow .wideKey { flex: 1.6; max-width: 68px; font-size: 12px; }
-.game button:focus-visible, .rules summary:focus-visible { outline: 3px solid #b64a1c; outline-offset: 3px; }
+.game button:focus-visible, .rules summary:focus-visible { outline: 3px solid #ffaf78; outline-offset: 3px; }
 .game button:disabled { cursor: default; opacity: .7; }
 .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 26px 0; }
-.actions button { border: 1px solid #d7cbdc; border-radius: 30px; padding: 12px 18px; font-size: 13px; font-weight: 700; cursor: pointer; background: #fffcf8; }
-.actions button:first-child { background: #6942a0; color: #fff; border-color: #6942a0; }
-.rules { border-top: 1px solid #d7cbdc; padding-top: 20px; font-size: 14px; line-height: 1.7; color: #655b72; }
-.rules summary { font-weight: 800; cursor: pointer; color: #34264c; }
+.actions button { border: 1px solid #766584; border-radius: 30px; padding: 12px 18px; font-size: 13px; font-weight: 700; cursor: pointer; background: #241c30; color: #f6eefb; }
+.actions button:first-child { background: #c4a2ff; color: #241832; border-color: #c4a2ff; }
+.rules { border-top: 1px solid #766584; padding-top: 20px; font-size: 14px; line-height: 1.7; color: #c1b5cf; }
+.rules summary { font-weight: 800; cursor: pointer; color: #f6eefb; }
 .rules p { margin: 12px 0; }
 .rules ul { padding-left: 22px; }
-.shareText { width: 100%; min-height: 200px; padding: 12px; background: white; border: 1px solid #d7cbdc; }
-.footnote { text-align: center; font-size: 11px; color: #655b72; margin-top: 30px; }
-.empty { text-align: center; padding: 45px 24px; border: 1px dashed #c7b5d3; border-radius: 15px; }
+.shareText { width: 100%; min-height: 200px; padding: 12px; background: #241c30; color: #f6eefb; border: 1px solid #766584; }
+.footnote { text-align: center; font-size: 11px; color: #c1b5cf; margin-top: 30px; }
+.empty { background: #211929; text-align: center; padding: 45px 24px; border: 1px dashed #766584; border-radius: 15px; }
 .empty h2 { font-size: 26px; margin-bottom: 10px; }
 @media (max-width: 400px) { .page { padding: 106px 10px 36px; } .keyRow { gap: 3px; } .keyRow button { font-size: 12px; } .tile { border-width: 1px; } }
 
-.page p { color: #655b72; }
-.page .status { color: #6942a0; }
+.page p { color: #c1b5cf; }
+.page .status { color: #c4a2ff; }
 
 .header .title { margin: 38px 0 20px; font-size: clamp(48px, 10vw, 76px); line-height: 1.06; letter-spacing: -.055em; }
 .titleLine { display: block; }
 .replacement { display: inline-block; position: relative; margin-left: .08em; }
-.oldWord { position: relative; color: #86758e; }
-.oldWord::after { content: ""; position: absolute; left: -.06em; right: -.05em; top: 55%; height: .065em; border-radius: 100%; background: #b64a1c; transform: rotate(-12deg); }
-.newWord { position: absolute; left: .04em; top: -.67em; color: #6942a0; font-family: "Segoe Print", "Bradley Hand", cursive; font-size: .68em; font-style: italic; font-weight: 700; letter-spacing: -.06em; transform: rotate(-7deg); }
+.oldWord { position: relative; color: #ad9cba; }
+.oldWord::after { content: ""; position: absolute; left: -.06em; right: -.05em; top: 55%; height: .065em; border-radius: 100%; background: #ffaf78; transform: rotate(-12deg); }
+.newWord { position: absolute; left: .04em; top: -.67em; color: #c4a2ff; font-family: "Segoe Print", "Bradley Hand", cursive; font-size: .68em; font-style: italic; font-weight: 700; letter-spacing: -.06em; transform: rotate(-7deg); }
 .titleEnding { display: block; }
