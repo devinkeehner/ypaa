@@ -1,5 +1,7 @@
 export type LetterState = 'correct' | 'present' | 'absent';
 export const MAX_GUESSES = 6;
+// Temporary testing mode: switch to false to restore saved daily attempts.
+export const ALLOW_REFRESH_RETRY = true;
 
 export function puzzleDate(now = new Date()) {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
