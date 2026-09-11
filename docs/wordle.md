@@ -20,3 +20,7 @@ Validation: `npx tsx --test tests/wordle.test.ts` and `npx tsc --noEmit`.
 The title visually replaces a crossed-out “day” with handwritten “word.” Purple indicates a correct position, apricot orange a misplaced letter, and pale gray a missed letter. Shared results use purple, orange, and white circles. The old `/wordle` address redirects permanently to `/one-word-at-a-time`; existing saved progress and collection records are preserved.
 
 The game uses a deep plum background, warm off-white text, lavender correct tiles, apricot orange misplaced tiles, and pale gray missed tiles. Tile text uses dark ink for contrast on the bright result colors.
+
+On phones the game fills the dynamic viewport, including safe-area padding. The title is compact, site registration bars and footer are hidden, and the board scales to the available space and word length. The keyboard stays visible, help and manual sharing use native dialogs, and landscape places the keyboard next to the board. After completion, the mobile keyboard gives way to result sharing. Extremely short viewports retain scrolling rather than clipping controls.
+
+Mobile layout verified with a temporary local fixture at 320×568, 375×667, 390×844, and 844×390, including five- and eight-letter boards, letter entry, validation, and help open/close. No scheduled puzzle records were created for these checks.

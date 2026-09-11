@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { MAX_GUESSES, type LetterState } from '@/lib/wordle';
 import { checkGuesses } from './actions';
 import styles from './wordle.module.css';
@@ -19,6 +19,9 @@ export function WordleGame({ date, length, puzzleKey }: { date: string; length: 
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [shareFallback, setShareFallback] = useState('');
+  const helpDialog = useRef<HTMLDialogElement>(null);
+  const shareDialog = useRef<HTMLDialogElement>(null);
+  const [announcement, setAnnouncement] = useState('');
   const locked = useRef(false);
   const storageKey = `ypaa-wordle:v1:${date}:${puzzleKey}`;
   const finished = game.won || game.guesses.length === MAX_GUESSES;
@@ -41,6 +44,10 @@ export function WordleGame({ date, length, puzzleKey }: { date: string; length: 
     return () => { cancelled = true; };
   }, [storageKey, date, length]);
 
+  useEffect(() => {
+    if (shareFallback) shareDialog.current?.showModal();
+  }, [shareFallback]);
+
   async function submit() {
     if (!ready || locked.current || finished) return;
     if (input.length !== length) { setMessage(`Enter ${length} letters first.`); return; }
@@ -54,7 +61,8 @@ export function WordleGame({ date, length, puzzleKey }: { date: string; length: 
       if (result.error || !result.scores) { setMessage(result.error || 'Could not check your guess. Try again.'); return; }
       setGame({ guesses, scores: result.scores, won: result.won, answer: result.answer });
       setInput('');
-      setMessage(result.won ? 'You found it! Share a little fellowship.' : guesses.length === MAX_GUESSES ? `The word was ${result.answer}. A fresh start tomorrow!` : `Guess ${guesses.length}: ${result.scores[result.scores.length - 1].map((state, i) => `${input[i]}, ${labels[state]}`).join('; ')}.`);
+      setAnnouncement(`Guess ${guesses.length}: ${result.scores[result.scores.length - 1].map((state, i) => `${input[i]}, ${labels[state]}`).join('; ')}.`);
+      setMessage(result.won ? 'You found it! Share a little fellowship.' : guesses.length === MAX_GUESSES ? `The word was ${result.answer}. A fresh start tomorrow!` : `Guess ${guesses.length} of ${MAX_GUESSES}. Keep going.`);
       try { localStorage.setItem(storageKey, JSON.stringify(guesses)); }
       catch { setMessage('Your guess was checked, but this browser cannot save progress.'); }
     } catch { setMessage('Could not reach the puzzle. Your guess is still here—try again.'); }
@@ -70,9 +78,10 @@ export function WordleGame({ date, length, puzzleKey }: { date: string; length: 
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
+      if (helpDialog.current?.open || shareDialog.current?.open) return;
       if (event.ctrlKey || event.metaKey || event.altKey || event.isComposing) return;
       const target = event.target as HTMLElement;
-      if (target.closest('input, textarea, select, a, [contenteditable="true"]')) return;
+      if (target.closest('dialog, [role="dialog"], input, textarea, select, a, [contenteditable="true"]')) return;
       if (target.closest('button') && event.key === 'Enter') return;
       const key = event.key.toUpperCase();
       if (/^[A-Z]$/.test(key) || key === 'ENTER' || key === 'BACKSPACE') { event.preventDefault(); press(key); }
@@ -101,9 +110,9 @@ export function WordleGame({ date, length, puzzleKey }: { date: string; length: 
     if (!keyboardStates[letter] || ranks[state] > ranks[keyboardStates[letter]]) keyboardStates[letter] = state;
   }));
 
-  return <section className={styles.game} aria-label="Daily word puzzle" aria-busy={busy}>
+  return <section className={styles.game} data-finished={finished} aria-label="Daily word puzzle" aria-busy={busy}>
     <p className={styles.instructions}>Find the <strong>{length}-letter word</strong> in six guesses.</p>
-    <div className={styles.board} role="group" aria-label="Guesses">
+    <div className={styles.boardArea}><div className={styles.board} style={{ "--letters": length } as CSSProperties} role="group" aria-label="Guesses">
       {Array.from({ length: MAX_GUESSES }, (_, row) => <div key={row} className={styles.row} style={{ gridTemplateColumns: `repeat(${length}, 1fr)` }} aria-label={`Guess ${row + 1}`}>
         {Array.from({ length }, (_, col) => {
           const letter = (game.guesses[row] || (row === game.guesses.length ? input : ''))[col] || '';
@@ -112,6 +121,8 @@ export function WordleGame({ date, length, puzzleKey }: { date: string; length: 
         })}
       </div>)}
     </div>
+    </div>
+    <span className={styles.srOnly} aria-live="polite">{announcement}</span>
     <p className={styles.status} role="status" aria-live="polite">{!ready ? 'Loading your puzzle…' : busy ? 'Checking…' : message || (finished ? game.won ? 'You found it! Come back tomorrow.' : `The word was ${game.answer}. A fresh start tomorrow!` : 'Use your keyboard or tap the letters below.')}</p>
     <div className={styles.keyboard} aria-label="On-screen keyboard">
       {keys.map((row, index) => <div className={styles.keyRow} key={row}>
@@ -120,8 +131,8 @@ export function WordleGame({ date, length, puzzleKey }: { date: string; length: 
         {index === 2 ? <button type="button" className={styles.wideKey} aria-label="Delete last letter" disabled={!ready || busy || finished} onClick={() => press('BACKSPACE')}>⌫</button> : null}
       </div>)}
     </div>
-    <div className={styles.actions}>{finished ? <><button type="button" onClick={() => void share(true, true)}>Share results ↗</button><button type="button" onClick={() => void share(true)}>Copy results</button></> : null}<button type="button" onClick={() => void share(false, true)}>Invite a friend ↗</button></div>
-    {shareFallback ? <textarea className={styles.shareText} aria-label="Text to copy and share" readOnly value={shareFallback} onFocus={event => event.target.select()} /> : null}
-    <details className={styles.rules}><summary>How to play</summary><p>Guess the daily YPAA or recovery-themed word in six tries. Each guess must use {length} letters. Acronyms and letter combinations are welcome.</p><ul><li><strong>Purple ●</strong> — right letter, right spot.</li><li><strong>Orange ◆</strong> — right letter, different spot.</li><li><strong>Pale gray –</strong> — no remaining match for this letter.</li></ul><p>Repeated letters only get credit for the number of times they appear in the answer. Progress saves in this browser. Shared results never include your guesses or the answer.</p></details>
+    <div className={styles.actions}>{finished ? <><button type="button" onClick={() => void share(true, true)}>Share results ↗</button><button type="button" onClick={() => void share(true)}>Copy results</button></> : null}<button type="button" onClick={() => void share(false, true)}>Invite a friend ↗</button><button type="button" onClick={() => helpDialog.current?.showModal()}>How to play</button></div>
+    <dialog ref={shareDialog} className={styles.dialog} aria-labelledby="share-title" onClose={() => setShareFallback('')}><form method="dialog"><button>Close</button></form><h2 id="share-title">Share with a friend</h2><p>Select and copy this text.</p><textarea className={styles.shareText} aria-label="Text to copy and share" readOnly value={shareFallback} onFocus={event => event.target.select()} /></dialog>
+    <dialog ref={helpDialog} className={`${styles.dialog} ${styles.rules}`} aria-labelledby="help-title"><form method="dialog"><button>Close</button></form><h2 id="help-title">How to play</h2><p>Guess the daily YPAA or recovery-themed word in six tries. Each guess must use {length} letters. Acronyms and letter combinations are welcome.</p><ul><li><strong>Purple ●</strong> — right letter, right spot.</li><li><strong>Orange ◆</strong> — right letter, different spot.</li><li><strong>Pale gray –</strong> — no remaining match for this letter.</li></ul><p>Repeated letters only get credit for the number of times they appear in the answer. Progress saves in this browser. Shared results never include your guesses or the answer.</p><p>A new puzzle opens at midnight Eastern.</p></dialog>
   </section>;
 }
