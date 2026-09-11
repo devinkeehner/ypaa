@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload';
 import { validPlayDate } from '../lib/wordle';
+import { nextPuzzleDate } from '../lib/puzzle-schedule';
 
 export const WordlePuzzles: CollectionConfig = {
   slug: 'wordle-puzzles',
@@ -17,6 +18,14 @@ export const WordlePuzzles: CollectionConfig = {
     { name: 'readingPassage', label: 'Before-play passage', type: 'textarea', admin: { description: 'Enter your own reading or text you have permission to reproduce. Paragraph breaks are preserved. If blank, players see a link to AA’s Daily Reflections.' } },
     { name: 'readingAttribution', label: 'Reading attribution', type: 'text', admin: { description: 'Source, author, page, and any required copyright notice.' } },
     { name: 'word', type: 'text', required: true, hooks: { beforeValidate: [({ value }) => typeof value === 'string' ? value.trim().toUpperCase() : value] }, validate: (value: unknown) => typeof value === 'string' && /^[A-Z]{4,8}$/.test(value) || 'Enter 4–8 letters, without spaces or punctuation.', admin: { description: 'A YPAA or recovery-themed word. The board adapts to its length.' } },
-    { name: 'playDate', label: 'Play date', type: 'text', required: true, unique: true, index: true, validate: (value: unknown) => validPlayDate(value) || 'Enter a real date as YYYY-MM-DD.', admin: { placeholder: '2026-09-10', description: 'YYYY-MM-DD. Opens at midnight America/New_York. Only one word can be scheduled per date.' } },
+    { name: 'playDate', label: 'Play date', type: 'text', required: true, unique: true, index: true,
+      defaultValue: async ({ req }) => {
+        if (!req.user) return nextPuzzleDate();
+        const latest = await req.payload.find({ collection: 'wordle-puzzles', req, overrideAccess: false, depth: 0, limit: 1, sort: '-playDate', select: { playDate: true } });
+        return nextPuzzleDate(latest.docs[0]?.playDate);
+      },
+      validate: (value: unknown) => validPlayDate(value) || 'Choose a valid calendar date.',
+      admin: { components: { Field: '@/components/admin/PlayDateField' }, description: 'Opens at midnight Eastern. New puzzles default to the day after the latest scheduled date.' },
+    },
   ],
 };
