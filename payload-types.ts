@@ -38205,6 +38205,17 @@ export interface MerchandiseOrder {
   shippingCents: number;
   status: 'processing' | 'fulfilled' | 'failed';
   failureMessage?: string | null;
+  orderNotifiedEmails?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  orderEmailStatus?: ('sent' | 'pending_configuration' | 'failed') | null;
+  orderEmailError?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -38564,7 +38575,7 @@ export interface NotificationRecipient {
   /**
    * More triggers can be added here without changing the recipient list.
    */
-  triggers: ('cash_scholarship_requested' | 'stripe_scholarship_paid')[];
+  triggers: ('cash_scholarship_requested' | 'stripe_scholarship_paid' | 'merchandise_order')[];
   active: boolean;
   updatedAt: string;
   createdAt: string;
@@ -38581,9 +38592,11 @@ export interface EmailTest {
     | 'cash_scholarship_requested'
     | 'stripe_scholarship_paid'
     | 'merchandise_shipped'
+    | 'merchandise_order'
     | 'scholarship_recipient_reserved'
     | 'purchaser_confirmation';
   recipientEmail: string;
+  fulfillmentMethod?: ('shipping' | 'receive_now' | 'event_pickup') | null;
   purchaserName?: string | null;
   recipientName?: string | null;
   scholarshipAmountCents?: number | null;
@@ -59057,6 +59070,9 @@ export interface MerchandiseOrdersSelect<T extends boolean = true> {
   shippingCents?: T;
   status?: T;
   failureMessage?: T;
+  orderNotifiedEmails?: T;
+  orderEmailStatus?: T;
+  orderEmailError?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -59296,6 +59312,7 @@ export interface NotificationRecipientsSelect<T extends boolean = true> {
 export interface EmailTestsSelect<T extends boolean = true> {
   notificationType?: T;
   recipientEmail?: T;
+  fulfillmentMethod?: T;
   purchaserName?: T;
   recipientName?: T;
   scholarshipAmountCents?: T;

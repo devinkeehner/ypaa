@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { sendMerchandiseShippingUpdate } from "@/lib/scholarship-email";
+import { sendMerchandiseShippingUpdate, sendMerchandiseOrderAlert } from "@/lib/scholarship-email";
 
 export const MerchandiseOrders: CollectionConfig = {
   slug: "merchandise-orders",
@@ -17,6 +17,29 @@ export const MerchandiseOrders: CollectionConfig = {
           ...(status === "sent" ? { shippingEmailSentAt: new Date().toISOString() } : {}) };
       } catch {
         return { ...data, shippingEmailStatus: "failed", shippingEmailError: "Shipping email could not be sent. Save this order again to retry." };
+      }
+    }, async ({ data, originalDoc, req }) => {
+      const order = { ...originalDoc, ...data };
+      // Both cash and Stripe orders reach fulfilled after inventory is recorded.
+      if (order.status !== "fulfilled") return data;
+      const sent: string[] = Array.isArray(originalDoc?.orderNotifiedEmails) ? [...originalDoc.orderNotifiedEmails] : [];
+      try {
+        const recipients = await req.payload.find({ collection: "notification-recipients", req, overrideAccess: true, pagination: false,
+          where: { and: [{ active: { equals: true } }, { triggers: { contains: "merchandise_order" } }] } });
+        let status = recipients.docs.length ? "sent" : "pending_configuration";
+        for (const recipient of recipients.docs) {
+          if (sent.includes(recipient.email)) continue;
+          status = await sendMerchandiseOrderAlert({
+            recipientEmail: recipient.email, purchaserName: order.purchaserName, purchaserEmail: order.purchaserEmail,
+            reference: order.sourceKey, fulfillmentMethod: order.fulfillmentMethod, paymentSource: order.paymentSource,
+            items: order.items, shippingAddress: order.shippingAddress,
+          });
+          if (status !== "sent") break;
+          sent.push(recipient.email);
+        }
+        return { ...data, orderNotifiedEmails: sent, orderEmailStatus: status, orderEmailError: null };
+      } catch {
+        return { ...data, orderNotifiedEmails: sent, orderEmailStatus: "failed", orderEmailError: "Order notification could not be sent. Save this order again to retry." };
       }
     }],
   },
@@ -69,5 +92,8 @@ export const MerchandiseOrders: CollectionConfig = {
       options: ["processing", "fulfilled", "failed"],
     },
     { name: "failureMessage", type: "textarea" },
+    { name: "orderNotifiedEmails", type: "json", admin: { readOnly: true } },
+    { name: "orderEmailStatus", type: "select", options: ["sent", "pending_configuration", "failed"], admin: { readOnly: true } },
+    { name: "orderEmailError", type: "textarea", admin: { readOnly: true } },
   ],
 };

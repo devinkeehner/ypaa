@@ -24,6 +24,7 @@ export const NotificationRecipients: CollectionConfig = {
       options: [
         { label: "Cash scholarship requested", value: "cash_scholarship_requested" },
         { label: "Stripe general scholarship fund donation paid", value: "stripe_scholarship_paid" },
+        { label: "Any merchandise order", value: "merchandise_order" },
       ],
       admin: { description: "More triggers can be added here without changing the recipient list." },
     },

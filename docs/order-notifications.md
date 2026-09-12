@@ -15,3 +15,9 @@ In Merchandise Orders, enter the carrier and tracking number, set Shipping Statu
 Both templates are available in **Email Tests**. Creating a test sends a real email to the entered test address.
 
 Automated verification: `npx tsx --test tests/order-notifications.test.ts` (uses mocked delivery; sends no real email).
+
+## Any merchandise order
+
+Select **Any merchandise order** in Notification Recipients to receive an internal alert for both cash and Stripe merchandise orders after inventory fulfillment succeeds. Each email lists the purchaser, items, quantities, variants, payment method, and delivery choice. Shipping orders include the shipping address; receive-now and event-pickup orders explicitly say no shipping is required.
+
+Delivery is tracked per recipient on the merchandise order. Save an order again to retry failed or unconfigured notifications. This is separate from the purchaser's shipment update. **Email Tests → Any merchandise order** offers all three delivery choices for testing.

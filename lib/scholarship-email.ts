@@ -58,6 +58,30 @@ export async function sendMerchandiseShippingUpdate(input: {
   return "sent" as const;
 }
 
+export async function sendMerchandiseOrderAlert(input: {
+  recipientEmail: string; purchaserName: string; purchaserEmail: string; reference: string;
+  fulfillmentMethod: string; paymentSource: string; items: unknown; shippingAddress?: unknown;
+}) {
+  const configuration = emailConfiguration();
+  if (!configuration) return "pending_configuration" as const;
+  const fulfillment = input.fulfillmentMethod === "shipping" ? "Shipping required"
+    : input.fulfillmentMethod === "event_pickup" ? "Event pickup — no shipping required"
+    : "Receive now — no shipping required";
+  const items = Array.isArray(input.items) ? input.items.map((value) => {
+    const item = value && typeof value === "object" ? value as Record<string, unknown> : {};
+    return `• ${String(item.name || item.slug || "Merchandise")} × ${Number(item.quantity) || 1}${item.size ? ` · ${item.size}` : ""}${item.color ? ` · ${item.color}` : ""}`;
+  }).join("\n") : "See merchandise order for items.";
+  const address = input.shippingAddress && typeof input.shippingAddress === "object" ? input.shippingAddress as Record<string, unknown> : {};
+  const addressLines = [address.line1, address.line2, address.city, address.state, address.postalCode].filter(Boolean).join("\n");
+  const text = `A new NECYPAA XXXVI merchandise order has been recorded.\n\n${fulfillment}\nPayment: ${input.paymentSource === "cash" ? "Cash" : "Stripe"}\nPurchaser: ${input.purchaserName}\nEmail: ${input.purchaserEmail}\nOrder reference: ${input.reference}\n\nItems\n${items}${input.fulfillmentMethod === "shipping" ? `\n\nShipping address\n${addressLines || "See merchandise order for address."}` : ""}`;
+  await sendEmail(configuration, {
+    to: input.recipientEmail, subject: `New merchandise order — ${fulfillment}`,
+    text, html: `<div style="font-family:Arial,sans-serif;line-height:1.6">${escapeHtml(text).replace(/\n/g, "<br>")}</div>`,
+    idempotencyKey: `merchandise-order:${input.reference}:${input.recipientEmail}`,
+  });
+  return "sent" as const;
+}
+
 export async function sendPurchaserConfirmation(input: PurchaserConfirmation) {
   const configuration = emailConfiguration();
   if (!configuration) return "pending_configuration" as const;
