@@ -28,5 +28,6 @@ export const CheckoutOrders: CollectionConfig = {
     { name: "checkoutLineItemSummary", type: "textarea" },
     { name: "order", type: "json", required: true },
     { name: "rawMetadata", type: "json" },
+    { name: "stripeScholarshipNotifiedEmails", type: "json", admin: { readOnly: true, description: "Recipients already notified of this Stripe general scholarship donation." } },
   ],
 };

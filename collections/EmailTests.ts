@@ -1,6 +1,6 @@
 import type { Access, CollectionConfig } from "payload";
 
-import { sendCashScholarshipAlert, sendPurchaserConfirmation, sendScholarshipNotification } from "@/lib/scholarship-email";
+import { sendCashScholarshipAlert, sendPurchaserConfirmation, sendScholarshipNotification, sendStripeScholarshipAlert, sendMerchandiseShippingUpdate } from "@/lib/scholarship-email";
 
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
@@ -19,7 +19,11 @@ export const EmailTests: CollectionConfig = {
       let deliveryStatus: "sent" | "pending_configuration" | "failed" = "failed";
       let deliveryError = "";
       try {
-        deliveryStatus = data.notificationType === "cash_scholarship_requested"
+        deliveryStatus = data.notificationType === "stripe_scholarship_paid"
+          ? await sendStripeScholarshipAlert({ recipientEmail: data.recipientEmail, scholarshipAmountCents: Number(data.scholarshipAmountCents || 4000), purchaserName: data.purchaserName || "Test purchaser", reference: `test-${Date.now()}` })
+          : data.notificationType === "merchandise_shipped"
+          ? await sendMerchandiseShippingUpdate({ recipientEmail: data.recipientEmail, purchaserName: data.purchaserName || "Test purchaser", reference: `test-${Date.now()}`, carrier: "Test carrier", trackingNumber: "TEST123456" })
+          : data.notificationType === "cash_scholarship_requested"
           ? await sendCashScholarshipAlert({ recipientEmail: data.recipientEmail, scholarshipAmountCents: Number(data.scholarshipAmountCents || 4000) })
           : data.notificationType === "purchaser_confirmation"
             ? await sendPurchaserConfirmation({ recipientEmail: data.recipientEmail, purchaserName: data.purchaserName || "Test purchaser", paymentMethod: "card", reference: `test-confirmation-${Date.now()}`, totalCents: 6500, items: ["NECYPAA XXXVI Registration", "Breakfast - Saturday"] })
@@ -39,6 +43,8 @@ export const EmailTests: CollectionConfig = {
       defaultValue: "cash_scholarship_requested",
       options: [
         { label: "Cash scholarship requested", value: "cash_scholarship_requested" },
+        { label: "Stripe general scholarship fund donation paid", value: "stripe_scholarship_paid" },
+        { label: "Merchandise shipped", value: "merchandise_shipped" },
         { label: "Scholarship reserved for recipient", value: "scholarship_recipient_reserved" },
         { label: "Purchaser order confirmation", value: "purchaser_confirmation" },
       ],
@@ -46,7 +52,7 @@ export const EmailTests: CollectionConfig = {
     { name: "recipientEmail", label: "Send test to", type: "email", required: true },
     { name: "purchaserName", type: "text", defaultValue: "Test purchaser", admin: { condition: (data) => data?.notificationType === "scholarship_recipient_reserved" } },
     { name: "recipientName", type: "text", defaultValue: "Test recipient", admin: { condition: (data) => data?.notificationType === "scholarship_recipient_reserved" } },
-    { name: "scholarshipAmountCents", label: "Scholarship amount (cents)", type: "number", min: 1, defaultValue: 4000, admin: { condition: (data) => data?.notificationType === "cash_scholarship_requested" } },
+    { name: "scholarshipAmountCents", label: "Scholarship amount (cents)", type: "number", min: 1, defaultValue: 4000, admin: { condition: (data) => ["cash_scholarship_requested", "stripe_scholarship_paid"].includes(data?.notificationType) } },
     { name: "deliveryStatus", type: "select", defaultValue: "sending", admin: { readOnly: true }, options: ["sending", "sent", "pending_configuration", "failed"] },
     { name: "deliveryError", type: "textarea", admin: { readOnly: true } },
   ],

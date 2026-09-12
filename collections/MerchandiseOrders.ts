@@ -1,7 +1,25 @@
 import type { CollectionConfig } from "payload";
+import { sendMerchandiseShippingUpdate } from "@/lib/scholarship-email";
 
 export const MerchandiseOrders: CollectionConfig = {
   slug: "merchandise-orders",
+  hooks: {
+    beforeChange: [async ({ data, originalDoc }) => {
+      const order = { ...originalDoc, ...data };
+      // Inventory fulfillment is not physical shipment. Retry unsent email on save.
+      if (order.fulfillmentMethod !== "shipping" || order.shippingStatus !== "shipped" || originalDoc?.shippingEmailSentAt) return data;
+      try {
+        const status = await sendMerchandiseShippingUpdate({
+          recipientEmail: order.purchaserEmail, purchaserName: order.purchaserName,
+          reference: order.sourceKey, carrier: order.shippingCarrier, trackingNumber: order.trackingNumber,
+        });
+        return { ...data, shippingEmailStatus: status, shippingEmailError: null,
+          ...(status === "sent" ? { shippingEmailSentAt: new Date().toISOString() } : {}) };
+      } catch {
+        return { ...data, shippingEmailStatus: "failed", shippingEmailError: "Shipping email could not be sent. Save this order again to retry." };
+      }
+    }],
+  },
   admin: {
     useAsTitle: "sourceKey",
     defaultColumns: ["sourceKey", "purchaserName", "paymentSource", "fulfillmentMethod", "status", "createdAt"],
@@ -34,6 +52,12 @@ export const MerchandiseOrders: CollectionConfig = {
       ],
     },
     { name: "shippingAddress", type: "json" },
+    { name: "shippingStatus", type: "select", defaultValue: "not_shipped", options: ["not_shipped", "shipped"], admin: { condition: (data) => data?.fulfillmentMethod === "shipping", description: "Set to shipped and save to email the purchaser. Inventory fulfillment alone does not send a shipping update." } },
+    { name: "shippingCarrier", type: "text", admin: { condition: (data) => data?.fulfillmentMethod === "shipping" } },
+    { name: "trackingNumber", type: "text", admin: { condition: (data) => data?.fulfillmentMethod === "shipping" } },
+    { name: "shippingEmailStatus", type: "select", options: ["sent", "pending_configuration", "failed"], admin: { readOnly: true } },
+    { name: "shippingEmailSentAt", type: "date", admin: { readOnly: true } },
+    { name: "shippingEmailError", type: "textarea", admin: { readOnly: true } },
     { name: "items", type: "json", required: true },
     { name: "merchandiseSubtotalCents", type: "number", required: true, min: 0 },
     { name: "shippingCents", type: "number", required: true, min: 0, defaultValue: 0 },

@@ -84,6 +84,8 @@ export interface Config {
     rooms: Room;
     'program-sessions': ProgramSession;
     'venue-maps': VenueMap;
+    'notification-recipients': NotificationRecipient;
+    'email-tests': EmailTest;
     'payload-mcp-api-keys': PayloadMcpApiKey;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -108,6 +110,8 @@ export interface Config {
     rooms: RoomsSelect<false> | RoomsSelect<true>;
     'program-sessions': ProgramSessionsSelect<false> | ProgramSessionsSelect<true>;
     'venue-maps': VenueMapsSelect<false> | VenueMapsSelect<true>;
+    'notification-recipients': NotificationRecipientsSelect<false> | NotificationRecipientsSelect<true>;
+    'email-tests': EmailTestsSelect<false> | EmailTestsSelect<true>;
     'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -38061,6 +38065,37 @@ export interface Post {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Schedule One Word at a Time at /one-word-at-a-time. One puzzle per Eastern calendar date.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "wordle-puzzles".
+ */
+export interface WordlePuzzle {
+  id: string;
+  /**
+   * Optional title for the reading shown before this day’s puzzle.
+   */
+  readingTitle?: string | null;
+  /**
+   * Enter your own reading or text you have permission to reproduce. Paragraph breaks are preserved. If blank, players see a link to AA’s Daily Reflections.
+   */
+  readingPassage?: string | null;
+  /**
+   * Source, author, page, and any required copyright notice.
+   */
+  readingAttribution?: string | null;
+  /**
+   * A YPAA or recovery-themed word. The board adapts to its length.
+   */
+  word: string;
+  /**
+   * Opens at midnight Eastern. New puzzles default to the day after the latest scheduled date.
+   */
+  playDate: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Each entry is one sellable item and appears as one card in the merchandise portal.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -38110,6 +38145,14 @@ export interface Merchandise {
   }[];
   available?: boolean | null;
   /**
+   * Turn this off for items that should only appear at the in-person merchandise table.
+   */
+  showInMainStore?: boolean | null;
+  /**
+   * Makes this item available on the QR-code merchandise checkout page.
+   */
+  showInQuickCheckout?: boolean | null;
+  /**
    * Optional comma-separated keywords visitors might search for.
    */
   searchTerms?: string | null;
@@ -38140,6 +38183,15 @@ export interface MerchandiseOrder {
     | number
     | boolean
     | null;
+  /**
+   * Set to shipped and save to email the purchaser. Inventory fulfillment alone does not send a shipping update.
+   */
+  shippingStatus?: ('not_shipped' | 'shipped') | null;
+  shippingCarrier?: string | null;
+  trackingNumber?: string | null;
+  shippingEmailStatus?: ('sent' | 'pending_configuration' | 'failed') | null;
+  shippingEmailSentAt?: string | null;
+  shippingEmailError?: string | null;
   items:
     | {
         [k: string]: unknown;
@@ -38178,6 +38230,7 @@ export interface CheckoutOrder {
   stripePaymentIntentId?: string | null;
   stripeChargeId?: string | null;
   stripeCustomerId?: string | null;
+  checkoutLineItemSummary?: string | null;
   order:
     | {
         [k: string]: unknown;
@@ -38188,6 +38241,18 @@ export interface CheckoutOrder {
     | boolean
     | null;
   rawMetadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Recipients already notified of this Stripe general scholarship donation.
+   */
+  stripeScholarshipNotifiedEmails?:
     | {
         [k: string]: unknown;
       }
@@ -38296,6 +38361,9 @@ export interface CashTransaction {
     | number
     | boolean
     | null;
+  /**
+   * Delivery status for the internal cash-scholarship alert.
+   */
   notificationStatus?: ('not_required' | 'sent' | 'pending_configuration' | 'failed') | null;
   updatedAt: string;
   createdAt: string;
@@ -38484,6 +38552,47 @@ export interface VenueMap {
   createdAt: string;
 }
 /**
+ * Add internal recipients here and select which notification triggers they should receive.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notification-recipients".
+ */
+export interface NotificationRecipient {
+  id: string;
+  email: string;
+  name?: string | null;
+  /**
+   * More triggers can be added here without changing the recipient list.
+   */
+  triggers: ('cash_scholarship_requested' | 'stripe_scholarship_paid')[];
+  active: boolean;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Create a test to send one real email. Tests never notify the internal recipient list.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-tests".
+ */
+export interface EmailTest {
+  id: string;
+  notificationType:
+    | 'cash_scholarship_requested'
+    | 'stripe_scholarship_paid'
+    | 'merchandise_shipped'
+    | 'scholarship_recipient_reserved'
+    | 'purchaser_confirmation';
+  recipientEmail: string;
+  purchaserName?: string | null;
+  recipientName?: string | null;
+  scholarshipAmountCents?: number | null;
+  deliveryStatus?: ('sending' | 'sent' | 'pending_configuration' | 'failed') | null;
+  deliveryError?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * API keys control which collections, resources, tools, and prompts MCP clients can access
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -38651,6 +38760,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'venue-maps';
         value: string | VenueMap;
+      } | null)
+    | ({
+        relationTo: 'notification-recipients';
+        value: string | NotificationRecipient;
+      } | null)
+    | ({
+        relationTo: 'email-tests';
+        value: string | EmailTest;
       } | null)
     | ({
         relationTo: 'payload-mcp-api-keys';
@@ -58878,6 +58995,19 @@ export interface PostsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "wordle-puzzles_select".
+ */
+export interface WordlePuzzlesSelect<T extends boolean = true> {
+  readingTitle?: T;
+  readingPassage?: T;
+  readingAttribution?: T;
+  word?: T;
+  playDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "merchandise_select".
  */
 export interface MerchandiseSelect<T extends boolean = true> {
@@ -58897,6 +59027,8 @@ export interface MerchandiseSelect<T extends boolean = true> {
         id?: T;
       };
   available?: T;
+  showInMainStore?: T;
+  showInQuickCheckout?: T;
   searchTerms?: T;
   featured?: T;
   updatedAt?: T;
@@ -58914,6 +59046,12 @@ export interface MerchandiseOrdersSelect<T extends boolean = true> {
   paymentSource?: T;
   fulfillmentMethod?: T;
   shippingAddress?: T;
+  shippingStatus?: T;
+  shippingCarrier?: T;
+  trackingNumber?: T;
+  shippingEmailStatus?: T;
+  shippingEmailSentAt?: T;
+  shippingEmailError?: T;
   items?: T;
   merchandiseSubtotalCents?: T;
   shippingCents?: T;
@@ -58941,8 +59079,10 @@ export interface CheckoutOrdersSelect<T extends boolean = true> {
   stripePaymentIntentId?: T;
   stripeChargeId?: T;
   stripeCustomerId?: T;
+  checkoutLineItemSummary?: T;
   order?: T;
   rawMetadata?: T;
+  stripeScholarshipNotifiedEmails?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -59134,6 +59274,33 @@ export interface VenueMapsSelect<T extends boolean = true> {
   description?: T;
   status?: T;
   displayOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notification-recipients_select".
+ */
+export interface NotificationRecipientsSelect<T extends boolean = true> {
+  email?: T;
+  name?: T;
+  triggers?: T;
+  active?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-tests_select".
+ */
+export interface EmailTestsSelect<T extends boolean = true> {
+  notificationType?: T;
+  recipientEmail?: T;
+  purchaserName?: T;
+  recipientName?: T;
+  scholarshipAmountCents?: T;
+  deliveryStatus?: T;
+  deliveryError?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -59338,24 +59505,4 @@ export interface Auth {
 
 declare module 'payload' {
   export interface GeneratedTypes extends Config {}
-}
-export interface WordlePuzzle {
-  id: string;
-  /**
-   * A YPAA or recovery-themed word. The board adapts to its length.
-   */
-  word: string;
-  /**
-   * YYYY-MM-DD. Opens at midnight America/New_York. Only one word can be scheduled per date.
-   */
-  playDate: string;
-  updatedAt: string;
-  createdAt: string;
-}
-
-export interface WordlePuzzlesSelect<T extends boolean = true> {
-  word?: T;
-  playDate?: T;
-  updatedAt?: T;
-  createdAt?: T;
 }

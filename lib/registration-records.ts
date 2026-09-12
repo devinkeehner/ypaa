@@ -10,6 +10,7 @@ import {
   type RegistrationOrder,
 } from "@/lib/registration";
 import { getStripe } from "@/lib/stripe-server";
+import { sendStripeScholarshipPaidNotification } from "@/lib/scholarship-email";
 
 type RecordContext = {
   sourceKey: string;
@@ -64,12 +65,14 @@ async function recordCheckoutOrder(payload: Payload, order: RegistrationOrder, c
     rawMetadata: context.rawMetadata,
   } as const;
   const result = await payload.find({ collection: "checkout-orders", overrideAccess: true, limit: 1, where: { sourceKey: { equals: context.sourceKey } } });
-  if (result.docs[0]) await payload.update({ collection: "checkout-orders", id: result.docs[0].id, overrideAccess: true, data });
-  else await payload.create({ collection: "checkout-orders", overrideAccess: true, data });
+  const checkout = result.docs[0]
+    ? await payload.update({ collection: "checkout-orders", id: result.docs[0].id, overrideAccess: true, data })
+    : await payload.create({ collection: "checkout-orders", overrideAccess: true, data });
+  return { orderId: String(checkout.id) };
 }
 
 export async function recordRegistrationOrder(payload: Payload, order: RegistrationOrder, context: RecordContext) {
-  await recordCheckoutOrder(payload, order, context);
+  const checkout = await recordCheckoutOrder(payload, order, context);
   let attendeeId: string | undefined;
   if (order.selfRegistration) {
     const sourceKey = `${context.sourceKey}:registration:1`;
@@ -177,6 +180,12 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
       else await payload.create({ collection: "breakfast-tickets", overrideAccess: true, data });
     }
   }
+  if (context.paymentSource === "stripe" && context.paymentStatus === "paid" && context.dataOrigin !== "stripe_backfill" && order.scholarship.enabled && order.scholarship.kind === "general") {
+    await sendStripeScholarshipPaidNotification(payload, {
+      checkoutOrderId: String(checkout.orderId), reference: context.sourceKey,
+      purchaserName: order.purchaserName, scholarshipAmountCents: order.scholarship.amountCents,
+    });
+  }
 }
 
 function breakfastCountFromLegacyText(metadata: Record<string, string>, day: "friday" | "saturday" | "sunday") {
@@ -259,6 +268,14 @@ export async function recordStripeSession(payload: Payload, session: Stripe.Chec
     email: session.customer_details?.email || session.customer_email || useful(metadata.attendee_email, "unknown@stripe-import.invalid"),
   };
   const order = orderFromStripeMetadata(metadata, purchaser);
+  if (dataOrigin === "stripe_webhook" && order.scholarship.enabled && order.scholarship.kind === "general") {
+    // Read the paid scholarship line so larger donations are not reported as $40.
+    let scholarshipCents = 0;
+    for await (const line of stripe.checkout.sessions.listLineItems(session.id, { limit: 100 })) {
+      if (/scholarship/i.test(line.description || "")) scholarshipCents += line.amount_total;
+    }
+    order.scholarship.amountCents = scholarshipCents || REGISTRATION_PRICE_CENTS * (count(metadata.necy_scholarship_qty) || count(metadata.scholarship_quantity) || 1);
+  }
   const charge = paymentIntent ? paymentIntent.latest_charge : undefined;
   const chargeId = typeof charge === "string" ? charge : charge?.id;
   const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id;

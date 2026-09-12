@@ -42,6 +42,22 @@ type PurchaserConfirmation = {
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character] || character);
 const currency = (cents: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
 
+export async function sendMerchandiseShippingUpdate(input: {
+  recipientEmail: string; purchaserName: string; reference: string;
+  carrier?: string; trackingNumber?: string;
+}) {
+  const configuration = emailConfiguration();
+  if (!configuration) return "pending_configuration" as const;
+  const tracking = [input.carrier && `Carrier: ${input.carrier}`, input.trackingNumber && `Tracking number: ${input.trackingNumber}`].filter(Boolean).join("\n");
+  const text = `Hi ${input.purchaserName},\n\nYour NECYPAA XXXVI merchandise has shipped!\n\n${tracking || "Tracking information is not available for this shipment."}\nOrder reference: ${input.reference}\n\nThank you for supporting NECYPAA XXXVI!\nhttps://necypaact.com/`;
+  await sendEmail(configuration, {
+    to: input.recipientEmail, subject: "Your NECYPAA XXXVI merchandise has shipped",
+    text, html: `<div style="font-family:Arial,sans-serif;line-height:1.6">${escapeHtml(text).replace(/\n/g, "<br>")}</div>`,
+    idempotencyKey: `merchandise-shipped:${input.reference}`,
+  });
+  return "sent" as const;
+}
+
 export async function sendPurchaserConfirmation(input: PurchaserConfirmation) {
   const configuration = emailConfiguration();
   if (!configuration) return "pending_configuration" as const;
@@ -85,6 +101,35 @@ export async function sendCashScholarshipAlert(input: { recipientEmail: string; 
     html: `<div style="background:#f6f7f9;padding:32px 16px;font-family:Arial,sans-serif;color:#1f2937"><div style="max-width:600px;margin:0 auto;background:#ffffff;padding:32px;border-radius:12px"><h1 style="margin:0 0 8px;font-size:26px">Cash scholarship request</h1><p style="margin:0 0 24px">A new request was submitted.</p><div style="background:#eff6ff;padding:24px;border-radius:10px;text-align:center"><div style="font-size:14px;text-transform:uppercase;letter-spacing:.08em">Scholarship amount</div><div style="font-size:38px;font-weight:700;margin-top:8px">${escapeHtml(amount)}</div></div><p style="margin:24px 0 0"><strong>NECYPAA XXXVI</strong><br>December 31, 2026 – January 3, 2027<br>Hartford Marriott Downtown · Hartford, Connecticut</p><p><a href="https://necypaact.com/">Visit NECYPAA XXXVI</a></p></div></div>`,
   });
   return "sent" as const;
+}
+
+export async function sendStripeScholarshipAlert(input: { recipientEmail: string; scholarshipAmountCents: number; purchaserName: string; reference: string }) {
+  const configuration = emailConfiguration();
+  if (!configuration) return "pending_configuration" as const;
+  const amount = currency(input.scholarshipAmountCents);
+  const text = `A general scholarship fund donation was paid through Stripe.\n\nScholarship amount: ${amount}\nPurchaser: ${input.purchaserName}\nOrder reference: ${input.reference}\n\nNECYPAA XXXVI\nhttps://necypaact.com/`;
+  await sendEmail(configuration, {
+    to: input.recipientEmail, subject: `Stripe general scholarship fund donation — ${amount}`,
+    text, html: `<div style="font-family:Arial,sans-serif;line-height:1.6">${escapeHtml(text).replace(/\n/g, "<br>")}</div>`,
+    idempotencyKey: `stripe-scholarship:${input.reference}:${input.recipientEmail}`,
+  });
+  return "sent" as const;
+}
+
+export async function sendStripeScholarshipPaidNotification(payload: Payload, input: { checkoutOrderId: string; scholarshipAmountCents: number; purchaserName: string; reference: string }) {
+  if (!emailConfiguration()) return "pending_configuration" as const;
+  const recipients = await payload.find({ collection: "notification-recipients", overrideAccess: true, pagination: false,
+    where: { and: [{ active: { equals: true } }, { triggers: { contains: "stripe_scholarship_paid" } }] } });
+  const order = await payload.findByID({ collection: "checkout-orders", id: input.checkoutOrderId, overrideAccess: true });
+  const sent = Array.isArray(order.stripeScholarshipNotifiedEmails) ? order.stripeScholarshipNotifiedEmails.filter((value): value is string => typeof value === "string") : [];
+  for (const recipient of recipients.docs) {
+    if (sent.includes(recipient.email)) continue;
+    const status = await sendStripeScholarshipAlert({ ...input, recipientEmail: recipient.email });
+    if (status !== "sent") return status;
+    sent.push(recipient.email);
+    await payload.update({ collection: "checkout-orders", id: input.checkoutOrderId, overrideAccess: true, data: { stripeScholarshipNotifiedEmails: sent } });
+  }
+  return recipients.docs.length ? "sent" as const : "pending_configuration" as const;
 }
 
 export async function sendCashScholarshipRequestedNotification(payload: Payload, input: { scholarshipAmountCents: number }) {
