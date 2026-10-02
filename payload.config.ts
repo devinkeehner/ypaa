@@ -4,7 +4,7 @@ import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { s3Storage } from "@payloadcms/storage-s3";
 import { buildConfig } from "payload";
 
-import { withViewerAccess, withViewerGlobalAccess } from "./lib/crm-access";
+import { isAdministrator, withViewerAccess, withViewerGlobalAccess } from "./lib/crm-access";
 
 import { Users } from "./collections/Users";
 import { WordlePuzzles } from "./collections/WordlePuzzles";
@@ -118,6 +118,13 @@ export default buildConfig({
     mcpPlugin({
       disabled: process.env.PAYLOAD_ENABLE_MCP !== "true",
       userCollection: "users",
+      overrideApiKeyCollection: (collection) => ({
+        ...collection,
+        admin: { ...collection.admin, hidden: ({ user }) => !isAdministrator(user) },
+        access: Object.fromEntries(["admin", "create", "read", "update", "delete", "unlock", "readVersions"].map((operation) =>
+          [operation, ({ req }: { req: { user?: unknown } }) => isAdministrator(req.user)],
+        )),
+      }),
       collections: {
         pages: {
           description: "Visual-builder pages. Read the ypaa://page-builder/block-catalog resource before creating or updating layout or builderData, and preserve every Puck zone.",

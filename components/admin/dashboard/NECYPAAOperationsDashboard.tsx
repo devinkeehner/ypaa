@@ -1,3 +1,4 @@
+import { canAccessArea } from "@/lib/crm-access";
 import { CRMDemoNotice } from "../CRMDemoNotice";
 import type { PayloadRequest, WidgetServerProps } from "payload";
 import { formatAdminURL } from "payload/shared";
@@ -61,28 +62,39 @@ const numberFromRecord = (value: unknown, field: string) => {
 export function EventQuickActionsWidget({ req }: WidgetServerProps) {
   const actions = [
     {
+      area: "registration",
       description: "Search people, payments, and linked records.",
       href: adminURL(req, "/registration-corrections"),
       icon: ContactRound,
       label: "Open Event CRM",
     },
     {
+      area: "registration",
       description: "Review the roster, admissions, and access codes.",
       href: adminURL(req, "/collections/attendees"),
       icon: TicketCheck,
       label: "Review registrations",
     },
     {
+      area: "registration",
       description: "Track donations, scholarship seats, and allocation.",
       href: adminURL(req, "/collections/scholarship-contributions"),
       icon: BadgeDollarSign,
       label: "Manage scholarship fund",
     },
     {
+      area: "program",
       description: "Arrange sessions, rooms, and schedule details.",
       href: adminURL(req, "/program-board"),
       icon: CalendarRange,
       label: "Open program board",
+    },
+    {
+      area: "merch",
+      description: "Review merchandise sales and fulfillment.",
+      href: adminURL(req, "/merchandise-sales"),
+      icon: BadgeDollarSign,
+      label: "Open merchandise sales",
     },
   ] as const;
 
@@ -97,7 +109,7 @@ export function EventQuickActionsWidget({ req }: WidgetServerProps) {
         <p>Manage NECYPAA XXXVI people, registrations, funding, and program work from one place.</p>
       </div>
       <div className={styles.actionGrid}>
-        {actions.map((action, index) => {
+        {actions.filter((action) => canAccessArea(req.user, action.area)).map((action, index) => {
           const Icon = action.icon;
 
           return (
@@ -124,6 +136,7 @@ export function EventQuickActionsWidget({ req }: WidgetServerProps) {
 }
 
 export async function EventCRMOverviewWidget({ req }: WidgetServerProps) {
+  if (!canAccessArea(req.user, "registration")) return null;
   const [contacts, registrations, breakfastTickets] = await Promise.all([
     safely(
       req.payload.count({
@@ -199,6 +212,7 @@ export async function EventCRMOverviewWidget({ req }: WidgetServerProps) {
 }
 
 export async function ScholarshipFundWidget({ req }: WidgetServerProps) {
+  if (!canAccessArea(req.user, "registration")) return null;
   const unassignedSeats = await safely(
     req.payload.find({
       collection: "registration-entitlements",
@@ -270,6 +284,7 @@ export async function ScholarshipFundWidget({ req }: WidgetServerProps) {
 }
 
 export async function EventOperationsWidget({ req }: WidgetServerProps) {
+  if (!canAccessArea(req.user, "registration") || !canAccessArea(req.user, "program")) return null;
   const [sessions, publishedSessions, draftSessions, rooms, corrections] =
     await Promise.all([
       safely(

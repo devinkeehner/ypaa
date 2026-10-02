@@ -15,7 +15,7 @@ import {
   EVENT_WORKSPACE_NAV_AREAS,
   type EventWorkspaceNavArea,
 } from "@/components/admin/eventWorkspace";
-import { isMerchChair } from "@/lib/crm-access";
+import { isMerchChair, canAccessArea, isAdministrator, isViewer, canReadCollection } from "@/lib/crm-access";
 
 import { NECYPAAAdminNavClient } from "./NECYPAAAdminNavClient";
 
@@ -75,6 +75,8 @@ export async function NECYPAAAdminNav(props: Props) {
 
       return {
         ...area,
+        ...(area.key === "website" && !canReadCollection(req.user, "pages")
+          ? { label: "Media", primaryAction: undefined } : {}),
         entities,
       };
     });
@@ -90,5 +92,9 @@ export async function NECYPAAAdminNav(props: Props) {
     moreArea.entities.push(...remainingEntities);
   }
 
-  return <NECYPAAAdminNavClient areas={areas.filter((area) => area.entities.length > 0 || area.primaryAction)} isMerchChair={isMerchChair(req.user)} />;
+  return <NECYPAAAdminNavClient areas={areas.filter((area) => {
+    if (isAdministrator(req.user) || isViewer(req.user)) return area.entities.length > 0 || Boolean(area.primaryAction);
+    const scope = area.key === "merch" || area.key === "program" ? area.key : ["crm", "registrations", "payments"].includes(area.key) ? "registration" : null;
+    return scope ? canAccessArea(req.user, scope) : area.entities.length > 0;
+  })} isMerchChair={isMerchChair(req.user)} />;
 }

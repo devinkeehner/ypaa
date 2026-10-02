@@ -1,9 +1,10 @@
+import { canAccessArea } from "@/lib/crm-access";
 import type { Metadata } from "next";
 import configPromise from "@payload-config";
 import { getPayload } from "payload";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 
 import { ProgramExplorer } from "@/components/site/ProgramExplorer";
 import { getProgramPreviewData } from "@/lib/program-data";
@@ -29,6 +30,7 @@ export default async function ProgramPreviewPage() {
     redirect(`${loginPath}?redirect=${encodeURIComponent("/program-preview")}`);
   }
 
+  if (!canAccessArea(user, "program")) notFound();
   const data = await getProgramPreviewData();
 
   return (

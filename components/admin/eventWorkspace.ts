@@ -68,7 +68,7 @@ export const EVENT_WORKSPACE_NAV_AREAS = [
     slugs: ["program-sessions", "rooms", "venue-maps"],
   },
   {
-    description: "See merchandise orders and what has sold.",
+    description: "Manage merchandise listings, stock, orders and fulfillment.",
     key: "merch",
     label: "Merch",
     primaryAction: {
@@ -76,7 +76,7 @@ export const EVENT_WORKSPACE_NAV_AREAS = [
       href: "/merchandise-sales",
       label: "View merchandise sales",
     },
-    slugs: [],
+    slugs: ["merchandise", "merchandise-orders"],
   },
   {
     description: "Review original payments, scholarship funding, cash, and merchandise orders.",
@@ -91,7 +91,6 @@ export const EVENT_WORKSPACE_NAV_AREAS = [
       "checkout-orders",
       "scholarship-contributions",
       "cash-transactions",
-      "merchandise-orders",
     ],
   },
   {
@@ -103,7 +102,7 @@ export const EVENT_WORKSPACE_NAV_AREAS = [
       href: "/collections/pages",
       label: "Open pages",
     },
-    slugs: ["pages", "posts", "wordle-puzzles", "media", "merchandise"],
+    slugs: ["pages", "posts", "wordle-puzzles", "media"],
   },
   {
     description: "Administrative settings and supporting records that are used less often.",

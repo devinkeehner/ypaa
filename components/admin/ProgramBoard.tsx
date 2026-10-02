@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Building2, CalendarDays, ChevronLeft, ChevronRight, Eye, GripVertical, Pencil, Plus, RotateCw, Save, Trash2, X } from "lucide-react";
 import Link from "next/link";
+import { canAccessArea } from "@/lib/crm-access";
 
 import type { ProgramRoom, ProgramSession } from "@/components/site/program-types";
 import { SESSION_TYPE_LABELS } from "@/components/site/program-types";
@@ -107,6 +108,7 @@ function normalizeSession(value: unknown, rooms: ProgramRoom[]): ProgramSession 
 
 export function ProgramBoard() {
   const [state, setState] = useState<EditorState>("loading");
+  const [canManage, setCanManage] = useState(false);
   const [rooms, setRooms] = useState<EditableRoom[]>([]);
   const [sessions, setSessions] = useState<ProgramSession[]>([]);
   const [day, setDay] = useState(CONVENTION_DAYS[0]);
@@ -127,10 +129,11 @@ export function ProgramBoard() {
     try {
       const authResponse = await fetch("/api/users/me", { credentials: "same-origin" });
       const authJSON = authResponse.ok ? await authResponse.json() as { user?: unknown } : null;
-      if (!authJSON?.user) {
+      if (!canAccessArea(authJSON?.user, "program")) {
         setState("unauthorized");
         return;
       }
+      setCanManage(canAccessArea(authJSON?.user, "program", true));
       const [roomResponse, sessionResponse] = await Promise.all([
         fetch("/api/rooms?limit=100&sort=displayOrder&depth=0", { credentials: "same-origin" }),
         fetch("/api/program-sessions?limit=500&sort=startAt&depth=1", { credentials: "same-origin" }),
@@ -160,6 +163,7 @@ export function ProgramBoard() {
   const daySessions = useMemo(() => sessions.filter((session) => dateKey(session.startAt) === day), [day, sessions]);
 
   function startCreate(roomID?: string, startTime = "09:00") {
+    if (!canManage) return;
     const [hour, minute] = startTime.split(":").map(Number);
     const endMinutes = hour * 60 + minute + 60;
     setMessage("");
@@ -167,23 +171,27 @@ export function ProgramBoard() {
   }
 
   function startEdit(session: ProgramSession) {
+    if (!canManage) return;
     setMessage("");
     setForm({ id: session.id, title: session.title, sessionType: session.sessionType, date: dateKey(session.startAt), startTime: timeValue(session.startAt), endTime: timeValue(session.endAt), room: String(session.room.id), shortDescription: session.shortDescription || "", language: session.language || "English", audience: session.audience || "", accessibility: session.accessibility || "", status: session.status || "published", featured: Boolean(session.featured), internalNotes: "" });
   }
 
   function startCreateRoom() {
+    if (!canManage) return;
     const nextOrder = rooms.length ? Math.max(...rooms.map((room) => room.displayOrder)) + 10 : 0;
     setRoomMessage("");
     setRoomForm({ ...EMPTY_ROOM_FORM, displayOrder: String(nextOrder) });
   }
 
   function startEditRoom(room: EditableRoom) {
+    if (!canManage) return;
     setRoomMessage("");
     setRoomForm({ id: room.id, name: room.name, shortLabel: room.shortLabel, floor: room.floor || "", capacity: room.capacity == null ? "" : String(room.capacity), accessible: room.accessible, directions: room.directions, displayOrder: String(room.displayOrder), mapX: room.mapX == null ? "" : String(room.mapX), mapY: room.mapY == null ? "" : String(room.mapY), color: room.color || "#E85E27", notes: room.notes });
   }
 
   async function saveRoom(event: React.FormEvent) {
     event.preventDefault();
+    if (!canManage) return;
     if (!roomForm) return;
     setRoomSaving(true);
     setRoomMessage("");
@@ -200,6 +208,7 @@ export function ProgramBoard() {
   }
 
   async function moveRoom(roomID: string, direction: -1 | 1) {
+    if (!canManage) return;
     const currentIndex = rooms.findIndex((room) => String(room.id) === roomID);
     const nextIndex = currentIndex + direction;
     if (currentIndex < 0 || nextIndex < 0 || nextIndex >= rooms.length || roomOrdering) return;
@@ -233,6 +242,7 @@ export function ProgramBoard() {
 
   async function save(event: React.FormEvent) {
     event.preventDefault();
+    if (!canManage) return;
     if (!form) return;
     const startAt = iso(form.date, form.startTime);
     const endAt = iso(form.date, form.endTime);
@@ -250,6 +260,7 @@ export function ProgramBoard() {
   }
 
   async function remove() {
+    if (!canManage) return;
     if (!form?.id || !window.confirm(`Delete “${form.title}”? This cannot be undone.`)) return;
     setSaving(true);
     const response = await fetch(`/api/program-sessions/${form.id}`, { method: "DELETE", credentials: "same-origin" });
@@ -260,6 +271,7 @@ export function ProgramBoard() {
   }
 
   async function moveSession(sessionID: string, roomID: string, startTime: string) {
+    if (!canManage) return;
     const session = sessions.find((candidate) => String(candidate.id) === sessionID);
     if (!session) return;
     const duration = new Date(session.endAt).getTime() - new Date(session.startAt).getTime();
@@ -387,6 +399,7 @@ export function ProgramBoard() {
   }
 
   async function resizeSession(session: ProgramSession, edge: ResizeEdge, deltaSlots: number) {
+    if (!canManage) return;
     if (!deltaSlots || movingSessionIDs.size) return;
     const plan = buildResizePlan(session, edge, deltaSlots);
     if (plan.error) { setMessage(plan.error); return; }
@@ -430,9 +443,10 @@ export function ProgramBoard() {
     return {
       "aria-label": `Resize ${edge === "start" ? "start" : "end"} of ${session.title}`,
       className: `program-board-resize-handle program-board-resize-${edge}`,
-      disabled: movingSessionIDs.size > 0,
+      disabled: !canManage || movingSessionIDs.size > 0,
       onPointerDown: (event: React.PointerEvent<HTMLButtonElement>) => {
         event.preventDefault();
+        if (!canManage) return;
         event.stopPropagation();
         event.currentTarget.setPointerCapture(event.pointerId);
         setResizePreview({ sessionID: String(session.id), edge, pointerStartY: event.clientY, deltaSlots: 0 });
@@ -452,6 +466,7 @@ export function ProgramBoard() {
       onKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => {
         if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
         event.preventDefault();
+        if (!canManage) return;
         void resizeSession(session, edge, clampResizeDelta(session, edge, event.key === "ArrowUp" ? -1 : 1));
       },
       // Keep the whole hit target inside the card so the grip reads as part of it.
@@ -479,13 +494,13 @@ export function ProgramBoard() {
     : null;
   return (
     <main className="program-board-page">
-      <header className="program-board-header"><div><Link href="/admin"><ArrowLeft aria-hidden="true" /> Payload admin</Link><h1>Program Board</h1><p>Drag sessions to move them. Click an empty time to add one. Scroll sideways to see every room.</p></div><div><Link className="program-board-preview-action" href="/program-preview"><Eye aria-hidden="true" /> Preview public page</Link><button className="program-board-secondary-action" onClick={startCreateRoom} type="button"><Building2 aria-hidden="true" /> Add room</button><button onClick={() => startCreate()} type="button"><Plus aria-hidden="true" /> Add session</button></div></header>
+      <header className="program-board-header"><div><Link href="/admin"><ArrowLeft aria-hidden="true" /> Payload admin</Link><h1>Program Board</h1><p>{canManage ? "Drag sessions to move them. Click an empty time to add one. Scroll sideways to see every room." : "View-only program access. Browse the schedule or open the program preview."}</p></div><div><Link className="program-board-preview-action" href="/program-preview"><Eye aria-hidden="true" /> Preview public page</Link><button className="program-board-secondary-action" disabled={!canManage} onClick={startCreateRoom} type="button"><Building2 aria-hidden="true" /> Add room</button><button disabled={!canManage} onClick={() => startCreate()} type="button"><Plus aria-hidden="true" /> Add session</button></div></header>
       <div className="program-board-toolbar"><div role="tablist" aria-label="Convention day">{CONVENTION_DAYS.map((value) => <button aria-selected={day === value} key={value} onClick={() => setDay(value)} role="tab" type="button">{dayLabel(value)}</button>)}</div><p aria-live="polite">{resizePreviewPlan?.error || message || `${daySessions.length} sessions · ${rooms.length} rooms`}</p></div>
       {state === "loading" ? <div className="program-board-loading">Loading program records…</div> : (
         <div className="program-board-scroll">
           <div className="program-board-grid" style={{ "--room-count": rooms.length, "--slot-height": `${slotHeight}px` } as React.CSSProperties}>
             <div className="program-board-corner">Time</div>
-            {rooms.map((room, index) => <div className="program-board-room" key={room.id}><span style={{ background: room.color || undefined }} /><strong>{room.shortLabel}</strong><small>{room.floor}</small><div className="program-board-room-actions"><button aria-label={`Move ${room.name} left`} disabled={index === 0 || roomOrdering} onClick={() => void moveRoom(String(room.id), -1)} title="Move room left" type="button"><ChevronLeft aria-hidden="true" /></button><button aria-label={`Edit ${room.name}`} onClick={() => startEditRoom(room)} title={`Edit ${room.name}`} type="button"><Pencil aria-hidden="true" /></button><button aria-label={`Move ${room.name} right`} disabled={index === rooms.length - 1 || roomOrdering} onClick={() => void moveRoom(String(room.id), 1)} title="Move room right" type="button"><ChevronRight aria-hidden="true" /></button></div></div>)}
+            {rooms.map((room, index) => <div className="program-board-room" key={room.id}><span style={{ background: room.color || undefined }} /><strong>{room.shortLabel}</strong><small>{room.floor}</small><div className="program-board-room-actions"><button aria-label={`Move ${room.name} left`} disabled={!canManage || index === 0 || roomOrdering} onClick={() => void moveRoom(String(room.id), -1)} title="Move room left" type="button"><ChevronLeft aria-hidden="true" /></button><button disabled={!canManage} aria-label={`Edit ${room.name}`} onClick={() => startEditRoom(room)} title={`Edit ${room.name}`} type="button"><Pencil aria-hidden="true" /></button><button aria-label={`Move ${room.name} right`} disabled={!canManage || index === rooms.length - 1 || roomOrdering} onClick={() => void moveRoom(String(room.id), 1)} title="Move room right" type="button"><ChevronRight aria-hidden="true" /></button></div></div>)}
             <div className="program-board-axis" style={{ height: slots * slotHeight }}>{Array.from({ length: slots }, (_, index) => { const minutes = startMinute + index * 30; const hour = Math.floor(minutes / 60); const minute = minutes % 60; return <span key={index} style={{ top: index * slotHeight }}>{new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" }).format(new Date(`${day}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00-05:00`))}</span>; })}</div>
             {rooms.map((room) => (
               <div
@@ -500,6 +515,7 @@ export function ProgramBoard() {
                   return (
                     <button
                       aria-label={`Add session in ${room.name} at ${time}`}
+                      disabled={!canManage}
                       className="program-board-cell"
                       data-drop-active={highlighted || undefined}
                       data-drop-end={highlighted && index === dropStartIndex + dropDurationSlots - 1 || undefined}
@@ -509,11 +525,13 @@ export function ProgramBoard() {
                       onDragEnter={(event) => { event.preventDefault(); setDropTarget({ roomID: String(room.id), time }); }}
                       onDragOver={(event) => {
                         event.preventDefault();
+                        if (!canManage) return;
                         event.dataTransfer.dropEffect = "move";
                         setDropTarget({ roomID: String(room.id), time });
                       }}
                       onDrop={(event) => {
                         event.preventDefault();
+                        if (!canManage) return;
                         const sessionID = event.dataTransfer.getData("text/program-session");
                         setDropTarget(null);
                         setDraggedSessionID(null);
@@ -540,7 +558,7 @@ export function ProgramBoard() {
                       className="program-board-event"
                       data-dragging={draggedSessionID === sessionID || undefined}
                       data-moving={moving || undefined}
-                      draggable={!moving}
+                      draggable={canManage && !moving}
                       key={session.id}
                       onClick={() => startEdit(session)}
                       onDragEnd={() => {

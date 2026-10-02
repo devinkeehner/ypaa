@@ -1,9 +1,12 @@
+import { canAccessArea } from "@/lib/crm-access";
+import { notFound } from "next/navigation";
 import { MerchandiseSales } from "@/components/admin/MerchandiseSales";
 import { DefaultTemplate } from "@payloadcms/next/templates";
 import type { AdminViewServerProps } from "payload";
 
 export default async function MerchandiseSalesAdminView(props: AdminViewServerProps) {
   const { req, permissions, visibleEntities, locale } = props.initPageResult;
+  if (!canAccessArea(req.user, "merch")) notFound();
   const result = await req.payload.find({
     collection: "merchandise-orders",
     depth: 0,

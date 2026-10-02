@@ -200,9 +200,17 @@ export interface PayloadMcpApiKeyAuthOperations {
 export interface User {
   id: string;
   /**
-   * Merchandise chairs can view merchandise sales only. Read-only viewers can explore records but cannot change them. Existing accounts without a role retain administrator access.
+   * Choose Restricted staff to limit this account to selected content areas. Administrators manage all content and user permissions. Existing accounts without a role retain administrator access.
    */
-  role?: ('admin' | 'viewer' | 'merch') | null;
+  role?: ('admin' | 'viewer' | 'merch' | 'staff') | null;
+  /**
+   * Select one or more areas. No areas selected means no content access. Shared media can be viewed; managers may upload new media.
+   */
+  contentAreas?: ('merch' | 'program' | 'registration')[] | null;
+  /**
+   * Applies only to the selected content areas. Audit logs remain read-only.
+   */
+  accessLevel?: ('view' | 'manage') | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -39073,6 +39081,8 @@ export interface PayloadMigration {
  */
 export interface UsersSelect<T extends boolean = true> {
   role?: T;
+  contentAreas?: T;
+  accessLevel?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;

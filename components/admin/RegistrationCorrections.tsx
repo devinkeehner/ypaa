@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, Search,
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 
 import { fetchAllCRMRecords } from "@/lib/crm-pagination";
-import { isReadOnlyUser } from "@/lib/crm-access";
+import { canEditCRM } from "@/lib/crm-access";
 
 import styles from "./registration-corrections.module.css";
 
@@ -356,7 +356,7 @@ export function RegistrationCorrections({ demo = false }: { demo?: boolean }) {
       setEditStep("review");
       return;
     }
-    if (!selected || !user || isReadOnlyUser(user) || !reason.trim()) { setMessage("Add a correction note before saving."); return; }
+    if (!selected || !user || !canEditCRM(user) || !reason.trim()) { setMessage("Add a correction note before saving."); return; }
     setSaving(true); setMessage(""); setMessageError(false);
     try {
       const response = await fetch("/api/admin/crm-correction", {
@@ -383,7 +383,7 @@ export function RegistrationCorrections({ demo = false }: { demo?: boolean }) {
   const pageCount = Math.max(1, Math.ceil(resultCount / SEARCH_PAGE_SIZE));
   const page = Math.min(resultPage, pageCount - 1);
   const target = resolution === "same_person_name_variation" ? canonicalContact : mode === "new" ? newContact : contacts.find((contact) => String(contact.id) === contactID);
-  const mayEdit = !isReadOnlyUser(user) && Boolean(selectedEntitlement) && !["refunded", "voided", "redeemed"].includes(selectedEntitlement?.status || "");
+  const mayEdit = canEditCRM(user) && Boolean(selectedEntitlement) && !["refunded", "voided", "redeemed"].includes(selectedEntitlement?.status || "");
   const changeTitle = resolution === "same_person_name_variation" ? "Fix name or contact details" : "Someone else is attending";
 
   if (status === "unauthorized") return <div className={styles.page}><h1>Sign in to view registrations</h1><a href="/admin/login">Sign in</a></div>;
@@ -429,7 +429,7 @@ export function RegistrationCorrections({ demo = false }: { demo?: boolean }) {
           <h2 ref={headingRef} tabIndex={-1}>Resolve a registration issue</h2>
           <p>Choose whether this is a detail correction or a change to who will attend. The original purchaser and payment stay attached to the order.</p>
           {selectedEntitlements.length > 1 ? <div className={styles.seatChoice}><p>This registration has {selectedEntitlements.length} paid places attached. Choose the purchase you want to work on.</p><label>Paid place<select value={String(selectedEntitlement?.id || "")} onChange={(event) => { const seat = selectedEntitlements.find((item) => String(item.id) === event.target.value); if (seat) selectEntitlement(seat); }}>{selectedEntitlements.map((seat) => <option key={seat.id} value={String(seat.id)}>{candidateFrom(seat).name || "Unnamed place"} — paid by {orderMap.get(String(idOf(seat.checkoutOrder)))?.purchaserName || "Unknown"}</option>)}</select></label></div> : null}
-          {isReadOnlyUser(user) ? <p className={styles.readOnly}>You have read-only access. An administrator can make changes.</p> : !mayEdit ? <p className={styles.readOnly}>This registration’s paid place needs administrator review before it can be changed here.</p> : null}
+          {!canEditCRM(user) ? <p className={styles.readOnly}>You have read-only access. A registration manager can make changes.</p> : !mayEdit ? <p className={styles.readOnly}>This registration’s paid place needs administrator review before it can be changed here.</p> : null}
           <div className={styles.actionChoices}><button disabled={!mayEdit || status !== "ready"} onClick={() => beginEdit("same_person_name_variation")} type="button"><span><strong>Fix name or contact details</strong><small>It’s the same person; something is misspelled or out of date.</small></span><ArrowRight aria-hidden="true" /></button><button disabled={!mayEdit || status !== "ready"} onClick={() => beginEdit("attendee_reassigned")} type="button"><span><strong>Someone else is attending</strong><small>Give this paid place to the person who will actually attend.</small></span><ArrowRight aria-hidden="true" /></button></div>
         </section>
       </> : editStep === "done" ? <section className={`${styles.panel} ${styles.complete}`}><CheckCircle2 aria-hidden="true" /><h2 ref={headingRef} tabIndex={-1}>Change saved</h2><p>The change is recorded in the history below.</p><div className={styles.formActions}><button className={styles.secondary} onClick={() => setEditStep("overview")} type="button">View this registration</button><button className={styles.primary} onClick={backToResults} type="button">Find another person</button></div></section> : <section className={styles.panel}>
@@ -439,7 +439,7 @@ export function RegistrationCorrections({ demo = false }: { demo?: boolean }) {
           {editStep === "details" ? <>
             {resolution === "attendee_reassigned" ? <><p>Who will use this paid place?</p><div className={styles.mode}><button aria-pressed={mode === "new"} onClick={() => setMode("new")} type="button">Enter their details</button><button aria-pressed={mode === "existing"} onClick={() => setMode("existing")} type="button">Choose an existing contact</button></div></> : <p>Update the details that need correcting.</p>}
             {resolution === "attendee_reassigned" && mode === "existing" ? <label>Attendee contact<select required value={contactID} onChange={(event) => { setContactID(event.target.value); setMessage(""); setMessageError(false); }}><option value="">Choose a person</option>{contacts.map((contact) => <option key={contact.id} value={String(contact.id)}>{contact.displayName} — {contact.email}</option>)}</select></label> : <div className={styles.fields}>{([['displayName', 'Name'], ['email', 'Email'], ['state', 'State'], ['homegroupCommittee', 'Homegroup / committee']] as const).map(([key, label]) => <label key={key}>{label}{key === 'state' || key === 'homegroupCommittee' ? <small>Optional</small> : null}<input required={key === "displayName" || key === "email"} type={key === "email" ? "email" : "text"} value={(resolution === "same_person_name_variation" ? canonicalContact : newContact)[key]} onChange={(event) => { const value = event.target.value; setMessage(""); setMessageError(false); if (resolution === "same_person_name_variation") setCanonicalContact((current) => ({ ...current, [key]: value })); else setNewContact((current) => ({ ...current, [key]: value })); }} /></label>)}</div>}
-            <div className={styles.formActions}><button className={styles.secondary} onClick={() => setEditStep("overview")} type="button">Cancel</button><button className={styles.primary} disabled={isReadOnlyUser(user)} type="submit">Review change <ArrowRight aria-hidden="true" /></button></div>
+            <div className={styles.formActions}><button className={styles.secondary} onClick={() => setEditStep("overview")} type="button">Cancel</button><button className={styles.primary} disabled={!canEditCRM(user)} type="submit">Review change <ArrowRight aria-hidden="true" /></button></div>
           </> : <>
             <div className={styles.review}><div><small>Current attendee</small><strong>{selected.attendeeName}</strong><span>{selected.attendeeEmail}</span></div><ArrowRight aria-hidden="true" /><div><small>{resolution === "same_person_name_variation" ? "Updated details" : "New attendee"}</small><strong>{target?.displayName}</strong><span>{target?.email}</span><span>{target?.state || "State not specified"}{target?.homegroupCommittee ? ` · ${target.homegroupCommittee}` : ""}</span></div></div>
             <div className={styles.reviewNotes} aria-label="What stays attached to this purchase">
@@ -448,7 +448,7 @@ export function RegistrationCorrections({ demo = false }: { demo?: boolean }) {
               <div><strong>Breakfast</strong><span>{ambiguousTickets ? "This purchase covers multiple places. Tickets will stay where they are until their owner is reviewed separately." : selectedTickets.length ? `${selectedTickets.length} ticket${selectedTickets.length === 1 ? "" : "s"} will stay linked to this paid place.` : "No breakfast tickets are linked to this paid place."}</span></div>
             </div>
             <label>Why are you making this change?<textarea required maxLength={4000} rows={3} value={reason} onChange={(event) => setReason(event.target.value)} placeholder="For example: Jamie paid for Alex’s registration." /></label>
-            <div className={styles.formActions}><button className={styles.secondary} disabled={saving} onClick={() => setEditStep("details")} type="button">Back</button><button className={styles.primary} disabled={saving || status !== "ready" || isReadOnlyUser(user)} type="submit">{saving ? "Saving…" : "Save change"}</button></div>
+            <div className={styles.formActions}><button className={styles.secondary} disabled={saving} onClick={() => setEditStep("details")} type="button">Back</button><button className={styles.primary} disabled={saving || status !== "ready" || !canEditCRM(user)} type="submit">{saving ? "Saving…" : "Save change"}</button></div>
           </>}
         </form>
       </section>}

@@ -8,7 +8,7 @@ const idOf = (value: unknown): string => typeof value === "string" || typeof val
 const clean = (value: unknown): string => typeof value === "string" ? value.trim() : "";
 
 export async function saveCRMCorrection(payload: Payload, user: TypedUser | null, input: Record<string, unknown>) {
-  if (!canEditCRM(user)) throw new CorrectionError("Administrator access is required to save corrections.", 403);
+  if (!canEditCRM(user)) throw new CorrectionError("Administrator access or registration management permission is required to save corrections.", 403);
   const reason = clean(input.reason);
   if (!reason || reason.length > 4000) throw new CorrectionError("Add a correction note of at most 4,000 characters.");
   if (!["same_person_name_variation", "attendee_reassigned"].includes(String(input.resolution))) throw new CorrectionError("Choose a valid correction type.");

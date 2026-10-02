@@ -1,3 +1,4 @@
+import { canReadCollection } from "@/lib/crm-access";
 import configPromise from "@payload-config";
 import { getPayload } from "payload";
 import { headers } from "next/headers";
@@ -25,6 +26,8 @@ export default async function VisualBuilderPage({ params }: { params: Promise<{ 
     const loginPath = `${config.routes.admin}${config.admin.routes?.login || "/login"}`;
     redirect(`${loginPath}?redirect=${encodeURIComponent(builderPath)}`);
   }
+
+  if (!canReadCollection(user, "pages")) notFound();
 
   const [page, tenants] = await Promise.all([
     payload.findByID({

@@ -225,7 +225,7 @@ export function NECYPAAAdminNavClient({ areas = [], isMerchChair: merchChair = f
                 <span>Home</span>
               </Link>}
 
-              {!merchChair && <Link
+              {navAreas.some((area) => area.entities.some((entity) => entity.slug === "pages")) && <Link
                 aria-current={isPathActive(pathname, pagesHref) ? "page" : undefined}
                 className={styles.railItem}
                 data-active={isPathActive(pathname, pagesHref) ? "true" : "false"}

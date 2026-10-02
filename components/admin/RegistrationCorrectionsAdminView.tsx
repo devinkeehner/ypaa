@@ -1,3 +1,5 @@
+import { canAccessArea } from "@/lib/crm-access";
+import { notFound } from "next/navigation";
 import { RegistrationCorrections } from "@/components/admin/RegistrationCorrections";
 import { CRMDemoNotice } from "./CRMDemoNotice";
 import { DefaultTemplate } from "@payloadcms/next/templates";
@@ -5,6 +7,7 @@ import type { AdminViewServerProps } from "payload";
 
 export default function RegistrationCorrectionsAdminView(props: AdminViewServerProps) {
   const { req, permissions, visibleEntities, locale } = props.initPageResult;
+  if (!canAccessArea(req.user, "registration")) notFound();
   return (
     <DefaultTemplate
       {...props}
