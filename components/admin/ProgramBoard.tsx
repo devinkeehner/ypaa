@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Building2, CalendarDays, ChevronLeft, ChevronRight, Eye, GripVertical, Pencil, Plus, RotateCw, Save, Trash2, X } from "lucide-react";
 import Link from "next/link";
 
@@ -25,6 +25,10 @@ type FormState = {
   internalNotes: string;
 };
 type DropTarget = { roomID: string; time: string };
+type ResizeEdge = "start" | "end";
+type ResizePreview = { sessionID: string; edge: ResizeEdge; pointerStartY: number; deltaSlots: number };
+type ResizeRange = { startAt: string; endAt: string };
+type ResizePlan = { changes: Map<string, ResizeRange>; error?: string };
 type EditableRoom = ProgramRoom & {
   capacity: number | null;
   accessible: boolean;
@@ -62,6 +66,12 @@ function dateKey(value: string) {
 function timeValue(value: string) {
   const parts = new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(value));
   return `${parts.find((part) => part.type === "hour")?.value || "00"}:${parts.find((part) => part.type === "minute")?.value || "00"}`;
+}
+
+function displayTime(value: string) {
+  const [hourPart, minute = "00"] = value.split(":");
+  const hour = Number(hourPart);
+  return `${hour % 12 || 12}:${minute} ${hour >= 12 ? "PM" : "AM"}`;
 }
 
 function dayLabel(key: string) {
@@ -105,11 +115,13 @@ export function ProgramBoard() {
   const [message, setMessage] = useState("");
   const [draggedSessionID, setDraggedSessionID] = useState<string | null>(null);
   const [dropTarget, setDropTarget] = useState<DropTarget | null>(null);
+  const [resizePreview, setResizePreview] = useState<ResizePreview | null>(null);
   const [movingSessionIDs, setMovingSessionIDs] = useState<Set<string>>(() => new Set());
   const [roomForm, setRoomForm] = useState<RoomFormState | null>(null);
   const [roomSaving, setRoomSaving] = useState(false);
   const [roomMessage, setRoomMessage] = useState("");
   const [roomOrdering, setRoomOrdering] = useState(false);
+  const dragImageRef = useRef<HTMLDivElement | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -277,6 +289,177 @@ export function ProgramBoard() {
     setMessage("Move saved.");
   }
 
+  function clampResizeDelta(session: ProgramSession, edge: ResizeEdge, deltaSlots: number) {
+    const slotMs = 30 * 60_000;
+    const start = new Date(session.startAt).getTime();
+    const end = new Date(session.endAt).getTime();
+    const midnight = Date.parse(`${dateKey(session.startAt)}T00:00:00-05:00`);
+    const minStart = midnight + 8 * 60 * 60_000;
+    const maxEnd = midnight + 24 * 60 * 60_000;
+    const minDelta = edge === "start"
+      ? Math.ceil((minStart - start) / slotMs)
+      : Math.ceil((start + slotMs - end) / slotMs);
+    const maxDelta = edge === "start"
+      ? Math.floor((end - slotMs - start) / slotMs)
+      : Math.floor((maxEnd - end) / slotMs);
+    return Math.max(minDelta, Math.min(maxDelta, deltaSlots));
+  }
+
+  function buildResizePlan(session: ProgramSession, edge: ResizeEdge, requestedDelta: number): ResizePlan {
+    const slotMs = 30 * 60_000;
+    const deltaSlots = clampResizeDelta(session, edge, requestedDelta);
+    const oldStart = new Date(session.startAt).getTime();
+    const oldEnd = new Date(session.endAt).getTime();
+    const deltaMs = deltaSlots * slotMs;
+    const nextStart = oldStart + (edge === "start" ? deltaMs : 0);
+    const nextEnd = oldEnd + (edge === "end" ? deltaMs : 0);
+    const changes = new Map<string, ResizeRange>([[String(session.id), { startAt: new Date(nextStart).toISOString(), endAt: new Date(nextEnd).toISOString() }]]);
+    const extendsLater = edge === "end" && deltaSlots > 0;
+    const extendsEarlier = edge === "start" && deltaSlots < 0;
+    const neighbors = sessions
+      .filter((candidate) => String(candidate.id) !== String(session.id) && String(candidate.room.id) === String(session.room.id))
+      .map((candidate) => ({ session: candidate, start: new Date(candidate.startAt).getTime(), end: new Date(candidate.endAt).getTime() }));
+
+    if (extendsLater) {
+      let boundary = nextEnd;
+      for (const neighbor of neighbors.filter(({ start, end }) => start >= oldEnd && end > oldEnd).sort((a, b) => a.start - b.start)) {
+        if (neighbor.start >= boundary) break;
+        const overlapMs = boundary - neighbor.start;
+        const durationMs = neighbor.end - neighbor.start;
+        const pushWholeBlock = durationMs - overlapMs <= slotMs;
+        if (!pushWholeBlock) {
+          changes.set(String(neighbor.session.id), { startAt: new Date(boundary).toISOString(), endAt: neighbor.session.endAt });
+          break;
+        }
+        const shiftMs = boundary - neighbor.start;
+        const movedStart = boundary;
+        const movedEnd = neighbor.end + shiftMs;
+        changes.set(String(neighbor.session.id), { startAt: new Date(movedStart).toISOString(), endAt: new Date(movedEnd).toISOString() });
+        boundary = movedEnd;
+      }
+    } else if (extendsEarlier) {
+      let boundary = nextStart;
+      for (const neighbor of neighbors.filter(({ end }) => end <= oldStart && end > nextStart).sort((a, b) => b.end - a.end)) {
+        if (neighbor.end <= boundary) break;
+        const overlapMs = neighbor.end - boundary;
+        const durationMs = neighbor.end - neighbor.start;
+        const pushWholeBlock = durationMs - overlapMs <= slotMs;
+        if (!pushWholeBlock) {
+          changes.set(String(neighbor.session.id), { startAt: neighbor.session.startAt, endAt: new Date(boundary).toISOString() });
+          break;
+        }
+        const shiftMs = neighbor.end - boundary;
+        const movedStart = neighbor.start - shiftMs;
+        const movedEnd = boundary;
+        changes.set(String(neighbor.session.id), { startAt: new Date(movedStart).toISOString(), endAt: new Date(movedEnd).toISOString() });
+        boundary = movedStart;
+      }
+    }
+
+    const midnight = Date.parse(`${dateKey(session.startAt)}T00:00:00-05:00`);
+    const boardStart = midnight + 8 * 60 * 60_000;
+    const boardEnd = midnight + 24 * 60 * 60_000;
+    const touched = [...changes.keys()];
+    for (const id of touched) {
+      const range = changes.get(id);
+      if (!range) continue;
+      const start = new Date(range.startAt).getTime();
+      const end = new Date(range.endAt).getTime();
+      if (start < boardStart || end > boardEnd) return { changes, error: "Resize blocked: there is no more room in that direction." };
+    }
+
+    const finalRanges = neighbors.map(({ session: candidate, start, end }) => ({
+      id: String(candidate.id),
+      title: candidate.title,
+      start: changes.has(String(candidate.id)) ? new Date(changes.get(String(candidate.id))!.startAt).getTime() : start,
+      end: changes.has(String(candidate.id)) ? new Date(changes.get(String(candidate.id))!.endAt).getTime() : end,
+    }));
+    finalRanges.push({ id: String(session.id), title: session.title, start: nextStart, end: nextEnd });
+    finalRanges.sort((a, b) => a.start - b.start);
+    for (let index = 1; index < finalRanges.length; index += 1) {
+      const previous = finalRanges[index - 1];
+      const current = finalRanges[index];
+      if (current.start < previous.end && (touched.includes(current.id) || touched.includes(previous.id))) {
+        return { changes, error: `Resize blocked: “${current.title}” still overlaps “${previous.title}”.` };
+      }
+    }
+    return { changes };
+  }
+
+  async function resizeSession(session: ProgramSession, edge: ResizeEdge, deltaSlots: number) {
+    if (!deltaSlots || movingSessionIDs.size) return;
+    const plan = buildResizePlan(session, edge, deltaSlots);
+    if (plan.error) { setMessage(plan.error); return; }
+    const changedIDs = [...plan.changes.keys()];
+    const previous = sessions;
+    setSessions((current) => current.map((candidate) => {
+      const range = plan.changes.get(String(candidate.id));
+      return range ? { ...candidate, ...range } : candidate;
+    }));
+    setMovingSessionIDs((current) => new Set([...current, ...changedIDs]));
+    setMessage("Saving resize…");
+    const savedIDs: string[] = [];
+    try {
+      // Save the target and pushed neighbors in a predictable order. If any
+      // request fails, compensate successful writes before reloading the board.
+      for (const id of changedIDs) {
+        const range = plan.changes.get(id)!;
+        const response = await fetch(`/api/program-sessions/${id}`, { method: "PATCH", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(range) });
+        if (!response.ok) {
+          const result = await response.json().catch(() => ({})) as { errors?: Array<{ message?: string }> };
+          throw new Error(result.errors?.[0]?.message || "The resize could not be saved.");
+        }
+        savedIDs.push(id);
+      }
+      setMessage("Resize saved.");
+    } catch (error) {
+      setSessions(previous);
+      for (const id of savedIDs.reverse()) {
+        const original = previous.find((candidate) => String(candidate.id) === id);
+        if (!original) continue;
+        await fetch(`/api/program-sessions/${id}`, { method: "PATCH", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ startAt: original.startAt, endAt: original.endAt }) }).catch(() => undefined);
+      }
+      await load();
+      setMessage(error instanceof Error ? error.message : "The resize could not be saved.");
+    } finally {
+      setMovingSessionIDs((current) => { const next = new Set(current); changedIDs.forEach((id) => next.delete(id)); return next; });
+    }
+  }
+
+  function resizeHandleProps(session: ProgramSession, edge: ResizeEdge, top: number, height: number) {
+    return {
+      "aria-label": `Resize ${edge === "start" ? "start" : "end"} of ${session.title}`,
+      className: `program-board-resize-handle program-board-resize-${edge}`,
+      disabled: movingSessionIDs.size > 0,
+      onPointerDown: (event: React.PointerEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+        event.currentTarget.setPointerCapture(event.pointerId);
+        setResizePreview({ sessionID: String(session.id), edge, pointerStartY: event.clientY, deltaSlots: 0 });
+      },
+      onPointerMove: (event: React.PointerEvent<HTMLButtonElement>) => {
+        if (resizePreview?.sessionID !== String(session.id) || resizePreview.edge !== edge) return;
+        const deltaSlots = clampResizeDelta(session, edge, Math.round((event.clientY - resizePreview.pointerStartY) / slotHeight));
+        setResizePreview({ ...resizePreview, deltaSlots });
+      },
+      onPointerUp: (event: React.PointerEvent<HTMLButtonElement>) => {
+        if (resizePreview?.sessionID !== String(session.id) || resizePreview.edge !== edge) return;
+        const deltaSlots = clampResizeDelta(session, edge, Math.round((event.clientY - resizePreview.pointerStartY) / slotHeight));
+        setResizePreview(null);
+        void resizeSession(session, edge, deltaSlots);
+      },
+      onPointerCancel: () => setResizePreview(null),
+      onKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => {
+        if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
+        event.preventDefault();
+        void resizeSession(session, edge, clampResizeDelta(session, edge, event.key === "ArrowUp" ? -1 : 1));
+      },
+      // Keep the whole hit target inside the card so the grip reads as part of it.
+      style: { top: edge === "start" ? top : top + height - 14 },
+      type: "button" as const,
+    };
+  }
+
   if (state === "unauthorized") return <main className="program-board-gate"><CalendarDays aria-hidden="true" /><h1>Program Board</h1><p>Sign in to Payload before opening the committee planning board.</p><Link href="/admin">Sign in to Payload</Link></main>;
   if (state === "error") return <main className="program-board-gate"><h1>Program Board</h1><p>The schedule could not be loaded.</p><button onClick={() => { setState("loading"); void load(); }} type="button"><RotateCw aria-hidden="true" /> Try again</button></main>;
 
@@ -290,17 +473,130 @@ export function ProgramBoard() {
   const dropDurationSlots = draggedSession
     ? Math.max(1, Math.ceil((new Date(draggedSession.endAt).getTime() - new Date(draggedSession.startAt).getTime()) / 1_800_000))
     : 1;
+  const resizePreviewSession = resizePreview ? sessions.find((session) => String(session.id) === resizePreview.sessionID) : null;
+  const resizePreviewPlan = resizePreviewSession && resizePreview
+    ? buildResizePlan(resizePreviewSession, resizePreview.edge, resizePreview.deltaSlots)
+    : null;
   return (
     <main className="program-board-page">
-      <header className="program-board-header"><div><Link href="/admin"><ArrowLeft aria-hidden="true" /> Payload admin</Link><h1>Program Board</h1><p>Drag sessions to move them. Click an empty time to add one.</p></div><div><Link className="program-board-preview-action" href="/program-preview"><Eye aria-hidden="true" /> Preview public page</Link><button className="program-board-secondary-action" onClick={startCreateRoom} type="button"><Building2 aria-hidden="true" /> Add room</button><button onClick={() => startCreate()} type="button"><Plus aria-hidden="true" /> Add session</button></div></header>
-      <div className="program-board-toolbar"><div role="tablist" aria-label="Convention day">{CONVENTION_DAYS.map((value) => <button aria-selected={day === value} key={value} onClick={() => setDay(value)} role="tab" type="button">{dayLabel(value)}</button>)}</div><p aria-live="polite">{message || `${daySessions.length} sessions · ${rooms.length} rooms`}</p></div>
+      <header className="program-board-header"><div><Link href="/admin"><ArrowLeft aria-hidden="true" /> Payload admin</Link><h1>Program Board</h1><p>Drag sessions to move them. Click an empty time to add one. Scroll sideways to see every room.</p></div><div><Link className="program-board-preview-action" href="/program-preview"><Eye aria-hidden="true" /> Preview public page</Link><button className="program-board-secondary-action" onClick={startCreateRoom} type="button"><Building2 aria-hidden="true" /> Add room</button><button onClick={() => startCreate()} type="button"><Plus aria-hidden="true" /> Add session</button></div></header>
+      <div className="program-board-toolbar"><div role="tablist" aria-label="Convention day">{CONVENTION_DAYS.map((value) => <button aria-selected={day === value} key={value} onClick={() => setDay(value)} role="tab" type="button">{dayLabel(value)}</button>)}</div><p aria-live="polite">{resizePreviewPlan?.error || message || `${daySessions.length} sessions · ${rooms.length} rooms`}</p></div>
       {state === "loading" ? <div className="program-board-loading">Loading program records…</div> : (
         <div className="program-board-scroll">
           <div className="program-board-grid" style={{ "--room-count": rooms.length, "--slot-height": `${slotHeight}px` } as React.CSSProperties}>
             <div className="program-board-corner">Time</div>
             {rooms.map((room, index) => <div className="program-board-room" key={room.id}><span style={{ background: room.color || undefined }} /><strong>{room.shortLabel}</strong><small>{room.floor}</small><div className="program-board-room-actions"><button aria-label={`Move ${room.name} left`} disabled={index === 0 || roomOrdering} onClick={() => void moveRoom(String(room.id), -1)} title="Move room left" type="button"><ChevronLeft aria-hidden="true" /></button><button aria-label={`Edit ${room.name}`} onClick={() => startEditRoom(room)} title={`Edit ${room.name}`} type="button"><Pencil aria-hidden="true" /></button><button aria-label={`Move ${room.name} right`} disabled={index === rooms.length - 1 || roomOrdering} onClick={() => void moveRoom(String(room.id), 1)} title="Move room right" type="button"><ChevronRight aria-hidden="true" /></button></div></div>)}
             <div className="program-board-axis" style={{ height: slots * slotHeight }}>{Array.from({ length: slots }, (_, index) => { const minutes = startMinute + index * 30; const hour = Math.floor(minutes / 60); const minute = minutes % 60; return <span key={index} style={{ top: index * slotHeight }}>{new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" }).format(new Date(`${day}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00-05:00`))}</span>; })}</div>
-            {rooms.map((room) => <div className="program-board-track" key={room.id} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDropTarget(null); }} style={{ height: slots * slotHeight }}>{Array.from({ length: slots }, (_, index) => { const minutes = startMinute + index * 30; const time = `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`; const highlighted = dropTarget?.roomID === String(room.id) && index >= dropStartIndex && index < dropStartIndex + dropDurationSlots; return <button aria-label={`Add session in ${room.name} at ${time}`} className="program-board-cell" data-drop-active={highlighted || undefined} data-drop-end={highlighted && index === dropStartIndex + dropDurationSlots - 1 || undefined} data-drop-start={highlighted && index === dropStartIndex || undefined} key={time} onClick={() => startCreate(String(room.id), time)} onDragEnter={(event) => { event.preventDefault(); setDropTarget({ roomID: String(room.id), time }); }} onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = "move"; }} onDrop={(event) => { event.preventDefault(); const sessionID = event.dataTransfer.getData("text/program-session"); setDropTarget(null); setDraggedSessionID(null); void moveSession(sessionID, String(room.id), time); }} style={{ height: slotHeight, top: index * slotHeight }} type="button" />; })}{daySessions.filter((session) => String(session.room.id) === String(room.id)).map((session) => { const sessionID = String(session.id); const [hour, minute] = timeValue(session.startAt).split(":").map(Number); const top = Math.max(0, ((hour * 60 + minute) - startMinute) / 30 * slotHeight + 3); const height = Math.max(slotHeight - 6, (new Date(session.endAt).getTime() - new Date(session.startAt).getTime()) / 60000 / 30 * slotHeight - 6); const moving = movingSessionIDs.has(sessionID); return <button aria-busy={moving} className="program-board-event" data-moving={moving || undefined} draggable={!moving} key={session.id} onClick={() => startEdit(session)} onDragEnd={() => { setDraggedSessionID(null); setDropTarget(null); }} onDragStart={(event) => { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/program-session", sessionID); setDraggedSessionID(sessionID); }} style={{ background: room.color || undefined, height, top }} type="button"><GripVertical aria-hidden="true" /><span>{timeValue(session.startAt)}</span><strong>{session.title}</strong><small>{moving ? "Saving…" : SESSION_TYPE_LABELS[session.sessionType] || session.sessionType}</small></button>; })}</div>)}
+            {rooms.map((room) => (
+              <div
+                className="program-board-track"
+                key={room.id}
+                style={{ height: slots * slotHeight }}
+              >
+                {Array.from({ length: slots }, (_, index) => {
+                  const minutes = startMinute + index * 30;
+                  const time = `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+                  const highlighted = dropTarget?.roomID === String(room.id) && index >= dropStartIndex && index < dropStartIndex + dropDurationSlots;
+                  return (
+                    <button
+                      aria-label={`Add session in ${room.name} at ${time}`}
+                      className="program-board-cell"
+                      data-drop-active={highlighted || undefined}
+                      data-drop-end={highlighted && index === dropStartIndex + dropDurationSlots - 1 || undefined}
+                      data-drop-start={highlighted && index === dropStartIndex || undefined}
+                      key={time}
+                      onClick={() => startCreate(String(room.id), time)}
+                      onDragEnter={(event) => { event.preventDefault(); setDropTarget({ roomID: String(room.id), time }); }}
+                      onDragOver={(event) => {
+                        event.preventDefault();
+                        event.dataTransfer.dropEffect = "move";
+                        setDropTarget({ roomID: String(room.id), time });
+                      }}
+                      onDrop={(event) => {
+                        event.preventDefault();
+                        const sessionID = event.dataTransfer.getData("text/program-session");
+                        setDropTarget(null);
+                        setDraggedSessionID(null);
+                        void moveSession(sessionID, String(room.id), time);
+                      }}
+                      style={{ height: slotHeight, top: index * slotHeight }}
+                      type="button"
+                    />
+                  );
+                })}
+                {daySessions.filter((session) => String(session.room.id) === String(room.id)).map((session) => {
+                  const sessionID = String(session.id);
+      const previewRange = resizePreviewPlan && !resizePreviewPlan.error ? resizePreviewPlan.changes.get(sessionID) : undefined;
+                  const visualStartAt = previewRange?.startAt || session.startAt;
+                  const visualEndAt = previewRange?.endAt || session.endAt;
+                  const [hour, minute] = timeValue(visualStartAt).split(":").map(Number);
+                  const top = Math.max(0, ((hour * 60 + minute) - startMinute) / 30 * slotHeight + 3);
+                  const height = Math.max(slotHeight - 6, (new Date(visualEndAt).getTime() - new Date(visualStartAt).getTime()) / 60000 / 30 * slotHeight - 6);
+                  const moving = movingSessionIDs.has(sessionID);
+                  return (
+                    <React.Fragment key={session.id}>
+                    <button
+                      aria-busy={moving}
+                      className="program-board-event"
+                      data-dragging={draggedSessionID === sessionID || undefined}
+                      data-moving={moving || undefined}
+                      draggable={!moving}
+                      key={session.id}
+                      onClick={() => startEdit(session)}
+                      onDragEnd={() => {
+                        setDraggedSessionID(null);
+                        setDropTarget(null);
+                        dragImageRef.current?.remove();
+                        dragImageRef.current = null;
+                      }}
+                      onDragStart={(event) => {
+                        event.dataTransfer.effectAllowed = "move";
+                        event.dataTransfer.setData("text/program-session", sessionID);
+                        setDraggedSessionID(sessionID);
+
+                        // Use a deliberate, high-contrast drag image instead of
+                        // the browser's pale, semi-transparent button snapshot.
+                        const dragImage = document.createElement("div");
+                        dragImage.className = "program-board-drag-image";
+                        dragImage.style.backgroundColor = session.room.color || "#ffc928";
+                        const title = document.createElement("strong");
+                        title.textContent = session.title;
+                        const destination = document.createElement("span");
+                        destination.textContent = SESSION_TYPE_LABELS[session.sessionType] || session.sessionType;
+                        dragImage.append(title, destination);
+                        document.body.append(dragImage);
+                        dragImageRef.current?.remove();
+                        dragImageRef.current = dragImage;
+                        event.dataTransfer.setDragImage(dragImage, 18, 18);
+                      }}
+                      style={{ background: room.color || undefined, height, top }}
+                      type="button"
+                    >
+                      <GripVertical aria-hidden="true" />
+                      <span>{displayTime(timeValue(visualStartAt))}</span>
+                      <strong>{session.title}</strong>
+                      <small>{moving ? "Saving…" : SESSION_TYPE_LABELS[session.sessionType] || session.sessionType}</small>
+                    </button>
+                    <button {...resizeHandleProps(session, "start", top, height)} />
+                    <button {...resizeHandleProps(session, "end", top, height)} />
+                    </React.Fragment>
+                  );
+                })}
+                {dropTarget?.roomID === String(room.id) && draggedSession ? (
+                  <div
+                    aria-hidden="true"
+                    className="program-board-drop-preview"
+                    style={{
+                      height: Math.max(slotHeight - 6, dropDurationSlots * slotHeight - 6),
+                      top: dropStartIndex * slotHeight + 3,
+                    }}
+                  >
+                    <span>{room.shortLabel} · drop here</span>
+                    <span>{displayTime(dropTarget.time)} · {dropDurationSlots * 30} min</span>
+                  </div>
+                ) : null}
+              </div>
+            ))}
           </div>
         </div>
       )}

@@ -12,7 +12,15 @@
     "test": "npm run build && node --test tests/*.test.mjs",
     "generate:importmap": "payload generate:importmap",
     "generate:types": "payload generate:types",
-    "lint": "eslint . --ignore-pattern .next"
+    "stripe:import": "tsx scripts/import-stripe-csv.ts",
+    "stripe:report": "tsx scripts/report-stripe-anomalies.ts",
+    "contacts:migrate-local": "tsx scripts/migrate-contacts.ts",
+    "scholarships:backfill": "tsx scripts/backfill-scholarship-fund.ts",
+    "scholarships:verify": "tsx scripts/verify-scholarship-fund.ts",
+    "lint": "eslint . --ignore-pattern .next",
+    "crm:demo": "powershell -File scripts/start-crm-demo.ps1",
+    "crm:demo:reset": "node scripts/reset-crm-demo.mjs && tsx scripts/seed-crm-demo.ts",
+    "test:crm": "tsx --test --test-force-exit tests/crm-pagination.test.ts tests/stripe-csv-import.test.ts tests/crm-integration.test.ts"
   },
   "dependencies": {
     "@payloadcms/db-mongodb": "3.87.0",
@@ -40,6 +48,7 @@
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "4.2.1",
+    "tsx": "^4.22.4",
     "typescript": "5.9.3"
   },
   "type": "module",

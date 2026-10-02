@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { sendMerchandiseShippingUpdate, sendMerchandiseOrderAlert } from "@/lib/scholarship-email";
+import { isMerchChair } from "@/lib/crm-access";
 
 export const MerchandiseOrders: CollectionConfig = {
   slug: "merchandise-orders",
@@ -21,7 +22,7 @@ export const MerchandiseOrders: CollectionConfig = {
     }, async ({ data, originalDoc, req }) => {
       const order = { ...originalDoc, ...data };
       // Both cash and Stripe orders reach fulfilled after inventory is recorded.
-      if (order.status !== "fulfilled") return data;
+      if (order.status !== "fulfilled" || order.isSynthetic === true) return data;
       const sent: string[] = Array.isArray(originalDoc?.orderNotifiedEmails) ? [...originalDoc.orderNotifiedEmails] : [];
       try {
         const recipients = await req.payload.find({ collection: "notification-recipients", req, overrideAccess: true, pagination: false,
@@ -55,9 +56,10 @@ export const MerchandiseOrders: CollectionConfig = {
     delete: ({ req }) => Boolean(req.user),
   },
   fields: [
-    { name: "sourceKey", type: "text", required: true, unique: true, index: true },
+    { name: "isSynthetic", type: "checkbox", defaultValue: false, access: { create: () => false, update: () => false } },
+    { name: "sourceKey", type: "text", required: true, unique: true, index: true, access: { read: ({ req }) => !isMerchChair(req.user) } },
     { name: "purchaserName", type: "text", required: true },
-    { name: "purchaserEmail", type: "email", required: true },
+    { name: "purchaserEmail", type: "email", required: true, access: { read: ({ req }) => !isMerchChair(req.user) } },
     {
       name: "paymentSource",
       type: "select",
@@ -74,13 +76,13 @@ export const MerchandiseOrders: CollectionConfig = {
         { label: "Ship to customer", value: "shipping" },
       ],
     },
-    { name: "shippingAddress", type: "json" },
-    { name: "shippingStatus", type: "select", defaultValue: "not_shipped", options: ["not_shipped", "shipped"], admin: { condition: (data) => data?.fulfillmentMethod === "shipping", description: "Set to shipped and save to email the purchaser. Inventory fulfillment alone does not send a shipping update." } },
-    { name: "shippingCarrier", type: "text", admin: { condition: (data) => data?.fulfillmentMethod === "shipping" } },
-    { name: "trackingNumber", type: "text", admin: { condition: (data) => data?.fulfillmentMethod === "shipping" } },
-    { name: "shippingEmailStatus", type: "select", options: ["sent", "pending_configuration", "failed"], admin: { readOnly: true } },
-    { name: "shippingEmailSentAt", type: "date", admin: { readOnly: true } },
-    { name: "shippingEmailError", type: "textarea", admin: { readOnly: true } },
+    { name: "shippingAddress", type: "json", access: { read: ({ req }) => !isMerchChair(req.user) } },
+    { name: "shippingStatus", type: "select", defaultValue: "not_shipped", options: ["not_shipped", "shipped"], access: { read: ({ req }) => !isMerchChair(req.user) }, admin: { condition: (data) => data?.fulfillmentMethod === "shipping", description: "Set to shipped and save to email the purchaser. Inventory fulfillment alone does not send a shipping update." } },
+    { name: "shippingCarrier", type: "text", access: { read: ({ req }) => !isMerchChair(req.user) }, admin: { condition: (data) => data?.fulfillmentMethod === "shipping" } },
+    { name: "trackingNumber", type: "text", access: { read: ({ req }) => !isMerchChair(req.user) }, admin: { condition: (data) => data?.fulfillmentMethod === "shipping" } },
+    { name: "shippingEmailStatus", type: "select", options: ["sent", "pending_configuration", "failed"], access: { read: ({ req }) => !isMerchChair(req.user) }, admin: { readOnly: true } },
+    { name: "shippingEmailSentAt", type: "date", access: { read: ({ req }) => !isMerchChair(req.user) }, admin: { readOnly: true } },
+    { name: "shippingEmailError", type: "textarea", access: { read: ({ req }) => !isMerchChair(req.user) }, admin: { readOnly: true } },
     { name: "items", type: "json", required: true },
     { name: "merchandiseSubtotalCents", type: "number", required: true, min: 0 },
     { name: "shippingCents", type: "number", required: true, min: 0, defaultValue: 0 },
@@ -91,9 +93,9 @@ export const MerchandiseOrders: CollectionConfig = {
       defaultValue: "processing",
       options: ["processing", "fulfilled", "failed"],
     },
-    { name: "failureMessage", type: "textarea" },
-    { name: "orderNotifiedEmails", type: "json", admin: { readOnly: true } },
-    { name: "orderEmailStatus", type: "select", options: ["sent", "pending_configuration", "failed"], admin: { readOnly: true } },
-    { name: "orderEmailError", type: "textarea", admin: { readOnly: true } },
+    { name: "failureMessage", type: "textarea", access: { read: ({ req }) => !isMerchChair(req.user) } },
+    { name: "orderNotifiedEmails", type: "json", access: { read: ({ req }) => !isMerchChair(req.user) }, admin: { readOnly: true } },
+    { name: "orderEmailStatus", type: "select", options: ["sent", "pending_configuration", "failed"], access: { read: ({ req }) => !isMerchChair(req.user) }, admin: { readOnly: true } },
+    { name: "orderEmailError", type: "textarea", access: { read: ({ req }) => !isMerchChair(req.user) }, admin: { readOnly: true } },
   ],
 };

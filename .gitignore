@@ -46,3 +46,10 @@ local.env
 next-env.d.ts
 /outputs/
 /work/
+
+# Isolated local CRM demo database and runtime
+/.local-crm/
+
+# Local payment audits and incremental compiler cache
+/reports/
+*.tsbuildinfo

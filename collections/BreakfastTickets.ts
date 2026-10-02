@@ -19,6 +19,7 @@ export const BreakfastTickets: CollectionConfig = {
     { name: "purchaserName", type: "text", required: true },
     { name: "purchaserEmail", type: "email", required: true, index: true },
     { name: "attendee", type: "relationship", relationTo: "attendees" },
+    { name: "holderContact", label: "Ticket holder", type: "relationship", relationTo: "contacts", index: true, admin: { description: "Who will use this ticket. The purchaser remains unchanged." } },
     { name: "paymentSource", type: "select", required: true, options: ["stripe", "cash"] },
     { name: "paymentStatus", type: "select", required: true, options: ["paid", "recorded", "refunded", "disputed", "voided"] },
     { name: "dataOrigin", type: "select", required: true, options: ["live_checkout", "stripe_webhook", "stripe_backfill", "cash_checkout"] },

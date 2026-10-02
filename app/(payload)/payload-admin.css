@@ -1,1 +1,46 @@
 @import "@payloadcms/next/css";
+
+.template-default:has(> .nav.necypaa-admin-nav) {
+  --necypaa-nav-rail-width: 11rem;
+  grid-template-columns: var(--necypaa-nav-rail-width) minmax(0, 1fr) !important;
+}
+
+.template-default:has(> .nav.necypaa-admin-nav) > .template-default__wrap {
+  min-width: 0;
+}
+
+.template-default__nav-toggler-wrapper,
+.template-default__nav-toggler-container,
+.template-default__nav-toggler,
+.nav-toggler.template-default__nav-toggler {
+  display: none !important;
+}
+
+.nav.necypaa-admin-nav {
+  --necypaa-nav-primary: #e85e27;
+  background: var(--theme-elevation-0);
+  border-inline-end: 1px solid var(--theme-elevation-150);
+  display: block;
+  flex: 0 0 var(--necypaa-nav-rail-width) !important;
+  height: 100dvh;
+  inline-size: var(--necypaa-nav-rail-width);
+  max-inline-size: var(--necypaa-nav-rail-width);
+  min-inline-size: var(--necypaa-nav-rail-width);
+  opacity: 1;
+  overflow: visible;
+  width: var(--necypaa-nav-rail-width) !important;
+  z-index: 40;
+}
+
+@media (max-width: 768px) {
+  .template-default:has(> .nav.necypaa-admin-nav) {
+    --necypaa-nav-rail-width: 5rem;
+  }
+
+  .nav.necypaa-admin-nav {
+    box-shadow: 12px 0 30px rgb(15 23 42 / 20%);
+    max-inline-size: var(--necypaa-nav-rail-width);
+    position: sticky;
+    transform: none !important;
+  }
+}

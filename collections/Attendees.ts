@@ -4,14 +4,18 @@ const authenticated: Access = ({ req }) => Boolean(req.user);
 
 export const Attendees: CollectionConfig = {
   slug: "attendees",
+  labels: { singular: "Registration", plural: "Registrations" },
   access: { create: authenticated, read: authenticated, update: authenticated, delete: authenticated },
   admin: {
     useAsTitle: "attendeeName",
-    defaultColumns: ["attendeeName", "attendeeEmail", "paymentSource", "paymentStatus", "purchasedAt"],
-    description: "The working convention roster: paid registrants, identified scholarship recipients, cash registrations, and manually managed expected attendees.",
+    defaultColumns: ["attendeeName", "attendeeEmail", "attendanceStatus", "paymentSource", "paymentStatus"],
+    description: "The single-event roster. The actual attendee contact is separate from the original purchaser.",
   },
   fields: [
     { name: "sourceKey", type: "text", required: true, unique: true, index: true, defaultValue: () => `manual:${crypto.randomUUID()}`, admin: { readOnly: true } },
+    { name: "contact", label: "Actual attendee", type: "relationship", relationTo: "contacts", index: true, admin: { description: "Who is attending. This may differ from the purchaser." } },
+    { name: "checkoutOrder", type: "relationship", relationTo: "checkout-orders", index: true, admin: { description: "The immutable payment that funded this registration." } },
+    { name: "entitlement", type: "relationship", relationTo: "registration-entitlements", index: true, admin: { description: "The paid registration or scholarship unit assigned to this attendee." } },
     { name: "attendeeName", type: "text", required: true, index: true },
     { name: "attendeeEmail", type: "email", required: true, index: true },
     { name: "state", type: "text", required: true },
@@ -58,6 +62,7 @@ export const Attendees: CollectionConfig = {
         { name: "signatureAgreement", type: "checkbox", defaultValue: false },
       ],
     },
+    { name: "canonicalNameConfirmed", type: "checkbox", defaultValue: false, admin: { description: "Checked when an administrator confirms that payer and attendee name variations refer to the same person." } },
     { name: "notes", type: "textarea", admin: { description: "Internal roster notes. This field is editable in Payload and is not sent to Stripe." } },
     { name: "rawMetadata", type: "json" },
   ],

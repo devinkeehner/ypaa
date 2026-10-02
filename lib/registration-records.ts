@@ -1,5 +1,6 @@
 import type Stripe from "stripe";
 import type { Payload } from "payload";
+import type { Attendee, BreakfastTicket, CheckoutOrder } from "@/payload-types";
 
 import {
   BREAKFASTS,
@@ -12,7 +13,7 @@ import {
 import { getStripe } from "@/lib/stripe-server";
 import { sendStripeScholarshipPaidNotification } from "@/lib/scholarship-email";
 
-type RecordContext = {
+export type RecordContext = {
   sourceKey: string;
   paymentSource: "stripe" | "cash";
   paymentStatus: "paid" | "recorded";
@@ -22,13 +23,21 @@ type RecordContext = {
   stripePaymentIntentId?: string;
   stripeChargeId?: string;
   stripeCustomerId?: string;
+  stripeCardId?: string;
+  cardholderName?: string;
+  cardBrand?: string;
+  cardLast4?: string;
+  cardFingerprint?: string;
+  paymentSourceType?: string;
   checkoutLineItemSummary?: string;
+  scholarshipQuantity?: number;
   cashTransactionId?: string;
   rawMetadata?: Record<string, string>;
   breakfastUnitPriceCents?: number;
   subtotalCents?: number;
   processingFeeCents?: number;
   totalCents?: number;
+  dedupeAttendeesByEmail?: boolean;
 };
 
 const bool = (value: string | undefined) => value === "true" || value === "1" || value === "yes";
@@ -36,12 +45,39 @@ const count = (value: string | undefined) => Math.max(0, Math.min(20, Math.floor
 const cents = (value: string | undefined) => Math.max(0, Math.min(100000, Math.floor(Number(value) || 0)));
 const useful = (value: string | undefined, fallback = "") => value && !["none", "not applicable", "not_applicable"].includes(value.toLowerCase()) ? value : fallback;
 
-async function findBySourceKey(payload: Payload, collection: "attendees" | "breakfast-tickets", sourceKey: string): Promise<{ id: string } | undefined> {
+async function findBySourceKey(payload: Payload, collection: "attendees" | "breakfast-tickets", sourceKey: string): Promise<Attendee | BreakfastTicket | undefined> {
   const result = await payload.find({ collection, overrideAccess: true, limit: 1, where: { sourceKey: { equals: sourceKey } } });
-  return result.docs[0] as { id: string } | undefined;
+  return result.docs[0] as Attendee | BreakfastTicket | undefined;
+}
+
+async function findByStripeIdentifier(payload: Payload, collection: "checkout-orders" | "attendees", field: "stripeCheckoutSessionId" | "stripePaymentIntentId" | "stripeChargeId", value?: string): Promise<CheckoutOrder | undefined> {
+  if (!value) return undefined;
+  const result = await payload.find({ collection, overrideAccess: true, limit: 1, where: { [field]: { equals: value } } });
+  return result.docs[0] as CheckoutOrder | undefined;
+}
+
+const relationshipID = (value: unknown): string | undefined => typeof value === "string" ? value : value && typeof value === "object" && "id" in value ? String(value.id) : undefined;
+
+async function existingAttendee(payload: Payload, entitlementKey: string, sourceKey: string) {
+  const seats = await payload.find({ collection: "registration-entitlements", overrideAccess: true, depth: 0, limit: 1, where: { sourceKey: { equals: entitlementKey } } });
+  const registrationID = relationshipID(seats.docs[0]?.registration);
+  if (registrationID) return payload.findByID({ collection: "attendees", id: registrationID, overrideAccess: true, depth: 0 });
+  return await findBySourceKey(payload, "attendees", sourceKey) as Attendee | undefined;
+}
+
+async function findOrCreateContact(payload: Payload, person: { name: string; email: string; state?: string; homegroupCommittee?: string; tags: Array<"attendee" | "purchaser" | "scholarship_recipient" | "volunteer"> }) {
+  const result = await payload.find({ collection: "contacts", overrideAccess: true, limit: 1, where: { and: [{ email: { equals: person.email.toLowerCase() } }, { displayName: { equals: person.name } }] } });
+  if (result.docs[0]) return result.docs[0];
+  return payload.create({ collection: "contacts", overrideAccess: true, data: { contactKey: `contact:${crypto.randomUUID()}`, displayName: person.name, email: person.email.toLowerCase(), state: person.state, homegroupCommittee: person.homegroupCommittee, communicationConsent: "unknown", tags: person.tags } });
 }
 
 async function recordCheckoutOrder(payload: Payload, order: RegistrationOrder, context: RecordContext) {
+  const existing = await payload.find({ collection: "checkout-orders", overrideAccess: true, limit: 1, where: { sourceKey: { equals: context.sourceKey } } });
+  const matched = existing.docs[0]
+    || await findByStripeIdentifier(payload, "checkout-orders", "stripeCheckoutSessionId", context.stripeCheckoutSessionId)
+    || await findByStripeIdentifier(payload, "checkout-orders", "stripePaymentIntentId", context.stripePaymentIntentId)
+    || await findByStripeIdentifier(payload, "checkout-orders", "stripeChargeId", context.stripeChargeId);
+  const purchaserContact = matched?.purchaserContact ? await payload.findByID({ collection: "contacts", id: relationshipID(matched.purchaserContact)!, overrideAccess: true }) : await findOrCreateContact(payload, { name: order.purchaserName, email: order.purchaserEmail, tags: ["purchaser"] });
   const subtotalCents = Math.max(0, Math.floor(context.subtotalCents ?? orderSubtotalCents(order)));
   const processingFeeCents = Math.max(0, Math.floor(context.processingFeeCents ?? 0));
   const totalCents = Math.max(subtotalCents + processingFeeCents, Math.floor(context.totalCents ?? 0));
@@ -49,6 +85,7 @@ async function recordCheckoutOrder(payload: Payload, order: RegistrationOrder, c
     sourceKey: context.sourceKey,
     purchaserName: order.purchaserName,
     purchaserEmail: order.purchaserEmail,
+    purchaserContact: purchaserContact.id,
     subtotalCents,
     processingFeeCents,
     totalCents,
@@ -60,24 +97,62 @@ async function recordCheckoutOrder(payload: Payload, order: RegistrationOrder, c
     stripePaymentIntentId: context.stripePaymentIntentId,
     stripeChargeId: context.stripeChargeId,
     stripeCustomerId: context.stripeCustomerId,
+    stripeCardId: context.stripeCardId,
+    cardholderName: context.cardholderName,
+    cardBrand: context.cardBrand,
+    cardLast4: context.cardLast4,
+    cardFingerprint: context.cardFingerprint,
+    paymentSourceType: context.paymentSourceType,
     checkoutLineItemSummary: context.checkoutLineItemSummary,
     order,
     rawMetadata: context.rawMetadata,
   } as const;
-  const result = await payload.find({ collection: "checkout-orders", overrideAccess: true, limit: 1, where: { sourceKey: { equals: context.sourceKey } } });
-  const checkout = result.docs[0]
-    ? await payload.update({ collection: "checkout-orders", id: result.docs[0].id, overrideAccess: true, data })
-    : await payload.create({ collection: "checkout-orders", overrideAccess: true, data });
-  return { orderId: String(checkout.id) };
+  if (matched) {
+    const preserved = await payload.findByID({ collection: "checkout-orders", id: matched.id, overrideAccess: true, depth: 0 });
+    const checkoutOrder = await payload.update({ collection: "checkout-orders", id: matched.id, overrideAccess: true, data: { ...data, sourceKey: preserved.sourceKey, purchaserName: preserved.purchaserName, purchaserEmail: preserved.purchaserEmail, purchaserContact: preserved.purchaserContact, paymentStatus: ["refunded", "disputed", "voided"].includes(preserved.paymentStatus) ? preserved.paymentStatus : context.paymentStatus } });
+    return { write: "updated" as const, orderId: String(checkoutOrder.id), sourceKey: checkoutOrder.sourceKey, purchaserContactId: relationshipID(checkoutOrder.purchaserContact) || String(purchaserContact.id) };
+  }
+  const checkoutOrder = await payload.create({ collection: "checkout-orders", overrideAccess: true, data });
+  return { write: "created" as const, orderId: String(checkoutOrder.id), sourceKey: checkoutOrder.sourceKey, purchaserContactId: relationshipID(checkoutOrder.purchaserContact) || String(purchaserContact.id) };
+}
+
+async function upsertEntitlement(payload: Payload, data: {
+  sourceKey: string;
+  checkoutOrder: string;
+  purchaserContact: string;
+  entitlementType: "registration" | "specific_scholarship" | "general_scholarship";
+  status: "unassigned" | "assigned";
+  attendeeContact?: string;
+  registration?: string;
+  assignedAt?: string;
+  sourceMetadata?: Record<string, string>;
+}) {
+  const entitlementData = { fundingSource: "direct_checkout" as const, ...data };
+  const existing = await payload.find({ collection: "registration-entitlements", overrideAccess: true, limit: 1, where: { sourceKey: { equals: data.sourceKey } } });
+  if (existing.docs[0]) {
+    const entitlement = await payload.update({ collection: "registration-entitlements", id: existing.docs[0].id, overrideAccess: true, data: { sourceMetadata: data.sourceMetadata } });
+    return { entitlement, write: "updated" as const };
+  }
+  const entitlement = await payload.create({ collection: "registration-entitlements", overrideAccess: true, data: entitlementData });
+  return { entitlement, write: "created" as const };
 }
 
 export async function recordRegistrationOrder(payload: Payload, order: RegistrationOrder, context: RecordContext) {
+  const result = { attendees: { created: 0, updated: 0 }, breakfastTickets: { created: 0, updated: 0 }, checkoutOrders: { created: 0, updated: 0 }, entitlements: { created: 0, updated: 0 } };
   const checkout = await recordCheckoutOrder(payload, order, context);
+  result.checkoutOrders[checkout.write] += 1;
+  context = { ...context, sourceKey: checkout.sourceKey };
   let attendeeId: string | undefined;
+  let attendeeContactId: string | undefined;
   if (order.selfRegistration) {
+    const existing = await existingAttendee(payload, `${context.sourceKey}:entitlement:registration:1`, `${context.sourceKey}:registration:1`);
+    const attendeeContact = existing?.contact ? await payload.findByID({ collection: "contacts", id: relationshipID(existing.contact)!, overrideAccess: true }) : await findOrCreateContact(payload, { name: order.attendee.name, email: order.attendee.email, state: order.attendee.state, homegroupCommittee: order.attendee.homegroupCommittee, tags: ["attendee", ...(order.attendee.willingToServe ? ["volunteer" as const] : [])] });
+    attendeeContactId = String(attendeeContact.id);
     const sourceKey = `${context.sourceKey}:registration:1`;
     const data = {
       sourceKey,
+      contact: attendeeContact.id,
+      checkoutOrder: checkout.orderId,
       attendeeName: order.attendee.name,
       attendeeEmail: order.attendee.email,
       state: order.attendee.state,
@@ -108,18 +183,36 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
       },
       rawMetadata: context.rawMetadata,
     } as const;
-    const existing = await findBySourceKey(payload, "attendees", sourceKey);
     const attendee = existing
-      ? await payload.update({ collection: "attendees", id: existing.id, overrideAccess: true, data })
-      : await payload.create({ collection: "attendees", overrideAccess: true, data });
+      ? await payload.update({ collection: "attendees", id: existing.id, overrideAccess: true, data: { rawMetadata: context.rawMetadata } }).then((value) => ({ ...value, _write: "updated" as const }))
+      : await payload.create({ collection: "attendees", overrideAccess: true, data }).then((value) => ({ ...value, _write: "created" as const }));
+    result.attendees[attendee._write] += 1;
     attendeeId = attendee.id;
+    const entitlementResult = await upsertEntitlement(payload, {
+      sourceKey: `${context.sourceKey}:entitlement:registration:1`,
+      checkoutOrder: checkout.orderId,
+      purchaserContact: checkout.purchaserContactId,
+      entitlementType: "registration",
+      status: "assigned",
+      attendeeContact: String(attendeeContact.id),
+      registration: String(attendee.id),
+      assignedAt: context.purchasedAt,
+      sourceMetadata: context.rawMetadata,
+    });
+    result.entitlements[entitlementResult.write] += 1;
+    if (!existing?.entitlement) await payload.update({ collection: "attendees", id: attendee.id, overrideAccess: true, data: { checkoutOrder: checkout.orderId, entitlement: entitlementResult.entitlement.id } });
   }
 
   if (order.scholarship.enabled && order.scholarship.kind === "specific") {
+    const existing = await existingAttendee(payload, `${context.sourceKey}:entitlement:specific-scholarship:1`, `${context.sourceKey}:scholarship:1`);
+    const scholarshipContact = existing?.contact ? await payload.findByID({ collection: "contacts", id: relationshipID(existing.contact)!, overrideAccess: true }) : await findOrCreateContact(payload, { name: order.scholarship.recipientName, email: order.scholarship.recipientEmail, state: order.scholarship.recipientState, homegroupCommittee: order.scholarship.recipientHomegroupCommittee, tags: ["attendee", "scholarship_recipient", ...(order.scholarship.recipientWillingToServe ? ["volunteer" as const] : [])] });
+    attendeeContactId ??= String(scholarshipContact.id);
     const sourceKey = `${context.sourceKey}:scholarship:1`;
     const unsignedPolicy = Object.fromEntries(POLICY_KEYS.map((key) => [key, false])) as RegistrationOrder["policy"];
     const data = {
       sourceKey,
+      contact: scholarshipContact.id,
+      checkoutOrder: checkout.orderId,
       attendeeName: order.scholarship.recipientName,
       attendeeEmail: order.scholarship.recipientEmail,
       state: order.scholarship.recipientState || "Unknown",
@@ -145,11 +238,39 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
       policyAcknowledgments: { ...unsignedPolicy, status: "pending" as const },
       rawMetadata: context.rawMetadata,
     } as const;
-    const existing = await findBySourceKey(payload, "attendees", sourceKey);
     const attendee = existing
-      ? await payload.update({ collection: "attendees", id: existing.id, overrideAccess: true, data })
-      : await payload.create({ collection: "attendees", overrideAccess: true, data });
+      ? await payload.update({ collection: "attendees", id: existing.id, overrideAccess: true, data: { rawMetadata: context.rawMetadata } }).then((value) => ({ ...value, _write: "updated" as const }))
+      : await payload.create({ collection: "attendees", overrideAccess: true, data }).then((value) => ({ ...value, _write: "created" as const }));
+    result.attendees[attendee._write] += 1;
     attendeeId ??= attendee.id;
+    const entitlementResult = await upsertEntitlement(payload, {
+      sourceKey: `${context.sourceKey}:entitlement:specific-scholarship:1`,
+      checkoutOrder: checkout.orderId,
+      purchaserContact: checkout.purchaserContactId,
+      entitlementType: "specific_scholarship",
+      status: "assigned",
+      attendeeContact: String(scholarshipContact.id),
+      registration: String(attendee.id),
+      assignedAt: context.purchasedAt,
+      sourceMetadata: context.rawMetadata,
+    });
+    result.entitlements[entitlementResult.write] += 1;
+    if (!existing?.entitlement) await payload.update({ collection: "attendees", id: attendee.id, overrideAccess: true, data: { checkoutOrder: checkout.orderId, entitlement: entitlementResult.entitlement.id } });
+  }
+
+  if (order.scholarship.enabled && order.scholarship.kind === "general") {
+    const scholarshipQuantity = Math.max(1, Math.min(20, Math.floor(context.scholarshipQuantity || 1)));
+    for (let index = 0; index < scholarshipQuantity; index += 1) {
+      const entitlementResult = await upsertEntitlement(payload, {
+        sourceKey: `${context.sourceKey}:entitlement:general-scholarship:${index + 1}`,
+        checkoutOrder: checkout.orderId,
+        purchaserContact: checkout.purchaserContactId,
+        entitlementType: "general_scholarship",
+        status: "unassigned",
+        sourceMetadata: context.rawMetadata,
+      });
+      result.entitlements[entitlementResult.write] += 1;
+    }
   }
 
   for (const breakfast of BREAKFASTS) {
@@ -164,6 +285,7 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
         purchaserName: order.purchaserName,
         purchaserEmail: order.purchaserEmail,
         attendee: attendeeId,
+        holderContact: attendeeContactId,
         paymentSource: context.paymentSource,
         paymentStatus: context.paymentStatus,
         dataOrigin: context.dataOrigin,
@@ -176,8 +298,13 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
         rawMetadata: context.rawMetadata,
       } as const;
       const existing = await findBySourceKey(payload, "breakfast-tickets", sourceKey);
-      if (existing) await payload.update({ collection: "breakfast-tickets", id: existing.id, overrideAccess: true, data });
-      else await payload.create({ collection: "breakfast-tickets", overrideAccess: true, data });
+      if (existing) {
+        await payload.update({ collection: "breakfast-tickets", id: existing.id, overrideAccess: true, data: { rawMetadata: context.rawMetadata } });
+        result.breakfastTickets.updated += 1;
+      } else {
+        await payload.create({ collection: "breakfast-tickets", overrideAccess: true, data });
+        result.breakfastTickets.created += 1;
+      }
     }
   }
   if (context.paymentSource === "stripe" && context.paymentStatus === "paid" && context.dataOrigin !== "stripe_backfill" && order.scholarship.enabled && order.scholarship.kind === "general") {
@@ -186,6 +313,7 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
       purchaserName: order.purchaserName, scholarshipAmountCents: order.scholarship.amountCents,
     });
   }
+  return result;
 }
 
 function breakfastCountFromLegacyText(metadata: Record<string, string>, day: "friday" | "saturday" | "sunday") {
@@ -278,6 +406,7 @@ export async function recordStripeSession(payload: Payload, session: Stripe.Chec
   }
   const charge = paymentIntent ? paymentIntent.latest_charge : undefined;
   const chargeId = typeof charge === "string" ? charge : charge?.id;
+  const card = typeof charge === "object" ? charge?.payment_method_details?.card : undefined;
   const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id;
 
   await recordRegistrationOrder(payload, order, {
@@ -290,7 +419,14 @@ export async function recordStripeSession(payload: Payload, session: Stripe.Chec
     stripePaymentIntentId: paymentIntent?.id,
     stripeChargeId: chargeId,
     stripeCustomerId: customerId,
+    stripeCardId: typeof charge === "object" && typeof charge?.payment_method === "string" ? charge.payment_method : undefined,
+    cardholderName: typeof charge === "object" ? charge?.billing_details?.name || purchaser.name : purchaser.name,
+    cardBrand: card?.brand || undefined,
+    cardLast4: card?.last4 || undefined,
+    cardFingerprint: card?.fingerprint || undefined,
+    paymentSourceType: paymentIntent?.payment_method_types?.join(", "),
     rawMetadata: metadata,
+    scholarshipQuantity: count(metadata.necy_scholarship_qty) || count(metadata.scholarship_quantity) || (order.scholarship.enabled ? 1 : 0),
     breakfastUnitPriceCents: cents(metadata.necy_breakfast_unit_price_cents)
       || cents(metadata.breakfast_ticket_price_cents)
       || (metadata.necy_schema_version ? BREAKFAST_PRICE_CENTS : 2000),

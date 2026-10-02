@@ -75,12 +75,16 @@ export interface Config {
     'wordle-puzzles': WordlePuzzle;
     merchandise: Merchandise;
     'merchandise-orders': MerchandiseOrder;
+    contacts: Contact;
     'checkout-orders': CheckoutOrder;
+    'scholarship-contributions': ScholarshipContribution;
+    'registration-entitlements': RegistrationEntitlement;
     tenants: Tenant;
     'access-codes': AccessCode;
     'cash-transactions': CashTransaction;
     attendees: Attendee;
     'breakfast-tickets': BreakfastTicket;
+    'registration-corrections': RegistrationCorrection;
     rooms: Room;
     'program-sessions': ProgramSession;
     'venue-maps': VenueMap;
@@ -92,7 +96,12 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    'checkout-orders': {
+      entitlements: 'registration-entitlements';
+      scholarshipContributions: 'scholarship-contributions';
+    };
+  };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -101,12 +110,16 @@ export interface Config {
     'wordle-puzzles': WordlePuzzlesSelect<false> | WordlePuzzlesSelect<true>;
     merchandise: MerchandiseSelect<false> | MerchandiseSelect<true>;
     'merchandise-orders': MerchandiseOrdersSelect<false> | MerchandiseOrdersSelect<true>;
+    contacts: ContactsSelect<false> | ContactsSelect<true>;
     'checkout-orders': CheckoutOrdersSelect<false> | CheckoutOrdersSelect<true>;
+    'scholarship-contributions': ScholarshipContributionsSelect<false> | ScholarshipContributionsSelect<true>;
+    'registration-entitlements': RegistrationEntitlementsSelect<false> | RegistrationEntitlementsSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
     'access-codes': AccessCodesSelect<false> | AccessCodesSelect<true>;
     'cash-transactions': CashTransactionsSelect<false> | CashTransactionsSelect<true>;
     attendees: AttendeesSelect<false> | AttendeesSelect<true>;
     'breakfast-tickets': BreakfastTicketsSelect<false> | BreakfastTicketsSelect<true>;
+    'registration-corrections': RegistrationCorrectionsSelect<false> | RegistrationCorrectionsSelect<true>;
     rooms: RoomsSelect<false> | RoomsSelect<true>;
     'program-sessions': ProgramSessionsSelect<false> | ProgramSessionsSelect<true>;
     'venue-maps': VenueMapsSelect<false> | VenueMapsSelect<true>;
@@ -132,6 +145,10 @@ export interface Config {
   };
   locale: null;
   widgets: {
+    eventQuickActions: EventQuickActionsWidget;
+    eventCRMOverview: EventCRMOverviewWidget;
+    scholarshipFund: ScholarshipFundWidget;
+    eventOperations: EventOperationsWidget;
     collections: CollectionsWidget;
   };
   user: User | PayloadMcpApiKey;
@@ -182,6 +199,10 @@ export interface PayloadMcpApiKeyAuthOperations {
  */
 export interface User {
   id: string;
+  /**
+   * Merchandise chairs can view merchandise sales only. Read-only viewers can explore records but cannot change them. Existing accounts without a role retain administrator access.
+   */
+  role?: ('admin' | 'viewer' | 'merch') | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -38169,6 +38190,7 @@ export interface Merchandise {
  */
 export interface MerchandiseOrder {
   id: string;
+  isSynthetic?: boolean | null;
   sourceKey: string;
   purchaserName: string;
   purchaserEmail: string;
@@ -38220,6 +38242,29 @@ export interface MerchandiseOrder {
   createdAt: string;
 }
 /**
+ * Canonical people directory. Purchases and registrations may point to different contacts.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts".
+ */
+export interface Contact {
+  id: string;
+  contactKey: string;
+  displayName: string;
+  email: string;
+  phone?: string | null;
+  state?: string | null;
+  homegroupCommittee?: string | null;
+  communicationConsent: 'unknown' | 'opted_in' | 'opted_out';
+  tags?: ('attendee' | 'purchaser' | 'scholarship_recipient' | 'volunteer' | 'donor' | 'committee')[] | null;
+  /**
+   * Permanent contact notes. Event-specific accommodations remain on the registration.
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * One paid checkout record, linked by source key to its attendee, breakfast, and merchandise records.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -38230,6 +38275,10 @@ export interface CheckoutOrder {
   sourceKey: string;
   purchaserName: string;
   purchaserEmail: string;
+  /**
+   * Canonical contact for the original payer.
+   */
+  purchaserContact?: (string | null) | Contact;
   subtotalCents: number;
   processingFeeCents: number;
   totalCents: number;
@@ -38241,7 +38290,29 @@ export interface CheckoutOrder {
   stripePaymentIntentId?: string | null;
   stripeChargeId?: string | null;
   stripeCustomerId?: string | null;
+  stripeCardId?: string | null;
+  /**
+   * Billing name supplied by Stripe. This can differ from the attendee.
+   */
+  cardholderName?: string | null;
+  cardBrand?: string | null;
+  cardLast4?: string | null;
+  /**
+   * Stripe fingerprint used to identify repeated use of the same card.
+   */
+  cardFingerprint?: string | null;
+  paymentSourceType?: string | null;
   checkoutLineItemSummary?: string | null;
+  entitlements?: {
+    docs?: (string | RegistrationEntitlement)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  scholarshipContributions?: {
+    docs?: (string | ScholarshipContribution)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   order:
     | {
         [k: string]: unknown;
@@ -38264,6 +38335,218 @@ export interface CheckoutOrder {
    * Recipients already notified of this Stripe general scholarship donation.
    */
   stripeScholarshipNotifiedEmails?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * One paid registration or scholarship unit. Connects the immutable checkout and payer to the assigned attendee and roster registration.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registration-entitlements".
+ */
+export interface RegistrationEntitlement {
+  id: string;
+  sourceKey: string;
+  /**
+   * The direct checkout for a purchased seat. Pooled donation-funded seats use Funding contributions instead.
+   */
+  checkoutOrder?: (string | null) | CheckoutOrder;
+  /**
+   * The original payer for a directly purchased seat. Pooled seats can have multiple contributors.
+   */
+  purchaserContact?: (string | null) | Contact;
+  entitlementType: 'registration' | 'specific_scholarship' | 'general_scholarship';
+  status: 'unassigned' | 'assigned' | 'redeemed' | 'refunded' | 'voided';
+  attendeeContact?: (string | null) | Contact;
+  registration?: (string | null) | Attendee;
+  assignedAt?: string | null;
+  assignmentNote?: string | null;
+  fundingSource: 'direct_checkout' | 'pooled_contributions';
+  /**
+   * Donation or scholarship contributions that funded this seat.
+   */
+  fundingContributions?: (string | ScholarshipContribution)[] | null;
+  sourceMetadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * The single-event roster. The actual attendee contact is separate from the original purchaser.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attendees".
+ */
+export interface Attendee {
+  id: string;
+  sourceKey: string;
+  /**
+   * Who is attending. This may differ from the purchaser.
+   */
+  contact?: (string | null) | Contact;
+  /**
+   * The immutable payment that funded this registration.
+   */
+  checkoutOrder?: (string | null) | CheckoutOrder;
+  /**
+   * The paid registration or scholarship unit assigned to this attendee.
+   */
+  entitlement?: (string | null) | RegistrationEntitlement;
+  attendeeName: string;
+  attendeeEmail: string;
+  state: string;
+  homegroupCommittee?: string | null;
+  attendanceStatus: 'expected' | 'checked_in' | 'cancelled';
+  attendanceBasis: 'self_registration' | 'scholarship_recipient' | 'manual_expected';
+  accommodations?: string | null;
+  interpretationNeeded?: boolean | null;
+  mobilityAccessibility?: boolean | null;
+  willingToServe?: boolean | null;
+  purchaserName: string;
+  purchaserEmail: string;
+  registrationPriceCents: number;
+  paymentSource: 'stripe' | 'cash' | 'manual';
+  paymentStatus: 'pending' | 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
+  dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout' | 'manual';
+  purchasedAt: string;
+  stripeCheckoutSessionId?: string | null;
+  stripePaymentIntentId?: string | null;
+  stripeChargeId?: string | null;
+  stripeCustomerId?: string | null;
+  cashTransaction?: (string | null) | CashTransaction;
+  policyAcknowledgments: {
+    status: 'pending' | 'signed' | 'waived';
+    signatureName?: string | null;
+    signedAt?: string | null;
+    readPolicy?: boolean | null;
+    understandQuestions?: boolean | null;
+    acknowledgeBehavior?: boolean | null;
+    understandAdmission?: boolean | null;
+    understandReporting?: boolean | null;
+    understandInvestigation?: boolean | null;
+    signatureAgreement?: boolean | null;
+  };
+  /**
+   * Checked when an administrator confirms that payer and attendee name variations refer to the same person.
+   */
+  canonicalNameConfirmed?: boolean | null;
+  /**
+   * Internal roster notes. This field is editable in Payload and is not sent to Stripe.
+   */
+  notes?: string | null;
+  rawMetadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * In-person cash orders recorded through the protected /cash form.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cash-transactions".
+ */
+export interface CashTransaction {
+  id: string;
+  purchaserName: string;
+  purchaserEmail: string;
+  recordedValueCents: number;
+  status: 'recorded' | 'voided';
+  stripeCustomerId?: string | null;
+  accessCode?: (string | null) | AccessCode;
+  sourceKey?: string | null;
+  order:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  metadata:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Delivery status for the internal cash-scholarship alert.
+   */
+  notificationStatus?: ('not_required' | 'sent' | 'pending_configuration' | 'failed') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Codes that authorize recording an in-person cash order at /cash.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "access-codes".
+ */
+export interface AccessCode {
+  id: string;
+  code: string;
+  active: boolean;
+  maxRedemptions: number;
+  redemptionCount: number;
+  grantType: 'cash_order' | 'complimentary_registration' | 'door_scholarship';
+  issuerSource?: string | null;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Auditable money contributed toward scholarships. Original payments stay in Checkout Orders; this ledger shows how their principal funds seats.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "scholarship-contributions".
+ */
+export interface ScholarshipContribution {
+  id: string;
+  sourceKey: string;
+  /**
+   * The immutable payment that supplied this contribution.
+   */
+  checkoutOrder: string | CheckoutOrder;
+  contributorContact: string | Contact;
+  contributionType: 'general_donation' | 'general_scholarship' | 'specific_person_scholarship';
+  amountCents: number;
+  allocatedCents: number;
+  availableCents: number;
+  seatPriceCents: number;
+  specificRecipientContact?: (string | null) | Contact;
+  /**
+   * Seats funded in whole or in part by this contribution. A pooled seat may have multiple contributing payments.
+   */
+  fundedEntitlements?: (string | RegistrationEntitlement)[] | null;
+  purchasedAt: string;
+  status: 'active' | 'refunded' | 'voided';
+  notes?: string | null;
+  sourceMetadata?:
     | {
         [k: string]: unknown;
       }
@@ -38322,123 +38605,6 @@ export interface Tenant {
   createdAt: string;
 }
 /**
- * Codes that authorize recording an in-person cash order at /cash.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "access-codes".
- */
-export interface AccessCode {
-  id: string;
-  code: string;
-  active: boolean;
-  maxRedemptions: number;
-  redemptionCount: number;
-  grantType: 'cash_order' | 'complimentary_registration' | 'door_scholarship';
-  issuerSource?: string | null;
-  notes?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * In-person cash orders recorded through the protected /cash form.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "cash-transactions".
- */
-export interface CashTransaction {
-  id: string;
-  purchaserName: string;
-  purchaserEmail: string;
-  recordedValueCents: number;
-  status: 'recorded' | 'voided';
-  stripeCustomerId?: string | null;
-  accessCode?: (string | null) | AccessCode;
-  sourceKey?: string | null;
-  order:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  metadata:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  /**
-   * Delivery status for the internal cash-scholarship alert.
-   */
-  notificationStatus?: ('not_required' | 'sent' | 'pending_configuration' | 'failed') | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * The working convention roster: paid registrants, identified scholarship recipients, cash registrations, and manually managed expected attendees.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "attendees".
- */
-export interface Attendee {
-  id: string;
-  sourceKey: string;
-  attendeeName: string;
-  attendeeEmail: string;
-  state: string;
-  homegroupCommittee?: string | null;
-  attendanceStatus: 'expected' | 'checked_in' | 'cancelled';
-  attendanceBasis: 'self_registration' | 'scholarship_recipient' | 'manual_expected';
-  accommodations?: string | null;
-  interpretationNeeded?: boolean | null;
-  mobilityAccessibility?: boolean | null;
-  willingToServe?: boolean | null;
-  purchaserName: string;
-  purchaserEmail: string;
-  registrationPriceCents: number;
-  paymentSource: 'stripe' | 'cash' | 'manual';
-  paymentStatus: 'pending' | 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
-  dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout' | 'manual';
-  purchasedAt: string;
-  stripeCheckoutSessionId?: string | null;
-  stripePaymentIntentId?: string | null;
-  stripeChargeId?: string | null;
-  stripeCustomerId?: string | null;
-  cashTransaction?: (string | null) | CashTransaction;
-  policyAcknowledgments: {
-    status: 'pending' | 'signed' | 'waived';
-    signatureName?: string | null;
-    signedAt?: string | null;
-    readPolicy?: boolean | null;
-    understandQuestions?: boolean | null;
-    acknowledgeBehavior?: boolean | null;
-    understandAdmission?: boolean | null;
-    understandReporting?: boolean | null;
-    understandInvestigation?: boolean | null;
-    signatureAgreement?: boolean | null;
-  };
-  /**
-   * Internal roster notes. This field is editable in Payload and is not sent to Stripe.
-   */
-  notes?: string | null;
-  rawMetadata?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * One record per breakfast admission, including Stripe purchases, cash purchases, and Stripe backfills.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -38454,6 +38620,10 @@ export interface BreakfastTicket {
   purchaserName: string;
   purchaserEmail: string;
   attendee?: (string | null) | Attendee;
+  /**
+   * Who will use this ticket. The purchaser remains unchanged.
+   */
+  holderContact?: (string | null) | Contact;
   paymentSource: 'stripe' | 'cash';
   paymentStatus: 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
   dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout';
@@ -38464,6 +38634,49 @@ export interface BreakfastTicket {
   stripeCustomerId?: string | null;
   cashTransaction?: (string | null) | CashTransaction;
   rawMetadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Immutable audit history for registration and ticket corrections.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registration-corrections".
+ */
+export interface RegistrationCorrection {
+  id: string;
+  registration: string | Attendee;
+  correctionType:
+    | 'same_person_name_variation'
+    | 'attendee_reassigned'
+    | 'contact_details_corrected'
+    | 'breakfast_holder_reassigned'
+    | 'other';
+  entitlement?: (string | null) | RegistrationEntitlement;
+  checkoutOrder?: (string | null) | CheckoutOrder;
+  fromContact?: (string | null) | Contact;
+  toContact?: (string | null) | Contact;
+  reason: string;
+  changedBy: string | User;
+  changedAt: string;
+  before:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  after:
     | {
         [k: string]: unknown;
       }
@@ -38739,8 +38952,20 @@ export interface PayloadLockedDocument {
         value: string | MerchandiseOrder;
       } | null)
     | ({
+        relationTo: 'contacts';
+        value: string | Contact;
+      } | null)
+    | ({
         relationTo: 'checkout-orders';
         value: string | CheckoutOrder;
+      } | null)
+    | ({
+        relationTo: 'scholarship-contributions';
+        value: string | ScholarshipContribution;
+      } | null)
+    | ({
+        relationTo: 'registration-entitlements';
+        value: string | RegistrationEntitlement;
       } | null)
     | ({
         relationTo: 'tenants';
@@ -38761,6 +38986,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'breakfast-tickets';
         value: string | BreakfastTicket;
+      } | null)
+    | ({
+        relationTo: 'registration-corrections';
+        value: string | RegistrationCorrection;
       } | null)
     | ({
         relationTo: 'rooms';
@@ -38843,6 +39072,7 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -59053,6 +59283,7 @@ export interface MerchandiseSelect<T extends boolean = true> {
  * via the `definition` "merchandise-orders_select".
  */
 export interface MerchandiseOrdersSelect<T extends boolean = true> {
+  isSynthetic?: T;
   sourceKey?: T;
   purchaserName?: T;
   purchaserEmail?: T;
@@ -59078,12 +59309,30 @@ export interface MerchandiseOrdersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts_select".
+ */
+export interface ContactsSelect<T extends boolean = true> {
+  contactKey?: T;
+  displayName?: T;
+  email?: T;
+  phone?: T;
+  state?: T;
+  homegroupCommittee?: T;
+  communicationConsent?: T;
+  tags?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "checkout-orders_select".
  */
 export interface CheckoutOrdersSelect<T extends boolean = true> {
   sourceKey?: T;
   purchaserName?: T;
   purchaserEmail?: T;
+  purchaserContact?: T;
   subtotalCents?: T;
   processingFeeCents?: T;
   totalCents?: T;
@@ -59095,10 +59344,60 @@ export interface CheckoutOrdersSelect<T extends boolean = true> {
   stripePaymentIntentId?: T;
   stripeChargeId?: T;
   stripeCustomerId?: T;
+  stripeCardId?: T;
+  cardholderName?: T;
+  cardBrand?: T;
+  cardLast4?: T;
+  cardFingerprint?: T;
+  paymentSourceType?: T;
   checkoutLineItemSummary?: T;
+  entitlements?: T;
+  scholarshipContributions?: T;
   order?: T;
   rawMetadata?: T;
   stripeScholarshipNotifiedEmails?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "scholarship-contributions_select".
+ */
+export interface ScholarshipContributionsSelect<T extends boolean = true> {
+  sourceKey?: T;
+  checkoutOrder?: T;
+  contributorContact?: T;
+  contributionType?: T;
+  amountCents?: T;
+  allocatedCents?: T;
+  availableCents?: T;
+  seatPriceCents?: T;
+  specificRecipientContact?: T;
+  fundedEntitlements?: T;
+  purchasedAt?: T;
+  status?: T;
+  notes?: T;
+  sourceMetadata?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registration-entitlements_select".
+ */
+export interface RegistrationEntitlementsSelect<T extends boolean = true> {
+  sourceKey?: T;
+  checkoutOrder?: T;
+  purchaserContact?: T;
+  entitlementType?: T;
+  status?: T;
+  attendeeContact?: T;
+  registration?: T;
+  assignedAt?: T;
+  assignmentNote?: T;
+  fundingSource?: T;
+  fundingContributions?: T;
+  sourceMetadata?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -59162,6 +59461,9 @@ export interface CashTransactionsSelect<T extends boolean = true> {
  */
 export interface AttendeesSelect<T extends boolean = true> {
   sourceKey?: T;
+  contact?: T;
+  checkoutOrder?: T;
+  entitlement?: T;
   attendeeName?: T;
   attendeeEmail?: T;
   state?: T;
@@ -59198,6 +59500,7 @@ export interface AttendeesSelect<T extends boolean = true> {
         understandInvestigation?: T;
         signatureAgreement?: T;
       };
+  canonicalNameConfirmed?: T;
   notes?: T;
   rawMetadata?: T;
   updatedAt?: T;
@@ -59216,6 +59519,7 @@ export interface BreakfastTicketsSelect<T extends boolean = true> {
   purchaserName?: T;
   purchaserEmail?: T;
   attendee?: T;
+  holderContact?: T;
   paymentSource?: T;
   paymentStatus?: T;
   dataOrigin?: T;
@@ -59226,6 +59530,25 @@ export interface BreakfastTicketsSelect<T extends boolean = true> {
   stripeCustomerId?: T;
   cashTransaction?: T;
   rawMetadata?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registration-corrections_select".
+ */
+export interface RegistrationCorrectionsSelect<T extends boolean = true> {
+  registration?: T;
+  correctionType?: T;
+  entitlement?: T;
+  checkoutOrder?: T;
+  fromContact?: T;
+  toContact?: T;
+  reason?: T;
+  changedBy?: T;
+  changedAt?: T;
+  before?: T;
+  after?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -59500,6 +59823,46 @@ export interface FooterSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "eventQuickActions_widget".
+ */
+export interface EventQuickActionsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "eventCRMOverview_widget".
+ */
+export interface EventCRMOverviewWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "scholarshipFund_widget".
+ */
+export interface ScholarshipFundWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "eventOperations_widget".
+ */
+export interface EventOperationsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'medium' | 'large' | 'x-large' | 'full';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

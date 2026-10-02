@@ -5,9 +5,11 @@
 .identity, .publish { align-items: center; display: flex; }
 .identity { flex: 0 0 auto; gap: 10px; }
 .identity a, .header button { align-items: center; background: #202932; border: 1px solid #44515d; border-radius: 7px; color: #f7fafc; cursor: pointer; display: inline-flex; height: 36px; justify-content: center; width: 36px; }
+.identity a { gap: 7px; padding: 0 9px; width: auto; }
 .identity svg, .header button svg { height: 17px; width: 17px; }
 .identity div { display: grid; }
 .identity span { color: #8cdcd6; font-size: .62rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.identity a span { color: #f7fafc; font-size: .72rem; font-weight: 700; letter-spacing: 0; text-transform: none; white-space: nowrap; }
 .identity strong { font-size: .9rem; }
 .previewControls { align-items: center; display: flex; gap: 5px; }
 .previewControls button { height: 34px; width: 34px; }

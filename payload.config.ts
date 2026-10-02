@@ -4,8 +4,10 @@ import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { s3Storage } from "@payloadcms/storage-s3";
 import { buildConfig } from "payload";
 
-import { WordlePuzzles } from "./collections/WordlePuzzles";
+import { withViewerAccess, withViewerGlobalAccess } from "./lib/crm-access";
+
 import { Users } from "./collections/Users";
+import { WordlePuzzles } from "./collections/WordlePuzzles";
 import { Media } from "./collections/Media";
 import { Pages } from "./collections/Pages";
 import { Posts } from "./collections/Posts";
@@ -17,12 +19,16 @@ import { AccessCodes } from "./collections/AccessCodes";
 import { CashTransactions } from "./collections/CashTransactions";
 import { Attendees } from "./collections/Attendees";
 import { BreakfastTickets } from "./collections/BreakfastTickets";
+import { Contacts } from "./collections/Contacts";
+import { RegistrationCorrections } from "./collections/RegistrationCorrections";
+import { RegistrationEntitlements } from "./collections/RegistrationEntitlements";
+import { ScholarshipContributions } from "./collections/ScholarshipContributions";
 import { Rooms } from "./collections/Rooms";
 import { ProgramSessions } from "./collections/ProgramSessions";
 import { VenueMaps } from "./collections/VenueMaps";
-import { ensureProgramSeed } from "./lib/program-seed";
 import { NotificationRecipients } from "./collections/NotificationRecipients";
 import { EmailTests } from "./collections/EmailTests";
+import { ensureProgramSeed } from "./lib/program-seed";
 import { pageBuilderCatalogResource } from "./mcp/block-catalog";
 import { Header } from "./globals/Header";
 import { Footer } from "./globals/Footer";
@@ -37,23 +43,73 @@ function getMediaFileUrl(filename: string) {
 
 export default buildConfig({
   admin: {
+    avatar: "default",
     user: Users.slug,
     importMap: { baseDir: "." },
     meta: { defaultOGImageType: "off" },
     components: {
-      afterNavLinks: ["@/components/admin/ProgramBoardNavLink"],
+      Nav: "@/components/admin/nav/NECYPAAAdminNav#NECYPAAAdminNav",
+      graphics: {
+        Icon: "@/components/admin/brand/NECYPAAAdminIcon#default",
+        Logo: "@/components/admin/brand/NECYPAAAdminLogo#default",
+      },
       providers: ["@/components/admin/AdminRuntimeRecovery"],
+      afterDashboard: ["@/components/admin/MerchChairDashboardRedirect#MerchChairDashboardRedirect"],
       views: {
         programBoard: {
           Component: "@/components/admin/ProgramBoardAdminView",
           exact: true,
           path: "/program-board",
         },
+        registrationCorrections: {
+          Component: "@/components/admin/RegistrationCorrectionsAdminView",
+          exact: true,
+          path: "/registration-corrections",
+        },
+        merchandiseSales: {
+          Component: "@/components/admin/MerchandiseSalesAdminView",
+          exact: true,
+          path: "/merchandise-sales",
+        },
       },
     },
+    dashboard: {
+      defaultLayout: [
+        { widgetSlug: "eventQuickActions", width: "full" },
+        { widgetSlug: "eventCRMOverview", width: "full" },
+        { widgetSlug: "scholarshipFund", width: "medium" },
+        { widgetSlug: "eventOperations", width: "medium" },
+      ],
+      widgets: [
+        {
+          slug: "eventQuickActions",
+          Component: "@/components/admin/dashboard/NECYPAAOperationsDashboard#EventQuickActionsWidget",
+          label: "Event operations",
+          minWidth: "full",
+        },
+        {
+          slug: "eventCRMOverview",
+          Component: "@/components/admin/dashboard/NECYPAAOperationsDashboard#EventCRMOverviewWidget",
+          label: "CRM overview",
+          minWidth: "full",
+        },
+        {
+          slug: "scholarshipFund",
+          Component: "@/components/admin/dashboard/NECYPAAOperationsDashboard#ScholarshipFundWidget",
+          label: "Scholarship fund",
+          minWidth: "medium",
+        },
+        {
+          slug: "eventOperations",
+          Component: "@/components/admin/dashboard/NECYPAAOperationsDashboard#EventOperationsWidget",
+          label: "Operations queue",
+          minWidth: "medium",
+        },
+      ],
+    },
   },
-  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, CheckoutOrders, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests],
-  globals: [Header, Footer],
+  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, Contacts, CheckoutOrders, ScholarshipContributions, RegistrationEntitlements, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, RegistrationCorrections, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests].map(withViewerAccess),
+  globals: [Header, Footer].map(withViewerGlobalAccess),
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || "",
   }),

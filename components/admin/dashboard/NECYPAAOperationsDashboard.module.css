@@ -1,0 +1,400 @@
+.widget {
+  --event-primary: #e85e27;
+  background: var(--theme-elevation-0);
+  border: 1px solid var(--theme-elevation-175, var(--theme-elevation-150));
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgb(15 23 42 / 6%);
+  color: var(--theme-text);
+  height: 100%;
+  padding: clamp(1rem, 2vw, 1.35rem);
+}
+
+.quickActions {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  height: auto;
+  padding: 0;
+}
+
+.heading,
+.panelHeader {
+  margin-bottom: 1rem;
+}
+
+.heading h1,
+.panelHeader h2 {
+  color: var(--theme-text);
+  line-height: 1.15;
+  margin: 0 0 0.3rem;
+}
+
+.heading h1 {
+  font-size: clamp(1.8rem, 3vw, 2.45rem);
+  letter-spacing: -0.035em;
+}
+
+.panelHeader {
+  align-items: flex-start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.panelHeader > div {
+  min-inline-size: 0;
+}
+
+.panelHeader h2 {
+  font-size: clamp(1.15rem, 1.6vw, 1.32rem);
+  font-weight: 730;
+  letter-spacing: -0.018em;
+}
+
+.heading p,
+.panelHeader p,
+.widgetNote,
+.emptyState {
+  color: var(--theme-elevation-650);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.actionGrid {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.actionCard {
+  align-items: center;
+  background: var(--theme-elevation-0);
+  border: 1px solid var(--theme-elevation-200);
+  border-radius: 8px;
+  color: var(--theme-text);
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: 2.4rem minmax(0, 1fr) auto;
+  min-block-size: 4.65rem;
+  min-inline-size: 0;
+  padding: 0.7rem;
+  text-decoration: none;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    transform 140ms ease;
+}
+
+.actionCard:hover,
+.actionCard:focus-visible {
+  background: var(--theme-elevation-50);
+  border-color: var(--theme-elevation-400);
+  transform: translateY(-1px);
+}
+
+.actionCard:focus-visible,
+.inlineLink:focus-visible,
+.correctionList a:focus-visible,
+.queueHeading a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--event-primary) 24%, transparent);
+  outline-offset: 2px;
+}
+
+.actionCard[data-primary="true"] {
+  background: var(--event-primary);
+  border-color: color-mix(in srgb, var(--event-primary) 82%, #000);
+  color: #fff;
+}
+
+.actionCard[data-primary="true"]:hover,
+.actionCard[data-primary="true"]:focus-visible {
+  background: color-mix(in srgb, var(--event-primary) 90%, #000);
+  border-color: color-mix(in srgb, var(--event-primary) 72%, #000);
+}
+
+.actionIcon,
+.metricIcon {
+  align-items: center;
+  background: var(--theme-elevation-75, var(--theme-elevation-50));
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 6px;
+  color: var(--theme-elevation-750);
+  display: inline-flex;
+  height: 2.4rem;
+  justify-content: center;
+  width: 2.4rem;
+}
+
+.actionCard[data-primary="true"] .actionIcon {
+  background: rgb(255 255 255 / 12%);
+  border-color: rgb(255 255 255 / 30%);
+  color: #fff;
+}
+
+.actionCopy {
+  display: grid;
+  gap: 0.12rem;
+  min-inline-size: 0;
+}
+
+.actionCopy strong {
+  font-size: 0.86rem;
+  line-height: 1.25;
+}
+
+.actionCopy small {
+  color: var(--theme-elevation-600);
+  font-size: 0.73rem;
+  line-height: 1.32;
+}
+
+.actionCard[data-primary="true"] .actionCopy small {
+  color: rgb(255 255 255 / 80%);
+}
+
+.actionArrow {
+  color: var(--event-primary);
+}
+
+.actionCard[data-primary="true"] .actionArrow {
+  color: #fff;
+}
+
+.inlineLink,
+.queueHeading a {
+  align-items: center;
+  color: var(--event-primary);
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 0.77rem;
+  font-weight: 720;
+  gap: 0.28rem;
+  text-decoration: none;
+}
+
+.inlineLink:hover,
+.queueHeading a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.17em;
+}
+
+.metricGrid,
+.fundGrid {
+  display: grid;
+}
+
+.metricGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.metric,
+.fundMetric {
+  align-items: center;
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: 2.55rem minmax(0, 1fr);
+  min-inline-size: 0;
+}
+
+.metric {
+  padding-inline: 0.15rem 1rem;
+}
+
+.metric + .metric {
+  border-inline-start: 1px solid var(--theme-elevation-150);
+  padding-inline: 1rem 0.15rem;
+}
+
+.metric > span:last-child,
+.fundMetric > span:last-child {
+  display: grid;
+  gap: 0.16rem;
+}
+
+.metric strong,
+.fundMetric strong {
+  color: var(--theme-text);
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.metric small,
+.fundMetric small {
+  color: var(--theme-elevation-650);
+  font-size: 0.76rem;
+}
+
+.fundGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fundMetric {
+  min-block-size: 4.45rem;
+  padding-inline: 0.15rem 1rem;
+}
+
+.fundMetric + .fundMetric {
+  border-inline-start: 1px solid var(--theme-elevation-150);
+  padding-inline: 1rem 0.15rem;
+}
+
+.widgetNote {
+  border-top: 1px solid var(--theme-elevation-150);
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+}
+
+.programStatus {
+  border-bottom: 1px solid var(--theme-elevation-150);
+  display: grid;
+  margin-bottom: 0.9rem;
+}
+
+.statusRow {
+  align-items: center;
+  display: flex;
+  font-size: 0.78rem;
+  justify-content: space-between;
+  min-block-size: 2.35rem;
+}
+
+.statusRow + .statusRow {
+  border-top: 1px solid var(--theme-elevation-125, var(--theme-elevation-100));
+}
+
+.statusRow > span {
+  align-items: center;
+  color: var(--theme-elevation-650);
+  display: inline-flex;
+  gap: 0.42rem;
+}
+
+.statusRow svg {
+  color: var(--event-primary);
+}
+
+.statusRow strong {
+  color: var(--theme-text);
+  font-size: 0.82rem;
+}
+
+.queueHeading {
+  align-items: center;
+  display: flex;
+  font-size: 0.82rem;
+  justify-content: space-between;
+  margin-bottom: 0.2rem;
+}
+
+.queueHeading strong {
+  color: var(--theme-text);
+}
+
+.correctionList {
+  display: grid;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.correctionList li + li {
+  border-top: 1px solid var(--theme-elevation-125, var(--theme-elevation-100));
+}
+
+.correctionList a {
+  align-items: center;
+  color: var(--theme-text);
+  display: grid;
+  gap: 0.45rem 0.75rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-block-size: 3.25rem;
+  padding: 0.45rem 0.15rem;
+  text-decoration: none;
+}
+
+.correctionList a:hover strong,
+.correctionList a:focus-visible strong {
+  color: var(--event-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.correctionList a > span {
+  display: grid;
+  gap: 0.1rem;
+  min-inline-size: 0;
+}
+
+.correctionList strong {
+  font-size: 0.76rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.correctionList small,
+.correctionList time {
+  color: var(--theme-elevation-600);
+  font-size: 0.68rem;
+}
+
+.correctionList time {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.emptyState {
+  border: 1px dashed var(--theme-elevation-200);
+  border-radius: 6px;
+  padding: 0.75rem;
+}
+
+@media (max-width: 1100px) {
+  .actionGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .widget {
+    padding: 0.95rem;
+  }
+
+  .panelHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .actionGrid,
+  .metricGrid,
+  .fundGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric,
+  .metric + .metric,
+  .fundMetric,
+  .fundMetric + .fundMetric {
+    border-inline-start: 0;
+    padding-inline: 0.15rem;
+  }
+
+  .metric + .metric,
+  .fundMetric + .fundMetric {
+    border-top: 1px solid var(--theme-elevation-150);
+    margin-top: 0.7rem;
+    padding-top: 0.7rem;
+  }
+
+  .actionCard {
+    min-block-size: 4.35rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .actionCard {
+    transition: none;
+  }
+}

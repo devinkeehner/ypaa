@@ -1,0 +1,322 @@
+.shell {
+  block-size: 100%;
+  min-block-size: 0;
+  overflow: visible;
+  position: relative;
+}
+
+.rail {
+  background: var(--theme-elevation-0);
+  block-size: 100%;
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0.55rem 0.45rem;
+  scrollbar-color: var(--theme-elevation-250) transparent;
+  scrollbar-width: thin;
+}
+
+.railMain {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.railFooter {
+  border-top: 1px solid var(--theme-elevation-150);
+  display: grid;
+  gap: 0.2rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.railItem {
+  align-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: var(--theme-elevation-650);
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  font: inherit;
+  gap: 0.75rem;
+  justify-content: flex-start;
+  min-block-size: 3.15rem;
+  padding: 0.55rem 0.7rem;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+  width: 100%;
+}
+
+.railItem::before {
+  background: transparent;
+  border-radius: 999px;
+  content: "";
+  inset-block: 0.72rem;
+  inset-inline-start: -0.43rem;
+  position: absolute;
+  width: 3px;
+}
+
+.railItem > svg {
+  flex: 0 0 auto;
+}
+
+.railItem > span {
+  font-size: 0.84rem;
+  font-weight: 620;
+  line-height: 1.25;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+
+.railItem:hover,
+.railItem:focus-visible,
+.railItem[data-active="true"] {
+  background: var(--theme-elevation-75, var(--theme-elevation-50));
+  border-color: var(--theme-elevation-150);
+  color: var(--theme-text);
+}
+
+.railItem[data-active="true"]::before {
+  background: var(--necypaa-nav-primary);
+}
+
+.railItem:focus-visible,
+.closeButton:focus-visible,
+.panelLink:focus-visible,
+.primaryAction:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--necypaa-nav-primary) 24%, transparent);
+  outline-offset: 2px;
+}
+
+.panel {
+  animation: panelIn 150ms ease-out;
+  background: var(--theme-elevation-0);
+  border-inline-end: 1px solid var(--theme-elevation-150);
+  box-shadow: 14px 0 28px rgb(15 23 42 / 12%);
+  display: flex;
+  flex-direction: column;
+  inset-block: 0;
+  inset-inline-start: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 1rem;
+  position: absolute;
+  width: min(20rem, calc(100vw - var(--necypaa-nav-rail-width)));
+  z-index: 3;
+}
+
+.panelHeader {
+  align-items: flex-start;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+}
+
+.panelHeader > div {
+  min-inline-size: 0;
+}
+
+.panelHeader h2 {
+  color: var(--theme-text);
+  font-size: 1.05rem;
+  line-height: 1.2;
+  margin: 0 0 0.22rem;
+}
+
+.panelHeader p {
+  color: var(--theme-elevation-600);
+  font-size: 0.76rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.closeButton {
+  align-items: center;
+  background: var(--theme-elevation-50);
+  border: 1px solid var(--theme-elevation-175, var(--theme-elevation-150));
+  border-radius: 6px;
+  color: var(--theme-text);
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 2.15rem;
+  justify-content: center;
+  padding: 0;
+  width: 2.15rem;
+}
+
+.primaryAction,
+.panelLink {
+  color: var(--theme-text);
+  text-align: left;
+  text-decoration: none;
+}
+
+.primaryAction {
+  align-items: center;
+  background: var(--necypaa-nav-primary);
+  border: 1px solid var(--necypaa-nav-primary);
+  border-radius: 7px;
+  color: #fff;
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  margin-bottom: 0.85rem;
+  min-block-size: 3.75rem;
+  padding: 0.6rem;
+}
+
+.primaryAction:hover,
+.primaryAction:focus-visible {
+  background: color-mix(in srgb, var(--necypaa-nav-primary) 88%, #000);
+  border-color: color-mix(in srgb, var(--necypaa-nav-primary) 72%, #000);
+}
+
+.primaryActionIcon,
+.panelLinkIcon {
+  align-items: center;
+  border-radius: 6px;
+  display: inline-flex;
+  height: 2.3rem;
+  justify-content: center;
+  width: 2.3rem;
+}
+
+.primaryActionIcon {
+  background: rgb(255 255 255 / 14%);
+  border: 1px solid rgb(255 255 255 / 30%);
+}
+
+.primaryAction > span:last-child,
+.panelLink > span:last-child {
+  display: grid;
+  gap: 0.12rem;
+  min-inline-size: 0;
+}
+
+.primaryAction strong,
+.panelLink strong {
+  font-size: 0.82rem;
+  line-height: 1.2;
+}
+
+.primaryAction small {
+  color: rgb(255 255 255 / 80%);
+  font-size: 0.7rem;
+  line-height: 1.32;
+}
+
+.panelLinks {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.panelLink {
+  align-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: 2.35rem minmax(0, 1fr);
+  min-block-size: 3.65rem;
+  padding: 0.6rem;
+  width: 100%;
+}
+
+.panelLink:hover,
+.panelLink:focus-visible,
+.panelLink[data-active="true"] {
+  background: var(--theme-elevation-75, var(--theme-elevation-50));
+  border-color: var(--theme-elevation-175, var(--theme-elevation-150));
+}
+
+.panelLink[data-active="true"] {
+  box-shadow: inset 3px 0 0 var(--necypaa-nav-primary);
+}
+
+.panelLinkIcon {
+  background: var(--theme-elevation-100);
+  border: 1px solid var(--theme-elevation-150);
+  color: var(--theme-elevation-700);
+}
+
+.panelLink small {
+  color: var(--theme-elevation-600);
+  font-size: 0.7rem;
+  line-height: 1.32;
+}
+
+.panelScrim {
+  background: rgb(15 23 42 / 18%);
+  border: 0;
+  display: block;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  transition: opacity 150ms ease;
+  z-index: 38;
+}
+
+.panelScrim[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .railItem {
+    flex-direction: column;
+    gap: 0.3rem;
+    justify-content: center;
+    min-block-size: 4rem;
+    padding: 0.45rem 0.2rem;
+    text-align: center;
+  }
+
+  .railItem > span {
+    font-size: 0.64rem;
+    font-weight: 700;
+    line-height: 1.05;
+  }
+
+  .rail {
+    padding-inline: 0.35rem;
+  }
+
+  .railItem {
+    min-block-size: 4rem;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .panelScrim,
+  .railItem {
+    animation: none;
+    transition: none;
+  }
+}
