@@ -45,6 +45,13 @@ test("invalid editor-transformed and empty values are safe", () => {
   assert.deepEqual(normalizeMeetings(undefined), []);
 });
 
+test("preserves unpopulated flyer references and stable event row IDs", () => {
+  for (const image of ["media-1", 7, 0, "/images/flyer.jpg"]) {
+    assert.deepEqual(normalizePastEvents([{ id: "row-1", title: "Bonfire", date: "Dec 31", image }]),
+      [{ id: "row-1", title: "Bonfire", date: "Dec 31", image }]);
+  }
+});
+
 test("preserves only the hidden rich-text map on structured rows", () => {
   const puckRichText = {
     date: { enabled: true, value: { root: { children: [] } } },

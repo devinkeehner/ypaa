@@ -8,7 +8,7 @@ export type MediaValue = {
   width?: number;
   height?: number;
 };
-export type PastEvent = { title: string; date: string; image?: MediaValue | null };
+export type PastEvent = { id?: number | string; title: string; date: string; image?: MediaValue | string | number | null };
 export type UpcomingEvent = { title: string; date: string };
 export type MeetingListing = { name: string; location: string; date?: string; url?: string; accessibleContext?: string };
 export type ScheduleMeeting = { day: string; time: string; name: string; url: string; accessibleContext?: string; location: string; city: string; attendance: string; address: string; types: string };

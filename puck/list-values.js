@@ -62,10 +62,12 @@ export function normalizePastEvents(value) {
       if (!item || typeof item !== "object" || Array.isArray(item)) return null;
       return {
         ...richTextStorage(item),
+        ...(typeof item.id === "string" || typeof item.id === "number" ? { id: item.id } : {}),
         title: text(item, ["title", "name", "label", "value"]),
         date: text(item, ["date", "when"]),
         image:
-          item.image && typeof item.image === "object" && !Array.isArray(item.image)
+          typeof item.image === "string" || typeof item.image === "number" ||
+          (item.image && typeof item.image === "object" && !Array.isArray(item.image))
             ? item.image
             : null,
       };

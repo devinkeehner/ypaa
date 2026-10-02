@@ -414,7 +414,7 @@ const pastEventsField: Field<PastEvent[]> = {
   type: "array",
   label: "Past events",
   defaultItemProps: { title: "", date: "", image: null },
-  arrayFields: { title: text("Title"), date: text("Date"), image: mediaField("Event flyer") },
+  arrayFields: { title: text("Title"), date: text("Date"), image: mediaField("Event flyer") as Field<PastEvent["image"]> },
   getItemSummary: (item) => item.title || item.date || "Past event",
 };
 

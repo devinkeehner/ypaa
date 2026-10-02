@@ -15,7 +15,7 @@ import { campaignAltDefinitions, campaignAltTypes } from "./campaign-alt-definit
 import { isLexicalValue } from "./lexical-value";
 import { lexicalToHTML, stripNativeRichTextForPayload } from "./native-rich-text";
 import { AFTER_CONTENT_BLOCK_TYPES, afterContentZoneID, bottomContentZoneID } from "./drop-zones";
-import { hydrateExpandedMedia } from "./runtime-data.mjs";
+import { hydrateExpandedMedia, recoverEventFlyers } from "./runtime-data.mjs";
 
 const COMPONENT_TYPES = new Set([
   "HeroCountdown",
@@ -413,7 +413,8 @@ export function pageDocumentToPuckData(page: PageDocument, options: { materializ
   if (isPuckData(page.builderData)) {
     data = normalizePuckData(page.builderData);
     if (Array.isArray(page.layout) && page.layout.length) {
-      data = hydrateExpandedMedia(data, pageLayoutToPuckData(page));
+      const layoutData = pageLayoutToPuckData(page);
+      data = hydrateExpandedMedia(recoverEventFlyers(data, layoutData), layoutData);
     }
   } else if (Array.isArray(page.layout) && page.layout.length) {
     data = pageLayoutToPuckData(page);
