@@ -171,7 +171,7 @@ test("header controls and convention blocks keep their accessible builder contra
   assert.match(config, /listForRender\(props, props\.pastEvents, normalizePastEvents\)/);
   assert.match(config, /listForRender\(props, props\.meetings, normalizeMeetings\)/);
   assert.match(config, /listForRender\(props, props\.meetings, normalizeScheduleMeetings\)/);
-  assert.match(config, /const hasFeaturedUpcoming = Boolean/);
+  assert.match(config, /const hasFeaturedUpcoming = !featuredExpired && Boolean/);
   assert.match(config, /hasEventContent \? <div className=\{styles\.eventBlend\}/);
   assert.doesNotMatch(config, /: "Upcoming flyer"/);
 

@@ -19,5 +19,5 @@ export default async function Home() {
   } catch {
     // Keep the initial public view available before the database is seeded.
   }
-  return <PublicPage data={data} />;
+  return <PublicPage data={data} homepageNow={Date.now()} />;
 }

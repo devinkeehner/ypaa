@@ -137,6 +137,23 @@ actions tied to the current ChatGPT user. Leave public content anonymous.
 
 ## Diagnostic Commands
 
+Homepage **Upcoming events** and **Business meeting** entries automatically hide after
+their full displayed date (for example, `Sunday, August 16, 2026`). Date-only entries
+remain visible through that day in `America/New_York`, including daylight saving time.
+The optional **Hide after (homepage only)** field overrides the display date with
+`YYYY-MM-DD` or a specific ISO end time including an offset, such as
+`2026-08-16T16:00:00-04:00`. A displayed meeting start time does not end its visibility.
+Dates without a year, date ranges, and invalid or missing dates stay visible until a
+valid cutoff is configured. Set cutoffs individually for the featured event, additional
+upcoming events, the primary business meeting, and each meeting-date row.
+
+Expired primary meeting details and its join button hide independently of remaining
+meeting-date rows. Empty event/meeting sections hide once all their dated content
+expires. Past Events cards and flyers always remain, and entries are never deleted
+or automatically moved to the archive. Other pages and the editor keep all content.
+The homepage checks dates on each request; open tabs refresh visibility every minute
+and when focused or brought back into view.
+
 - `npm run dev`: start the Next.js development server
 - `npm run build`: generate the Payload import map and build the Vercel artifact
 - `npm run start`: start the production Next.js server

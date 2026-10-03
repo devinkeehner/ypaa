@@ -18,6 +18,15 @@ import type { Block, Field } from "payload";
 
 import { campaignAltDefinitions } from "@/puck/campaign-alt-definitions";
 import { AFTER_CONTENT_BLOCK_TYPES } from "@/puck/drop-zones";
+import { HIDE_AFTER_DESCRIPTION, parseHideAfter } from "@/puck/homepage-dates";
+
+function hideAfterField(name = "hideAfter"): Field {
+  return {
+    name, label: "Hide after (homepage only)", type: "text",
+    admin: { description: HIDE_AFTER_DESCRIPTION },
+    validate: (value: unknown) => value == null || value === "" || parseHideAfter(value) !== null || "Use YYYY-MM-DD or an ISO end time with a timezone.",
+  };
+}
 
 const textStyles: Field = {
   name: "textStyles",
@@ -146,6 +155,7 @@ export const MeetingInfoBlock: Block = {
     { name: "heading", type: "text" },
     { name: "body", type: "textarea" },
     { name: "date", type: "text" },
+    hideAfterField(),
     { name: "time", type: "text" },
     { name: "location", type: "text" },
     { name: "actionLabel", type: "text" },
@@ -159,6 +169,7 @@ export const MeetingInfoBlock: Block = {
       labels: { singular: "Meeting date", plural: "Meeting dates" },
       fields: [
         { name: "date", type: "text" },
+        hideAfterField(),
       ],
     },
     textStyles,
@@ -176,6 +187,7 @@ export const EventsBlock: Block = {
     { name: "upcomingTitle", type: "text" },
     { name: "upcomingBody", type: "textarea" },
     { name: "upcomingDate", type: "text" },
+    hideAfterField("upcomingHideAfter"),
     { name: "upcomingLocation", type: "text" },
     { name: "upcomingImage", type: "upload", relationTo: "media" },
     {
@@ -185,6 +197,7 @@ export const EventsBlock: Block = {
       fields: [
         { name: "title", type: "text" },
         { name: "date", type: "text" },
+        hideAfterField(),
       ],
     },
     {

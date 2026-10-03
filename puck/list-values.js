@@ -33,6 +33,12 @@ function richTextStorage(record) {
     : {};
 }
 
+function dateVisibilityStorage(record) {
+  return typeof record.hideAfter === "string" && record.hideAfter.trim()
+    ? { hideAfter: record.hideAfter.trim() }
+    : {};
+}
+
 /** @param {unknown} value */
 export function normalizeImportantDates(value) {
   return lines(value)
@@ -44,6 +50,7 @@ export function normalizeImportantDates(value) {
       if (!item || typeof item !== "object" || Array.isArray(item)) return null;
       return {
         ...richTextStorage(item),
+        ...dateVisibilityStorage(item),
         date: text(item, ["date", "when"]),
         label: text(item, ["label", "title", "name", "details", "value"]),
       };
@@ -107,6 +114,7 @@ export function normalizeUpcomingEvents(value) {
       if (!item || typeof item !== "object" || Array.isArray(item)) return null;
       return {
         ...richTextStorage(item),
+        ...dateVisibilityStorage(item),
         title: text(item, ["title", "name", "label", "value"]),
         date: text(item, ["date", "when"]),
       };
