@@ -39,12 +39,47 @@ test("explicit end instants expire at the cutoff and date overrides use Eastern 
   }
 });
 
-test("unambiguous full-year legacy dates work without guessing a missing year", () => {
+test("unambiguous full-year legacy dates work and unclear dates stay visible", () => {
   for (const date of ["Aug 16 2026", "August 16th, 2026", "Sunday August 16, 2026", "Sept. 1, 2026"]) {
     assert.equal(expired(date, "2026-10-03T12:00:00Z"), true);
   }
-  for (const date of [undefined, null, "", "Aug 16", "01/02/2026", "Every Sunday", "TBA", "August 16–17, 2026", "August 16, 2026 at 2 PM", "2026-08-16T14:00:00-04:00", {}, "2026-02-30", "February 29, 2026", "April 31, 2026"]) {
+  for (const date of [undefined, null, "", "01/02/2026", "11/7", "Every Sunday", "TBA", "November 7-8", "August 16–17, 2026", "August 16, 2026 at 2 PM", "2026-08-16T14:00:00-04:00", {}, "2026-02-30", "February 29", "February 29, 2026", "April 31", "April 31, 2026"]) {
     assert.equal(expired(date, "2027-01-01T12:00:00Z"), false, String(date));
+  }
+});
+
+test("published upcoming month/day formats default to 2026 through their Eastern day", () => {
+  for (const date of ["November 7th", "November7th", "Nov 7", "Nov. 7th", "Saturday, November 7th", "november 7TH"]) {
+    assert.equal(expired(date, "2026-11-07T12:00:00Z"), false, date);
+    assert.equal(expired(date, "2026-11-08T04:59:59.999Z"), false, date);
+    assert.equal(expired(date, "2026-11-08T05:00:00Z"), true, date);
+  }
+  for (const date of ["November 22nd", "November22nd", "Sunday, November 22nd"]) {
+    assert.equal(expired(date, "2026-11-23T04:59:59.999Z"), false, date);
+    assert.equal(expired(date, "2026-11-23T05:00:00Z"), true, date);
+  }
+});
+
+test("the default is fixed to 2026 while explicit other years and cutoffs take precedence", () => {
+  assert.equal(expired("November 7th", "2027-01-01T12:00:00Z"), true);
+  assert.equal(expired("November 7th, 2027", "2027-01-01T12:00:00Z"), false);
+  assert.equal(expired("November 7th, 2025", "2026-01-01T12:00:00Z"), true);
+  assert.equal(expired("January 3, 2027", "2027-01-04T04:59:59.999Z"), false);
+  assert.equal(expired("January 3, 2027", "2027-01-04T05:00:00Z"), true);
+  assert.equal(expired("February 29, 2028", "2028-03-01T04:59:59.999Z"), false);
+  assert.equal(expired("February 29, 2028", "2028-03-01T05:00:00Z"), true);
+  assert.equal(expired("November 7th", "2026-11-08T05:00:00Z", "2027-11-07"), false);
+  assert.equal(expired("November 7th", "2026-11-07T20:59:59.999Z", "2026-11-07T16:00:00-05:00"), false);
+  assert.equal(expired("November 7th", "2026-11-07T21:00:00Z", "2026-11-07T16:00:00-05:00"), true);
+});
+
+test("yearless dates honor both DST transition days in the fixed calendar year", () => {
+  for (const [date, last, next] of [
+    ["March 8th", "2026-03-09T03:59:59.999Z", "2026-03-09T04:00:00Z"],
+    ["November 1st", "2026-11-02T04:59:59.999Z", "2026-11-02T05:00:00Z"],
+  ]) {
+    assert.equal(expired(date, last), false);
+    assert.equal(expired(date, next), true);
   }
 });
 
@@ -63,14 +98,20 @@ test("filtering retains unknown dates, source indexes and archive flyers without
   const upcoming = normalizeUpcomingEvents([
     { title: "Expired", date: "August 16, 2026" },
     { title: "Future", date: "November 1, 2026", hideAfter: "2026-11-01" },
-    { title: "Needs a year", date: "Aug 16" },
+    { title: "Yearless expired", date: "Aug 16" },
     { title: "Undated", date: "" },
+    { title: "Unclear", date: "TBA" },
   ]);
-  const past = normalizePastEvents([{ title: "Archived", date: "August 16, 2026", image: { id: "flyer", url: "/flyer.png" } }]);
+  const past = normalizePastEvents([
+    { title: "Archived", date: "August 16, 2026", image: { id: "flyer", url: "/flyer.png" } },
+    { title: "Yearless archive", date: "Aug 16", image: { id: "yearless-flyer", url: "/yearless-flyer.png" } },
+  ]);
   const before = structuredClone({ upcoming, past });
-  assert.deepEqual(visibleHomepageRows(upcoming, now).map(({ index }) => index), [1, 2, 3]);
+  assert.deepEqual(visibleHomepageRows(upcoming, now).map(({ index }) => index), [1, 3, 4]);
   assert.deepEqual({ upcoming, past }, before);
   assert.equal(past[0].image.url, "/flyer.png");
+  assert.equal(past[1].date, "Aug 16");
+  assert.equal(past[1].image.url, "/yearless-flyer.png");
   const meetings = normalizeImportantDates([{ date: "Aug 16", hideAfter: "2026-08-16" }, { date: "Nov 1", hideAfter: "2026-11-01" }]);
   assert.equal(visibleHomepageRows(meetings, now)[0].item.date, "Nov 1");
   assert.equal(visibleHomepageRows(upcoming, null).length, upcoming.length);

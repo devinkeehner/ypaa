@@ -368,7 +368,7 @@ export interface Page {
             body?: string | null;
             date?: string | null;
             /**
-             * Homepage only. Optional YYYY-MM-DD (visible through that Eastern day), or ISO end time with timezone, e.g. 2026-08-16T16:00:00-04:00. Blank uses the displayed date when it includes a year. Missing years, ranges, and unclear dates stay visible.
+             * Homepage only. Optional YYYY-MM-DD (visible through that Eastern day), or ISO end time with timezone, e.g. 2026-08-16T16:00:00-04:00. Blank uses the displayed date. Month/day dates without a year use 2026. Explicit years are preserved; ranges and unclear dates stay visible.
              */
             hideAfter?: string | null;
             time?: string | null;
@@ -387,7 +387,7 @@ export interface Page {
               | {
                   date?: string | null;
                   /**
-                   * Homepage only. Optional YYYY-MM-DD (visible through that Eastern day), or ISO end time with timezone, e.g. 2026-08-16T16:00:00-04:00. Blank uses the displayed date when it includes a year. Missing years, ranges, and unclear dates stay visible.
+                   * Homepage only. Optional YYYY-MM-DD (visible through that Eastern day), or ISO end time with timezone, e.g. 2026-08-16T16:00:00-04:00. Blank uses the displayed date. Month/day dates without a year use 2026. Explicit years are preserved; ranges and unclear dates stay visible.
                    */
                   hideAfter?: string | null;
                   puckRichText?:
@@ -432,7 +432,7 @@ export interface Page {
             upcomingBody?: string | null;
             upcomingDate?: string | null;
             /**
-             * Homepage only. Optional YYYY-MM-DD (visible through that Eastern day), or ISO end time with timezone, e.g. 2026-08-16T16:00:00-04:00. Blank uses the displayed date when it includes a year. Missing years, ranges, and unclear dates stay visible.
+             * Homepage only. Optional YYYY-MM-DD (visible through that Eastern day), or ISO end time with timezone, e.g. 2026-08-16T16:00:00-04:00. Blank uses the displayed date. Month/day dates without a year use 2026. Explicit years are preserved; ranges and unclear dates stay visible.
              */
             upcomingHideAfter?: string | null;
             upcomingLocation?: string | null;
@@ -442,7 +442,7 @@ export interface Page {
                   title?: string | null;
                   date?: string | null;
                   /**
-                   * Homepage only. Optional YYYY-MM-DD (visible through that Eastern day), or ISO end time with timezone, e.g. 2026-08-16T16:00:00-04:00. Blank uses the displayed date when it includes a year. Missing years, ranges, and unclear dates stay visible.
+                   * Homepage only. Optional YYYY-MM-DD (visible through that Eastern day), or ISO end time with timezone, e.g. 2026-08-16T16:00:00-04:00. Blank uses the displayed date. Month/day dates without a year use 2026. Explicit years are preserved; ranges and unclear dates stay visible.
                    */
                   hideAfter?: string | null;
                   puckRichText?:

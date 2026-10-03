@@ -143,8 +143,10 @@ remain visible through that day in `America/New_York`, including daylight saving
 The optional **Hide after (homepage only)** field overrides the display date with
 `YYYY-MM-DD` or a specific ISO end time including an offset, such as
 `2026-08-16T16:00:00-04:00`. A displayed meeting start time does not end its visibility.
-Dates without a year, date ranges, and invalid or missing dates stay visible until a
-valid cutoff is configured. Set cutoffs individually for the featured event, additional
+Month/day dates without a year (such as `November 7th` or `November 22nd`) use **2026**.
+Explicit years are preserved, including 2027 convention dates. The default stays 2026
+even when the current year changes. Date ranges and invalid or missing dates stay
+visible until a valid cutoff is configured. Set cutoffs individually for the featured event, additional
 upcoming events, the primary business meeting, and each meeting-date row.
 
 Expired primary meeting details and its join button hide independently of remaining

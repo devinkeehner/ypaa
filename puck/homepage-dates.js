@@ -1,5 +1,8 @@
 export const HOMEPAGE_TIME_ZONE = "America/New_York";
-export const HIDE_AFTER_DESCRIPTION = "Homepage only. Optional YYYY-MM-DD (visible through that Eastern day), or ISO end time with timezone, e.g. 2026-08-16T16:00:00-04:00. Blank uses the displayed date when it includes a year. Missing years, ranges, and unclear dates stay visible.";
+export const HIDE_AFTER_DESCRIPTION = "Homepage only. Optional YYYY-MM-DD (visible through that Eastern day), or ISO end time with timezone, e.g. 2026-08-16T16:00:00-04:00. Blank uses the displayed date. Month/day dates without a year use 2026. Explicit years are preserved; ranges and unclear dates stay visible.";
+
+// This convention's calendar year is fixed; do not roll yearless entries into a later year.
+const DEFAULT_HOMEPAGE_YEAR = 2026;
 
 const easternDate = new Intl.DateTimeFormat("en-US", {
   timeZone: HOMEPAGE_TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit",
@@ -34,9 +37,9 @@ function parseDisplayDate(value) {
   // A displayed time might be a start time. Only explicit hideAfter ends an entry early.
   const text = value.trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return parseHideAfter(text);
-  const match = /^(?:(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+)?(January|Jan\.?|February|Feb\.?|March|Mar\.?|April|Apr\.?|May|June|Jun\.?|July|Jul\.?|August|Aug\.?|September|Sept?\.?|October|Oct\.?|November|Nov\.?|December|Dec\.?)\s+(\d{1,2})(?:st|nd|rd|th)?[,]?\s+(\d{4})$/i.exec(text);
+  const match = /^(?:(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),?\s+)?(January|Jan\.?|February|Feb\.?|March|Mar\.?|April|Apr\.?|May|June|Jun\.?|July|Jul\.?|August|Aug\.?|September|Sept?\.?|October|Oct\.?|November|Nov\.?|December|Dec\.?)\s*(\d{1,2})(?:st|nd|rd|th)?(?:[,]?\s+(\d{4}))?$/i.exec(text);
   if (!match) return null;
-  const day = calendarDate(Number(match[3]), months.indexOf(match[1].slice(0, 3).toLowerCase()) + 1, Number(match[2]));
+  const day = calendarDate(match[3] ? Number(match[3]) : DEFAULT_HOMEPAGE_YEAR, months.indexOf(match[1].slice(0, 3).toLowerCase()) + 1, Number(match[2]));
   return day ? { day } : null;
 }
 
