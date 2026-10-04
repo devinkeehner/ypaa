@@ -163,6 +163,45 @@ test("registration check with real MongoDB, Payload records, route and captured 
       } finally { globalThis.fetch = original; process.env.REGISTRATION_TEST_MAIL_CAPTURE = capture; }
       assert.equal((await POST(request("do-not-send@real-attendee.invalid"))).status, 503);
     });
+    await t.test("paid-order receipts use recorded registration prices and preserve total/fees", async (receiptTests) => {
+      const { POST: reportOrder } = await import("../app/(payload)/api/registration-site/orders/route");
+      const previousKey = process.env.REGISTRATION_SITE_API_KEY;
+      process.env.REGISTRATION_SITE_API_KEY = "synthetic-receipt-only";
+      const fixtures = [
+        { label: "current45", subtotal: 4500, price: "$45.00", order: {}, context: { rawMetadata: { necy_registration_qty_40: "1" } } },
+        { label: "historical40", subtotal: 4000, price: "$40.00", order: {}, context: {} },
+        { label: "historical35", subtotal: 3500, price: "$35.00", order: {}, context: {} },
+        { label: "breakfast-mixed", subtotal: 9500, price: "$45.00", order: { breakfast: { friday: 2 } }, context: { breakfastUnitPriceCents: 2500 } },
+        { label: "scholarship-mixed", subtotal: 14500, price: "$45.00", order: { scholarship: { enabled: true, kind: "general", amountCents: 10000 } }, context: {} },
+        { label: "merch-mixed-unknown", subtotal: 5500, price: null, order: { merchandise: [{ slug: "synthetic-hat", quantity: 1 }] }, context: {} },
+        { label: "merch-mixed-recorded", subtotal: 5500, price: "$45.00", order: { merchandise: [{ slug: "synthetic-hat", quantity: 1 }] }, context: { registrationUnitPriceCents: 4500 } },
+        { label: "missing-subtotal", subtotal: undefined, price: null, order: {}, context: {} },
+        { label: "breakfast-only", subtotal: 2500, price: null, order: { selfRegistration: false, breakfast: { friday: 1 } }, context: { breakfastUnitPriceCents: 2500 } },
+      ];
+      try {
+        for (const fixture of fixtures) await receiptTests.test(fixture.label, async () => {
+          const fee = 165, totalCents = (fixture.subtotal ?? 4500) + fee;
+          const order = { purchaserName: "Synthetic Receipt Buyer", purchaserEmail: "receipt@example.invalid", selfRegistration: true, attendee: { name: "Synthetic Receipt Attendee", email: "receipt-attendee@example.invalid", state: "CT" }, ...fixture.order };
+          const context = { sourceKey: `synthetic:receipt:${fixture.label}`, paymentSource: "stripe", paymentStatus: "paid", dataOrigin: "stripe_webhook", purchasedAt: "2026-10-04T12:00:00Z", subtotalCents: fixture.subtotal, processingFeeCents: fee, totalCents, ...fixture.context };
+          const before = (await mail()).length;
+          const response = await reportOrder(new Request("http://127.0.0.1:3029/api/registration-site/orders", { method: "POST", headers: { authorization: "Bearer synthetic-receipt-only", "content-type": "application/json" }, body: JSON.stringify({ order, context }) }));
+          assert.equal(response.status, 200); assert.equal((await mail()).length, before + 1);
+          const message = (await mail())[before];
+          assert.equal(message.to, "receipt@example.invalid");
+          const expectedTotal = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalCents / 100);
+          for (const content of [message.text, message.html]) {
+            assert.ok(content.includes(`Total: ${expectedTotal}`));
+            assert.ok(content.includes("Card processing fee — $1.65"));
+            if (fixture.price) assert.ok(content.includes(`NECYPAA XXXVI Registration — ${fixture.price}`));
+            else assert.ok(!content.includes("NECYPAA XXXVI Registration —"));
+            if (fixture.price === "$45.00") assert.ok(!content.includes("NECYPAA XXXVI Registration — $40.00"));
+            if (fixture.label === "breakfast-only") assert.ok(!content.includes("NECYPAA XXXVI Registration"));
+          }
+        });
+      } finally {
+        if (previousKey === undefined) delete process.env.REGISTRATION_SITE_API_KEY; else process.env.REGISTRATION_SITE_API_KEY = previousKey;
+      }
+    });
     await t.test("Puck/Payload round-trip persists top-level and nested registration check", () => {
       const layout = [{ blockType: "RegistrationCheck", heading: "Check", intro: "Intro" }];
       const data = pageLayoutToPuckData({ title: "Synthetic", layout });

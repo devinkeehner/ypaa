@@ -3,7 +3,8 @@ import { NextResponse } from "next/server";
 import { getPayload } from "payload";
 
 import config from "@payload-config";
-import { BREAKFASTS, BREAKFAST_PRICE_CENTS, REGISTRATION_PRICE_CENTS, normalizeOrder } from "@/lib/registration";
+import { BREAKFASTS, BREAKFAST_PRICE_CENTS, normalizeOrder } from "@/lib/registration";
+import { registrationReceiptPriceCents } from "@/lib/registration-receipt";
 import { recordRegistrationOrder } from "@/lib/registration-records";
 import { sendPurchaserConfirmation } from "@/lib/scholarship-email";
 
@@ -66,7 +67,10 @@ export async function POST(request: Request) {
     });
     try {
       const items: string[] = [];
-      if (order.selfRegistration) items.push(`NECYPAA XXXVI Registration — ${new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(REGISTRATION_PRICE_CENTS / 100)}`);
+      if (order.selfRegistration) {
+        const price = registrationReceiptPriceCents(order, context, body.order);
+        items.push(`NECYPAA XXXVI Registration${price === null ? "" : ` — ${new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(price / 100)}`}`);
+      }
       for (const breakfast of BREAKFASTS) {
         const quantity = order.breakfast[breakfast.id];
         if (quantity) items.push(`${breakfast.name} × ${quantity} — ${new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format((quantity * BREAKFAST_PRICE_CENTS) / 100)}`);
