@@ -70,13 +70,13 @@ test("registration importer parsing, authorization, transactions, idempotence, a
       const cash = await preview(syntheticTracker({ cash: true, email: "import-cash@example.invalid" })); await confirm(cash); assert.equal(await hasConfirmedRegistration(payload, "import-cash@example.invalid"), true);
       const cashOrder = (await payload.find({ collection: "checkout-orders", where: { paymentSource: { equals: "cash" } } })).docs[0]; assert.equal(cashOrder.paymentStatus, "recorded");
     });
-    await t.test("refunded existing receipts and different-source email duplicates blocked; existing corrected data preserved", async () => {
+    await t.test("refunded existing receipts blocked; shared email accepted and existing corrected data preserved", async () => {
       const bytes = syntheticTracker({ reference: "ch_SYNTHETICPRESERVE", email: "preserve@example.invalid" }); const p = await preview(bytes); const result = await confirm(p);
       await payload.update({ collection: "attendees", id: result.result!.attendees[0].id, data: { attendeeName: "Corrected Synthetic", policyAcknowledgments: { status: "waived" } } });
       const matching = await preview(bytes); assert.equal(matching.plan.counts.matched, 1);
       const retained = await payload.findByID({ collection: "attendees", id: result.result!.attendees[0].id }); assert.equal(retained.attendeeName, "Corrected Synthetic"); assert.equal(retained.policyAcknowledgments!.status, "waived");
       await assert.rejects(rollbackRegistrationImport(payload, admin, { id: p.id, reason: "Changed", confirmRollback: true }), /changed/);
-      assert.equal((await preview(syntheticTracker({ reference: "ch_OTHERPAYMENT", email: "preserve@example.invalid" }))).plan.counts.conflicts, 1);
+      assert.equal((await preview(syntheticTracker({ reference: "ch_OTHERPAYMENT", email: "preserve@example.invalid" }))).plan.counts.new, 1);
       await payload.update({ collection: "checkout-orders", id: result.result!.orders[0], data: { paymentStatus: "refunded" } }); assert.equal((await preview(bytes)).plan.counts.conflicts, 1); assert.equal(await hasConfirmedRegistration(payload, "preserve@example.invalid"), false);
     });
     await t.test("CRM drift, expiry, actor mismatch and repeated source conflicts cannot bypass preview", async () => {
@@ -87,7 +87,39 @@ test("registration importer parsing, authorization, transactions, idempotence, a
       await assert.rejects(confirmRegistrationImport(payload, other, { id: p2.id, fingerprint: p2.plan.fingerprint, sources: [p2.plan.rows[0].sourceKey], confirmPayment: true, confirmAttendees: true, confirmScope: true }), /administrator who reviewed/);
       await confirm(p2); await assert.rejects(confirm(p), /expired/);
       const rows = trackerSheets(syntheticTracker({ reference: "ch_DUPLICATEFILE", email: "duplicate-file@example.invalid" })); const second = trackerSheets(syntheticTracker({ reference: "ch_DUPLICATEFILEOTHER", email: "duplicate-file@example.invalid" })); rows.Registrations.push(second.Registrations[1]); rows.Payments.push(second.Payments[1]);
-      const duplicate = await planRegistrationImport(payload, normalizeTracker(rows)); assert.equal(duplicate.counts.conflicts, 2);
+      const duplicate = await planRegistrationImport(payload, normalizeTracker(rows)); assert.equal(duplicate.counts.new, 2); assert.equal(duplicate.counts.conflicts, 0);
+    });
+    await t.test("distinct receipts sharing an email import together or later and remain idempotent", async () => {
+      const email = "shared-import@example.invalid";
+      const rows = trackerSheets(syntheticTracker({ reference: "ch_SHAREDFIRST", email }));
+      const second = trackerSheets(syntheticTracker({ reference: "ch_SHAREDSECOND", email }));
+      rows.Registrations.push(second.Registrations[1]); rows.Payments.push(second.Payments[1]);
+      const bytes = workbookFixture(rows), p = await preview(bytes);
+      assert.equal(p.plan.counts.new, 2); assert.equal(p.plan.counts.conflicts, 0);
+      const result = await confirm(p); assert.equal(result.result!.attendees.length, 2); assert.equal(result.result!.orders.length, 2); assert.equal(result.result!.seats.length, 2);
+      assert.equal(new Set(result.result!.attendees.map((r) => r.id)).size, 2);
+      assert.equal((await confirm(p)).alreadyImported, true);
+      assert.equal((await preview(bytes)).plan.counts.matched, 2);
+      const later = await preview(syntheticTracker({ reference: "ch_SHAREDLATER", email })); assert.equal(later.plan.counts.new, 1); await confirm(later);
+      assert.equal((await payload.count({ collection: "attendees", where: { attendeeEmail: { equals: email } } })).totalDocs, 3);
+      assert.equal(await readFile(".local-registration/mail.ndjson", "utf8"), "");
+    });
+    await t.test("different names on a shared-email group remain separate; repeated details leave extra seats unassigned", async () => {
+      const sheets = trackerSheets(syntheticTracker({ reference: "ch_SHAREDGROUP", email: "shared-group@example.invalid", quantity: 3 }));
+      sheets.Registrations[2][3] = "Second Synthetic Attendee";
+      const bytes = workbookFixture(sheets), p = await preview(bytes), result = await confirm(p);
+      assert.equal(result.result!.attendees.length, 2); assert.equal(result.result!.seats.length, 3);
+      const next = await preview(bytes); assert.equal(next.plan.counts.matched, 1);
+    });
+    await t.test("exact duplicate roster rows cannot invent seats; conflicting sources and ambiguous contacts remain blocked", async () => {
+      const duplicate = trackerSheets(syntheticTracker({ reference: "ch_EXACTDUPLICATE", email: "exact-duplicate@example.invalid" }));
+      duplicate.Registrations.push([...duplicate.Registrations[1]]);
+      const p = await preview(workbookFixture(duplicate)); assert.equal(p.plan.counts.conflicts, 1); assert.match(p.plan.rows[0].reason, /purchased ticket quantity/);
+      await assert.rejects(confirm(p, [p.plan.rows[0].sourceKey]), /validated/);
+      const conflicting = trackerSheets(syntheticTracker({ reference: "ch_CONFLICTINGSOURCE", quantity: 2 })); conflicting.Registrations[2][6] = "40";
+      assert.match((await preview(workbookFixture(conflicting))).plan.rows[0].reason, /Conflicting duplicate/);
+      for (const contactKey of ["synthetic:ambiguous:first", "synthetic:ambiguous:second"]) await payload.create({ collection: "contacts", data: { contactKey, displayName: "Synthetic Attendee", email: "ambiguous@example.invalid", communicationConsent: "unknown" } });
+      assert.match((await preview(syntheticTracker({ reference: "ch_AMBIGUOUSCONTACT", email: "ambiguous@example.invalid" }))).plan.rows[0].reason, /Multiple canonical contacts/);
     });
     await t.test("database failure rolls back all registration/payment/seat writes; no mail transport invoked", async () => {
       const p = await preview(syntheticTracker({ reference: "ch_INJECTEDFAILURE", email: "failure-import@example.invalid" }));

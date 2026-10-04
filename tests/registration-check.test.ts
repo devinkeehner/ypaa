@@ -3,7 +3,7 @@ import test from "node:test";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { MongoClient } from "mongodb";
 import { seedRegistrationTest } from "../scripts/registration-test-seed";
-import { hasConfirmedRegistration, claimPublicRequest, checkRequestIP, normalizeCheckEmail, validCheckEmail } from "../lib/registration-check";
+import { findConfirmedRegistrations, hasConfirmedRegistration, claimPublicRequest, checkRequestIP, normalizeCheckEmail, validCheckEmail } from "../lib/registration-check";
 import { pageLayoutToPuckData, puckDataToLayout } from "../puck/page-data";
 
 const database = new URL(process.env.DATABASE_URI || "").pathname.slice(1);
@@ -42,14 +42,58 @@ test("registration check with real MongoDB, Payload records, route and captured 
       assert.match(messages[1].text, /does not mean you need to pay again/);
       assert.equal(messages[0].from, "NECYPAA Test <sender@example.invalid>");
     });
-    await t.test("multiple valid matches do not leak names or counts", async () => {
+    await t.test("all matching registrations appear in one private email; public response stays generic and HTML is escaped", async () => {
       const paid = (await payload.find({ collection: "attendees", where: { attendeeEmail: { like: "paid@example.invalid" } }, depth: 0 })).docs[0];
-      await payload.create({ collection: "attendees", data: { sourceKey: "synthetic:duplicate", attendanceStatus: "expected", attendanceBasis: "manual_expected", policyAcknowledgments: { status: "pending" }, registrationPriceCents: 4000, paymentSource: "manual", dataOrigin: "manual", attendeeName: "Duplicate Private Name", attendeeEmail: "paid@example.invalid", state: "CT", purchaserName: "Synthetic", purchaserEmail: "payer@example.invalid", purchasedAt: "2026-10-01T12:00:00Z", paymentStatus: "paid" } });
-      assert.equal(await hasConfirmedRegistration(payload, "paid@example.invalid"), true);
+      const second = await payload.create({ collection: "attendees", data: { sourceKey: "synthetic:duplicate", attendanceStatus: "expected", attendanceBasis: "manual_expected", policyAcknowledgments: { status: "pending" }, registrationPriceCents: 4000, paymentSource: "manual", dataOrigin: "manual", attendeeName: "Second <Private> & Name", attendeeEmail: "paid@example.invalid", state: "CT", purchaserName: "Private Payer", purchaserEmail: "payer@example.invalid", purchasedAt: "2026-10-01T12:00:00Z", paymentStatus: "paid", notes: "Private staff notes" } });
+      const matches = await findConfirmedRegistrations(payload, "paid@example.invalid");
+      assert.deepEqual(matches.map((r) => r.attendeeName).sort(), ["Paid Synthetic", "Second <Private> & Name"].sort());
+      assert.ok(matches.every((r) => Object.keys(r).join() === "attendeeName"));
+      await clearLimits(); const before = (await mail()).length;
+      const positive = await POST(request("paid@example.invalid")), negative = await POST(request("missing@example.invalid"));
+      const publicResult = await positive.json(); assert.deepEqual(publicResult, await negative.json());
+      assert.doesNotMatch(JSON.stringify(publicResult), /Paid Synthetic|Private|registrations are|2 confirmed/);
+      const messages = (await mail()).slice(before); assert.equal(messages.filter((m) => m.to === "paid@example.invalid").length, 1);
+      const sent = messages[0]; assert.match(sent.text, /2 confirmed NECYPAA XXXVI registrations/); assert.match(sent.text, /Paid Synthetic — Confirmed/); assert.match(sent.text, /Second <Private> & Name — Confirmed/);
+      assert.equal((sent.html.match(/<li>/g) || []).length, 2); assert.match(sent.html, /Second &lt;Private&gt; &amp; Name/); assert.doesNotMatch(sent.html, /<Private>/);
+      for (const privateValue of [paid.id, second.id, "Private Payer", "payer@example.invalid", "Private staff notes", "synthetic:duplicate"]) assert.ok(!sent.text.includes(privateValue) && !sent.html.includes(privateValue));
+      assert.equal((await POST(request("paid@example.invalid"))).status, 200); assert.equal((await mail()).length, before + 2);
+    });
+    await t.test("shared-email invalid records do not appear in the private confirmed list", async () => {
+      const original = (await payload.find({ collection: "attendees", where: { attendeeEmail: { like: "paid@example.invalid" } }, depth: 0 })).docs[0];
+      for (const paymentStatus of ["pending", "refunded", "disputed", "voided"] as const) await payload.create({ collection: "attendees", data: { ...original, id: undefined, sourceKey: `synthetic:invalid:${paymentStatus}`, checkoutOrder: undefined, entitlement: undefined, attendeeName: `Invalid ${paymentStatus}`, attendeeEmail: "paid@example.invalid", paymentStatus } });
+      await payload.create({ collection: "attendees", data: { ...original, id: undefined, sourceKey: "synthetic:invalid:cancelled", checkoutOrder: undefined, entitlement: undefined, attendeeName: "Invalid cancelled", attendeeEmail: "paid@example.invalid", attendanceStatus: "cancelled", paymentStatus: "paid" } });
+      const refunded = (await payload.find({ collection: "attendees", where: { attendeeEmail: { equals: "refunded@example.invalid" } }, depth: 0 })).docs[0];
+      await payload.update({ collection: "attendees", id: refunded.id, data: { attendeeEmail: "paid@example.invalid" } });
+      assert.equal((await findConfirmedRegistrations(payload, "paid@example.invalid")).length, 2);
       await clearLimits(); const before = (await mail()).length;
       assert.equal((await POST(request("paid@example.invalid"))).status, 200);
-      const sent = (await mail())[before]; assert.doesNotMatch(sent.text, /Duplicate Private Name|Paid Synthetic|2 registrations/);
-      assert.ok(paid.id);
+      assert.doesNotMatch((await mail())[before].text, /Invalid|Refunded Synthetic/);
+    });
+    await t.test("invalid linked seats and payments are omitted even when another registration shares the email", async () => {
+      const original = (await payload.find({ collection: "attendees", where: { attendeeEmail: { equals: "cash@example.invalid" } }, depth: 0 })).docs[0];
+      const orderId = typeof original.checkoutOrder === "string" ? original.checkoutOrder : original.checkoutOrder!.id;
+      const seatId = typeof original.entitlement === "string" ? original.entitlement : original.entitlement!.id;
+      await payload.update({ collection: "attendees", id: original.id, data: { attendeeEmail: "paid@example.invalid" } });
+      for (const status of ["unassigned", "refunded", "voided"] as const) {
+        await payload.update({ collection: "registration-entitlements", id: seatId, data: { status } });
+        assert.equal((await findConfirmedRegistrations(payload, "paid@example.invalid")).length, 2, status);
+      }
+      await payload.update({ collection: "registration-entitlements", id: seatId, data: { status: "assigned", registration: (await payload.find({ collection: "attendees", where: { attendeeName: { equals: "Paid Synthetic" } } })).docs[0].id } });
+      assert.equal((await findConfirmedRegistrations(payload, "paid@example.invalid")).length, 2);
+      await payload.update({ collection: "registration-entitlements", id: seatId, data: { status: "redeemed", registration: original.id } });
+      assert.equal((await findConfirmedRegistrations(payload, "paid@example.invalid")).length, 3);
+      for (const paymentStatus of ["refunded", "disputed", "voided"] as const) {
+        await payload.update({ collection: "checkout-orders", id: orderId, data: { paymentStatus } });
+        assert.equal((await findConfirmedRegistrations(payload, "paid@example.invalid")).length, 2, paymentStatus);
+      }
+      await payload.update({ collection: "checkout-orders", id: orderId, data: { paymentStatus: "recorded" } });
+      await payload.update({ collection: "attendees", id: original.id, data: { attendeeEmail: "cash@example.invalid" } });
+    });
+    await t.test("candidate overflow fails closed without a partial confirmation email", async () => {
+      const original = payload.find.bind(payload); const before = (await mail()).length;
+      payload.find = (async (args: Parameters<typeof original>[0]) => args.collection === "attendees" ? { docs: [], hasNextPage: true } : original(args)) as typeof payload.find;
+      try { await clearLimits(); assert.equal((await POST(request("overflow@example.invalid"))).status, 503); assert.equal((await mail()).length, before); }
+      finally { payload.find = original; }
     });
     await t.test("unpaid statuses and voided entitlements cannot confirm", async () => {
       const cash = (await payload.find({ collection: "attendees", where: { attendeeEmail: { equals: "cash@example.invalid" } }, depth: 0 })).docs[0];

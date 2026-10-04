@@ -43,6 +43,12 @@ try {
   await page.getByText(received, { exact: true }).waitFor();
   assert.equal(await page.getByRole('button', { name: 'Request received', exact: true }).isDisabled(), true);
   assert.equal((await mail()).length - before, 1);
+  const confirmation = (await mail()).at(-1);
+  assert.match(confirmation.text, /2 confirmed NECYPAA XXXVI registrations/);
+  assert.match(confirmation.text, /Paid Synthetic — Confirmed/);
+  assert.match(confirmation.text, /Second Paid Synthetic — Confirmed/);
+  assert.equal((confirmation.html.match(/<li>/g) || []).length, 2);
+  assert.doesNotMatch(await page.getByRole('status').innerText(), /Synthetic|2 confirmed/);
   await email.fill('missing@example.invalid'); await button.click();
   await page.getByText(received, { exact: true }).waitFor();
   assert.match((await mail()).at(-1).text, /No confirmed registration found/);

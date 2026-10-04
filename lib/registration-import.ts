@@ -33,14 +33,6 @@ export async function planRegistrationImport(payload: Payload, data: TrackerData
     else if (orders.length && (orders[0].totalCents !== source.totalCents || orders[0].paymentSource !== source.source)) { row.action = "conflict"; row.reason = "Existing checkout payment details disagree with the tracker. No overwrite is allowed."; }
     else if (seats.length >= source.quantity || registrations.length === source.quantity) { row.action = "matched"; row.reason = "Existing registrations/seats are preserved, including assignments, corrected identities, policy acknowledgments and attendance."; }
     else if (seats.length || registrations.length) { row.action = "conflict"; row.reason = "Partial existing roster or seat allocation. Resolve it in Event CRM before importing."; }
-    else if (!orders.length) {
-      const possible = (await payload.find({ ...options, collection: "attendees", where: { or: source.attendees.map((a) => ({ attendeeEmail: { like: a.email } })) } })).docs;
-      const duplicates = possible.filter((p) => source.attendees.some((a) => p.attendeeEmail?.trim().toLowerCase() === a.email));
-      if (duplicates.length) {
-        row.action = "conflict"; row.reason = "Email already appears under a different payment/source. Review possible duplicates in Event CRM.";
-        row.existing.push(...duplicates.map((d) => ({ collection: "attendees", id: d.id, updatedAt: d.updatedAt })));
-      }
-    }
     if (row.action === "new") for (const person of source.attendees) {
       const contacts = await payload.find({ ...options, collection: "contacts", limit: 2, where: { and: [{ email: { equals: person.email } }, { displayName: { equals: person.name } }] } });
       row.existing.push(...contacts.docs.map((d) => ({ collection: "contacts", id: d.id, updatedAt: d.updatedAt })));
@@ -48,10 +40,7 @@ export async function planRegistrationImport(payload: Payload, data: TrackerData
     }
     rows.push(row);
   }
-  // Separate receipts for one email need individual review rather than automatic duplicate people.
-  const seen = new Map<string, ImportPlanRow[]>();
-  for (const row of rows) for (const a of row.attendees) seen.set(a.email, [...(seen.get(a.email) || []), row]);
-  for (const candidates of seen.values()) if (new Set(candidates.map((r) => r.sourceKey)).size > 1) for (const r of candidates) if (r.action === "new") { r.action = "conflict"; r.reason = "This email appears on multiple payment sources in this file. Resolve duplicates or attendee assignments before importing."; }
+  // Payment/source identity determines registrations; sharing an email does not merge or block receipts.
   const fingerprint = importDigest(rows);
   return { ...data, rows, fingerprint, counts: { new: rows.filter((r) => r.action === "new").length, matched: rows.filter((r) => r.action === "matched").length, conflicts: rows.filter((r) => r.action === "conflict").length, seats: rows.filter((r) => r.action === "new").reduce((sum, r) => sum + r.quantity, 0), namedAttendees: rows.filter((r) => r.action === "new").reduce((sum, r) => sum + r.attendees.length, 0), excluded: data.excluded.length } };
 }

@@ -15,10 +15,12 @@ const funded = (value: unknown) => value === "paid" || value === "recorded";
 
 // Search the roster, never a payer, contact-only record, merchandise order or unassigned seat.
 // `like` is case-insensitive in the Mongo adapter; the exact normalized comparison prevents partial matches.
-export async function hasConfirmedRegistration(payload: Payload, email: string): Promise<boolean> {
+export type ConfirmedRegistration = { attendeeName: string };
+export async function findConfirmedRegistrations(payload: Payload, email: string): Promise<ConfirmedRegistration[]> {
   const result = await payload.find({ collection: "attendees", overrideAccess: true, depth: 2, limit: 100,
     where: { and: [{ attendeeEmail: { like: email } }, { paymentStatus: { in: ["paid", "recorded"] } }, { attendanceStatus: { not_equals: "cancelled" } }] } });
   if (result.hasNextPage) throw new Error("registration_check_match_limit");
+  const matches: ConfirmedRegistration[] = [];
   for (const registration of result.docs) {
     if (normalizeCheckEmail(registration.attendeeEmail) !== email || !funded(registration.paymentStatus) || registration.attendanceStatus === "cancelled") continue;
     if (registration.checkoutOrder) {
@@ -48,9 +50,13 @@ export async function hasConfirmedRegistration(payload: Payload, email: string):
         if (allocated < registration.registrationPriceCents || allocated <= 0) continue;
       }
     }
-    return true; // Multiple valid rows are safe: disclose no names, counts or payment details.
+    matches.push({ attendeeName: registration.attendeeName });
   }
-  return false;
+  return matches;
+}
+
+export async function hasConfirmedRegistration(payload: Payload, email: string): Promise<boolean> {
+  return (await findConfirmedRegistrations(payload, email)).length > 0;
 }
 
 const digest = (value: string) => {
@@ -92,8 +98,8 @@ export async function claimPublicRequest(payload: Payload, mode: "check" | "help
 }
 
 export async function processRegistrationCheck(payload: Payload, email: string, reference: string) {
-  const confirmed = await hasConfirmedRegistration(payload, email);
-  const status = await sendRegistrationCheckResult({ recipientEmail: email, confirmed, reference });
+  const registrations = await findConfirmedRegistrations(payload, email);
+  const status = await sendRegistrationCheckResult({ recipientEmail: email, registrations, reference });
   if (status !== "sent") throw new Error("registration_check_email_not_configured");
 }
 

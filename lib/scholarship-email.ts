@@ -198,17 +198,20 @@ export async function sendCashScholarshipRequestedNotification(payload: Payload,
   return "sent" as const;
 }
 
-export async function sendRegistrationCheckResult(input: { recipientEmail: string; confirmed: boolean; reference: string }) {
+export async function sendRegistrationCheckResult(input: { recipientEmail: string; registrations: Array<{ attendeeName: string }>; reference: string }) {
   const configuration = emailConfiguration();
   if (!configuration) return "pending_configuration" as const;
-  const heading = input.confirmed ? "Your registration is confirmed" : "No confirmed registration found";
-  const explanation = input.confirmed
-    ? "We found a confirmed NECYPAA XXXVI registration associated with this email address. Please keep this email for your records."
+  const count = input.registrations.length;
+  const heading = count ? (count === 1 ? "Your registration is confirmed" : "Your registrations are confirmed") : "No confirmed registration found";
+  const explanation = count
+    ? `We found ${count === 1 ? "1 confirmed NECYPAA XXXVI registration" : `${count} confirmed NECYPAA XXXVI registrations`} associated with this email address. Each registration below is confirmed. Please keep this email for your records.`
     : "We could not find a confirmed NECYPAA XXXVI registration associated with this email address. If someone registered you, the registration may use another email address. This result does not mean you need to pay again. Use the registration help form on our website so the team can assist you.";
+  const detailsText = input.registrations.map((registration, index) => `${index + 1}. ${registration.attendeeName.replace(/[\r\n]/g, " ")} — Confirmed`).join("\n");
+  const detailsHtml = count ? `<ol>${input.registrations.map((registration) => `<li>${escapeHtml(registration.attendeeName)} — Confirmed</li>`).join("")}</ol>` : "";
   await sendEmail(configuration, {
     to: input.recipientEmail, subject: "Your NECYPAA XXXVI registration check",
-    text: `${heading}\n\n${explanation}\n\nNECYPAA XXXVI\nDecember 31, 2026 – January 3, 2027\nHartford Marriott Downtown · Hartford, Connecticut\nhttps://necypaact.com/\n\nIf you did not request this check, you can ignore this email.`,
-    html: `<div style="background:#f6f7f9;padding:32px 16px;font-family:Arial,sans-serif;color:#1f2937"><div style="max-width:600px;margin:0 auto;background:#ffffff;padding:32px;border-radius:12px"><h1 style="margin:0 0 16px;font-size:26px">${heading}</h1><p>${explanation}</p><div style="background:#f3f4f6;padding:18px;border-radius:8px"><strong>NECYPAA XXXVI</strong><br>December 31, 2026 – January 3, 2027<br>Hartford Marriott Downtown · Hartford, Connecticut<br><a href="https://necypaact.com/">necypaact.com</a></div><p>If you did not request this check, you can ignore this email.</p></div></div>`,
+    text: `${heading}\n\n${explanation}${detailsText ? `\n\n${detailsText}` : ""}\n\nNECYPAA XXXVI\nDecember 31, 2026 – January 3, 2027\nHartford Marriott Downtown · Hartford, Connecticut\nhttps://necypaact.com/\n\nIf you did not request this check, you can ignore this email.`,
+    html: `<div style="background:#f6f7f9;padding:32px 16px;font-family:Arial,sans-serif;color:#1f2937"><div style="max-width:600px;margin:0 auto;background:#ffffff;padding:32px;border-radius:12px"><h1 style="margin:0 0 16px;font-size:26px">${heading}</h1><p>${explanation}</p>${detailsHtml}<div style="background:#f3f4f6;padding:18px;border-radius:8px"><strong>NECYPAA XXXVI</strong><br>December 31, 2026 – January 3, 2027<br>Hartford Marriott Downtown · Hartford, Connecticut<br><a href="https://necypaact.com/">necypaact.com</a></div><p>If you did not request this check, you can ignore this email.</p></div></div>`,
     idempotencyKey: `registration-check:${input.reference}`,
   });
   return "sent" as const;

@@ -1,5 +1,7 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+const mail = async () => (await readFile('.local-registration/mail.ndjson', 'utf8')).split('\n').filter(Boolean).map((line) => JSON.parse(line));
 const base = 'http://127.0.0.1:3029';
 const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
 try {
@@ -9,16 +11,20 @@ try {
   const page = await context.newPage(); const errors = [];
   page.setDefaultTimeout(120000); page.setDefaultNavigationTimeout(120000);
   page.on('pageerror', (error) => errors.push(error.message));
+  page.on('console', (message) => { if (message.type() === 'error' && !/503|403/.test(message.text())) errors.push(message.text()); });
+  const before = (await mail()).length;
   await page.goto(`${base}/admin/registration-import`);
+  assert.equal(new URL(page.url()).pathname, '/admin/registration-import');
+  assert.ok(await page.title());
   await page.getByRole('heading', { name: 'Import registrations', exact: true }).waitFor();
   await page.getByLabel('Tracker workbook').setInputFiles('.local-registration/import-fixture.xlsx');
   let uploads = 0, confirms = 0;
   page.on('request', (request) => { if (request.url().endsWith('/api/admin/registration-import') && request.method() === 'POST') { if ((request.headers()['content-type'] || '').startsWith('multipart')) uploads++; else confirms++; } });
   await page.getByRole('button', { name: 'Preview workbook' }).dblclick();
   await page.getByRole('heading', { name: 'Review preview' }).waitFor({ timeout: 120000 });
-  assert.equal(uploads, 1); assert.match(await page.locator('body').innerText(), /3 new paid seats · 1 named attendees/);
+  assert.equal(uploads, 1); assert.match(await page.locator('body').innerText(), /4 new paid seats · 2 named attendees/);
   await page.getByRole('button', { name: 'Select all new sources' }).click();
-  const importButton = page.getByRole('button', { name: 'Import selected registrations (1)' });
+  const importButton = page.getByRole('button', { name: 'Import selected registrations (2)' });
   await importButton.click(); assert.equal(confirms, 0); // Native required checks prevent accidental import.
   await page.getByLabel(/I verified that the selected Stripe receipts/).check();
   await page.getByLabel(/I verified the named attendees/).check();
@@ -28,7 +34,12 @@ try {
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1));
   await page.screenshot({ path: '.local-registration/import-preview-mobile.png', fullPage: true });
   await importButton.dblclick();
-  await page.getByRole('status').filter({ hasText: 'Import complete: 1 attendee registrations and 3 paid seats' }).waitFor({ timeout: 120000 }); assert.equal(confirms, 1);
+  await page.getByRole('status').filter({ hasText: 'Import complete: 2 attendee registrations and 4 paid seats' }).waitFor({ timeout: 120000 }); assert.equal(confirms, 1);
+  assert.equal((await mail()).length, before, 'Import sends no mail');
+  const lookup = await context.request.post(`${base}/api/registration-check`, { headers: { origin: base }, data: { mode: 'check', email: 'browser-import@example.invalid', startedAt: Date.now() - 2000 } });
+  assert.equal(lookup.status(), 200); assert.equal((await mail()).length, before + 1);
+  assert.match((await mail()).at(-1).text, /2 confirmed NECYPAA XXXVI registrations/);
+  assert.equal(((await mail()).at(-1).html.match(/<li>/g) || []).length, 2);
   await page.getByRole('button', { name: 'Review rollback' }).first().click();
   await page.getByLabel('Reason', { exact: true }).fill('Synthetic browser rollback');
   await page.getByLabel(/I confirm cancelling this import/).check();
@@ -37,7 +48,7 @@ try {
   await page.getByLabel('Tracker workbook').setInputFiles('.local-registration/import-fixture.xlsx');
   await page.getByRole('button', { name: 'Preview workbook' }).click();
   await page.getByRole('heading', { name: 'Review preview' }).waitFor();
-  const row = page.getByRole('row').filter({ hasText: 'ch_BROWSERIMPORT' }); assert.equal(await row.getByRole('checkbox').isDisabled(), true); assert.match(await row.innerText(), /conflict/);
+  const rows = page.getByRole('row').filter({ hasText: 'ch_BROWSERIMPORT' }); assert.equal(await rows.count(), 2); for (const row of await rows.all()) { assert.equal(await row.getByRole('checkbox').isDisabled(), true); assert.match(await row.innerText(), /conflict/); }
   await page.route('**/api/admin/registration-import', async (route) => route.request().method() === 'POST' ? route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'Synthetic upload failure. Retry.' }) }) : route.continue());
   await page.getByRole('button', { name: 'Preview workbook' }).click();
   await page.getByRole('alert').filter({ hasText: 'Synthetic upload failure' }).waitFor(); assert.equal(await page.getByRole('button', { name: 'Preview workbook' }).isEnabled(), true);

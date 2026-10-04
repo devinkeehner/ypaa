@@ -1,6 +1,7 @@
 import type { Payload } from "payload";
 import { writeFile } from "node:fs/promises";
-import { syntheticTracker } from "../tests/registration-tracker-fixture";
+import { syntheticTracker, workbookFixture } from "../tests/registration-tracker-fixture";
+import { trackerSheets } from "../lib/registration-tracker";
 import { orderFromStripeMetadata, recordRegistrationOrder } from "../lib/registration-records";
 
 export async function seedRegistrationTest(payload: Payload) {
@@ -31,7 +32,12 @@ if (process.argv[1]?.endsWith("registration-test-seed.ts")) {
   try {
     await seedRegistrationTest(payload);
     if (!(await payload.find({ collection: "users", where: { email: { equals: "browser-admin@example.invalid" } }, limit: 1 })).docs.length) await payload.create({ collection: "users", data: { email: "browser-admin@example.invalid", password: "LocalSyntheticBrowserOnly123!", role: "admin" } });
-    await writeFile(".local-registration/import-fixture.xlsx", syntheticTracker({ reference: "ch_BROWSERIMPORT", email: "browser-import@example.invalid", quantity: 3 }));
+    const secondOrder = orderFromStripeMetadata({ attendee_name: "Second Paid Synthetic", attendee_email: "paid@example.invalid", self_registration_quantity: "1" }, { name: "Synthetic Payer", email: "payer@example.invalid" });
+    await recordRegistrationOrder(payload, secondOrder, { sourceKey: "synthetic:second-paid", paymentSource: "stripe", paymentStatus: "paid", dataOrigin: "stripe_backfill", purchasedAt: "2026-10-01T12:00:00Z" });
+    const sheets = trackerSheets(syntheticTracker({ reference: "ch_BROWSERIMPORT", email: "browser-import@example.invalid", quantity: 3 }));
+    const second = trackerSheets(syntheticTracker({ reference: "ch_BROWSERIMPORTSECOND", email: "browser-import@example.invalid" }));
+    sheets.Registrations.push(second.Registrations[1]); sheets.Payments.push(second.Payments[1]);
+    await writeFile(".local-registration/import-fixture.xlsx", workbookFixture(sheets));
     console.log("Synthetic test seed ready: /registration-check-test and /admin/registration-import. Emails are captured locally.");
   }
   finally { await payload.destroy(); }
