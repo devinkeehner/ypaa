@@ -169,18 +169,20 @@ test("registration check with real MongoDB, Payload records, route and captured 
       process.env.REGISTRATION_SITE_API_KEY = "synthetic-receipt-only";
       const fixtures = [
         { label: "current45", subtotal: 4500, price: "$45.00", order: {}, context: { rawMetadata: { necy_registration_qty_40: "1" } } },
+        { label: "stale-subtotal40", subtotal: 4000, total: 4665, price: "$45.00", order: {}, context: {} },
         { label: "historical40", subtotal: 4000, price: "$40.00", order: {}, context: {} },
         { label: "historical35", subtotal: 3500, price: "$35.00", order: {}, context: {} },
         { label: "breakfast-mixed", subtotal: 9500, price: "$45.00", order: { breakfast: { friday: 2 } }, context: { breakfastUnitPriceCents: 2500 } },
+        { label: "breakfast-stale-subtotal", subtotal: 9000, total: 9665, price: "$45.00", order: { breakfast: { friday: 2 } }, context: { breakfastUnitPriceCents: 2500 } },
         { label: "scholarship-mixed", subtotal: 14500, price: "$45.00", order: { scholarship: { enabled: true, kind: "general", amountCents: 10000 } }, context: {} },
         { label: "merch-mixed-unknown", subtotal: 5500, price: null, order: { merchandise: [{ slug: "synthetic-hat", quantity: 1 }] }, context: {} },
         { label: "merch-mixed-recorded", subtotal: 5500, price: "$45.00", order: { merchandise: [{ slug: "synthetic-hat", quantity: 1 }] }, context: { registrationUnitPriceCents: 4500 } },
-        { label: "missing-subtotal", subtotal: undefined, price: null, order: {}, context: {} },
+        { label: "missing-subtotal", subtotal: undefined, price: "$45.00", order: {}, context: {} },
         { label: "breakfast-only", subtotal: 2500, price: null, order: { selfRegistration: false, breakfast: { friday: 1 } }, context: { breakfastUnitPriceCents: 2500 } },
       ];
       try {
         for (const fixture of fixtures) await receiptTests.test(fixture.label, async () => {
-          const fee = 165, totalCents = (fixture.subtotal ?? 4500) + fee;
+          const fee = 165, totalCents = fixture.total ?? (fixture.subtotal ?? 4500) + fee;
           const order = { purchaserName: "Synthetic Receipt Buyer", purchaserEmail: "receipt@example.invalid", selfRegistration: true, attendee: { name: "Synthetic Receipt Attendee", email: "receipt-attendee@example.invalid", state: "CT" }, ...fixture.order };
           const context = { sourceKey: `synthetic:receipt:${fixture.label}`, paymentSource: "stripe", paymentStatus: "paid", dataOrigin: "stripe_webhook", purchasedAt: "2026-10-04T12:00:00Z", subtotalCents: fixture.subtotal, processingFeeCents: fee, totalCents, ...fixture.context };
           const before = (await mail()).length;

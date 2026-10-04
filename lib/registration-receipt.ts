@@ -12,7 +12,9 @@ export function registrationReceiptPriceCents(order: RegistrationOrder, context:
   if (!order.selfRegistration) return null;
   const explicitPrice = cents(context.registrationUnitPriceCents);
   if (explicitPrice !== null) return explicitPrice;
-  const subtotal = cents(context.subtotalCents);
+  const total = cents(context.totalCents);
+  const fee = cents(context.processingFeeCents, true);
+  const subtotal = total !== null && fee !== null ? cents(total - fee) : cents(context.subtotalCents);
   if (subtotal === null) return null;
   const raw = rawOrder && typeof rawOrder === "object" && !Array.isArray(rawOrder) ? rawOrder as Record<string, unknown> : {};
   // Merchandise/shipping amounts are not itemized in this reporting contract.
