@@ -27,6 +27,8 @@ import { Rooms } from "./collections/Rooms";
 import { ProgramSessions } from "./collections/ProgramSessions";
 import { VenueMaps } from "./collections/VenueMaps";
 import { NotificationRecipients } from "./collections/NotificationRecipients";
+import { RegistrationHelpRequests } from "./collections/RegistrationHelpRequests";
+import { RegistrationImports } from "./collections/RegistrationImports";
 import { EmailTests } from "./collections/EmailTests";
 import { ensureProgramSeed } from "./lib/program-seed";
 import { pageBuilderCatalogResource } from "./mcp/block-catalog";
@@ -56,6 +58,11 @@ export default buildConfig({
       providers: ["@/components/admin/AdminRuntimeRecovery"],
       afterDashboard: ["@/components/admin/MerchChairDashboardRedirect#MerchChairDashboardRedirect"],
       views: {
+        registrationImport: {
+          Component: "@/components/admin/RegistrationImportAdminView",
+          exact: true,
+          path: "/registration-import",
+        },
         programBoard: {
           Component: "@/components/admin/ProgramBoardAdminView",
           exact: true,
@@ -108,7 +115,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, Contacts, CheckoutOrders, ScholarshipContributions, RegistrationEntitlements, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, RegistrationCorrections, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests].map(withViewerAccess),
+  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, Contacts, CheckoutOrders, ScholarshipContributions, RegistrationEntitlements, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, RegistrationCorrections, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests, RegistrationHelpRequests, RegistrationImports].map(withViewerAccess),
   globals: [Header, Footer].map(withViewerGlobalAccess),
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || "",

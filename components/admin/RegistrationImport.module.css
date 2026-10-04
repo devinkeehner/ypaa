@@ -1,0 +1,17 @@
+.page { max-width: 1280px; margin: 2rem auto; padding: 0 1.5rem; }
+.page p { max-width: 90ch; line-height: 1.5; }
+.panel { border: 1px solid var(--theme-elevation-200, #b9b9b9); border-radius: 8px; padding: 1.25rem; margin: 1.5rem 0; }
+.panel label { display: block; margin: 1rem 0; line-height: 1.5; }
+.panel input[type="file"], .panel textarea { display: block; margin-top: .5rem; max-width: 100%; }
+.panel textarea { width: 100%; min-height: 5rem; }
+.panel button { margin: .5rem .5rem .5rem 0; padding: .6rem 1rem; cursor: pointer; }
+.panel button:disabled { cursor: default; opacity: .6; }
+.panel input[type="checkbox"] { width: 1.15rem; height: 1.15rem; vertical-align: middle; margin-right: .5rem; }
+.scroll { overflow-x: auto; margin: 1rem 0; }
+.scroll table { border-collapse: collapse; width: 100%; min-width: 700px; }
+.scroll th, .scroll td { text-align: left; padding: .8rem; border-bottom: 1px solid var(--theme-elevation-200, #b9b9b9); vertical-align: top; overflow-wrap: anywhere; }
+.scroll caption { text-align: left; margin-bottom: .7rem; }
+.scroll th { white-space: nowrap; overflow-wrap: normal; }
+.scroll td p { margin: .5rem 0; }
+.error { color: var(--theme-error-700, #bd2222); }
+.panel :focus-visible { outline: 3px solid var(--theme-success-500, #247ea3); outline-offset: 3px; }

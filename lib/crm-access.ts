@@ -28,12 +28,13 @@ const COLLECTION_AREAS: Record<string, ContentArea> = {
   "program-sessions": "program", rooms: "program", "venue-maps": "program",
   contacts: "registration", attendees: "registration", "registration-entitlements": "registration",
   "breakfast-tickets": "registration", "access-codes": "registration", "cash-transactions": "registration",
-  "checkout-orders": "registration", "scholarship-contributions": "registration", "registration-corrections": "registration",
+  "checkout-orders": "registration", "scholarship-contributions": "registration", "registration-corrections": "registration", "registration-help-requests": "registration",
 };
 
 export function canReadCollection(user: unknown, slug: string): boolean {
   if (isAdministrator(user)) return true;
   if (slug === "users") return false; // Accounts and permission management are admin-only.
+  if (slug === "registration-imports") return false;
   if (isViewer(user)) return true;
   if (isMerchChair(user)) return slug === "merchandise-orders";
   if (slug === "media") return CONTENT_AREAS.some((area) => canAccessArea(user, area));

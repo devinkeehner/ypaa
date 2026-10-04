@@ -53,3 +53,6 @@ next-env.d.ts
 # Local payment audits and incremental compiler cache
 /reports/
 *.tsbuildinfo
+
+# Synthetic registration test database and captured mail
+/.local-registration/

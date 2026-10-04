@@ -1,4 +1,4 @@
-import { canAccessArea } from "@/lib/crm-access";
+import { canAccessArea, isAdministrator } from "@/lib/crm-access";
 import { CRMDemoNotice } from "../CRMDemoNotice";
 import type { PayloadRequest, WidgetServerProps } from "payload";
 import { formatAdminURL } from "payload/shared";
@@ -109,6 +109,7 @@ export function EventQuickActionsWidget({ req }: WidgetServerProps) {
         <p>Manage NECYPAA XXXVI people, registrations, funding, and program work from one place.</p>
       </div>
       <div className={styles.actionGrid}>
+        {isAdministrator(req.user) && <a className={styles.actionCard} href={adminURL(req, "/registration-import")}><span className={styles.actionIcon}><TicketCheck aria-hidden size={20} /></span><span className={styles.actionCopy}><strong>Import registrations</strong><small>Upload a tracker, review matches, and confirm registration-only records.</small></span><ArrowRight aria-hidden className={styles.actionArrow} size={18} /></a>}
         {actions.filter((action) => canAccessArea(req.user, action.area)).map((action, index) => {
           const Icon = action.icon;
 

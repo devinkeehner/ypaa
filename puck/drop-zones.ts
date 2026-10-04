@@ -18,6 +18,7 @@ export const ELEMENT_DROP_TYPES = [
   "Countdown",
   "FollowLinks",
   "InlineForm",
+  "RegistrationCheck",
   "Navigation",
   "BulletedList",
 ] as string[];

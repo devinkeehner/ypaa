@@ -1,0 +1,48 @@
+import { chromium } from 'playwright';
+import assert from 'node:assert/strict';
+const base = 'http://127.0.0.1:3029';
+const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
+try {
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const login = await context.request.post(`${base}/api/users/login`, { timeout: 120000, data: { email: 'browser-admin@example.invalid', password: 'LocalSyntheticBrowserOnly123!' } });
+  assert.equal(login.status(), 200);
+  const page = await context.newPage(); const errors = [];
+  page.setDefaultTimeout(120000); page.setDefaultNavigationTimeout(120000);
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto(`${base}/admin/registration-import`);
+  await page.getByRole('heading', { name: 'Import registrations', exact: true }).waitFor();
+  await page.getByLabel('Tracker workbook').setInputFiles('.local-registration/import-fixture.xlsx');
+  let uploads = 0, confirms = 0;
+  page.on('request', (request) => { if (request.url().endsWith('/api/admin/registration-import') && request.method() === 'POST') { if ((request.headers()['content-type'] || '').startsWith('multipart')) uploads++; else confirms++; } });
+  await page.getByRole('button', { name: 'Preview workbook' }).dblclick();
+  await page.getByRole('heading', { name: 'Review preview' }).waitFor({ timeout: 120000 });
+  assert.equal(uploads, 1); assert.match(await page.locator('body').innerText(), /3 new paid seats · 1 named attendees/);
+  await page.getByRole('button', { name: 'Select all new sources' }).click();
+  const importButton = page.getByRole('button', { name: 'Import selected registrations (1)' });
+  await importButton.click(); assert.equal(confirms, 0); // Native required checks prevent accidental import.
+  await page.getByLabel(/I verified that the selected Stripe receipts/).check();
+  await page.getByLabel(/I verified the named attendees/).check();
+  await page.getByLabel(/I reviewed the new\/matched\/conflict/).check();
+  await page.screenshot({ path: '.local-registration/import-preview-desktop.png', fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1));
+  await page.screenshot({ path: '.local-registration/import-preview-mobile.png', fullPage: true });
+  await importButton.dblclick();
+  await page.getByRole('status').filter({ hasText: 'Import complete: 1 attendee registrations and 3 paid seats' }).waitFor({ timeout: 120000 }); assert.equal(confirms, 1);
+  await page.getByRole('button', { name: 'Review rollback' }).first().click();
+  await page.getByLabel('Reason', { exact: true }).fill('Synthetic browser rollback');
+  await page.getByLabel(/I confirm cancelling this import/).check();
+  await page.getByRole('button', { name: 'Confirm rollback' }).click();
+  await page.getByRole('status').filter({ hasText: 'Rollback complete' }).waitFor();
+  await page.getByLabel('Tracker workbook').setInputFiles('.local-registration/import-fixture.xlsx');
+  await page.getByRole('button', { name: 'Preview workbook' }).click();
+  await page.getByRole('heading', { name: 'Review preview' }).waitFor();
+  const row = page.getByRole('row').filter({ hasText: 'ch_BROWSERIMPORT' }); assert.equal(await row.getByRole('checkbox').isDisabled(), true); assert.match(await row.innerText(), /conflict/);
+  await page.route('**/api/admin/registration-import', async (route) => route.request().method() === 'POST' ? route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'Synthetic upload failure. Retry.' }) }) : route.continue());
+  await page.getByRole('button', { name: 'Preview workbook' }).click();
+  await page.getByRole('alert').filter({ hasText: 'Synthetic upload failure' }).waitFor(); assert.equal(await page.getByRole('button', { name: 'Preview workbook' }).isEnabled(), true);
+  await page.unroute('**/api/admin/registration-import');
+  const anonymous = await browser.newContext(); const denied = await anonymous.request.get(`${base}/api/admin/registration-import`); assert.equal(denied.status(), 403); await anonymous.close();
+  assert.deepEqual(errors, []); console.log('Importer browser checks passed: admin upload, preview, validation, duplicate clicks, import, rollback, conflicts, failure recovery, accessible labels/status, mobile layout and public denial.');
+  await context.close();
+} finally { await browser.close(); }

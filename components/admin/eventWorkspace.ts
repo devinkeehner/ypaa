@@ -54,6 +54,7 @@ export const EVENT_WORKSPACE_NAV_AREAS = [
       "registration-entitlements",
       "breakfast-tickets",
       "access-codes",
+      "registration-imports",
     ],
   },
   {

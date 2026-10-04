@@ -20,7 +20,11 @@
     "lint": "eslint . --ignore-pattern .next",
     "crm:demo": "powershell -File scripts/start-crm-demo.ps1",
     "crm:demo:reset": "node scripts/reset-crm-demo.mjs && tsx scripts/seed-crm-demo.ts",
-    "test:crm": "tsx --test --test-force-exit tests/crm-pagination.test.ts tests/stripe-csv-import.test.ts tests/crm-integration.test.ts"
+    "test:crm": "tsx --test --test-force-exit tests/crm-pagination.test.ts tests/stripe-csv-import.test.ts tests/crm-integration.test.ts",
+    "registration:local": "node scripts/local-registration.mjs",
+    "test:registration": "node scripts/local-registration.mjs test",
+    "test:registration:browser": "node scripts/local-registration.mjs browser",
+    "lint:registration": "eslint --config eslint.registration.config.mjs lib/registration-check.ts lib/registration-import.ts lib/registration-tracker.ts lib/scholarship-email.ts collections/RegistrationHelpRequests.ts collections/RegistrationImports.ts components/site/RegistrationCheck.tsx components/admin/RegistrationImport.tsx components/admin/RegistrationImportAdminView.tsx scripts/local-registration.mjs scripts/registration-test-seed.ts scripts/dry-run-registration-tracker.ts tests/registration-check.test.ts tests/registration-check.browser.mjs tests/registration-import.test.ts tests/registration-import.browser.mjs tests/registration-tracker-fixture.ts 'app/(payload)/api/registration-check/route.ts' 'app/(payload)/api/admin/registration-import/route.ts'"
   },
   "dependencies": {
     "@payloadcms/db-mongodb": "3.87.0",
@@ -32,6 +36,8 @@
     "@puckeditor/core": "^0.21.2",
     "@tiptap/extension-color": "3.11.1",
     "@tiptap/extension-text-style": "3.11.1",
+    "fast-xml-parser": "5.5.9",
+    "fflate": "0.8.3",
     "graphql": "^16.8.1",
     "lucide-react": "^0.468.0",
     "next": "16.2.6",
@@ -47,6 +53,7 @@
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
+    "playwright": "1.58.2",
     "tailwindcss": "4.2.1",
     "tsx": "^4.22.4",
     "typescript": "5.9.3"

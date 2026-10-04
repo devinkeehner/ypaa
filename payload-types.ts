@@ -90,6 +90,8 @@ export interface Config {
     'venue-maps': VenueMap;
     'notification-recipients': NotificationRecipient;
     'email-tests': EmailTest;
+    'registration-help-requests': RegistrationHelpRequest;
+    'registration-imports': RegistrationImport;
     'payload-mcp-api-keys': PayloadMcpApiKey;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -125,6 +127,8 @@ export interface Config {
     'venue-maps': VenueMapsSelect<false> | VenueMapsSelect<true>;
     'notification-recipients': NotificationRecipientsSelect<false> | NotificationRecipientsSelect<true>;
     'email-tests': EmailTestsSelect<false> | EmailTestsSelect<true>;
+    'registration-help-requests': RegistrationHelpRequestsSelect<false> | RegistrationHelpRequestsSelect<true>;
+    'registration-imports': RegistrationImportsSelect<false> | RegistrationImportsSelect<true>;
     'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -1171,6 +1175,22 @@ export interface Page {
                             blockType: 'InlineForm';
                           }
                         | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'RegistrationCheck';
+                          }
+                        | {
                             image: string | Media;
                             caption?: string | null;
                             puckRichText?:
@@ -2036,6 +2056,22 @@ export interface Page {
                             blockType: 'InlineForm';
                           }
                         | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'RegistrationCheck';
+                          }
+                        | {
                             image: string | Media;
                             caption?: string | null;
                             puckRichText?:
@@ -2858,6 +2894,22 @@ export interface Page {
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'InlineForm';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'RegistrationCheck';
                           }
                         | {
                             image: string | Media;
@@ -3814,6 +3866,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -4574,6 +4642,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -5100,6 +5184,22 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'InlineForm';
+          }
+        | {
+            heading?: string | null;
+            intro?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'RegistrationCheck';
           }
         | {
             image: string | Media;
@@ -5988,6 +6088,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -6731,6 +6847,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -7628,6 +7760,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -8371,6 +8519,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -9195,6 +9359,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -9938,6 +10118,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -10760,6 +10956,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -11503,6 +11715,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -12334,6 +12562,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -13077,6 +13321,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -13902,6 +14162,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -14645,6 +14921,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -15467,6 +15759,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -16210,6 +16518,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -17033,6 +17357,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -17776,6 +18116,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -18603,6 +18959,22 @@ export interface Page {
                             blockType: 'InlineForm';
                           }
                         | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'RegistrationCheck';
+                          }
+                        | {
                             image: string | Media;
                             caption?: string | null;
                             puckRichText?:
@@ -19361,6 +19733,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -20104,6 +20492,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -20927,6 +21331,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -21670,6 +22090,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -22492,6 +22928,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -23235,6 +23687,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -24057,6 +24525,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -24800,6 +25284,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -25696,6 +26196,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -26439,6 +26955,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -27266,6 +27798,22 @@ export interface Page {
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'InlineForm';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'RegistrationCheck';
                           }
                         | {
                             image: string | Media;
@@ -28105,6 +28653,22 @@ export interface Page {
                             blockType: 'InlineForm';
                           }
                         | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'RegistrationCheck';
+                          }
+                        | {
                             image: string | Media;
                             caption?: string | null;
                             puckRichText?:
@@ -28863,6 +29427,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -29606,6 +30186,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -30427,6 +31023,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -31170,6 +31782,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -31992,6 +32620,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -32735,6 +33379,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -33631,6 +34291,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -34374,6 +35050,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -35270,6 +35962,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -36013,6 +36721,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -36835,6 +37559,22 @@ export interface Page {
                       blockType: 'InlineForm';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -37578,6 +38318,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'InlineForm';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'RegistrationCheck';
                     }
                   | {
                       image: string | Media;
@@ -38812,7 +39568,7 @@ export interface NotificationRecipient {
   /**
    * More triggers can be added here without changing the recipient list.
    */
-  triggers: ('cash_scholarship_requested' | 'stripe_scholarship_paid' | 'merchandise_order')[];
+  triggers: ('registration_help' | 'cash_scholarship_requested' | 'stripe_scholarship_paid' | 'merchandise_order')[];
   active: boolean;
   updatedAt: string;
   createdAt: string;
@@ -38839,6 +39595,61 @@ export interface EmailTest {
   scholarshipAmountCents?: number | null;
   deliveryStatus?: ('sending' | 'sent' | 'pending_configuration' | 'failed') | null;
   deliveryError?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Private registration assistance queue. Pending notifications need staff follow-up. Remove resolved requests according to the committee's retention policy.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registration-help-requests".
+ */
+export interface RegistrationHelpRequest {
+  id: string;
+  requestKey: string;
+  name: string;
+  email: string;
+  details: string;
+  status: 'new' | 'in_progress' | 'resolved';
+  notificationStatus: 'pending' | 'sent';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Administrator tracker previews, confirmed imports, and rollback audit records. Use Import registrations to upload a tracker.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registration-imports".
+ */
+export interface RegistrationImport {
+  id: string;
+  filename: string;
+  fileDigest: string;
+  status: 'preview' | 'imported' | 'rolled_back';
+  createdBy: string | User;
+  expiresAt: string;
+  confirmedAt?: string | null;
+  rolledBackAt?: string | null;
+  rolledBackBy?: (string | null) | User;
+  rollbackReason?: string | null;
+  preview:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  result?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -39034,6 +39845,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'email-tests';
         value: string | EmailTest;
+      } | null)
+    | ({
+        relationTo: 'registration-help-requests';
+        value: string | RegistrationHelpRequest;
+      } | null)
+    | ({
+        relationTo: 'registration-imports';
+        value: string | RegistrationImport;
       } | null)
     | ({
         relationTo: 'payload-mcp-api-keys';
@@ -39582,6 +40401,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          RegistrationCheck?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           ImageCaption?:
                             | T
                             | {
@@ -40044,6 +40872,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          RegistrationCheck?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           ImageCaption?:
                             | T
                             | {
@@ -40471,6 +41308,15 @@ export interface PagesSelect<T extends boolean = true> {
                                       puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          RegistrationCheck?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
                                 puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
@@ -40959,6 +41805,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -41361,6 +42216,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -41650,6 +42514,15 @@ export interface PagesSelect<T extends boolean = true> {
                     puckRichText?: T;
                     id?: T;
                   };
+              puckRichText?: T;
+              id?: T;
+              blockName?: T;
+            };
+        RegistrationCheck?:
+          | T
+          | {
+              heading?: T;
+              intro?: T;
               puckRichText?: T;
               id?: T;
               blockName?: T;
@@ -42131,6 +43004,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -42521,6 +43403,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -43009,6 +43900,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -43399,6 +44299,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -43844,6 +44753,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -44234,6 +45152,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -44677,6 +45604,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -45067,6 +46003,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -45519,6 +46464,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -45909,6 +46863,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -46355,6 +47318,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -46745,6 +47717,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -47188,6 +48169,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -47578,6 +48568,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -48022,6 +49021,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -48412,6 +49420,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -48861,6 +49878,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          RegistrationCheck?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           ImageCaption?:
                             | T
                             | {
@@ -49259,6 +50285,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -49649,6 +50684,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -50093,6 +51137,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -50483,6 +51536,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -50926,6 +51988,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -51316,6 +52387,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -51759,6 +52839,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -52149,6 +53238,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -52636,6 +53734,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -53026,6 +54133,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -53471,6 +54587,15 @@ export interface PagesSelect<T extends boolean = true> {
                                       puckRichText?: T;
                                       id?: T;
                                     };
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          RegistrationCheck?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
                                 puckRichText?: T;
                                 id?: T;
                                 blockName?: T;
@@ -53923,6 +55048,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          RegistrationCheck?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           ImageCaption?:
                             | T
                             | {
@@ -54321,6 +55455,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -54711,6 +55854,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -55153,6 +56305,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -55543,6 +56704,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -55986,6 +57156,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -56376,6 +57555,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -56863,6 +58051,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -57253,6 +58450,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -57740,6 +58946,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -58130,6 +59345,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -58573,6 +59797,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -58963,6 +60196,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 puckRichText?: T;
                                 id?: T;
                               };
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
                           puckRichText?: T;
                           id?: T;
                           blockName?: T;
@@ -59671,6 +60913,39 @@ export interface EmailTestsSelect<T extends boolean = true> {
   scholarshipAmountCents?: T;
   deliveryStatus?: T;
   deliveryError?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registration-help-requests_select".
+ */
+export interface RegistrationHelpRequestsSelect<T extends boolean = true> {
+  requestKey?: T;
+  name?: T;
+  email?: T;
+  details?: T;
+  status?: T;
+  notificationStatus?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registration-imports_select".
+ */
+export interface RegistrationImportsSelect<T extends boolean = true> {
+  filename?: T;
+  fileDigest?: T;
+  status?: T;
+  createdBy?: T;
+  expiresAt?: T;
+  confirmedAt?: T;
+  rolledBackAt?: T;
+  rolledBackBy?: T;
+  rollbackReason?: T;
+  preview?: T;
+  result?: T;
   updatedAt?: T;
   createdAt?: T;
 }

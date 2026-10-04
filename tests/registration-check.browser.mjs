@@ -1,0 +1,76 @@
+// Run after registration:local reset and registration:local dev. No external website or mailbox is used.
+import assert from 'node:assert/strict';
+import { readFile, mkdir } from 'node:fs/promises';
+import { MongoClient } from 'mongodb';
+import { pathToFileURL } from 'node:url';
+let playwright;
+try { playwright = await import('playwright'); }
+catch { if (!process.env.PLAYWRIGHT_MODULE_PATH) throw new Error('Install the pinned playwright dev dependency or set PLAYWRIGHT_MODULE_PATH to its index.mjs.'); playwright = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE_PATH).href); }
+const base = 'http://127.0.0.1:3029';
+const client = new MongoClient(process.env.DATABASE_URI);
+await client.connect();
+const db = client.db();
+assert.equal(db.databaseName, 'ypaa_registration_test');
+assert.ok(await db.collection('_synthetic_test_marker').findOne({ _id: 'registration' }));
+await db.collection('_registration_check_limits').deleteMany({});
+await db.collection('registration-help-requests').deleteMany({});
+await mkdir('.local-registration', { recursive: true });
+const mail = async () => (await readFile('.local-registration/mail.ndjson', 'utf8')).split('\n').filter(Boolean).map((line) => JSON.parse(line));
+const browser = await playwright.chromium.launch({ headless: true, ...(process.env.PLAYWRIGHT_CHROMIUM_PATH ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH } : {}) });
+const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+page.setDefaultNavigationTimeout(90000);
+const errors = [];
+page.on('pageerror', (error) => errors.push(error.message));
+page.on('console', (message) => { if (message.type() === 'error' && !message.text().includes('503')) errors.push(message.text()); });
+const button = page.getByRole('button', { name: 'Email my registration information' });
+const email = page.getByLabel('Registration email address');
+const received = 'Your request was received. Please check your inbox and spam folder for registration information.';
+try {
+  await page.goto(`${base}/registration-check-test`);
+  await page.getByRole('heading', { name: 'Check your registration' }).waitFor();
+  assert.equal(new URL(page.url()).pathname, '/registration-check-test');
+  assert.ok(await page.title());
+  const headingBounds = await page.getByRole('heading', { name: 'Check your registration' }).boundingBox();
+  const headerBounds = await page.locator('.cms-header').boundingBox();
+  assert.ok(headingBounds.y >= headerBounds.y + headerBounds.height, 'Heading clears the fixed site header');
+  assert.equal(await page.locator('nextjs-portal').filter({ hasText: /error/i }).count(), 0);
+  await email.fill('not-an-email'); await button.click();
+  assert.equal(await email.evaluate((element) => element.validity.valid), false);
+  await email.fill('paid@example.invalid');
+  await page.waitForTimeout(1600);
+  const before = (await mail()).length;
+  await button.dblclick();
+  await page.getByText(received, { exact: true }).waitFor();
+  assert.equal(await page.getByRole('button', { name: 'Request received', exact: true }).isDisabled(), true);
+  assert.equal((await mail()).length - before, 1);
+  await email.fill('missing@example.invalid'); await button.click();
+  await page.getByText(received, { exact: true }).waitFor();
+  assert.match((await mail()).at(-1).text, /No confirmed registration found/);
+  await page.screenshot({ path: '.local-registration/desktop.png', fullPage: true });
+  const helpToggle = page.getByText('Can’t remember your email, or registered by someone else?', { exact: true });
+  await helpToggle.focus(); await helpToggle.press('Enter');
+  assert.equal(await page.locator('details').getAttribute('open'), '');
+  await page.getByLabel('Your name', { exact: true }).fill('Browser Synthetic');
+  await page.getByLabel('Email where we can contact you').fill('browserhelp@example.invalid');
+  await page.getByLabel('How can we help?').fill('Someone else registered me under another email.');
+  await page.getByRole('button', { name: 'Request registration help', exact: true }).click();
+  await page.getByText('Your help request was received. The registration team will contact you at the email you provided.', { exact: true }).waitFor();
+  assert.equal((await db.collection('registration-help-requests').findOne({ email: 'browserhelp@example.invalid' })).notificationStatus, 'sent');
+  assert.equal((await mail()).at(-1).to, 'organizer@example.invalid');
+  // Transport failure stays visible and can be retried, without a stale success.
+  await page.route('**/api/registration-check', (route) => route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ message: 'Synthetic temporary failure. Please try again.' }) }));
+  await email.fill('retry@example.invalid'); await button.click();
+  await page.getByRole('alert').filter({ hasText: 'Synthetic temporary failure' }).waitFor();
+  assert.equal(await button.isEnabled(), true);
+  await page.unroute('**/api/registration-check'); await button.click();
+  await page.getByText(received, { exact: true }).waitFor();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.screenshot({ path: '.local-registration/mobile.png', fullPage: true });
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);
+  assert.ok(await email.getAttribute('id'));
+  assert.equal(await email.getAttribute('type'), 'email');
+  assert.equal(await page.getByRole('status').count() >= 1, true);
+  assert.deepEqual(errors, []);
+  console.log('Browser checks passed: page identity, rendered block, validation, duplicate clicks, positive/negative mail, expanded help, database persistence, failure retry, labels/live status, desktop/mobile layout, no runtime errors.');
+} finally { await browser.close(); await client.close(); }

@@ -23,6 +23,7 @@ import { default as default_aeec5a1cb188c92d9f77827ec2b0f137 } from '@/component
 import { default as default_1af26a48a33b1f90881506ce1faf6e97 } from '@/components/admin/brand/NECYPAAAdminLogo'
 import { MerchChairDashboardRedirect as MerchChairDashboardRedirect_2d43fa8c45dc07b22d958fec6f050f61 } from '@/components/admin/MerchChairDashboardRedirect'
 import { default as default_0a7c9bc9d3a649c77c5308f552f7e134 } from '@/components/admin/AdminRuntimeRecovery'
+import { default as default_213d20f75eb34d973cd5cf23cab0d28b } from '@/components/admin/RegistrationImportAdminView'
 import { default as default_527e3cc5584c179551c753b0bb54551a } from '@/components/admin/ProgramBoardAdminView'
 import { default as default_debe4d33eb402321fdfcac39cf67690a } from '@/components/admin/RegistrationCorrectionsAdminView'
 import { default as default_dbbc3df504fa1953eab105ab74b52252 } from '@/components/admin/MerchandiseSalesAdminView'
@@ -59,6 +60,7 @@ export const importMap = {
   "@/components/admin/brand/NECYPAAAdminLogo#default": default_1af26a48a33b1f90881506ce1faf6e97,
   "@/components/admin/MerchChairDashboardRedirect#MerchChairDashboardRedirect": MerchChairDashboardRedirect_2d43fa8c45dc07b22d958fec6f050f61,
   "@/components/admin/AdminRuntimeRecovery#default": default_0a7c9bc9d3a649c77c5308f552f7e134,
+  "@/components/admin/RegistrationImportAdminView#default": default_213d20f75eb34d973cd5cf23cab0d28b,
   "@/components/admin/ProgramBoardAdminView#default": default_527e3cc5584c179551c753b0bb54551a,
   "@/components/admin/RegistrationCorrectionsAdminView#default": default_debe4d33eb402321fdfcac39cf67690a,
   "@/components/admin/MerchandiseSalesAdminView#default": default_dbbc3df504fa1953eab105ab74b52252,

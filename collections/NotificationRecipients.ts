@@ -22,6 +22,7 @@ export const NotificationRecipients: CollectionConfig = {
       required: true,
       defaultValue: ["cash_scholarship_requested"],
       options: [
+        { label: "Registration help requested", value: "registration_help" },
         { label: "Cash scholarship requested", value: "cash_scholarship_requested" },
         { label: "Stripe general scholarship fund donation paid", value: "stripe_scholarship_paid" },
         { label: "Any merchandise order", value: "merchandise_order" },

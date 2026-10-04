@@ -57,6 +57,7 @@ const COMPONENT_TYPES = new Set([
   "FollowLinks",
   "BulletedList",
   "InlineForm",
+  "RegistrationCheck",
   "ImageCaption",
   "Video",
   "Embed",

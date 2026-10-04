@@ -167,3 +167,6 @@ and when focused or brought back into view.
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Payload Documentation](https://payloadcms.com/docs)
 - [Vercel Documentation](https://vercel.com/docs)
+
+Public registration lookup and isolated local testing: [registration check guide](docs/registration-check.md).
+Administrator tracker upload, preview, audit and rollback: [registration import guide](docs/registration-import.md).
