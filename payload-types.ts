@@ -62323,7 +62323,7 @@ export interface Header {
    */
   logoAlt: string;
   /**
-   * Link items appear in the primary navigation. Button-style items appear as header actions.
+   * Link items appear in the primary navigation and can have one level of child links. Parent labels always follow their URL; a separate toggle opens the children. Button-style items remain direct header actions.
    */
   navigation?:
     | {
@@ -62333,6 +62333,18 @@ export interface Header {
         appearance?: ('solid' | 'outline') | null;
         newTab?: boolean | null;
         showWarning?: boolean | null;
+        /**
+         * Optional: up to 12 child links, shown in a desktop dropdown or an expandable mobile group. No grandchildren. Leave empty to keep a flat link.
+         */
+        children?:
+          | {
+              label: string;
+              url: string;
+              newTab?: boolean | null;
+              showWarning?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
@@ -62376,6 +62388,15 @@ export interface HeaderSelect<T extends boolean = true> {
         appearance?: T;
         newTab?: T;
         showWarning?: T;
+        children?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+              newTab?: T;
+              showWarning?: T;
+              id?: T;
+            };
         id?: T;
       };
   updatedAt?: T;

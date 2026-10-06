@@ -6,14 +6,20 @@ const base = process.env.HEADER_NAVIGATION_TEST_URL || 'http://127.0.0.1:3038';
 if (!/^http:\/\/127\.0\.0\.1:\d+$/.test(base)) throw new Error('Use only the disposable local header-navigation-fixture app.');
 const evidence = process.env.HEADER_NAVIGATION_EVIDENCE || '/tmp/ypaa-header-navigation-evidence';
 await mkdir(evidence, { recursive: true });
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({ headless: true, ...(process.env.HEADER_NAVIGATION_CHROMIUM_EXECUTABLE ? { executablePath: process.env.HEADER_NAVIGATION_CHROMIUM_EXECUTABLE } : {}) });
 const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
 const page = await context.newPage();
 const errors = [];
 page.on('pageerror', (error) => errors.push(error.message));
 page.on('console', (message) => { if (message.type() === 'error' || message.type() === 'warning') errors.push(message.text()); });
-const expanded = async (toggle, value) => assert.equal(await toggle.getAttribute('aria-expanded'), String(value));
-const focus = async (locator) => assert.equal(await locator.evaluate((node) => node === document.activeElement), true);
+const expanded = async (toggle, value) => {
+  await toggle.page().waitForFunction(([node, expected]) => node.getAttribute('aria-expanded') === expected, [await toggle.elementHandle(), String(value)], { timeout: 5000 });
+  assert.equal(await toggle.getAttribute('aria-expanded'), String(value));
+};
+const focus = async (locator) => {
+  await locator.page().waitForFunction((node) => node === document.activeElement, await locator.elementHandle(), { timeout: 5000 });
+  assert.equal(await locator.evaluate((node) => node === document.activeElement), true);
+};
 const primary = page.getByRole('navigation', { name: 'Primary navigation', exact: true });
 const first = primary.getByRole('button', { name: 'Child links for Parent', exact: true });
 const second = primary.getByRole('button', { name: 'Child links for Second parent', exact: true });
@@ -27,6 +33,7 @@ try {
   assert.equal(await primary.getByRole('link', { name: 'Child one', exact: true }).count(), 0);
   assert.equal(await primary.getByRole('button').count(), 2, 'Flat and empty groups have no toggle');
   await primary.getByRole('link', { name: 'Parent', exact: true }).click();
+  await page.waitForURL(/#parent$/);
   assert.equal(new URL(page.url()).hash, '#parent');
   await expanded(first, false);
   await first.focus(); await first.press('Enter'); await expanded(first, true); await focus(first);
@@ -48,6 +55,7 @@ try {
   await page.getByRole('button', { name: 'Outside control' }).click(); await expanded(second, false);
   await first.click(); await primary.getByRole('link', { name: 'Flat link', exact: true }).focus(); await expanded(first, false);
   await first.click(); await primary.getByRole('link', { name: 'Child one', exact: true }).click();
+  await page.waitForURL(/#child-one$/);
   assert.equal(new URL(page.url()).hash, '#child-one'); await expanded(first, false);
   await first.click();
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1));
@@ -78,9 +86,11 @@ try {
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1));
   await page.screenshot({ path: `${evidence}/mobile.png`, fullPage: false });
   await mobile.getByRole('link', { name: 'Child two', exact: true }).click();
+  await page.waitForURL(/#child-two$/);
   assert.equal(new URL(page.url()).hash, '#child-two'); assert.equal(await mobile.count(), 0);
   await menu.click(); await toggle.click();
   await page.setViewportSize({ width: 1440, height: 1000 });
+  await mobile.waitFor({ state: 'detached' });
   assert.equal(await mobile.count(), 0); await expanded(first, false);
   await page.getByRole('button', { name: 'Display and accessibility settings', exact: true }).click();
   await page.getByRole('button', { name: 'Light', exact: true }).click();
@@ -97,6 +107,7 @@ try {
   await touchToggle.tap(); await expanded(touchToggle, true);
   await touchToggle.tap(); await expanded(touchToggle, false);
   await touchToggle.tap(); await touchNav.getByRole('link', { name: 'Child one', exact: true }).tap();
+  await touchPage.waitForURL(/#child-one$/);
   assert.equal(new URL(touchPage.url()).hash, '#child-one'); assert.equal(await touchNav.count(), 0);
   await touchContext.close();
   assert.deepEqual(errors, [], 'No console, hydration, duplicate-key or runtime errors');
