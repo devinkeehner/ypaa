@@ -40257,6 +40257,7 @@ export interface Room {
  * via the `definition` "program-sessions".
  */
 export interface ProgramSession {
+  scheduleRevision?: number | null;
   id: string;
   title: string;
   slug: string;
@@ -62092,6 +62093,7 @@ export interface RoomsSelect<T extends boolean = true> {
  * via the `definition` "program-sessions_select".
  */
 export interface ProgramSessionsSelect<T extends boolean = true> {
+  scheduleRevision?: T;
   title?: T;
   slug?: T;
   sessionType?: T;

@@ -1,5 +1,7 @@
 import type { Access, CollectionConfig, FieldAccess } from "payload";
 
+import { guardProgramWrite, guardProgramDelete } from "../lib/program-schedule";
+
 const authenticated: Access = ({ req }) => Boolean(req.user);
 const fieldAuthenticated: FieldAccess = ({ req }) => Boolean(req.user);
 
@@ -27,6 +29,7 @@ export const ProgramSessions: CollectionConfig = {
   },
   defaultSort: "startAt",
   fields: [
+    { name: "scheduleRevision", type: "number", defaultValue: 0, admin: { hidden: true, readOnly: true } },
     { name: "title", type: "text", required: true, index: true },
     {
       name: "slug",
@@ -84,6 +87,8 @@ export const ProgramSessions: CollectionConfig = {
     { name: "internalNotes", type: "textarea", access: { read: fieldAuthenticated, create: fieldAuthenticated, update: fieldAuthenticated }, admin: { description: "Committee-only notes; never displayed publicly." } },
   ],
   hooks: {
+    beforeChange: [guardProgramWrite],
+    beforeDelete: [guardProgramDelete],
     beforeValidate: [({ data }) => {
       if (data?.startAt && data?.endAt && new Date(data.endAt).getTime() <= new Date(data.startAt).getTime()) {
         throw new Error("End time must be later than start time.");
