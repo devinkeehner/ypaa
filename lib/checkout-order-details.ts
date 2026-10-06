@@ -94,7 +94,9 @@ export function derivePurchaseDetails(document: unknown, merchandiseRecords: unk
     const kind = recipientEmail || (recipientName && !generalName) ? "specific" : generalName ? "general" : reliableStoredKind;
     // Backfill/webhook normalization historically defaults this amount to $40. Do not present that as an actual donation.
     const amountCents = integer(snapshotScholarship.amountCents) ?? (originalPurchaseInput ? integer(scholarship.amountCents) : null);
-    scholarshipDetails = { kind, quantity: scholarshipQuantity, amountCents, recipientName: generalName ? null : recipientName, recipientEmail, attribution: text(metadata.attribution_aa_entity) || text(scholarship.attribution) };
+    // Explicit current values retain precedence; sparse later reports fall back to
+    // the immutable original-input snapshot instead of erasing known attribution.
+    scholarshipDetails = { kind, quantity: scholarshipQuantity, amountCents, recipientName: generalName ? null : recipientName, recipientEmail, attribution: text(metadata.attribution_aa_entity) || text(scholarship.attribution) || text(snapshotScholarship.attribution) };
     if (amountCents === null) notes.push("Scholarship amount is not independently recorded here; the normalized historical default is not used.");
   }
 

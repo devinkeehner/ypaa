@@ -1,12 +1,12 @@
 import type { Access, CollectionConfig } from "payload";
-import { readCheckoutPurchase, snapshotCheckoutPurchase } from "@/lib/checkout-order-hooks";
+import { prepareCheckoutPurchaseRead, readCheckoutPurchase, snapshotCheckoutPurchase } from "@/lib/checkout-order-hooks";
 
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
 export const CheckoutOrders: CollectionConfig = {
   slug: "checkout-orders",
   access: { create: authenticated, read: authenticated, update: authenticated, delete: authenticated },
-  hooks: { beforeChange: [snapshotCheckoutPurchase], beforeRead: [readCheckoutPurchase] },
+  hooks: { beforeOperation: [prepareCheckoutPurchaseRead], beforeChange: [snapshotCheckoutPurchase], beforeRead: [readCheckoutPurchase] },
   admin: {
     useAsTitle: "sourceKey",
     defaultColumns: ["purchaserName", "purchaseSummary", "totalCents", "paymentSource", "paymentStatus", "purchasedAt"],

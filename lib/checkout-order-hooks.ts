@@ -1,6 +1,20 @@
-import type { CollectionBeforeReadHook, CollectionBeforeChangeHook } from "payload";
+import type { CollectionBeforeReadHook, CollectionBeforeChangeHook, CollectionBeforeOperationHook } from "payload";
+import { getSelectMode } from "payload/shared";
 import { canReadCollection } from "./crm-access";
 import { derivePurchaseDetails, objectValue } from "./checkout-order-details";
+
+export const prepareCheckoutPurchaseRead: CollectionBeforeOperationHook<"checkout-orders"> = ({ args, operation, req }) => {
+  if (operation !== "read") return args;
+  const select = "select" in args ? args.select : undefined;
+  const projected = Boolean(select && Object.keys(select).length);
+  const include = !select || getSelectMode(select) === "include";
+  const requested = !projected || (include
+    ? Boolean(select?.purchaseSummary || select?.purchaseDetails)
+    : select?.purchaseSummary !== false || select?.purchaseDetails !== false);
+  // beforeRead has no select argument. Carry the actual operation selection in its
+  // own request context, rather than mutating a request shared by concurrent reads.
+  return { ...args, req: { ...req, context: { ...req.context, checkoutPurchaseReadRequested: requested, checkoutPurchaseReadProjected: projected } } };
+};
 
 export const snapshotCheckoutPurchase: CollectionBeforeChangeHook = ({ data, originalDoc, operation, context }) => {
   // Derived fields cannot be supplied by an API client. Historical saves never backfill a snapshot.
@@ -16,11 +30,11 @@ export const snapshotCheckoutPurchase: CollectionBeforeChangeHook = ({ data, ori
 };
 
 export const readCheckoutPurchase: CollectionBeforeReadHook = async ({ doc, req, overrideAccess }) => {
-  if (req.context.skipCheckoutPurchaseDisplay) return doc;
+  if (req.context.skipCheckoutPurchaseDisplay || req.context.checkoutPurchaseReadRequested === false) return doc;
   let source = doc;
-  // Virtual-only projections do not include their dependencies in Mongo's result.
+  // Any projection may omit dependencies, even when order or metadata is present.
   // Load them with the same caller/transaction, then let Payload's field pipeline apply select.
-  if (doc.id && !("order" in doc) && !("rawMetadata" in doc)) {
+  if (doc.id && (req.context.checkoutPurchaseReadProjected || (!("order" in doc) && !("rawMetadata" in doc)))) {
     // List reads run in parallel. Never put a recursion flag in their shared request context.
     const sourceReq = { ...req, headers: req.headers, query: { ...req.query }, context: { ...req.context, skipCheckoutPurchaseDisplay: true } };
     source = await req.payload.findByID({ collection: "checkout-orders", id: doc.id, req: sourceReq, overrideAccess: Boolean(overrideAccess), depth: 0,

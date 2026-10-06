@@ -23,6 +23,11 @@ try {
   await page.getByText('Registration + Scholarship + Breakfast + Merchandise', { exact: true }).first().waitFor();
   const api = await context.request.get(`${base}/api/checkout-orders/${qa.mixedOrderId}?depth=0`); assert.equal(api.status(), 200);
   const data = await api.json(); assert.equal(data.purchaseDetails.merchandise.items[0].size, 'L');
+  const projectedAPI = await context.request.get(`${base}/api/checkout-orders/${qa.mixedOrderId}?depth=0&select[purchaseDetails]=true&select[rawMetadata]=true`);
+  assert.equal(projectedAPI.status(), 200);
+  const projectedData = await projectedAPI.json();
+  assert.deepEqual(projectedData.purchaseDetails, data.purchaseDetails);
+  assert.deepEqual(Object.keys(projectedData).sort(), ['id', 'purchaseDetails', 'rawMetadata']);
   await page.goto(`${base}/admin/collections/checkout-orders/${qa.mixedOrderId}`);
   const details = page.getByRole('region', { name: 'Purchase details', exact: true });
   await details.getByRole('heading', { name: 'Purchase details', exact: true }).waitFor();
@@ -52,5 +57,5 @@ try {
   const edit = await viewerContext.request.patch(`${base}/api/checkout-orders/${qa.mixedOrderId}`, { data: { totalCents: 1 } }); assert.equal(edit.status(), 403);
   await viewerPage.getByRole('region', { name: 'Purchase details' }).screenshot({ path: `${evidence}/order-detail-viewer.png`, caret: 'initial' });
   assert.deepEqual(errors, []);
-  console.log('PASS admin list category column, authenticated REST details, mixed order, historical shipping, desktop/mobile wrapping, related-order navigation, unknown state and read-only viewer. No browser runtime errors.');
+  console.log('PASS admin list category column, authenticated full/mixed-projection REST details, mixed order, historical shipping, desktop/mobile wrapping, related-order navigation, unknown state and read-only viewer. No browser runtime errors.');
 } finally { await browser.close(); }

@@ -68,6 +68,17 @@ test("specific scholarship details show recorded recipient and attribution", () 
   assert.equal(result.scholarship?.kind, "specific"); assert.equal(result.scholarship?.amountCents, 4500);
   assert.equal(result.scholarship?.recipientName, "Synthetic Recipient"); assert.equal(result.scholarship?.attribution, "Synthetic Group");
 });
+test("sparse subsequent reports retain original scholarship attribution with current values taking precedence", () => {
+  const purchaseSnapshot = derivePurchaseDetails({ order: { scholarship: { enabled: true, kind: "specific", amountCents: 4500, recipientName: "Synthetic Recipient", attribution: "Original Synthetic Group" } } }, [], true);
+  const sparse = { order: { scholarship: { enabled: true } }, rawMetadata: { necy_has_scholarship: "true" }, purchaseSnapshot };
+  const before = structuredClone(sparse);
+  assert.equal(derivePurchaseDetails(sparse).scholarship?.attribution, "Original Synthetic Group");
+  assert.equal(derivePurchaseDetails({ ...sparse, order: { scholarship: { enabled: true, attribution: "Current Order Group" } } }).scholarship?.attribution, "Current Order Group");
+  assert.equal(derivePurchaseDetails({ ...sparse, rawMetadata: { attribution_aa_entity: "Current Metadata Group" } }).scholarship?.attribution, "Current Metadata Group");
+  assert.equal(derivePurchaseDetails({ ...sparse, purchaseSnapshot: { version: 1, scholarship: { attribution: [] } } }).scholarship?.attribution, null);
+  assert.equal(derivePurchaseDetails({ ...sparse, purchaseSnapshot: { version: 2, scholarship: { attribution: "Unsupported" } } }).scholarship?.attribution, null);
+  assert.deepEqual(sparse, before);
+});
 test("historical cash normalization also cannot establish a contribution amount", () => {
   const result = derivePurchaseDetails({ dataOrigin: "cash_checkout", order: { scholarship: { enabled: true, kind: "general", amountCents: 4000 } } });
   assert.equal(result.scholarship?.amountCents, null); assert.equal(result.scholarship?.kind, "unknown");

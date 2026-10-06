@@ -14,13 +14,15 @@ Explicit metadata counts take priority over legacy text or normalized defaults. 
 
 Historical `order.scholarship.amountCents` and `scholarship.kind` can contain normalization defaults. Without reliable recipient metadata or a future original-input snapshot, the display leaves those details unknown. `necy_has_registration` is a broad flag that can include a scholarship and does not establish a self registration. Stripe identifies the payment processor; if the actual payment method was not recorded, the display says method unknown.
 
-The category column is virtual and is intended for readability, not historical database filtering/export grouping or reliable sorting by purchase category. Virtual-only projections load their source dependencies with the same caller permissions and transaction, using an isolated request context for each concurrent read. Payload then returns only the requested fields.
+The category column is virtual and is intended for readability, not historical database filtering/export grouping or reliable sorting by purchase category. Every projection requesting a purchase display field loads the complete source dependencies with the same caller permissions and transaction, including mixed selections that also request `order` or `rawMetadata`. The read operation carries its selection in an isolated request context; concurrent reads do not share flags. Payload then returns only the requested fields. Reads selecting neither purchase display field skip dependency reloads and merchandise reads.
 
 ## Future orders
 
 New Checkout Orders receive a structured `purchaseSnapshot`, captured on creation and preserved on updates. The server-to-server reporting route passes the original reported purchase shape through Payload request context before `normalizeOrder` discards merchandise and normalizes scholarship fields. The snapshot retains only the display model, not an additional complete customer/order document. External clients cannot supply or replace this snapshot through a collection write.
 
 The snapshot can therefore retain an originally reported scholarship amount, merchandise slug/variant IDs/count, and delivery choice. The normalized `order`, original metadata, status, totals and source records retain their existing behavior. The display still obtains complete item names/options and current shipping status from permitted related merchandise records once fulfillment has created them. Ordinary record creation without an original server report only snapshots details supported by existing fields; it does not invent missing facts.
+
+Scholarship attribution uses current explicit metadata first, then the current normalized order, then the immutable original-input snapshot. A repeated report omitting attribution therefore retains the original known attribution without modifying metadata, finances, or the snapshot.
 
 ## Local verification
 
@@ -40,3 +42,9 @@ The release was prepared from deployed main `7fab8628215bdbc543cb4dc751de588832e
 Final release checks passed: 13 purchase-shape cases, 13 real Payload/Mongo checks (including concurrent virtual-only projections and the authenticated reporting boundary), 6 existing CSV/notification regressions, focused lint, the standard Next.js Turbopack production build with TypeScript, and 32 existing post-build contract checks. Browser QA against the built production artifact passed at 1280×900 and 390×844 with the category list, mixed historical shipping order, unknown state, related-order navigation, and read-only viewer. Both admin and viewer consoles were monitored with no errors. The purchase section fits and wraps on mobile; Payload's surrounding header/account controls and document metadata have existing horizontal overflow at 390px. Screenshots use `caret: 'initial'` to avoid injecting form-input caret styles during hydration. Browser plugin was unavailable; the installed Playwright/Chromium workflow was used. The isolated preview was stopped after the exclusive test slot; shared MongoDB was left available.
 
 This release does not perform a production backfill or historical category indexing. This change requires no new form plugin.
+
+## Reviewed display regressions
+
+The follow-up reproduces two display defects in the initial release: selecting a purchase virtual together with `order` or `rawMetadata` omitted other required dependencies, and a sparse repeated report hid scholarship attribution despite retaining the original snapshot. Focused regressions cover mixed inclusive/exclusive selections, concurrent mixed projected list reads, zero purchase dependency reads when both virtuals are unrequested, attribution precedence/malformed snapshots, and the actual authenticated repeated-report boundary. An authenticated local HTTP mixed projection must equal the full purchase details while returning only selected fields.
+
+Both new failure cases were observed against the initial commit before fixing them. The follow-up passed 14 shape cases, 16 real Payload/Mongo checks, 6 CSV/notification regressions, 32 post-build contracts, focused lint, and the standard production build/TypeScript. Built-artifact desktop/mobile and read-only-viewer QA, including the mixed-projection HTTP check, passed with no browser console/runtime errors. No schema/generated files or external reporting source were changed.

@@ -49,12 +49,35 @@ try {
   assert.equal((restricted.purchaseDetails as typeof details).merchandise.records.length, 0);
   assert.equal((restricted.purchaseDetails as typeof details).merchandise.items.length, 0);
   check("registration-only staff receive no restricted merchandise record or item details");
+  let dependencyReads = 0, merchandiseReads = 0;
+  (payload.collections["checkout-orders"].config.hooks.beforeRead ??= []).push(({ doc, req }) => { if (req.context.skipCheckoutPurchaseDisplay) dependencyReads++; return doc; });
+  (payload.collections["merchandise-orders"].config.hooks.beforeRead ??= []).push(({ doc }) => { merchandiseReads++; return doc; });
   const selected = await payload.findByID({ collection: "checkout-orders", id: created.id, user, overrideAccess: false, select: { totalCents: true } });
   assert.equal(selected.totalCents, 14000); assert.equal("purchaseDetails" in selected, false); assert.equal("rawMetadata" in selected, false);
+  const excludedVirtuals = await payload.findByID({ collection: "checkout-orders", id: created.id, user, overrideAccess: false, select: { purchaseSummary: false, purchaseDetails: false } });
+  assert.equal("purchaseSummary" in excludedVirtuals, false); assert.equal("purchaseDetails" in excludedVirtuals, false);
+  assert.equal(dependencyReads, 0); assert.equal(merchandiseReads, 0);
   check("field selection does not accidentally expose metadata or purchase details");
+  check("reads that omit both virtual fields perform no dependency reload or merchandise read");
   const selectedSummary = await payload.findByID({ collection: "checkout-orders", id: created.id, user, overrideAccess: false, select: { purchaseSummary: true } });
   assert.match(selectedSummary.purchaseSummary!, /Registration.*Scholarship.*Breakfast.*Merchandise/); assert.equal("rawMetadata" in selectedSummary, false); assert.equal("purchaseDetails" in selectedSummary, false);
   check("virtual-only projections recover source dependencies while returning only requested fields");
+  for (const select of [
+    { purchaseSummary: true, order: true },
+    { purchaseDetails: true, rawMetadata: true },
+    { purchaseSummary: true, purchaseSnapshot: true },
+    { purchaseDetails: true, sourceKey: true },
+    { purchaseSummary: true, paymentSource: true },
+    { purchaseDetails: true, paymentStatus: true },
+  ] as const) {
+    const projected = await payload.findByID({ collection: "checkout-orders", id: created.id, user, overrideAccess: false, select });
+    if ("purchaseSummary" in select) assert.equal(projected.purchaseSummary, read.purchaseSummary);
+    if ("purchaseDetails" in select) assert.deepEqual(projected.purchaseDetails, read.purchaseDetails);
+    assert.deepEqual(Object.keys(projected).sort(), ["id", ...Object.keys(select)].sort());
+  }
+  const excluded = await payload.findByID({ collection: "checkout-orders", id: created.id, user, overrideAccess: false, select: { order: false } });
+  assert.deepEqual(excluded.purchaseDetails, read.purchaseDetails); assert.equal("order" in excluded, false);
+  check("mixed inclusive and exclusive projections derive the same complete purchase while returning only selected fields");
   await payload.update({ collection: "checkout-orders", id: created.id, data: { paymentStatus: "refunded", purchaseSnapshot: { forged: true }, purchaseDetails: { forged: true }, purchaseSummary: "forged" } });
   const updated = await client.db().collection("checkout-orders").findOne({ sourceKey: data.sourceKey });
   assert.deepEqual(updated?.purchaseSnapshot, stored?.purchaseSnapshot); assert.equal(updated?.paymentStatus, "refunded");
@@ -78,7 +101,7 @@ try {
   let externalCalls = 0;
   globalThis.fetch = async () => { externalCalls++; throw new Error("No outbound requests allowed in Orders tests"); };
   try {
-    const reportedOrder = { purchaserName: "Synthetic Boundary Buyer", purchaserEmail: "boundary@example.invalid", selfRegistration: false, scholarship: { enabled: true, kind: "specific", amountCents: 4500, recipientName: "Synthetic Recipient", recipientEmail: "recipient@example.invalid", recipientState: "CT" }, merchandise: [{ slug: "synthetic-hoodie", variantId: "SYN-XL", quantity: 2 }], fulfillmentMethod: "event_pickup" };
+    const reportedOrder = { purchaserName: "Synthetic Boundary Buyer", purchaserEmail: "boundary@example.invalid", selfRegistration: false, scholarship: { enabled: true, kind: "specific", amountCents: 4500, recipientName: "Synthetic Recipient", recipientEmail: "recipient@example.invalid", recipientState: "CT", attribution: "Original Synthetic Group" }, merchandise: [{ slug: "synthetic-hoodie", variantId: "SYN-XL", quantity: 2 }], fulfillmentMethod: "event_pickup" };
     const reportContext = { sourceKey: "cash:synthetic-boundary", paymentSource: "cash", paymentStatus: "recorded", dataOrigin: "cash_checkout", purchasedAt: data.purchasedAt, subtotalCents: 8100, processingFeeCents: 0, totalCents: 8100, rawMetadata: { necy_has_scholarship: "true", necy_has_merch: "true", necy_merch_count: "2", scholarship_quantity: "1", scholarship_recipient_name: "Synthetic Recipient", scholarship_recipient_email: "recipient@example.invalid" } };
     const response = await POST(new Request("http://127.0.0.1/api/registration-site/orders", { method: "POST", headers: { authorization: "Bearer synthetic-orders-boundary", "content-type": "application/json" }, body: JSON.stringify({ order: reportedOrder, context: reportContext }) }));
     assert.equal(response.status, 200); assert.equal(externalCalls, 0);
@@ -87,6 +110,16 @@ try {
     assert.equal(recordedDetails.scholarship?.amountCents, 4500); assert.equal(recordedDetails.scholarship?.kind, "specific"); assert.equal(recordedDetails.merchandise.items[0].variantId, "SYN-XL"); assert.equal(recordedDetails.merchandise.fulfillment, "event_pickup");
     assert.equal(recorded.totalCents, 8100); assert.equal((recorded.order as { scholarship: { amountCents: number } }).scholarship.amountCents, 4000); assert.deepEqual(recorded.rawMetadata, reportContext.rawMetadata);
     check("authenticated reporting route passes original purchase shape into snapshot while retaining existing normalized order, source metadata and recorded totals; no outbound mail");
+    const originalSnapshot = structuredClone(recorded.purchaseSnapshot);
+    const { attribution: omittedAttribution, ...sparseScholarship } = reportedOrder.scholarship;
+    assert.equal(omittedAttribution, "Original Synthetic Group");
+    const sparseResponse = await POST(new Request("http://127.0.0.1/api/registration-site/orders", { method: "POST", headers: { authorization: "Bearer synthetic-orders-boundary", "content-type": "application/json" }, body: JSON.stringify({ order: { ...reportedOrder, scholarship: sparseScholarship }, context: reportContext }) }));
+    assert.equal(sparseResponse.status, 200); assert.equal(externalCalls, 0);
+    const rereported = await payload.findByID({ collection: "checkout-orders", id: recorded.id });
+    assert.equal((rereported.purchaseDetails as typeof details).scholarship?.attribution, "Original Synthetic Group");
+    assert.deepEqual(rereported.purchaseSnapshot, originalSnapshot);
+    for (const field of ["sourceKey", "subtotalCents", "processingFeeCents", "totalCents", "paymentSource", "paymentStatus", "dataOrigin", "rawMetadata"] as const) assert.deepEqual(rereported[field], recorded[field], field);
+    check("sparse repeated authenticated report retains original attribution and snapshot without changing recorded financial or source fields");
   } finally { globalThis.fetch = originalFetch; process.env.REGISTRATION_SITE_API_KEY = ""; }
   const methods = ["receive_now", "event_pickup"] as const;
   for (const method of methods) {
@@ -94,7 +127,7 @@ try {
   }
   const unknown = await payload.create({ collection: "checkout-orders", data: { ...data, sourceKey: "synthetic:unknown", order: {}, rawMetadata: {}, checkoutLineItemSummary: "" } });
   assert.equal((await payload.findByID({ collection: "checkout-orders", id: unknown.id })).purchaseSummary, "Purchase details unknown");
-  const projectedList = await payload.find({ collection: "checkout-orders", user, overrideAccess: false, pagination: false, select: { sourceKey: true, purchaseSummary: true } });
+  const projectedList = await payload.find({ collection: "checkout-orders", user, overrideAccess: false, pagination: false, select: { sourceKey: true, order: true, purchaseSummary: true } });
   assert.ok(projectedList.docs.length >= 5);
   assert.ok(projectedList.docs.every((record) => typeof record.purchaseSummary === "string"));
   assert.match(projectedList.docs.find((record) => record.sourceKey === data.sourceKey)!.purchaseSummary!, /Merchandise/);
