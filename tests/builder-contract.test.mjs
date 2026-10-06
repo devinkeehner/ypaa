@@ -147,7 +147,7 @@ test("header controls and convention blocks keep their accessible builder contra
 
   assert.match(header, /type: "row"[\s\S]*name: "logo"[\s\S]*name: "logoAlt"/);
   assert.match(header, /name: "appearance"[\s\S]*value: "outline"/);
-  assert.match(layout, /appearance: item\?\.appearance === "outline" \? "outline" : "solid"/);
+  assert.match(layout, /headerNavigation: headerItems\.length \? normalizeHeaderNavigation\(headerItems\) : defaultHeaderNavigation/);
   assert.match(siteFrame, /tenant\.logoUrl \? <img alt=\{tenant\.logoAlt\} src=\{tenant\.logoUrl\} \/> : <span>36<\/span>/);
   assert.match(siteFrame, /<strong aria-hidden=\{tenant\.logoUrl \? true : undefined\}>NECYPAA<\/strong>/);
   assert.match(siteFrame, /cms-header-action-\$\{appearance\}/);
