@@ -3,6 +3,7 @@ import config from "@payload-config";
 import { getPayload } from "payload";
 
 import { FrontendStyles } from "./frontend-styles";
+import { normalizeHeaderNavigation } from "@/lib/header-navigation";
 import { defaultTenantTheme, TenantThemeProvider, type TenantTheme, defaultHeaderNavigation, defaultFooter } from "@/components/site/TenantThemeProvider";
 
 export const metadata: Metadata = {
@@ -53,14 +54,7 @@ export default async function FrontendLayout({
         lightBackground: typeof theme?.lightBackground === "string" ? theme.lightBackground : defaultTenantTheme.lightBackground,
         darkText: typeof theme?.darkText === "string" ? theme.darkText : defaultTenantTheme.darkText,
         lightText: typeof theme?.lightText === "string" ? theme.lightText : defaultTenantTheme.lightText,
-        headerNavigation: Array.isArray(headerItems) && headerItems.length ? headerItems.map((item) => ({
-          label: typeof item?.label === "string" ? item.label : "Link",
-          url: typeof item?.url === "string" ? item.url : "/",
-          style: item?.style === "button" ? "button" : "link",
-          appearance: item?.appearance === "outline" ? "outline" : "solid",
-          newTab: item?.newTab === true,
-          showWarning: item?.showWarning === true,
-        })) : defaultHeaderNavigation,
+        headerNavigation: headerItems.length ? normalizeHeaderNavigation(headerItems) : defaultHeaderNavigation,
         footer: {
           heading: typeof footer.heading === "string" ? footer.heading : defaultFooter.heading,
           text: typeof footer.text === "string" ? footer.text : defaultFooter.text,

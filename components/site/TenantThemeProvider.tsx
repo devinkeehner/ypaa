@@ -1,6 +1,8 @@
 "use client";
 
 import { createContext, useContext, type CSSProperties } from "react";
+import type { HeaderNavigationItem } from "../../lib/header-navigation";
+export type { HeaderNavigationItem } from "../../lib/header-navigation";
 
 export type TenantTheme = {
   logoUrl?: string;
@@ -17,7 +19,6 @@ export type TenantTheme = {
   footer: FooterSettings;
 };
 
-export type HeaderNavigationItem = { label: string; url: string; style: "link" | "button"; appearance?: "solid" | "outline"; newTab?: boolean; showWarning?: boolean };
 export type FooterLink = { label: string; url: string; newTab?: boolean; showWarning?: boolean };
 export type FooterSettings = { heading: string; text: string; links: FooterLink[]; legal: string };
 
