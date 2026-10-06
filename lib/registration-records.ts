@@ -30,6 +30,8 @@ export type RecordContext = {
   cardFingerprint?: string;
   paymentSourceType?: string;
   checkoutLineItemSummary?: string;
+  /** Original server-reported purchase shape for display only, before normalization discards details. */
+  purchaseDisplayOrder?: unknown;
   scholarshipQuantity?: number;
   cashTransactionId?: string;
   rawMetadata?: Record<string, string>;
@@ -112,7 +114,7 @@ async function recordCheckoutOrder(payload: Payload, order: RegistrationOrder, c
     const checkoutOrder = await payload.update({ collection: "checkout-orders", id: matched.id, overrideAccess: true, data: { ...data, sourceKey: preserved.sourceKey, purchaserName: preserved.purchaserName, purchaserEmail: preserved.purchaserEmail, purchaserContact: preserved.purchaserContact, paymentStatus: ["refunded", "disputed", "voided"].includes(preserved.paymentStatus) ? preserved.paymentStatus : context.paymentStatus } });
     return { write: "updated" as const, orderId: String(checkoutOrder.id), sourceKey: checkoutOrder.sourceKey, purchaserContactId: relationshipID(checkoutOrder.purchaserContact) || String(purchaserContact.id) };
   }
-  const checkoutOrder = await payload.create({ collection: "checkout-orders", overrideAccess: true, data });
+  const checkoutOrder = await payload.create({ collection: "checkout-orders", overrideAccess: true, data, context: { checkoutPurchaseDisplayOrder: context.purchaseDisplayOrder } });
   return { write: "created" as const, orderId: String(checkoutOrder.id), sourceKey: checkoutOrder.sourceKey, purchaserContactId: relationshipID(checkoutOrder.purchaserContact) || String(purchaserContact.id) };
 }
 

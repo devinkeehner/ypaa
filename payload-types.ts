@@ -39813,6 +39813,31 @@ export interface CheckoutOrder {
    * Canonical contact for the original payer.
    */
   purchaserContact?: (string | null) | Contact;
+  /**
+   * Categories derived on read; historical records require no backfill.
+   */
+  purchaseSummary?: string | null;
+  purchaseDetails?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Derived purchase details captured on creation only. Historical records are not backfilled.
+   */
+  purchaseSnapshot?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   subtotalCents: number;
   processingFeeCents: number;
   totalCents: number;
@@ -61850,6 +61875,9 @@ export interface CheckoutOrdersSelect<T extends boolean = true> {
   purchaserName?: T;
   purchaserEmail?: T;
   purchaserContact?: T;
+  purchaseSummary?: T;
+  purchaseDetails?: T;
+  purchaseSnapshot?: T;
   subtotalCents?: T;
   processingFeeCents?: T;
   totalCents?: T;

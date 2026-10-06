@@ -56,3 +56,6 @@ next-env.d.ts
 
 # Synthetic registration test database and captured mail
 /.local-registration/
+
+# Isolated Orders synthetic QA runtime
+.orders-qa.json

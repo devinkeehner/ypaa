@@ -1,13 +1,15 @@
 import type { Access, CollectionConfig } from "payload";
+import { readCheckoutPurchase, snapshotCheckoutPurchase } from "@/lib/checkout-order-hooks";
 
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
 export const CheckoutOrders: CollectionConfig = {
   slug: "checkout-orders",
   access: { create: authenticated, read: authenticated, update: authenticated, delete: authenticated },
+  hooks: { beforeChange: [snapshotCheckoutPurchase], beforeRead: [readCheckoutPurchase] },
   admin: {
     useAsTitle: "sourceKey",
-    defaultColumns: ["purchaserName", "totalCents", "paymentSource", "paymentStatus", "purchasedAt"],
+    defaultColumns: ["purchaserName", "purchaseSummary", "totalCents", "paymentSource", "paymentStatus", "purchasedAt"],
     description: "One paid checkout record, linked by source key to its attendee, breakfast, and merchandise records.",
   },
   fields: [
@@ -15,6 +17,9 @@ export const CheckoutOrders: CollectionConfig = {
     { name: "purchaserName", type: "text", required: true },
     { name: "purchaserEmail", type: "email", required: true, index: true },
     { name: "purchaserContact", type: "relationship", relationTo: "contacts", index: true, admin: { description: "Canonical contact for the original payer." } },
+    { name: "purchaseSummary", label: "Purchased", type: "text", virtual: true, admin: { readOnly: true, disableListFilter: true, description: "Categories derived on read; historical records require no backfill." } },
+    { name: "purchaseDetails", type: "json", virtual: true, admin: { readOnly: true, disableListColumn: true, components: { Field: "@/components/admin/CheckoutOrderDetails#CheckoutOrderDetails" } } },
+    { name: "purchaseSnapshot", type: "json", access: { create: () => false, update: () => false }, admin: { readOnly: true, hidden: true, description: "Derived purchase details captured on creation only. Historical records are not backfilled." } },
     { name: "subtotalCents", type: "number", required: true, min: 0 },
     { name: "processingFeeCents", type: "number", required: true, min: 0, defaultValue: 0 },
     { name: "totalCents", type: "number", required: true, min: 0 },

@@ -17,6 +17,7 @@ import { ParagraphFeatureClient as ParagraphFeatureClient_e70f5e05f09f93e00b997e
 import { default as default_144c3c1198cf63d305ab8264d5a2b1aa } from '@/components/admin/DeletePageButton'
 import { default as default_9fae9a50b1c0f53ea5eb1ee9db3c553d } from '@/components/admin/PuckPageBuilderView'
 import { default as default_14477b3b486e867c9b743aef60ceeffe } from '@/components/admin/PlayDateField'
+import { CheckoutOrderDetails as CheckoutOrderDetails_6179f05f3f598af35ef419b08efd80a5 } from '@/components/admin/CheckoutOrderDetails'
 import { default as default_58e097ffd737c28c33127f4662812319 } from '@/components/admin/HexColorField'
 import { HotelNotificationRetry as HotelNotificationRetry_e042df286cbf21f4d002ebd49dc7057a } from '@/components/admin/HotelNotificationRetry'
 import { NECYPAAAdminNav as NECYPAAAdminNav_e65de6325dcaf4caeadda34237cac052 } from '@/components/admin/nav/NECYPAAAdminNav'
@@ -55,6 +56,7 @@ export const importMap = {
   "@/components/admin/DeletePageButton#default": default_144c3c1198cf63d305ab8264d5a2b1aa,
   "@/components/admin/PuckPageBuilderView#default": default_9fae9a50b1c0f53ea5eb1ee9db3c553d,
   "@/components/admin/PlayDateField#default": default_14477b3b486e867c9b743aef60ceeffe,
+  "@/components/admin/CheckoutOrderDetails#CheckoutOrderDetails": CheckoutOrderDetails_6179f05f3f598af35ef419b08efd80a5,
   "@/components/admin/HexColorField#default": default_58e097ffd737c28c33127f4662812319,
   "@/components/admin/HotelNotificationRetry#HotelNotificationRetry": HotelNotificationRetry_e042df286cbf21f4d002ebd49dc7057a,
   "@/components/admin/nav/NECYPAAAdminNav#NECYPAAAdminNav": NECYPAAAdminNav_e65de6325dcaf4caeadda34237cac052,
