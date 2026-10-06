@@ -28,7 +28,7 @@ const COLLECTION_AREAS: Record<string, ContentArea> = {
   "program-sessions": "program", rooms: "program", "venue-maps": "program",
   contacts: "registration", attendees: "registration", "registration-entitlements": "registration",
   "breakfast-tickets": "registration", "access-codes": "registration", "cash-transactions": "registration",
-  "checkout-orders": "registration", "scholarship-contributions": "registration", "registration-corrections": "registration", "registration-help-requests": "registration",
+  "checkout-orders": "registration", "scholarship-contributions": "registration", "registration-corrections": "registration", "registration-help-requests": "registration", "hotel-requests": "registration",
 };
 
 export function canReadCollection(user: unknown, slug: string): boolean {

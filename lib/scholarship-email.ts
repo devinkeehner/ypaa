@@ -226,3 +226,18 @@ export async function sendRegistrationHelpAlert(input: { recipientEmail: string;
     idempotencyKey: `registration-help:${input.reference}:${input.recipientEmail}` });
   return "sent" as const;
 }
+
+export async function sendHotelRequestAlert(input: {
+  recipientEmail: string; name: string; email: string; phone: string;
+  arrivalDate: string; departureDate: string; numberOfRooms: number; notes: string; reference: string;
+}) {
+  const configuration = emailConfiguration();
+  if (!configuration) return "pending_configuration" as const;
+  const text = `A hotel request has been saved for NECYPAA XXXVI.\n\nName: ${input.name}\nEmail: ${input.email}\nPhone: ${input.phone}\nArrival: ${input.arrivalDate}\nDeparture: ${input.departureDate}\nRooms requested: ${input.numberOfRooms}\n${input.notes ? `Notes: ${input.notes}\n` : ""}\nRequest reference: ${input.reference}\n\nReview the private Hotel Requests queue, update its status, and record a batch reference when forwarding it to the hotel. This request does not confirm a booking, availability, or a rate.\nhttps://necypaact.com/admin/collections/hotel-requests`;
+  await sendEmail(configuration, {
+    to: input.recipientEmail, subject: "NECYPAA XXXVI hotel request received", text,
+    html: `<div style="background:#f6f4f0;padding:28px 16px;font-family:Arial,sans-serif;color:#281837"><div style="max-width:600px;margin:0 auto;background:#fff;padding:28px;border-radius:12px"><h1 style="font-size:24px;margin:0 0 16px">New hotel request</h1><div style="line-height:1.7">${escapeHtml(text).replace(/\n/g, "<br>")}</div></div></div>`,
+    idempotencyKey: `hotel-request:${input.reference}:${input.recipientEmail}`,
+  });
+  return "sent" as const;
+}

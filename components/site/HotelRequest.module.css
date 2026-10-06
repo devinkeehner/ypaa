@@ -1,0 +1,39 @@
+.container { --type-h2: clamp(1.8rem, 3.8vw, 3rem); display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.2fr); gap: clamp(1.5rem, 4vw, 4rem); max-width: 1120px; margin: 2rem auto; padding: clamp(1.25rem, 4vw, 3rem); color: var(--canvas-text, #f4e8d3); background: var(--canvas-surface, #241632); border: 1px solid var(--canvas-border, #675c71); border-radius: 1.5rem; box-sizing: border-box; }
+.container * { box-sizing: border-box; }
+.introduction { padding-top: .4rem; }
+.eyebrow { display: flex; align-items: center; gap: .55rem; font-size: .75rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; color: var(--canvas-muted, #c4b8d0); }
+.container h2 { margin: 1.1rem 0 1rem; font-size: var(--type-h2); line-height: 1.1; letter-spacing: -.035em; overflow-wrap: anywhere; }
+.intro { white-space: pre-line; font-size: 1rem; line-height: 1.7; margin: 0; }
+.steps { display: grid; gap: .5rem; margin-top: 1.5rem; }
+.steps p { display: flex; gap: .8rem; align-items: flex-start; margin: .5rem 0; line-height: 1.5; font-size: .9rem; }
+.steps svg { flex: 0 0 auto; margin-top: .15rem; color: var(--canvas-action, #f5b367); }
+.steps strong { display: block; margin-bottom: .2rem; }
+.notice { margin: 1.7rem 0 0; padding-top: 1.1rem; border-top: 1px solid var(--canvas-border, #675c71); font-size: .82rem; line-height: 1.65; }
+.panel { padding: clamp(1rem, 3vw, 1.75rem); background: var(--canvas-elevated, #30213e); border: 1px solid var(--canvas-border, #675c71); border-radius: 1rem; min-width: 0; }
+.panelHeading { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.3rem; }
+.panelHeading strong { font-size: .9rem; }
+.panelHeading > span:last-child { flex-basis: 100%; font-size: .75rem; opacity: .8; padding-left: 1rem; }
+.dot { width: .5rem; height: .5rem; background: var(--canvas-action, #f5b367); border-radius: 50%; }
+.preview { border-left: 3px solid var(--canvas-action, #f5b367); padding: .55rem .75rem; margin: 0 0 1rem; line-height: 1.5; font-size: .85rem; }
+.fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; border: 0; padding: 0; margin: 0; min-width: 0; }
+.fields > div { min-width: 0; display: grid; align-content: start; gap: .4rem; }
+.full { grid-column: 1 / -1; }
+.fields label { font-size: .82rem; font-weight: 650; line-height: 1.4; }
+.fields label > span { font-weight: 400; opacity: .8; margin-left: .25rem; }
+.container input, .container textarea { display: block; min-width: 0; width: 100%; min-height: 44px; padding: .7rem .75rem; color: var(--canvas-text, #f4e8d3); background: var(--canvas-bg, #1c1029); border: 1px solid var(--canvas-border, #8a7d96); border-radius: .5rem; font: inherit; font-size: .9rem; color-scheme: dark; }
+:global(.theme-light) .container input, :global(.theme-light) .container textarea { color-scheme: light; }
+.container input[type="date"] { appearance: auto; }
+.container .roomCount { width: 6rem; }
+.container textarea { resize: vertical; }
+.container small { font-size: .72rem; line-height: 1.5; }
+.container button { display: flex; align-items: center; justify-content: center; gap: .6rem; width: 100%; min-height: 48px; padding: .85rem 1rem; margin-top: 1.2rem; color: var(--canvas-on-action, #281837); background: var(--canvas-action, #f5b367); border: 1px solid transparent; border-radius: .6rem; font: inherit; font-weight: 750; cursor: pointer; }
+.container button:hover:enabled { filter: brightness(1.08); }
+.container button:disabled { opacity: .65; cursor: default; }
+.container :is(input, textarea, button):focus-visible { outline: 3px solid var(--canvas-action, #f5b367); outline-offset: 3px; }
+.container :is(input, textarea, button) { scroll-margin-block: 6rem; }
+.status { min-height: 1.4rem; margin: .8rem 0 0; line-height: 1.6; font-size: .85rem; overflow-wrap: anywhere; }
+.status[role="alert"] { color: var(--canvas-text, #f4e8d3); font-weight: 650; }
+.trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+:global(#cms-main) > main > div:first-child > .container:first-child { margin-top: 6rem; }
+@media (max-width: 760px) { .container { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; border-radius: 1rem; margin-inline: .75rem; } .steps { margin-top: 1rem; } .notice { margin-top: 1rem; } }
+@media (max-width: 460px) { .fields { grid-template-columns: minmax(0, 1fr); } .container h2 { font-size: 2rem; } }

@@ -91,6 +91,7 @@ export interface Config {
     'notification-recipients': NotificationRecipient;
     'email-tests': EmailTest;
     'registration-help-requests': RegistrationHelpRequest;
+    'hotel-requests': HotelRequest;
     'registration-imports': RegistrationImport;
     'payload-mcp-api-keys': PayloadMcpApiKey;
     'payload-kv': PayloadKv;
@@ -128,6 +129,7 @@ export interface Config {
     'notification-recipients': NotificationRecipientsSelect<false> | NotificationRecipientsSelect<true>;
     'email-tests': EmailTestsSelect<false> | EmailTestsSelect<true>;
     'registration-help-requests': RegistrationHelpRequestsSelect<false> | RegistrationHelpRequestsSelect<true>;
+    'hotel-requests': HotelRequestsSelect<false> | HotelRequestsSelect<true>;
     'registration-imports': RegistrationImportsSelect<false> | RegistrationImportsSelect<true>;
     'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -1191,6 +1193,22 @@ export interface Page {
                             blockType: 'RegistrationCheck';
                           }
                         | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'HotelRequest';
+                          }
+                        | {
                             image: string | Media;
                             caption?: string | null;
                             puckRichText?:
@@ -2072,6 +2090,22 @@ export interface Page {
                             blockType: 'RegistrationCheck';
                           }
                         | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'HotelRequest';
+                          }
+                        | {
                             image: string | Media;
                             caption?: string | null;
                             puckRichText?:
@@ -2910,6 +2944,22 @@ export interface Page {
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'RegistrationCheck';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'HotelRequest';
                           }
                         | {
                             image: string | Media;
@@ -3882,6 +3932,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -4658,6 +4724,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -5200,6 +5282,22 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'RegistrationCheck';
+          }
+        | {
+            heading?: string | null;
+            intro?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'HotelRequest';
           }
         | {
             image: string | Media;
@@ -6104,6 +6202,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -6863,6 +6977,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -7776,6 +7906,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -8535,6 +8681,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -9375,6 +9537,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -10134,6 +10312,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -10972,6 +11166,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -11731,6 +11941,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -12578,6 +12804,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -13337,6 +13579,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -14178,6 +14436,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -14937,6 +15211,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -15775,6 +16065,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -16534,6 +16840,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -17373,6 +17695,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -18132,6 +18470,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -18975,6 +19329,22 @@ export interface Page {
                             blockType: 'RegistrationCheck';
                           }
                         | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'HotelRequest';
+                          }
+                        | {
                             image: string | Media;
                             caption?: string | null;
                             puckRichText?:
@@ -19749,6 +20119,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -20508,6 +20894,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -21347,6 +21749,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -22106,6 +22524,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -22944,6 +23378,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -23703,6 +24153,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -24541,6 +25007,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -25300,6 +25782,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -26212,6 +26710,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -26971,6 +27485,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -27814,6 +28344,22 @@ export interface Page {
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'RegistrationCheck';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'HotelRequest';
                           }
                         | {
                             image: string | Media;
@@ -28669,6 +29215,22 @@ export interface Page {
                             blockType: 'RegistrationCheck';
                           }
                         | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'HotelRequest';
+                          }
+                        | {
                             image: string | Media;
                             caption?: string | null;
                             puckRichText?:
@@ -29443,6 +30005,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -30202,6 +30780,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -31039,6 +31633,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -31798,6 +32408,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -32636,6 +33262,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -33395,6 +34037,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -34307,6 +34965,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -35066,6 +35740,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -35978,6 +36668,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -36737,6 +37443,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -37575,6 +38297,22 @@ export interface Page {
                       blockType: 'RegistrationCheck';
                     }
                   | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
+                    }
+                  | {
                       image: string | Media;
                       caption?: string | null;
                       puckRichText?:
@@ -38334,6 +39072,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'HotelRequest';
                     }
                   | {
                       image: string | Media;
@@ -39568,7 +40322,13 @@ export interface NotificationRecipient {
   /**
    * More triggers can be added here without changing the recipient list.
    */
-  triggers: ('registration_help' | 'cash_scholarship_requested' | 'stripe_scholarship_paid' | 'merchandise_order')[];
+  triggers: (
+    | 'registration_help'
+    | 'hotel_request'
+    | 'cash_scholarship_requested'
+    | 'stripe_scholarship_paid'
+    | 'merchandise_order'
+  )[];
   active: boolean;
   updatedAt: string;
   createdAt: string;
@@ -39582,6 +40342,7 @@ export interface NotificationRecipient {
 export interface EmailTest {
   id: string;
   notificationType:
+    | 'hotel_request'
     | 'cash_scholarship_requested'
     | 'stripe_scholarship_paid'
     | 'merchandise_shipped'
@@ -39612,6 +40373,62 @@ export interface RegistrationHelpRequest {
   details: string;
   status: 'new' | 'in_progress' | 'resolved';
   notificationStatus: 'pending' | 'sent';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Private hotel inquiry queue. Requests are not confirmed bookings. Review pending email notifications here; batch references record committee handoffs, not reservations. Apply the committee’s retention policy to resolved requests.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hotel-requests".
+ */
+export interface HotelRequest {
+  id: string;
+  requestKey: string;
+  name: string;
+  email: string;
+  phone: string;
+  arrivalDate: string;
+  departureDate: string;
+  numberOfRooms: number;
+  notes?: string | null;
+  /**
+   * Derived from arrival/departure dates. Each date represents one requested night.
+   */
+  requestedNights?:
+    | {
+        date: string;
+        id?: string | null;
+      }[]
+    | null;
+  status: 'new' | 'in_progress' | 'submitted_to_hotel' | 'resolved' | 'cancelled';
+  /**
+   * Optional committee batch/reference for a hotel handoff. This field does not send a batch or reserve rooms.
+   */
+  batchReference?: string | null;
+  /**
+   * When this request was included in a committee hotel handoff.
+   */
+  batchedAt?: string | null;
+  /**
+   * Internal review notes.
+   */
+  staffNotes?: string | null;
+  notificationStatus: 'pending' | 'sent' | 'partial' | 'failed' | 'pending_configuration';
+  /**
+   * Organizer addresses for which Resend accepted the notification. This is not proof of inbox delivery.
+   */
+  notifiedEmails?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  lastNotificationAttemptAt?: string | null;
+  notificationErrorCode?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -39849,6 +40666,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'registration-help-requests';
         value: string | RegistrationHelpRequest;
+      } | null)
+    | ({
+        relationTo: 'hotel-requests';
+        value: string | HotelRequest;
       } | null)
     | ({
         relationTo: 'registration-imports';
@@ -40410,6 +41231,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          HotelRequest?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           ImageCaption?:
                             | T
                             | {
@@ -40881,6 +41711,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          HotelRequest?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           ImageCaption?:
                             | T
                             | {
@@ -41313,6 +42152,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 blockName?: T;
                               };
                           RegistrationCheck?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          HotelRequest?:
                             | T
                             | {
                                 heading?: T;
@@ -41814,6 +42662,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -42225,6 +43082,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -42519,6 +43385,15 @@ export interface PagesSelect<T extends boolean = true> {
               blockName?: T;
             };
         RegistrationCheck?:
+          | T
+          | {
+              heading?: T;
+              intro?: T;
+              puckRichText?: T;
+              id?: T;
+              blockName?: T;
+            };
+        HotelRequest?:
           | T
           | {
               heading?: T;
@@ -43013,6 +43888,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -43408,6 +44292,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -43909,6 +44802,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -44304,6 +45206,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -44762,6 +45673,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -45157,6 +46077,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -45613,6 +46542,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -46008,6 +46946,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -46473,6 +47420,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -46868,6 +47824,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -47327,6 +48292,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -47722,6 +48696,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -48178,6 +49161,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -48573,6 +49565,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -49030,6 +50031,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -49425,6 +50435,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -49887,6 +50906,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          HotelRequest?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           ImageCaption?:
                             | T
                             | {
@@ -50294,6 +51322,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -50689,6 +51726,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -51146,6 +52192,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -51541,6 +52596,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -51997,6 +53061,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -52392,6 +53465,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -52848,6 +53930,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -53243,6 +54334,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -53743,6 +54843,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -54138,6 +55247,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -54592,6 +55710,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 blockName?: T;
                               };
                           RegistrationCheck?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          HotelRequest?:
                             | T
                             | {
                                 heading?: T;
@@ -55057,6 +56184,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          HotelRequest?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           ImageCaption?:
                             | T
                             | {
@@ -55464,6 +56600,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -55859,6 +57004,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -56314,6 +57468,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -56709,6 +57872,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -57165,6 +58337,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -57560,6 +58741,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -58060,6 +59250,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -58455,6 +59654,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -58955,6 +60163,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -59350,6 +60567,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -59806,6 +61032,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    HotelRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     ImageCaption?:
                       | T
                       | {
@@ -60201,6 +61436,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    HotelRequest?:
                       | T
                       | {
                           heading?: T;
@@ -60927,6 +62171,36 @@ export interface RegistrationHelpRequestsSelect<T extends boolean = true> {
   details?: T;
   status?: T;
   notificationStatus?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hotel-requests_select".
+ */
+export interface HotelRequestsSelect<T extends boolean = true> {
+  requestKey?: T;
+  name?: T;
+  email?: T;
+  phone?: T;
+  arrivalDate?: T;
+  departureDate?: T;
+  numberOfRooms?: T;
+  notes?: T;
+  requestedNights?:
+    | T
+    | {
+        date?: T;
+        id?: T;
+      };
+  status?: T;
+  batchReference?: T;
+  batchedAt?: T;
+  staffNotes?: T;
+  notificationStatus?: T;
+  notifiedEmails?: T;
+  lastNotificationAttemptAt?: T;
+  notificationErrorCode?: T;
   updatedAt?: T;
   createdAt?: T;
 }

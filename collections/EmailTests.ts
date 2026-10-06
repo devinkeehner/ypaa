@@ -1,6 +1,6 @@
 import type { Access, CollectionConfig } from "payload";
 
-import { sendCashScholarshipAlert, sendPurchaserConfirmation, sendScholarshipNotification, sendStripeScholarshipAlert, sendMerchandiseShippingUpdate, sendMerchandiseOrderAlert } from "@/lib/scholarship-email";
+import { sendCashScholarshipAlert, sendPurchaserConfirmation, sendScholarshipNotification, sendStripeScholarshipAlert, sendMerchandiseShippingUpdate, sendMerchandiseOrderAlert, sendHotelRequestAlert } from "@/lib/scholarship-email";
 
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
@@ -19,7 +19,9 @@ export const EmailTests: CollectionConfig = {
       let deliveryStatus: "sent" | "pending_configuration" | "failed" = "failed";
       let deliveryError = "";
       try {
-        deliveryStatus = data.notificationType === "merchandise_order"
+        deliveryStatus = data.notificationType === "hotel_request"
+          ? await sendHotelRequestAlert({ recipientEmail: data.recipientEmail, name: "Synthetic hotel guest", email: "guest@example.invalid", phone: "860-555-0100", arrivalDate: "2026-12-31", departureDate: "2027-01-03", numberOfRooms: 1, notes: "Sample request only; no reservation.", reference: `test-${Date.now()}` })
+          : data.notificationType === "merchandise_order"
           ? await sendMerchandiseOrderAlert({ recipientEmail: data.recipientEmail, purchaserName: "Test purchaser", purchaserEmail: "buyer@example.com", reference: `test-${Date.now()}`, fulfillmentMethod: data.fulfillmentMethod || "shipping", paymentSource: "stripe", items: [{ name: "NECYPAA shirt", quantity: 2, size: "L", color: "Purple" }], shippingAddress: { line1: "123 Example Street", city: "Hartford", state: "CT", postalCode: "06103" } })
           : data.notificationType === "stripe_scholarship_paid"
           ? await sendStripeScholarshipAlert({ recipientEmail: data.recipientEmail, scholarshipAmountCents: Number(data.scholarshipAmountCents || 4000), purchaserName: data.purchaserName || "Test purchaser", reference: `test-${Date.now()}` })
@@ -44,6 +46,7 @@ export const EmailTests: CollectionConfig = {
       required: true,
       defaultValue: "cash_scholarship_requested",
       options: [
+        { label: "Hotel request received", value: "hotel_request" },
         { label: "Cash scholarship requested", value: "cash_scholarship_requested" },
         { label: "Stripe general scholarship fund donation paid", value: "stripe_scholarship_paid" },
         { label: "Merchandise shipped", value: "merchandise_shipped" },

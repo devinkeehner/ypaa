@@ -5,6 +5,8 @@ import { Award, BadgeDollarSign, BookOpen, BriefcaseBusiness, CalendarDays, Chec
 import { createContext, Fragment, isValidElement, useContext, useEffect, useId, useState, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 import { RegistrationCheck } from "@/components/site/RegistrationCheck";
+import { HotelRequest } from "@/components/site/HotelRequest";
+import { HOTEL_REQUEST_HEADING, HOTEL_REQUEST_INTRO } from "@/lib/hotel-request-validation";
 import { Countdown } from "@/components/site/Countdown";
 import { requestNavigationWarning } from "@/components/site/navigation-warning";
 import { ProgramExplorer } from "@/components/site/ProgramExplorer";
@@ -175,6 +177,7 @@ type Headline = Base & { text: string; level: "h1" | "h2" | "h3" | "h4"; alignme
 type Divider = Base & { style: "solid" | "dashed" | "dotted"; color: string };
 type FollowLinks = Base & { heading: string; links: LinkItem[] };
 type BulletedList = Base & { items: { text: string }[] };
+type HotelRequestBlock = Base & { heading: string; intro: string };
 type RegistrationCheckBlock = Base & { heading: string; intro: string };
 type InlineForm = Base & { heading: string; intro: string; submitLabel: string; submitAccessibleContext: string; actionUrl: string; fields: { label: string; name: string; type: "text" | "email" }[] };
 type ImageCaption = Base & { image?: MediaValue | null; caption: string };
@@ -188,7 +191,7 @@ type CampaignAltSlotItem = CampaignAltItem & { blocks?: NestedSlotValue };
 type CampaignAltProps = Base & SectionSpacing & { variant: string; presentation: string; eyebrow: string; heading: string; intro: string; body: string; media?: MediaValue | null; backgroundMedia?: MediaValue | null; headingLogo?: MediaValue | null; qrImage?: MediaValue | null; highlightTitle: string; highlightText: string; backgroundOverlay: string; textPanelColor: string; textPanelOpacity: string; primaryLabel: string; primaryUrl: string; primaryAccessibleContext: string; primaryShowWarning?: boolean; primaryButtonColor: string; primaryButtonTextColor: string; secondaryLabel: string; secondaryUrl: string; secondaryAccessibleContext: string; secondaryShowWarning?: boolean; secondaryButtonColor: string; secondaryButtonTextColor: string; quote: string; quoteAttribution: string; electionDay: string; earlyVote: string; phone: string; email: string; website: string; qrCaption: string; disclaimer: string; enableAfterContent?: boolean; afterContent?: NestedSlotValue; bottomContent?: NestedSlotValue; items: CampaignAltItem[]; cards: CampaignAltSlotItem[]; columns: CampaignAltSlotItem[]; tabs: CampaignAltSlotItem[]; puck?: { isEditing?: boolean } };
 type CampaignAltComponents = { [K in CampaignAltType]: CampaignAltProps };
 
-type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CTMeetingSchedule: CTMeetingSchedule; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; Text: TextBlockProps; Button: ButtonBlockProps; Icon: IconElement; Countdown: CountdownBlockProps; Section: Section; Column: Column; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; Navigation: Navigation; Headline: Headline; Divider: Divider; FollowLinks: FollowLinks; BulletedList: BulletedList; RegistrationCheck: RegistrationCheckBlock; InlineForm: InlineForm; ImageCaption: ImageCaption; Video: Video; Embed: Embed; PayPal: PayPal; ContentRow: ContentRow; Row: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow } & CampaignAltComponents;
+type Components = { HeroCountdown: Hero; About: About; MeetingInfo: Meeting; Events: Events; MeetingDirectory: Directory; CTMeetingSchedule: CTMeetingSchedule; CallToAction: CTA; Image: ImageBlock; RichText: RichTextSection; FreeText: FreeText; Text: TextBlockProps; Button: ButtonBlockProps; Icon: IconElement; Countdown: CountdownBlockProps; Section: Section; Column: Column; ProgramSchedule: ProgramSchedule; ButtonRow: ButtonRow; IssuesSection: IssuesSection; IssueCards: IssueCards; QuoteBlock: Quote; ResultsStats: ResultsStats; SupporterLogos: SupporterLogos; ActionTabs: ActionTabs; MediaGallery: MediaGallery; Navigation: Navigation; Headline: Headline; Divider: Divider; FollowLinks: FollowLinks; BulletedList: BulletedList; RegistrationCheck: RegistrationCheckBlock; HotelRequest: HotelRequestBlock; InlineForm: InlineForm; ImageCaption: ImageCaption; Video: Video; Embed: Embed; PayPal: PayPal; ContentRow: ContentRow; Row: ContentRow; RowOneColumn: ContentRow; RowTwoColumns: ContentRow; RowLeftWide: ContentRow; RowRightWide: ContentRow; RowThreeColumns: ContentRow; RowFourColumns: ContentRow } & CampaignAltComponents;
 
 const campaignAltEditableFields = Object.fromEntries(campaignAltDefinitions.map((definition) => {
   const fields = ["eyebrow", "heading", "body", "primaryLabel", "secondaryLabel"];
@@ -231,6 +234,7 @@ export const editableFieldsByType: Record<keyof Components, string[]> = {
   FollowLinks: ["heading"],
   BulletedList: [],
   RegistrationCheck: [],
+  HotelRequest: [],
   InlineForm: ["heading", "intro", "submitLabel"],
   ImageCaption: ["caption"],
   Video: ["caption"],
@@ -1105,7 +1109,7 @@ const campaignAltComponents = Object.fromEntries(campaignAltDefinitions.map((def
 
 export const puckConfig: Config<Components> = {
   categories: {
-    "Home page": { components: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "CTMeetingSchedule", "ProgramSchedule", "CallToAction", "RegistrationCheck"] },
+    "Home page": { components: ["HeroCountdown", "About", "MeetingInfo", "Events", "MeetingDirectory", "CTMeetingSchedule", "ProgramSchedule", "CallToAction", "RegistrationCheck", "HotelRequest"] },
     "Features & content": { components: ["IssuesSection", "IssueCards"] },
     "Quotes & highlights": { components: ["QuoteBlock", "ResultsStats", "SupporterLogos"] },
     "Actions & tabs": { components: ["ActionTabs", "ButtonRow"] },
@@ -1123,6 +1127,11 @@ export const puckConfig: Config<Components> = {
     render: ({ children }) => <main className={styles.canvas}>{children}</main>,
   },
   components: {
+    HotelRequest: {
+      label: "Hotel request", defaultProps: { heading: HOTEL_REQUEST_HEADING, intro: HOTEL_REQUEST_INTRO },
+      fields: { heading: plainText("Heading"), intro: { type: "textarea", label: "Introduction / description" } },
+      render: (props) => <HotelRequest heading={props.heading} intro={props.intro} isEditing={props.puck?.isEditing} />,
+    },
     RegistrationCheck: { label: "Registration check + help", defaultProps: { heading: "Check your registration", intro: "Enter the email address used for your registration. We will email your registration information." }, fields: { heading: plainText("Heading"), intro: plainText("Introduction") }, render: (props) => <RegistrationCheck heading={props.heading} intro={props.intro} isEditing={props.puck?.isEditing} /> },
     HeroCountdown: {
       label: "Hero + countdown",

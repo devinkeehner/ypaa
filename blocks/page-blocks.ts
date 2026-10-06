@@ -388,13 +388,20 @@ export const DividerBlock: Block = { slug: "Divider", labels: { singular: "Divid
 export const FollowLinksBlock: Block = { slug: "FollowLinks", labels: { singular: "Follow links", plural: "Follow links" }, admin: { group: "Page blocks" }, fields: [{ name: "heading", type: "text", defaultValue: "Follow along" }, { name: "links", type: "array", fields: linkFields }] };
 export const BulletedListBlock: Block = { slug: "BulletedList", labels: { singular: "Bulleted list", plural: "Bulleted lists" }, admin: { group: "Page blocks" }, fields: [{ name: "items", type: "array", fields: [{ name: "text", type: "text" }] }] };
 export const RegistrationCheckBlock: Block = { slug: "RegistrationCheck", labels: { singular: "Registration check + help", plural: "Registration checks" }, admin: { group: "Convention sections" }, fields: [{ name: "heading", type: "text", defaultValue: "Check your registration" }, { name: "intro", type: "textarea", defaultValue: "Enter the email address used for your registration. We will email your registration information." }] };
+export const HotelRequestBlock: Block = {
+  slug: "HotelRequest", labels: { singular: "Hotel request", plural: "Hotel requests" }, admin: { group: "Convention sections" },
+  fields: [
+    { name: "heading", type: "text", defaultValue: "Need help with a hotel room?" },
+    { name: "intro", label: "Introduction / description", type: "textarea", defaultValue: "Tell us when you’d like to stay and how to reach you. The host committee will review your request and contact you about available options." },
+  ],
+};
 export const InlineFormBlock: Block = { slug: "InlineForm", labels: { singular: "Inline form", plural: "Inline forms" }, admin: { group: "Page blocks" }, fields: [{ name: "heading", type: "text" }, { name: "intro", type: "textarea" }, { name: "submitLabel", type: "text", defaultValue: "Submit" }, accessibleContextField("submitAccessibleContext"), { name: "actionUrl", type: "text" }, { name: "fields", type: "array", fields: [{ name: "label", type: "text" }, { name: "name", type: "text" }, { name: "type", type: "select", defaultValue: "text", options: ["text", "email"] }] }] };
 export const ImageCaptionBlock: Block = { slug: "ImageCaption", labels: { singular: "Image + caption", plural: "Images + captions" }, admin: { group: "Page blocks" }, fields: [{ name: "image", type: "upload", relationTo: "media", required: true }, { name: "caption", type: "text" }] };
 export const VideoBlock: Block = { slug: "Video", labels: { singular: "Video", plural: "Videos" }, admin: { group: "Page blocks" }, fields: [{ name: "video", type: "upload", relationTo: "media" }, { name: "url", type: "text" }, { name: "caption", type: "text" }] };
 export const EmbedBlock: Block = { slug: "Embed", labels: { singular: "Embed", plural: "Embeds" }, admin: { group: "Page blocks" }, fields: [{ name: "url", type: "text" }, { name: "title", type: "text" }] };
 export const PayPalBlock: Block = { slug: "PayPal", labels: { singular: "Legacy PayPal button", plural: "Legacy PayPal buttons" }, admin: { group: "Legacy compatibility" }, fields: [{ name: "label", type: "text", defaultValue: "Donate" }, { name: "url", type: "text" }, accessibleContextField(), leavingSiteWarningField(), { name: "amount", type: "text" }] };
 
-const nestedElementBlocks: Block[] = [ImageBlock, RichTextBlock, FreeTextBlock, TextBlock, ButtonBlock, IconBlock, CountdownBlock, NavigationBlock, HeadlineBlock, DividerBlock, FollowLinksBlock, BulletedListBlock, InlineFormBlock, RegistrationCheckBlock, ImageCaptionBlock, VideoBlock, EmbedBlock];
+const nestedElementBlocks: Block[] = [ImageBlock, RichTextBlock, FreeTextBlock, TextBlock, ButtonBlock, IconBlock, CountdownBlock, NavigationBlock, HeadlineBlock, DividerBlock, FollowLinksBlock, BulletedListBlock, InlineFormBlock, RegistrationCheckBlock, HotelRequestBlock, ImageCaptionBlock, VideoBlock, EmbedBlock];
 
 const afterContentBlocksField: Field = {
   name: "afterContentBlocks",
@@ -731,6 +738,7 @@ const pageLayoutBlocks: Block[] = [
   BulletedListBlock,
   InlineFormBlock,
   RegistrationCheckBlock,
+  HotelRequestBlock,
   ImageCaptionBlock,
   VideoBlock,
   EmbedBlock,

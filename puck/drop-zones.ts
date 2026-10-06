@@ -19,6 +19,7 @@ export const ELEMENT_DROP_TYPES = [
   "FollowLinks",
   "InlineForm",
   "RegistrationCheck",
+  "HotelRequest",
   "Navigation",
   "BulletedList",
 ] as string[];
@@ -29,6 +30,7 @@ export const ELEMENT_DROP_TYPES = [
  * pages continue to render; this list controls what authors are offered.
  */
 export const REUSABLE_SECTION_TYPES = [
+  "HotelRequest",
   "HeroAlt",
   "AboutAlt",
   "CardsGridAlt",

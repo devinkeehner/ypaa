@@ -228,6 +228,7 @@ const BLOCK_LIBRARY: Record<string, { icon?: React.ReactNode; label: string; row
   FollowLinks: { icon: <MousePointerClick />, label: "Follow Links" },
   BulletedList: { icon: <ListTree />, label: "Bulleted List" },
   InlineForm: { icon: <FileText />, label: "Inline Form" },
+  HotelRequest: { icon: <FileText />, label: "Hotel request" },
   ImageCaption: { icon: <ImageIcon />, label: "Image + Caption" },
   Video: { icon: <GalleryHorizontal />, label: "Video" },
   Embed: { icon: <Box />, label: "Embed" },

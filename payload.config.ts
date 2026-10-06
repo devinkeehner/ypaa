@@ -28,6 +28,7 @@ import { ProgramSessions } from "./collections/ProgramSessions";
 import { VenueMaps } from "./collections/VenueMaps";
 import { NotificationRecipients } from "./collections/NotificationRecipients";
 import { RegistrationHelpRequests } from "./collections/RegistrationHelpRequests";
+import { HotelRequests } from "./collections/HotelRequests";
 import { RegistrationImports } from "./collections/RegistrationImports";
 import { EmailTests } from "./collections/EmailTests";
 import { ensureProgramSeed } from "./lib/program-seed";
@@ -115,7 +116,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, Contacts, CheckoutOrders, ScholarshipContributions, RegistrationEntitlements, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, RegistrationCorrections, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests, RegistrationHelpRequests, RegistrationImports].map(withViewerAccess),
+  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, Contacts, CheckoutOrders, ScholarshipContributions, RegistrationEntitlements, Tenants, AccessCodes, CashTransactions, Attendees, BreakfastTickets, RegistrationCorrections, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests, RegistrationHelpRequests, HotelRequests, RegistrationImports].map(withViewerAccess),
   globals: [Header, Footer].map(withViewerGlobalAccess),
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || "",
