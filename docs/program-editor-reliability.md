@@ -47,4 +47,15 @@ Remaining scope: native touchscreen move gestures still use the edit form altern
 - Initial integration attempt in database ending `9001` hit a fixture index-creation race. The test now waits for model indexes before transactional seeding; the fresh `9002` run passed. Both synthetic namespaces were left intact.
 - Static syntax and `git diff --check`: passed.
 
-Screenshots are stored outside the repository in task-5/program-fix-evidence. No full Next production build, real HTTP auth test, production readiness check or physical touchscreen verification was run. The browser fixture uses the actual component/CSS but stubs Next Link and all APIs; Mongo tests exercise the actual Payload collections and mutation helper independently.
+### Release checks against main `a021805f7bcd06582f0a827cca9a7bdd3f670fc4`
+
+- Rebased in the isolated clone, preserving the deployed hotel and header/breakfast changes. Regenerated Payload types and import map; the generator only reordered the revision field and required no import-map changes.
+- Full standard Next.js 16.2.6 Turbopack production build, including TypeScript and page generation: passed. The initial attempt rejected the external `node_modules` symlink; copying the existing installed dependencies into this isolated clone resolved it without installing packages or altering shared dependencies.
+- Ran the production build on local port 3045 with the actual app config and dedicated synthetic database `program_editor_release_1791299999001`. Email capture was enabled, cloud storage/MCP disabled, and payment/service keys blank. The initial sample seed encountered an index-creation race; startup after model index initialization passed.
+- Real authenticated HTTP checks: manager create and multi-session resize passed; overlaps, stale revisions, anonymous/viewer writes and wrong-origin writes were rejected. Persisted notes and incremented revisions were confirmed by subsequent reads.
+- Real browser checks: authenticated editor rendered, Eastern labels were correct from a UTC browser, a form edit saved with notes intact, viewer controls were disabled, anonymous access redirected to login, and the Payload admin iframe rendered. No browser page errors. No request interception was used for this release check.
+- Test browser and owned local server were stopped. Shared Mongo was left running and unchanged; synthetic databases remain available for inspection.
+
+Screenshots are stored outside the repository in task-5/program-fix-evidence and task-5/program-release/authenticated-editor.png. Build, seed and HTTP evidence is in task-5/program-release. The earlier component fixture stubs Next Link and APIs; the release checks above exercise the built Next app and actual Payload HTTP routes.
+
+**Deployment gate remains open:** production transaction readiness is unverified. The connected Vercel account cannot access the actual production workspace (403); local environment database values point to loopback and provide no production topology evidence. Do not publish the mandatory transaction hooks until authorized read-only production evidence confirms support. Physical touchscreen behavior also remains unverified.

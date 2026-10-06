@@ -40257,8 +40257,8 @@ export interface Room {
  * via the `definition` "program-sessions".
  */
 export interface ProgramSession {
-  scheduleRevision?: number | null;
   id: string;
+  scheduleRevision?: number | null;
   title: string;
   slug: string;
   sessionType: 'main_meeting' | 'panel' | 'workshop' | 'dance' | 'marathon' | 'affinity' | 'special_event';
