@@ -5,6 +5,7 @@ import type { HeaderNavigationItem } from "../../lib/header-navigation";
 export type { HeaderNavigationItem } from "../../lib/header-navigation";
 
 export type TenantTheme = {
+  merchEnabled: boolean;
   logoUrl?: string;
   logoAlt: string;
   primary: string;
@@ -45,6 +46,7 @@ export const defaultFooter: FooterSettings = {
 };
 
 export const defaultTenantTheme: TenantTheme = {
+  merchEnabled: true,
   logoAlt: "NECYPAA XXXVI",
   primary: "#E85E27",
   secondary: "#31275A",

@@ -2,6 +2,7 @@ import config from "@payload-config";
 import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getPayload } from "payload";
+import { getMerchandiseCatalog } from "@/lib/merchandise-catalog";
 
 type RequestedItem = { slug?: unknown; variantId?: unknown; quantity?: unknown };
 type FulfillmentBody = {
@@ -46,28 +47,13 @@ function normalizedShippingAddress(value: unknown): Record<string, string> | nul
   };
 }
 
+export const dynamic = "force-dynamic";
+
 type CatalogChannel = "main" | "quick" | "all";
 
 async function catalog(request: Request, channel: CatalogChannel = "main") {
-  const payload = await getPayload({ config });
-  const result = await payload.find({
-    collection: "merchandise",
-    overrideAccess: true,
-    draft: false,
-    depth: 1,
-    limit: 100,
-    sort: "-featured,name",
-    where: {
-      and: [{ _status: { equals: "published" } }, { available: { equals: true } }],
-    },
-  });
-  return result.docs
-    .filter((doc) => {
-      const visibility = doc as typeof doc & { showInMainStore?: boolean | null; showInQuickCheckout?: boolean | null };
-      if (channel === "all") return true;
-      if (channel === "quick") return visibility.showInQuickCheckout === true;
-      return visibility.showInMainStore !== false;
-    })
+  const { items } = await getMerchandiseCatalog(channel);
+  return items
     .map((doc) => ({
     id: String(doc.id),
     name: doc.name,
@@ -143,7 +129,8 @@ export async function GET(request: Request) {
   if (!authorized(request)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
     const channel = new URL(request.url).searchParams.get("channel") === "quick" ? "quick" : "main";
-    return NextResponse.json({ items: await catalog(request, channel) });
+    const items = await catalog(request, channel);
+    return NextResponse.json({ enabled: items.length > 0, items }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Merchandise could not be loaded." },

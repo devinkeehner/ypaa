@@ -33,6 +33,10 @@ export const Tenants: CollectionConfig = {
   },
   fields: [
     { name: "name", type: "text", required: true, defaultValue: "NECYPAA XXXVI" },
+    { name: "onlineMerchEnabled", label: "Enable online merchandise", type: "checkbox", defaultValue: true,
+      admin: { description: "Turn off to hide the merchandise store, cart, links, and Merchandise section in registration checkout, and reject new online merch purchases. Existing payments and order history are preserved." } },
+    { name: "quickMerchEnabled", label: "Enable in-person merchandise checkout", type: "checkbox", defaultValue: true,
+      admin: { description: "Controls new sales through the /merch QR checkout on the registration site independently of online sales. Existing payments can still finish." } },
     {
       type: "group",
       name: "theme",

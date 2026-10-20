@@ -1,30 +1,17 @@
-import config from "@payload-config";
+import { getMerchandiseCatalog } from "@/lib/merchandise-catalog";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPayload } from "payload";
 
 import { ProductDetail } from "@/components/site/ProductDetail";
 import type { MerchandiseItem } from "@/components/site/merch";
 
+export const dynamic = "force-dynamic";
+
 type ProductPageProps = { params: Promise<{ slug: string }> };
 
 async function findProduct(slug: string) {
-  const payload = await getPayload({ config });
-  const result = await payload.find({
-    collection: "merchandise",
-    draft: false,
-    depth: 1,
-    limit: 1,
-    where: {
-      and: [
-        { slug: { equals: slug } },
-        { _status: { equals: "published" } },
-        { available: { equals: true } },
-      ],
-    },
-  });
-  const item = result.docs[0] as (MerchandiseItem & { showInMainStore?: boolean | null }) | undefined;
-  return item?.showInMainStore === false ? undefined : item;
+  const { items } = await getMerchandiseCatalog();
+  return items.find((item) => item.slug === slug) as unknown as MerchandiseItem | undefined;
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {

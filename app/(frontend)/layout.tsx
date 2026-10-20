@@ -2,9 +2,13 @@ import type { Metadata } from "next";
 import config from "@payload-config";
 import { getPayload } from "payload";
 
+import { getMerchandiseCatalog } from "@/lib/merchandise-catalog";
+
 import { FrontendStyles } from "./frontend-styles";
 import { normalizeHeaderNavigation } from "@/lib/header-navigation";
 import { defaultTenantTheme, TenantThemeProvider, type TenantTheme, defaultHeaderNavigation, defaultFooter } from "@/components/site/TenantThemeProvider";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "NECYPAA XXXVI | Hartford, Connecticut",
@@ -30,13 +34,14 @@ export default async function FrontendLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  let tenant: TenantTheme = defaultTenantTheme;
+  let tenant: TenantTheme = { ...defaultTenantTheme, merchEnabled: false };
   try {
     const payload = await getPayload({ config });
-    const [result, headerGlobal, footerGlobal] = await Promise.all([
+    const [result, headerGlobal, footerGlobal, merch] = await Promise.all([
       payload.find({ collection: "tenants", depth: 1, limit: 1, sort: "createdAt" }),
       payload.findGlobal({ slug: "header", depth: 1 }),
       payload.findGlobal({ slug: "footer", depth: 1 }),
+      getMerchandiseCatalog(),
     ]);
     const settings = result.docs[0] as unknown as Record<string, unknown> | undefined;
     const header = headerGlobal as unknown as Record<string, unknown>;
@@ -44,6 +49,7 @@ export default async function FrontendLayout({
     const headerItems = Array.isArray(header.navigation) ? header.navigation : [];
     const theme = settings?.theme as Record<string, unknown> | undefined;
     tenant = {
+        merchEnabled: merch.enabled,
         logoUrl: mediaUrl(header.logo),
         logoAlt: typeof header.logoAlt === "string" ? header.logoAlt : defaultTenantTheme.logoAlt,
         primary: typeof theme?.primary === "string" ? theme.primary : defaultTenantTheme.primary,

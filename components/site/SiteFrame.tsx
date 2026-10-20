@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, 
 import { Menu, Settings, X } from "lucide-react";
 import Link from "next/link";
 import type { NavigationWarningDetail } from "./navigation-warning";
+import { isMerchLink } from "@/lib/merchandise-visibility";
 import { CartLink } from "./CartLink";
 import { useTenantTheme, type HeaderNavigationItem, type FooterLink } from "./TenantThemeProvider";
 import { HeaderNavigationItems, HeaderNavLink as NavLink } from "./HeaderNavigation";
@@ -47,7 +48,7 @@ function isDisabledPublicSurface(url: string) {
 
 export function SiteFrame({ children, mainId }: { children: React.ReactNode; mainId: string }) {
   const tenant = useTenantTheme();
-  const navItems = filterHeaderNavigation(normalizeHeaderNavigation(tenant.headerNavigation?.length ? tenant.headerNavigation : fallbackNavItems), (url) => !isDisabledPublicSurface(url));
+  const navItems = filterHeaderNavigation(normalizeHeaderNavigation(tenant.headerNavigation?.length ? tenant.headerNavigation : fallbackNavItems), (url) => !isDisabledPublicSurface(url) && (tenant.merchEnabled || !isMerchLink(url)));
   const navLinks = navItems.filter((item) => item.style !== "button");
   const actionItems = navItems.filter((item) => item.style === "button");
   const mobileActionRows = Math.max(1, Math.ceil(actionItems.length / 2));
@@ -181,7 +182,7 @@ export function SiteFrame({ children, mainId }: { children: React.ReactNode; mai
         {menu ? <nav className="cms-mobile-menu" id="cms-mobile-menu" aria-label="Mobile navigation" ref={menuRef} style={{ maxHeight: "calc(100dvh - 160px)", overflowY: "auto" }}><HeaderNavigationItems items={navItems} mobile onNavigate={(item, event) => { confirmNavigation(item, event); if (!event.defaultPrevented) setMenu(false); }} /></nav> : null}
       </header>
       {children}
-      <footer className="cms-footer"><div className="cms-footer-inner"><div><p className="cms-footer-kicker">{tenant.footer.heading}</p><p>{tenant.footer.text}</p></div>{tenant.footer.links.filter((item) => !isDisabledPublicSurface(item.url)).length ? <nav aria-label="Footer navigation">{tenant.footer.links.filter((item) => !isDisabledPublicSurface(item.url)).map((item) => <FooterLinkItem item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}</nav> : null}</div><p className="cms-footer-legal">{tenant.footer.legal}</p></footer>
+      <footer className="cms-footer"><div className="cms-footer-inner"><div><p className="cms-footer-kicker">{tenant.footer.heading}</p><p>{tenant.footer.text}</p></div>{tenant.footer.links.filter((item) => !isDisabledPublicSurface(item.url) && (tenant.merchEnabled || !isMerchLink(item.url))).length ? <nav aria-label="Footer navigation">{tenant.footer.links.filter((item) => !isDisabledPublicSurface(item.url) && (tenant.merchEnabled || !isMerchLink(item.url))).map((item) => <FooterLinkItem item={item} key={`${item.url}-${item.label}`} onClick={(event) => confirmNavigation(item, event)} />)}</nav> : null}</div><p className="cms-footer-legal">{tenant.footer.legal}</p></footer>
       {actionItems.length ? <nav aria-label="Quick actions" className="cms-mobile-actions" data-action-count={actionItems.length}>{actionItems.map((item, index) => <NavLink className={headerActionClassName(item)} item={item} key={headerNavigationKey(item, index)} onClick={(event) => confirmNavigation(item, event)} />)}</nav> : null}
       {pendingNavigation ? <div className="cms-leave-backdrop" role="presentation"><section aria-describedby="cms-leave-description" aria-labelledby="cms-leave-title" aria-modal="true" className="cms-leave-dialog" ref={leaveDialogRef} role="dialog"><h2 id="cms-leave-title">You are leaving this site</h2><p id="cms-leave-description">You are about to follow “{pendingNavigation.label}” to another page. Continue?</p><div className="cms-leave-actions"><button onClick={closeLeaveDialog} type="button">Stay here</button><button onClick={continueNavigation} type="button">Continue to link</button></div></section></div> : null}
       <button className="display-gear" aria-expanded={settings} aria-haspopup="dialog" aria-label="Display and accessibility settings" onClick={() => { if (settings) closeSettings(); else { setMenu(false); setSettings(true); } }} ref={settingsButtonRef} type="button"><Settings aria-hidden="true" /></button>

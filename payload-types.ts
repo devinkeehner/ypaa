@@ -40126,6 +40126,8 @@ export interface ScholarshipContribution {
 export interface Tenant {
   id: string;
   name: string;
+  onlineMerchEnabled?: boolean | null;
+  quickMerchEnabled?: boolean | null;
   theme: {
     /**
      * Choose a color or paste an exact six-digit hex code.
@@ -61952,6 +61954,8 @@ export interface RegistrationEntitlementsSelect<T extends boolean = true> {
  */
 export interface TenantsSelect<T extends boolean = true> {
   name?: T;
+  onlineMerchEnabled?: T;
+  quickMerchEnabled?: T;
   theme?:
     | T
     | {
