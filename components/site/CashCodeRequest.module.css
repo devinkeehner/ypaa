@@ -1,0 +1,20 @@
+.container {
+  --form-text: var(--tenant-light-text, #f4e8d3);
+  max-width: 42rem;
+  margin: 1.5rem auto;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  color: var(--form-text);
+  background: var(--tenant-surface, #15181a);
+  border: 1px solid color-mix(in srgb, var(--form-text), transparent 78%);
+  border-radius: .75rem;
+}
+.container h2 { margin: 0 0 .85rem; color: var(--form-text); font-size: clamp(1.5rem, 4vw, 2.15rem); line-height: 1.15; }
+.container p { color: var(--form-text); line-height: 1.6; }
+.container form { display: grid; gap: .75rem; margin-top: 1.5rem; }
+.container label { font-weight: 700; }
+.container input { min-width: 0; width: 100%; padding: .85rem; font: inherit; color: var(--form-text); background: var(--tenant-background, #0c0d0e); border: 1px solid color-mix(in srgb, var(--form-text), transparent 50%); border-radius: .3rem; }
+.container button { justify-self: start; max-width: 100%; min-height: 48px; padding: .8rem 1.2rem; font: inherit; font-weight: 750; color: #171614; background: var(--tenant-primary, #e85e27); border: 0; border-radius: .3rem; cursor: pointer; }
+.container button:disabled { opacity: .65; cursor: default; }
+.container :is(input, button):focus-visible { outline: 3px solid var(--tenant-accent, #ffd76a); outline-offset: 3px; }
+.status { min-height: 1.5rem; margin: 0; overflow-wrap: anywhere; }
+.trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }

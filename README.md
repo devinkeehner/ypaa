@@ -1,25 +1,19 @@
 # NECYPAA XXXVI
 
-## Cash registration code settings
+## Cash registration access codes
 
-These are the only settings needed for the cash-code integration. Keep them together in the hosting environment so they are easy to find:
+Add and activate approved addresses in **Cash Code Recipients** in Payload. Share `/cash-code-request`, or add the **Cash access code request** block to a page in the visual builder. The registration checkout also links to the request form. Each request from an active approved address emails a code for one cash order. A person can request another code for a later order. Requests for unknown addresses receive the same public acknowledgment. Removing or deactivating an address prevents future code requests; previously issued codes remain valid until used.
 
-```text
-ISSUER_SERVICE_BASE_URL       External cash-code service URL
-ISSUER_SERVICE_API_KEY        Secret key for the external service
-ISSUER_EVENT_SLUG             Event identifier, normally necypaa-xxxvi
-CASH_ACCESS_CODE              Optional local fallback code
-CASH_ACCESS_CODE_MAX_REDEMPTIONS  Uses allowed for the fallback code
-```
+The main site needs `REGISTRATION_SITE_API_KEY`, `PAYLOAD_SECRET`, `RESEND_API_KEY`, and `SCHOLARSHIP_FROM_EMAIL`. `REGISTRATION_SITE_URL` optionally changes the registration-site origin from `https://reg.necypaact.com`. The registration site uses its existing `PAYLOAD_MERCH_API_KEY` with the same value as `REGISTRATION_SITE_API_KEY`. Keep both keys server-side. No third-party cash-code issuer is used. The registration database stores hashes rather than plaintext codes. A request limit prevents repeated messages and is shared with registration checking; a repeated request within ten minutes receives an acknowledgment without a second email. Retry after ten minutes to receive another code.
 
-Generated issuer codes are redeemed through the external service. The fallback environment code continues through this site's local cash ledger. External codes cover one registration and do not cover breakfast tickets or additional scholarships.
+Codes apply to one complete cash order, including any allowed registration, breakfast, merchandise, or scholarship selections. A lost response can be retried with the same code and unchanged order. If the order remains processing, wait and retry; if fulfillment cannot be completed, the same order can be retried using the code. The optional legacy `CASH_ACCESS_CODE` is a separate local fallback and does not have the emailed code's single-order guarantee.
 
 ## Site administration
 
 - Use **Media** to upload homepage artwork and video.
 - Use the home page editor to replace the hero background, hero poster, hero foreground, about artwork, upcoming event flyer, every past-event image, and closing artwork.
 - Use **Tenant / site settings** to upload the header logo and set the site palette with six-digit hex codes.
-- Use **Access Codes** to create the codes accepted by `/cash`, including activation and redemption limits.
+- Use **Cash Code Recipients** to manage who can request emailed cash access codes. The legacy **Access Codes** collection belongs to the main site’s separate cash API.
 - Cash orders appear under **Cash Transactions**.
 - Use **Notification Recipients** to add internal addresses and choose the alerts each address should receive. Add an address with the **Cash scholarship requested** trigger to receive the scholarship amount for cash scholarship requests.
 - Use **Email Tests** to send a one-time sample scholarship email to an address you enter. Each record shows whether Resend sent it, still needs configuration, or failed.
@@ -29,7 +23,7 @@ Generated issuer codes are redeemed through the external service. The fallback e
 
 ## Registration and Stripe
 
-`/register` provides one checkout for a $40 self-registration, $25 breakfast tickets for Friday, Saturday, or Sunday, a named $40 registration scholarship, or a general scholarship contribution starting at $40. The policy and its seven acknowledgments appear only when the purchaser registers themself. A named scholarship collects recipient contact, state, homegroup, and accessibility details and creates an expected attendee whose policy status remains pending until personally completed.
+`/register` redirects to the separate registration checkout for a $45 self-registration, $25 breakfast tickets for Friday, Saturday, or Sunday, a named $45 registration scholarship, or a general scholarship contribution. The policy and its seven acknowledgments appear only when the purchaser registers themself. A named scholarship collects recipient contact, state, homegroup, and accessibility details and creates an expected attendee whose policy status remains pending until personally completed.
 
 `/cash` provides the same order builder after an authorized access code is entered. A cash order does not create a fake $0 card charge. It creates or updates a Stripe Customer with the registration metadata and saves the cash value and order as a Cash Transaction in Payload.
 

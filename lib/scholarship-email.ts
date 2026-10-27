@@ -241,3 +241,13 @@ export async function sendHotelRequestAlert(input: {
   });
   return "sent" as const;
 }
+
+export async function sendCashAccessCode(input: { recipientEmail: string; code: string; reference: string }) {
+  const configuration = emailConfiguration();
+  if (!configuration) return "pending_configuration" as const;
+  const text = `Your NECYPAA cash registration access code is: ${input.code}\n\nEnter this code at https://reg.necypaact.com/checkout when recording one cash order. You can request another code for a later order. Keep this code private.\n\nIf you did not request a code, you can ignore this email.`;
+  await sendEmail(configuration, { to: input.recipientEmail, subject: "Your NECYPAA cash registration access code", text,
+    html: `<div style="font-family:Arial,sans-serif;line-height:1.6">${escapeHtml(text).replace(/\n/g, "<br>")}</div>`,
+    idempotencyKey: `cash-code:${input.reference}` });
+  return "sent" as const;
+}

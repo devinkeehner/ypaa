@@ -58,6 +58,7 @@ const COMPONENT_TYPES = new Set([
   "BulletedList",
   "InlineForm",
   "RegistrationCheck",
+  "CashCodeRequest",
   "HotelRequest",
   "ImageCaption",
   "Video",

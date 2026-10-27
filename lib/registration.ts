@@ -1,4 +1,4 @@
-export const REGISTRATION_PRICE_CENTS = 4000;
+export const REGISTRATION_PRICE_CENTS = 4500;
 export const BREAKFAST_PRICE_CENTS = 2500;
 
 export const BREAKFASTS = [
@@ -189,8 +189,8 @@ export function buildMetadata(order: RegistrationOrder, totals: { dataOrigin: "l
     necy_has_breakfast: String(breakfastCount(order) > 0),
     necy_has_scholarship: String(order.scholarship.enabled),
     necy_has_merch: "false",
-    necy_registration_qty_35: "0",
-    necy_registration_qty_40: order.selfRegistration ? "1" : "0",
+    necy_registration_qty_45: order.selfRegistration ? "1" : "0",
+    necy_registration_qty_40: "0",
     necy_scholarship_qty: order.scholarship.enabled ? "1" : "0",
     necy_breakfast_friday_qty: String(order.breakfast.friday),
     necy_breakfast_saturday_qty: String(order.breakfast.saturday),

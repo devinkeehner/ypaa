@@ -19,6 +19,7 @@ export const ELEMENT_DROP_TYPES = [
   "FollowLinks",
   "InlineForm",
   "RegistrationCheck",
+  "CashCodeRequest",
   "HotelRequest",
   "Navigation",
   "BulletedList",

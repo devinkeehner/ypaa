@@ -63,18 +63,19 @@ export const defaultTenantTheme: TenantTheme = {
 const TenantContext = createContext<TenantTheme>(defaultTenantTheme);
 
 export function TenantThemeProvider({ children, settings }: { children: React.ReactNode; settings: TenantTheme }) {
+  const resolved = { ...defaultTenantTheme, ...settings, footer: settings.footer || defaultFooter, headerNavigation: settings.headerNavigation || defaultHeaderNavigation };
   const style = {
-    "--tenant-primary": settings.primary,
-    "--tenant-secondary": settings.secondary,
-    "--tenant-accent": settings.accent,
-    "--tenant-background": settings.background,
-    "--tenant-surface": settings.surface,
-    "--tenant-light-background": settings.lightBackground,
-    "--tenant-dark-text": settings.darkText,
-    "--tenant-light-text": settings.lightText,
+    "--tenant-primary": resolved.primary,
+    "--tenant-secondary": resolved.secondary,
+    "--tenant-accent": resolved.accent,
+    "--tenant-background": resolved.background,
+    "--tenant-surface": resolved.surface,
+    "--tenant-light-background": resolved.lightBackground,
+    "--tenant-dark-text": resolved.darkText,
+    "--tenant-light-text": resolved.lightText,
   } as CSSProperties;
 
-  return <TenantContext.Provider value={settings}><div className="tenant-theme" style={style}>{children}</div></TenantContext.Provider>;
+  return <TenantContext.Provider value={resolved}><div className="tenant-theme" style={style}>{children}</div></TenantContext.Provider>;
 }
 
 export function useTenantTheme() {

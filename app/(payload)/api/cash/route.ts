@@ -6,7 +6,7 @@ import { buildMetadata, normalizeOrder, orderSubtotalCents, validateOrder } from
 import { sendCashScholarshipRequestedNotification, sendScholarshipNotification } from "@/lib/scholarship-email";
 import { getStripe } from "@/lib/stripe-server";
 import { recordRegistrationOrder } from "@/lib/registration-records";
-import { buildCashRegistrationId, maskCashCode, normalizeCashCode, redeemExternalCashCode, type ExternalRedemptionResult } from "@/lib/cash-access";
+import { maskCashCode, normalizeCashCode } from "@/lib/cash-access";
 
 export async function POST(request: Request) {
   try {
@@ -18,7 +18,6 @@ export async function POST(request: Request) {
     if (validation) return NextResponse.json({ error: validation }, { status: 400 });
 
     const payload = await getPayload({ config });
-    let externalRedemption: Extract<ExternalRedemptionResult, { success: true }> | null = null;
     const result = await payload.find({
       collection: "access-codes",
       limit: 1,
@@ -27,7 +26,6 @@ export async function POST(request: Request) {
     });
     let accessCode = result.docs[0] as any;
     const environmentCode = normalizeCashCode(process.env.CASH_ACCESS_CODE);
-    const externalEligible = order.selfRegistration && !order.scholarship.enabled && Object.values(order.breakfast).every((count) => count === 0);
 
     if (!accessCode && environmentCode && code === environmentCode) {
       accessCode = await payload.create({
@@ -44,37 +42,6 @@ export async function POST(request: Request) {
       });
     }
 
-    if (!accessCode && process.env.ISSUER_SERVICE_BASE_URL && process.env.ISSUER_SERVICE_API_KEY) {
-      if (!externalEligible) {
-        return NextResponse.json({ error: "An externally issued registration code covers one registration only. Remove breakfast tickets and scholarships, then try again." }, { status: 400 });
-      }
-      const registrationId = buildCashRegistrationId({ code, email: order.attendee.email, name: order.attendee.name });
-      const existingExternal = await payload.find({
-        collection: "cash-transactions",
-        overrideAccess: true,
-        limit: 1,
-        where: { sourceKey: { equals: `external:${registrationId}` } },
-      });
-      if (existingExternal.docs[0]) return NextResponse.json({ success: true, reference: String(existingExternal.docs[0].id) });
-      const redemption = await redeemExternalCashCode({ code, email: order.attendee.email, fullName: order.attendee.name, registrationId });
-      if (!redemption.success) return NextResponse.json({ error: redemption.error || "That access code could not be redeemed." }, { status: 403 });
-      if (redemption.registrationId !== registrationId) return NextResponse.json({ error: "The access-code service returned a mismatched registration." }, { status: 409 });
-      externalRedemption = redemption;
-      accessCode = await payload.create({
-        collection: "access-codes",
-        overrideAccess: true,
-        data: {
-          code: `EXTERNAL-${redemption.redemptionId}`.toUpperCase(),
-          active: false,
-          maxRedemptions: 1,
-          redemptionCount: 1,
-          grantType: redemption.grantType === "cash_scholarship" ? "door_scholarship" : "complimentary_registration",
-          issuerSource: "external-issuer",
-          notes: `External grant ${redemption.grantId}; redemption ${redemption.redemptionId}`,
-        },
-      });
-    }
-
     if (!accessCode || Number(accessCode.redemptionCount || 0) >= Number(accessCode.maxRedemptions || 1)) {
       return NextResponse.json({ error: "That access code is invalid or has reached its redemption limit." }, { status: 403 });
     }
@@ -87,7 +54,7 @@ export async function POST(request: Request) {
     delete metadata.self_registration_quantity;
     delete metadata.scholarship_quantity;
     delete metadata.breakfast_tickets;
-    delete metadata.necy_registration_qty_35;
+    delete metadata.necy_registration_qty_40;
     Object.assign(metadata, {
       registration_type: "cash",
       transaction_method: "cash",
@@ -97,13 +64,6 @@ export async function POST(request: Request) {
       access_issuer_source: String(accessCode.issuerSource || "necypaa_host_committee"),
       access_code_masked: maskCashCode(code),
     });
-    if (externalRedemption) Object.assign(metadata, {
-      access_redemption_id: externalRedemption.redemptionId,
-      access_grant_id: externalRedemption.grantId,
-      access_grant_type: externalRedemption.grantType,
-      access_issuer_source: "external-issuer",
-    });
-
     const stripe = getStripe();
     const existing = await stripe.customers.list({ email: order.purchaserEmail, limit: 1 });
     const customer = existing.data[0]
@@ -123,13 +83,12 @@ export async function POST(request: Request) {
         order,
         metadata,
         notificationStatus: order.scholarship.enabled ? "pending_configuration" : "not_required",
-        sourceKey: externalRedemption ? `external:${buildCashRegistrationId({ code, email: order.attendee.email, name: order.attendee.name })}` : undefined,
       },
     });
     metadata.access_redemption_id = String(transaction.id);
     if (Object.keys(metadata).length > 50) throw new Error("Cash metadata exceeds the 50-field limit.");
     await stripe.customers.update(customer.id, { metadata });
-    if (!externalRedemption) await payload.update({
+    await payload.update({
         collection: "access-codes",
         id: accessCode.id,
         overrideAccess: true,

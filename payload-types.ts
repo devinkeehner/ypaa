@@ -81,6 +81,7 @@ export interface Config {
     'registration-entitlements': RegistrationEntitlement;
     tenants: Tenant;
     'access-codes': AccessCode;
+    'cash-code-recipients': CashCodeRecipient;
     'cash-transactions': CashTransaction;
     attendees: Attendee;
     'breakfast-tickets': BreakfastTicket;
@@ -119,6 +120,7 @@ export interface Config {
     'registration-entitlements': RegistrationEntitlementsSelect<false> | RegistrationEntitlementsSelect<true>;
     tenants: TenantsSelect<false> | TenantsSelect<true>;
     'access-codes': AccessCodesSelect<false> | AccessCodesSelect<true>;
+    'cash-code-recipients': CashCodeRecipientsSelect<false> | CashCodeRecipientsSelect<true>;
     'cash-transactions': CashTransactionsSelect<false> | CashTransactionsSelect<true>;
     attendees: AttendeesSelect<false> | AttendeesSelect<true>;
     'breakfast-tickets': BreakfastTicketsSelect<false> | BreakfastTicketsSelect<true>;
@@ -1206,6 +1208,22 @@ export interface Page {
                               | null;
                             id?: string | null;
                             blockName?: string | null;
+                            blockType: 'CashCodeRequest';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
                             blockType: 'HotelRequest';
                           }
                         | {
@@ -2103,6 +2121,22 @@ export interface Page {
                               | null;
                             id?: string | null;
                             blockName?: string | null;
+                            blockType: 'CashCodeRequest';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
                             blockType: 'HotelRequest';
                           }
                         | {
@@ -2944,6 +2978,22 @@ export interface Page {
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'RegistrationCheck';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'CashCodeRequest';
                           }
                         | {
                             heading?: string | null;
@@ -3945,6 +3995,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -4737,6 +4803,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -5282,6 +5364,22 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'RegistrationCheck';
+          }
+        | {
+            heading?: string | null;
+            intro?: string | null;
+            puckRichText?:
+              | {
+                  [k: string]: unknown;
+                }
+              | unknown[]
+              | string
+              | number
+              | boolean
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'CashCodeRequest';
           }
         | {
             heading?: string | null;
@@ -6215,6 +6313,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -6977,6 +7091,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -7919,6 +8049,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -8681,6 +8827,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -9550,6 +9712,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -10312,6 +10490,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -11179,6 +11373,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -11941,6 +12151,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -12817,6 +13043,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -13579,6 +13821,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -14449,6 +14707,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -15211,6 +15485,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -16078,6 +16368,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -16840,6 +17146,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -17708,6 +18030,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -18470,6 +18808,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -19342,6 +19696,22 @@ export interface Page {
                               | null;
                             id?: string | null;
                             blockName?: string | null;
+                            blockType: 'CashCodeRequest';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
                             blockType: 'HotelRequest';
                           }
                         | {
@@ -20132,6 +20502,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -20894,6 +21280,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -21762,6 +22164,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -22524,6 +22942,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -23391,6 +23825,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -24153,6 +24603,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -25020,6 +25486,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -25782,6 +26264,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -26723,6 +27221,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -27485,6 +27999,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -28344,6 +28874,22 @@ export interface Page {
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'RegistrationCheck';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'CashCodeRequest';
                           }
                         | {
                             heading?: string | null;
@@ -29228,6 +29774,22 @@ export interface Page {
                               | null;
                             id?: string | null;
                             blockName?: string | null;
+                            blockType: 'CashCodeRequest';
+                          }
+                        | {
+                            heading?: string | null;
+                            intro?: string | null;
+                            puckRichText?:
+                              | {
+                                  [k: string]: unknown;
+                                }
+                              | unknown[]
+                              | string
+                              | number
+                              | boolean
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
                             blockType: 'HotelRequest';
                           }
                         | {
@@ -30018,6 +30580,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -30780,6 +31358,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -31646,6 +32240,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -32408,6 +33018,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -33275,6 +33901,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -34037,6 +34679,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -34978,6 +35636,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -35740,6 +36414,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -36681,6 +37371,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -37443,6 +38149,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -38310,6 +39032,22 @@ export interface Page {
                         | null;
                       id?: string | null;
                       blockName?: string | null;
+                      blockType: 'CashCodeRequest';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
                       blockType: 'HotelRequest';
                     }
                   | {
@@ -39072,6 +39810,22 @@ export interface Page {
                       id?: string | null;
                       blockName?: string | null;
                       blockType: 'RegistrationCheck';
+                    }
+                  | {
+                      heading?: string | null;
+                      intro?: string | null;
+                      puckRichText?:
+                        | {
+                            [k: string]: unknown;
+                          }
+                        | unknown[]
+                        | string
+                        | number
+                        | boolean
+                        | null;
+                      id?: string | null;
+                      blockName?: string | null;
+                      blockType: 'CashCodeRequest';
                     }
                   | {
                       heading?: string | null;
@@ -40126,7 +40880,13 @@ export interface ScholarshipContribution {
 export interface Tenant {
   id: string;
   name: string;
+  /**
+   * Turn off to hide the merchandise store, cart, links, and Merchandise section in registration checkout, and reject new online merch purchases. Existing payments and order history are preserved.
+   */
   onlineMerchEnabled?: boolean | null;
+  /**
+   * Controls new sales through the /merch QR checkout on the registration site independently of online sales. Existing payments can still finish.
+   */
   quickMerchEnabled?: boolean | null;
   theme: {
     /**
@@ -40162,6 +40922,20 @@ export interface Tenant {
      */
     lightText: string;
   };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Email addresses approved to request a cash registration access code.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cash-code-recipients".
+ */
+export interface CashCodeRecipient {
+  id: string;
+  email: string;
+  active: boolean;
+  notes?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -40654,6 +41428,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'access-codes';
         value: string | AccessCode;
+      } | null)
+    | ({
+        relationTo: 'cash-code-recipients';
+        value: string | CashCodeRecipient;
       } | null)
     | ({
         relationTo: 'cash-transactions';
@@ -41259,6 +42037,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          CashCodeRequest?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           HotelRequest?:
                             | T
                             | {
@@ -41739,6 +42526,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          CashCodeRequest?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           HotelRequest?:
                             | T
                             | {
@@ -42180,6 +42976,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 blockName?: T;
                               };
                           RegistrationCheck?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          CashCodeRequest?:
                             | T
                             | {
                                 heading?: T;
@@ -42690,6 +43495,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -43110,6 +43924,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -43413,6 +44236,15 @@ export interface PagesSelect<T extends boolean = true> {
               blockName?: T;
             };
         RegistrationCheck?:
+          | T
+          | {
+              heading?: T;
+              intro?: T;
+              puckRichText?: T;
+              id?: T;
+              blockName?: T;
+            };
+        CashCodeRequest?:
           | T
           | {
               heading?: T;
@@ -43916,6 +44748,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -44320,6 +45161,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -44830,6 +45680,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -45234,6 +46093,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -45701,6 +46569,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -46105,6 +46982,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -46570,6 +47456,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -46974,6 +47869,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -47448,6 +48352,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -47852,6 +48765,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -48320,6 +49242,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -48724,6 +49655,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -49189,6 +50129,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -49593,6 +50542,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -50059,6 +51017,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -50463,6 +51430,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -50934,6 +51910,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          CashCodeRequest?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           HotelRequest?:
                             | T
                             | {
@@ -51350,6 +52335,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -51754,6 +52748,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -52220,6 +53223,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -52624,6 +53636,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -53089,6 +54110,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -53493,6 +54523,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -53958,6 +54997,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -54362,6 +55410,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -54871,6 +55928,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -55275,6 +56341,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -55738,6 +56813,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 blockName?: T;
                               };
                           RegistrationCheck?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          CashCodeRequest?:
                             | T
                             | {
                                 heading?: T;
@@ -56212,6 +57296,15 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                                 blockName?: T;
                               };
+                          CashCodeRequest?:
+                            | T
+                            | {
+                                heading?: T;
+                                intro?: T;
+                                puckRichText?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
                           HotelRequest?:
                             | T
                             | {
@@ -56628,6 +57721,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -57032,6 +58134,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -57496,6 +58607,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -57900,6 +59020,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -58365,6 +59494,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -58769,6 +59907,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -59278,6 +60425,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -59682,6 +60838,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -60191,6 +61356,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -60595,6 +61769,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -61060,6 +62243,15 @@ export interface PagesSelect<T extends boolean = true> {
                           id?: T;
                           blockName?: T;
                         };
+                    CashCodeRequest?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
                     HotelRequest?:
                       | T
                       | {
@@ -61464,6 +62656,15 @@ export interface PagesSelect<T extends boolean = true> {
                           blockName?: T;
                         };
                     RegistrationCheck?:
+                      | T
+                      | {
+                          heading?: T;
+                          intro?: T;
+                          puckRichText?: T;
+                          id?: T;
+                          blockName?: T;
+                        };
+                    CashCodeRequest?:
                       | T
                       | {
                           heading?: T;
@@ -61982,6 +63183,17 @@ export interface AccessCodesSelect<T extends boolean = true> {
   redemptionCount?: T;
   grantType?: T;
   issuerSource?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cash-code-recipients_select".
+ */
+export interface CashCodeRecipientsSelect<T extends boolean = true> {
+  email?: T;
+  active?: T;
   notes?: T;
   updatedAt?: T;
   createdAt?: T;

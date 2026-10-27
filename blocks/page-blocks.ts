@@ -388,6 +388,7 @@ export const DividerBlock: Block = { slug: "Divider", labels: { singular: "Divid
 export const FollowLinksBlock: Block = { slug: "FollowLinks", labels: { singular: "Follow links", plural: "Follow links" }, admin: { group: "Page blocks" }, fields: [{ name: "heading", type: "text", defaultValue: "Follow along" }, { name: "links", type: "array", fields: linkFields }] };
 export const BulletedListBlock: Block = { slug: "BulletedList", labels: { singular: "Bulleted list", plural: "Bulleted lists" }, admin: { group: "Page blocks" }, fields: [{ name: "items", type: "array", fields: [{ name: "text", type: "text" }] }] };
 export const RegistrationCheckBlock: Block = { slug: "RegistrationCheck", labels: { singular: "Registration check + help", plural: "Registration checks" }, admin: { group: "Convention sections" }, fields: [{ name: "heading", type: "text", defaultValue: "Check your registration" }, { name: "intro", type: "textarea", defaultValue: "Enter the email address used for your registration. We will email your registration information." }] };
+export const CashCodeRequestBlock: Block = { slug: "CashCodeRequest", labels: { singular: "Cash access code request", plural: "Cash access code requests" }, admin: { group: "Convention sections" }, fields: [{ name: "heading", type: "text", defaultValue: "Request a cash access code" }, { name: "intro", type: "textarea", defaultValue: "Enter your approved email address. We will email you a code for one cash order." }] };
 export const HotelRequestBlock: Block = {
   slug: "HotelRequest", labels: { singular: "Hotel request", plural: "Hotel requests" }, admin: { group: "Convention sections" },
   fields: [
@@ -401,7 +402,7 @@ export const VideoBlock: Block = { slug: "Video", labels: { singular: "Video", p
 export const EmbedBlock: Block = { slug: "Embed", labels: { singular: "Embed", plural: "Embeds" }, admin: { group: "Page blocks" }, fields: [{ name: "url", type: "text" }, { name: "title", type: "text" }] };
 export const PayPalBlock: Block = { slug: "PayPal", labels: { singular: "Legacy PayPal button", plural: "Legacy PayPal buttons" }, admin: { group: "Legacy compatibility" }, fields: [{ name: "label", type: "text", defaultValue: "Donate" }, { name: "url", type: "text" }, accessibleContextField(), leavingSiteWarningField(), { name: "amount", type: "text" }] };
 
-const nestedElementBlocks: Block[] = [ImageBlock, RichTextBlock, FreeTextBlock, TextBlock, ButtonBlock, IconBlock, CountdownBlock, NavigationBlock, HeadlineBlock, DividerBlock, FollowLinksBlock, BulletedListBlock, InlineFormBlock, RegistrationCheckBlock, HotelRequestBlock, ImageCaptionBlock, VideoBlock, EmbedBlock];
+const nestedElementBlocks: Block[] = [ImageBlock, RichTextBlock, FreeTextBlock, TextBlock, ButtonBlock, IconBlock, CountdownBlock, NavigationBlock, HeadlineBlock, DividerBlock, FollowLinksBlock, BulletedListBlock, InlineFormBlock, RegistrationCheckBlock, CashCodeRequestBlock, HotelRequestBlock, ImageCaptionBlock, VideoBlock, EmbedBlock];
 
 const afterContentBlocksField: Field = {
   name: "afterContentBlocks",
@@ -738,6 +739,7 @@ const pageLayoutBlocks: Block[] = [
   BulletedListBlock,
   InlineFormBlock,
   RegistrationCheckBlock,
+  CashCodeRequestBlock,
   HotelRequestBlock,
   ImageCaptionBlock,
   VideoBlock,

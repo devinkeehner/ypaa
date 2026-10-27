@@ -74,7 +74,7 @@ export function checkRequestIP(request: Request) {
 
 const limitIndexes = new WeakMap<object, Promise<string>>();
 type LimitRow = { _id: string; count?: number; nextAllowedAt?: Date; expiresAt: Date; token?: string };
-export async function claimPublicRequest(payload: Payload, mode: "check" | "help", email: string, ip: string, now = Date.now()) {
+export async function claimPublicRequest(payload: Payload, mode: "check" | "help" | "cash", email: string, ip: string, now = Date.now()) {
   const db = payload.db.connection.db;
   if (!db) throw new Error("registration_check_database_unavailable");
   const limits = db.collection<LimitRow>("_registration_check_limits");
