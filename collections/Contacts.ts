@@ -1,4 +1,5 @@
 import type { Access, CollectionConfig } from "payload";
+import { registrationAffiliationFields } from "./fields/registration-affiliation";
 
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
@@ -8,7 +9,7 @@ export const Contacts: CollectionConfig = {
   access: { create: authenticated, read: authenticated, update: authenticated, delete: authenticated },
   admin: {
     useAsTitle: "displayName",
-    defaultColumns: ["displayName", "email", "state", "homegroupCommittee"],
+    defaultColumns: ["displayName", "email", "state", "homegroup", "committee"],
     description: "Canonical people directory. Purchases and registrations may point to different contacts.",
   },
   fields: [
@@ -17,7 +18,7 @@ export const Contacts: CollectionConfig = {
     { name: "email", type: "email", required: true, index: true },
     { name: "phone", type: "text" },
     { name: "state", type: "text" },
-    { name: "homegroupCommittee", type: "text" },
+    ...registrationAffiliationFields,
     { name: "communicationConsent", type: "select", required: true, defaultValue: "unknown", options: ["unknown", "opted_in", "opted_out"] },
     { name: "tags", type: "select", hasMany: true, options: ["attendee", "purchaser", "scholarship_recipient", "volunteer", "donor", "committee"] },
     { name: "notes", type: "textarea", admin: { description: "Permanent contact notes. Event-specific accommodations remain on the registration." } },

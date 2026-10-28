@@ -40542,6 +40542,16 @@ export interface Contact {
   email: string;
   phone?: string | null;
   state?: string | null;
+  homegroup?: string | null;
+  /**
+   * Optional. Examples: Bay State Bid, EACYPAA Host, ICYPAA Bid, CSCYPAA.
+   */
+  committee?: string | null;
+  fellowships?: ('aa' | 'al_anon' | 'other')[] | null;
+  fellowshipOther?: string | null;
+  /**
+   * Original combined value from older registrations. Kept without guessing how to split it.
+   */
   homegroupCommittee?: string | null;
   communicationConsent: 'unknown' | 'opted_in' | 'opted_out';
   tags?: ('attendee' | 'purchaser' | 'scholarship_recipient' | 'volunteer' | 'donor' | 'committee')[] | null;
@@ -40723,6 +40733,16 @@ export interface Attendee {
   attendeeName: string;
   attendeeEmail: string;
   state: string;
+  homegroup?: string | null;
+  /**
+   * Optional. Examples: Bay State Bid, EACYPAA Host, ICYPAA Bid, CSCYPAA.
+   */
+  committee?: string | null;
+  fellowships?: ('aa' | 'al_anon' | 'other')[] | null;
+  fellowshipOther?: string | null;
+  /**
+   * Original combined value from older registrations. Kept without guessing how to split it.
+   */
   homegroupCommittee?: string | null;
   attendanceStatus: 'expected' | 'checked_in' | 'cancelled';
   attendanceBasis: 'self_registration' | 'scholarship_recipient' | 'manual_expected';
@@ -63062,6 +63082,10 @@ export interface ContactsSelect<T extends boolean = true> {
   email?: T;
   phone?: T;
   state?: T;
+  homegroup?: T;
+  committee?: T;
+  fellowships?: T;
+  fellowshipOther?: T;
   homegroupCommittee?: T;
   communicationConsent?: T;
   tags?: T;
@@ -63228,6 +63252,10 @@ export interface AttendeesSelect<T extends boolean = true> {
   attendeeName?: T;
   attendeeEmail?: T;
   state?: T;
+  homegroup?: T;
+  committee?: T;
+  fellowships?: T;
+  fellowshipOther?: T;
   homegroupCommittee?: T;
   attendanceStatus?: T;
   attendanceBasis?: T;

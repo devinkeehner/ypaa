@@ -1,3 +1,4 @@
+import { parseAffiliationMetadata, type Affiliation } from "./registration-affiliation";
 import type Stripe from "stripe";
 import type { Payload } from "payload";
 import type { Attendee, BreakfastTicket, CheckoutOrder } from "@/payload-types";
@@ -67,10 +68,18 @@ async function existingAttendee(payload: Payload, entitlementKey: string, source
   return await findBySourceKey(payload, "attendees", sourceKey) as Attendee | undefined;
 }
 
-async function findOrCreateContact(payload: Payload, person: { name: string; email: string; state?: string; homegroupCommittee?: string; tags: Array<"attendee" | "purchaser" | "scholarship_recipient" | "volunteer"> }) {
+async function findOrCreateContact(payload: Payload, person: { name: string; email: string; state?: string; homegroupCommittee?: string; homegroup?: string; committee?: string; fellowships?: Affiliation["fellowships"]; fellowshipOther?: string; tags: Array<"attendee" | "purchaser" | "scholarship_recipient" | "volunteer"> }) {
   const result = await payload.find({ collection: "contacts", overrideAccess: true, limit: 1, where: { and: [{ email: { equals: person.email.toLowerCase() } }, { displayName: { equals: person.name } }] } });
-  if (result.docs[0]) return result.docs[0];
-  return payload.create({ collection: "contacts", overrideAccess: true, data: { contactKey: `contact:${crypto.randomUUID()}`, displayName: person.name, email: person.email.toLowerCase(), state: person.state, homegroupCommittee: person.homegroupCommittee, communicationConsent: "unknown", tags: person.tags } });
+  if (result.docs[0]) {
+    const existing = result.docs[0];
+    const profile = { homegroup: person.homegroup, committee: person.committee, fellowships: person.fellowships, fellowshipOther: person.fellowshipOther };
+    const missing = Object.fromEntries(Object.entries(profile).filter(([key, value]) => {
+      const current = existing[key as keyof typeof existing];
+      return (current == null || current === "" || Array.isArray(current) && !current.length) && (Array.isArray(value) ? value.length > 0 : Boolean(value));
+    }));
+    return Object.keys(missing).length ? payload.update({ collection: "contacts", id: existing.id, overrideAccess: true, data: missing }) : existing;
+  }
+  return payload.create({ collection: "contacts", overrideAccess: true, data: { contactKey: `contact:${crypto.randomUUID()}`, displayName: person.name, email: person.email.toLowerCase(), state: person.state, homegroupCommittee: person.homegroupCommittee, homegroup: person.homegroup, committee: person.committee, fellowships: person.fellowships, fellowshipOther: person.fellowshipOther, communicationConsent: "unknown", tags: person.tags } });
 }
 
 async function recordCheckoutOrder(payload: Payload, order: RegistrationOrder, context: RecordContext) {
@@ -148,7 +157,7 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
   let attendeeContactId: string | undefined;
   if (order.selfRegistration) {
     const existing = await existingAttendee(payload, `${context.sourceKey}:entitlement:registration:1`, `${context.sourceKey}:registration:1`);
-    const attendeeContact = existing?.contact ? await payload.findByID({ collection: "contacts", id: relationshipID(existing.contact)!, overrideAccess: true }) : await findOrCreateContact(payload, { name: order.attendee.name, email: order.attendee.email, state: order.attendee.state, homegroupCommittee: order.attendee.homegroupCommittee, tags: ["attendee", ...(order.attendee.willingToServe ? ["volunteer" as const] : [])] });
+    const attendeeContact = existing?.contact ? await payload.findByID({ collection: "contacts", id: relationshipID(existing.contact)!, overrideAccess: true }) : await findOrCreateContact(payload, { name: order.attendee.name, email: order.attendee.email, state: order.attendee.state, homegroupCommittee: order.attendee.homegroupCommittee, homegroup: order.attendee.homegroup, committee: order.attendee.committee, fellowships: order.attendee.fellowships, fellowshipOther: order.attendee.fellowshipOther, tags: ["attendee", ...(order.attendee.willingToServe ? ["volunteer" as const] : [])] });
     attendeeContactId = String(attendeeContact.id);
     const sourceKey = `${context.sourceKey}:registration:1`;
     const data = {
@@ -159,6 +168,7 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
       attendeeEmail: order.attendee.email,
       state: order.attendee.state,
       homegroupCommittee: order.attendee.homegroupCommittee,
+      homegroup: order.attendee.homegroup, committee: order.attendee.committee, fellowships: order.attendee.fellowships, fellowshipOther: order.attendee.fellowshipOther,
       accommodations: order.attendee.accommodations,
       interpretationNeeded: order.attendee.interpretationNeeded,
       mobilityAccessibility: order.attendee.mobilityAccessibility,
@@ -207,7 +217,7 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
 
   if (order.scholarship.enabled && order.scholarship.kind === "specific") {
     const existing = await existingAttendee(payload, `${context.sourceKey}:entitlement:specific-scholarship:1`, `${context.sourceKey}:scholarship:1`);
-    const scholarshipContact = existing?.contact ? await payload.findByID({ collection: "contacts", id: relationshipID(existing.contact)!, overrideAccess: true }) : await findOrCreateContact(payload, { name: order.scholarship.recipientName, email: order.scholarship.recipientEmail, state: order.scholarship.recipientState, homegroupCommittee: order.scholarship.recipientHomegroupCommittee, tags: ["attendee", "scholarship_recipient", ...(order.scholarship.recipientWillingToServe ? ["volunteer" as const] : [])] });
+    const scholarshipContact = existing?.contact ? await payload.findByID({ collection: "contacts", id: relationshipID(existing.contact)!, overrideAccess: true }) : await findOrCreateContact(payload, { name: order.scholarship.recipientName, email: order.scholarship.recipientEmail, state: order.scholarship.recipientState, homegroupCommittee: order.scholarship.recipientHomegroupCommittee, homegroup: order.scholarship.recipientHomegroup, committee: order.scholarship.recipientCommittee, fellowships: order.scholarship.recipientFellowships, fellowshipOther: order.scholarship.recipientFellowshipOther, tags: ["attendee", "scholarship_recipient", ...(order.scholarship.recipientWillingToServe ? ["volunteer" as const] : [])] });
     attendeeContactId ??= String(scholarshipContact.id);
     const sourceKey = `${context.sourceKey}:scholarship:1`;
     const unsignedPolicy = Object.fromEntries(POLICY_KEYS.map((key) => [key, false])) as RegistrationOrder["policy"];
@@ -219,6 +229,7 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
       attendeeEmail: order.scholarship.recipientEmail,
       state: order.scholarship.recipientState || "Unknown",
       homegroupCommittee: order.scholarship.recipientHomegroupCommittee,
+      homegroup: order.scholarship.recipientHomegroup, committee: order.scholarship.recipientCommittee, fellowships: order.scholarship.recipientFellowships, fellowshipOther: order.scholarship.recipientFellowshipOther,
       accommodations: order.scholarship.recipientAccommodations,
       interpretationNeeded: order.scholarship.recipientInterpretationNeeded,
       mobilityAccessibility: order.scholarship.recipientMobilityAccessibility,
@@ -347,6 +358,7 @@ export function orderFromStripeMetadata(metadata: Record<string, string>, purcha
       mobilityAccessibility: bool(metadata.mobility_accessibility) || bool(metadata.handicap_accessibility),
       willingToServe: bool(metadata.willing_to_serve),
       homegroupCommittee: useful(metadata.homegroup_committee),
+      ...parseAffiliationMetadata(metadata.attendee_affiliation),
     },
     policy: Object.fromEntries(POLICY_KEYS.map((key) => {
       const metadataKey = {
@@ -373,6 +385,10 @@ export function orderFromStripeMetadata(metadata: Record<string, string>, purcha
       recipientEmail: useful(metadata.scholarship_recipient_email),
       recipientState: useful(metadata.scholarship_recipient_state, "Unknown"),
       recipientHomegroupCommittee: useful(metadata.scholarship_recipient_homegroup),
+      recipientHomegroup: parseAffiliationMetadata(metadata.scholarship_affiliation).homegroup,
+      recipientCommittee: parseAffiliationMetadata(metadata.scholarship_affiliation).committee,
+      recipientFellowships: parseAffiliationMetadata(metadata.scholarship_affiliation).fellowships,
+      recipientFellowshipOther: parseAffiliationMetadata(metadata.scholarship_affiliation).fellowshipOther,
       recipientAccommodations: useful(metadata.scholarship_recipient_accommodations),
       recipientInterpretationNeeded: bool(metadata.scholarship_recipient_interpretation),
       recipientMobilityAccessibility: bool(metadata.scholarship_recipient_mobility),

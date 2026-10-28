@@ -1,3 +1,4 @@
+import { affiliationMetadata, hasAffiliation, normalizeAffiliation, validateAffiliation, type Affiliation } from "./registration-affiliation";
 export const REGISTRATION_PRICE_CENTS = 4500;
 export const BREAKFAST_PRICE_CENTS = 2500;
 
@@ -31,6 +32,10 @@ export type RegistrationOrder = {
     mobilityAccessibility: boolean;
     willingToServe: boolean;
     homegroupCommittee: string;
+    homegroup: string;
+    committee: string;
+    fellowships: Affiliation["fellowships"];
+    fellowshipOther: string;
   };
   policy: Record<PolicyKey, boolean>;
   breakfast: Record<(typeof BREAKFASTS)[number]["id"], number>;
@@ -42,6 +47,10 @@ export type RegistrationOrder = {
     recipientEmail: string;
     recipientState: string;
     recipientHomegroupCommittee: string;
+    recipientHomegroup: string;
+    recipientCommittee: string;
+    recipientFellowships: Affiliation["fellowships"];
+    recipientFellowshipOther: string;
     recipientAccommodations: string;
     recipientInterpretationNeeded: boolean;
     recipientMobilityAccessibility: boolean;
@@ -75,6 +84,7 @@ export function normalizeOrder(value: unknown): RegistrationOrder {
       mobilityAccessibility: attendee.mobilityAccessibility === true,
       willingToServe: attendee.willingToServe === true,
       homegroupCommittee: clean(attendee.homegroupCommittee, 180),
+      ...normalizeAffiliation(attendee),
     },
     policy: Object.fromEntries(POLICY_KEYS.map((key) => [key, policy[key] === true])) as Record<PolicyKey, boolean>,
     breakfast: {
@@ -90,6 +100,10 @@ export function normalizeOrder(value: unknown): RegistrationOrder {
       recipientEmail: clean(scholarship.recipientEmail, 180).toLowerCase(),
       recipientState: clean(scholarship.recipientState, 80),
       recipientHomegroupCommittee: clean(scholarship.recipientHomegroupCommittee, 180),
+      recipientHomegroup: normalizeAffiliation({ homegroup: scholarship.recipientHomegroup }).homegroup,
+      recipientCommittee: normalizeAffiliation({ committee: scholarship.recipientCommittee }).committee,
+      recipientFellowships: normalizeAffiliation({ fellowships: scholarship.recipientFellowships }).fellowships,
+      recipientFellowshipOther: normalizeAffiliation({ fellowships: scholarship.recipientFellowships, fellowshipOther: scholarship.recipientFellowshipOther }).fellowshipOther,
       recipientAccommodations: clean(scholarship.recipientAccommodations),
       recipientInterpretationNeeded: scholarship.recipientInterpretationNeeded === true,
       recipientMobilityAccessibility: scholarship.recipientMobilityAccessibility === true,
@@ -102,7 +116,9 @@ export function normalizeOrder(value: unknown): RegistrationOrder {
 export function validateOrder(order: RegistrationOrder) {
   if (!order.purchaserName || !/^\S+@\S+\.\S+$/.test(order.purchaserEmail)) return "Enter the purchaser's name and email.";
   if (order.selfRegistration) {
-    if (!order.attendee.name || !order.attendee.state || !/^\S+@\S+\.\S+$/.test(order.attendee.email) || !order.attendee.homegroupCommittee) {
+    const affiliationError = validateAffiliation(order.attendee);
+    if (affiliationError) return affiliationError;
+    if (!order.attendee.name || !order.attendee.state || !/^\S+@\S+\.\S+$/.test(order.attendee.email) || !(order.attendee.homegroup || order.attendee.homegroupCommittee)) {
       return "Complete all required attendee fields.";
     }
     if (!POLICY_KEYS.every((key) => order.policy[key])) return "Every policy acknowledgment is required for self-registration.";
@@ -111,6 +127,10 @@ export function validateOrder(order: RegistrationOrder) {
     if (!order.scholarship.recipientName || !/^\S+@\S+\.\S+$/.test(order.scholarship.recipientEmail) || !order.scholarship.recipientState) {
       return "Enter the scholarship recipient's name, email, and state.";
     }
+  }
+  if (order.scholarship.enabled && order.scholarship.kind === "specific") {
+    const affiliationError = validateAffiliation({ homegroup: order.scholarship.recipientHomegroup, committee: order.scholarship.recipientCommittee, fellowships: order.scholarship.recipientFellowships, fellowshipOther: order.scholarship.recipientFellowshipOther });
+    if (affiliationError) return affiliationError;
   }
   if (orderSubtotalCents(order) <= 0) return "Choose a registration, breakfast ticket, or scholarship.";
   return null;
@@ -201,6 +221,15 @@ export function buildMetadata(order: RegistrationOrder, totals: { dataOrigin: "l
     necy_total_charge_cents: String(totals.totalChargeCents),
   };
 
+  if (order.selfRegistration && hasAffiliation(order.attendee)) {
+    delete metadata.homegroup_committee;
+    metadata.attendee_affiliation = affiliationMetadata(order.attendee);
+  }
+  const recipientAffiliation = { homegroup: order.scholarship.recipientHomegroup, committee: order.scholarship.recipientCommittee, fellowships: order.scholarship.recipientFellowships, fellowshipOther: order.scholarship.recipientFellowshipOther };
+  if (order.scholarship.enabled && order.scholarship.kind === "specific" && hasAffiliation(recipientAffiliation)) {
+    delete metadata.scholarship_recipient_homegroup;
+    metadata.scholarship_affiliation = affiliationMetadata(recipientAffiliation);
+  }
   if (Object.keys(metadata).length > 50) throw new Error("Stripe metadata exceeds the 50-field limit.");
   return metadata;
 }

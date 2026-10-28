@@ -1,4 +1,5 @@
 import type { Access, CollectionConfig } from "payload";
+import { registrationAffiliationFields } from "./fields/registration-affiliation";
 
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
@@ -19,7 +20,7 @@ export const Attendees: CollectionConfig = {
     { name: "attendeeName", type: "text", required: true, index: true },
     { name: "attendeeEmail", type: "email", required: true, index: true },
     { name: "state", type: "text", required: true },
-    { name: "homegroupCommittee", type: "text" },
+    ...registrationAffiliationFields,
     { name: "attendanceStatus", type: "select", required: true, defaultValue: "expected", index: true, options: ["expected", "checked_in", "cancelled"] },
     { name: "attendanceBasis", type: "select", required: true, defaultValue: "manual_expected", options: ["self_registration", "scholarship_recipient", "manual_expected"] },
     {
