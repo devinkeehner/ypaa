@@ -10,8 +10,8 @@ export const RegistrationSources: CollectionConfig = {
     read: ({ req }) => isAdministrator(req.user), create: ({ req }) => isAdministrator(req.user),
     update: ({ req }) => isAdministrator(req.user), delete: () => false,
   },
-  hooks: { beforeChange: [({ data, originalDoc }) => {
-    if (originalDoc && data.slug && data.slug !== originalDoc.slug) throw new Error("Tracking slugs cannot be renamed. Disable this link and create another.");
+  hooks: { beforeChange: [({ data, originalDoc, operation }) => {
+    if (operation === "update" && originalDoc && data.slug && data.slug !== originalDoc.slug) throw new Error("Tracking slugs cannot be renamed. Disable this link and create another.");
     return { ...data, event: REGISTRATION_EVENT };
   }] },
   fields: [

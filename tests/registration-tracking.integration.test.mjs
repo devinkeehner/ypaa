@@ -47,7 +47,13 @@ test("admin-only immutable unique links reject reserved routes and other events,
     assert.equal(await collection.access[operation]({ req: { user: role ? { role, collection: "users", contentAreas: ["registration"], accessLevel: "manage" } : null } }), false);
   assert.equal(await collection.access.create({ req: { user: { role: "admin", collection: "users" } } }), true);
   assert.equal(collection.fields.find(field => field.name === "slug").unique, true);
-  assert.throws(() => collection.hooks.beforeChange[0]({ data: { slug: "renamed" }, originalDoc: { slug: "custom-name" } }));
+  const beforeChange = collection.hooks.beforeChange[0];
+  // Payload's create operation supplies an empty object, not undefined.
+  assert.equal(beforeChange({ operation: "create", data: { slug: "custom-name" }, originalDoc: {} }).slug, "custom-name");
+  // Duplicating a record is also a create, with the source as originalDoc.
+  assert.equal(beforeChange({ operation: "create", data: { slug: "another-name" }, originalDoc: { slug: "custom-name" } }).slug, "another-name");
+  assert.throws(() => beforeChange({ operation: "update", data: { slug: "renamed" }, originalDoc: { slug: "custom-name" } }));
+  assert.equal(beforeChange({ operation: "update", data: { slug: "custom-name", active: false }, originalDoc: { slug: "custom-name" } }).active, false);
   assert.equal(collection.hooks.beforeChange[0]({ data: { event: "foreign" } }).event, sources.REGISTRATION_EVENT);
   for (const path of ["checkout", "register", "api", "merch", "records", "registration", "admin", "_next", "../x", "Custom", "a--b", "a/b", "x".repeat(81), "favicon.svg"]) assert.equal(sources.validTrackingSlug(path), false);
   for (const dir of readdirSync(new URL("../../registration/app/", import.meta.url), { withFileTypes: true })) {
