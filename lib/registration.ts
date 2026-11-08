@@ -1,4 +1,4 @@
-import { affiliationMetadata, hasAffiliation, normalizeAffiliation, validateAffiliation, type Affiliation } from "./registration-affiliation";
+import { validSoberDate, normalizeSourceSlug, affiliationMetadata, hasAffiliation, normalizeAffiliation, validateAffiliation, type Affiliation } from "./registration-affiliation";
 export const REGISTRATION_PRICE_CENTS = 4500;
 export const BREAKFAST_PRICE_CENTS = 2500;
 
@@ -22,8 +22,10 @@ export type PolicyKey = (typeof POLICY_KEYS)[number];
 export type RegistrationOrder = {
   purchaserName: string;
   purchaserEmail: string;
+  registrationSource?: string;
   selfRegistration: boolean;
   attendee: {
+    soberDate?: string;
     name: string;
     state: string;
     email: string;
@@ -43,6 +45,7 @@ export type RegistrationOrder = {
     enabled: boolean;
     kind: "specific" | "general";
     amountCents: number;
+    recipientSoberDate?: string;
     recipientName: string;
     recipientEmail: string;
     recipientState: string;
@@ -74,8 +77,10 @@ export function normalizeOrder(value: unknown): RegistrationOrder {
   return {
     purchaserName: clean(input.purchaserName, 120),
     purchaserEmail: clean(input.purchaserEmail, 180).toLowerCase(),
+    registrationSource: normalizeSourceSlug(input.registrationSource),
     selfRegistration: input.selfRegistration === true,
     attendee: {
+      soberDate: typeof attendee.soberDate === "string" ? attendee.soberDate.trim() : attendee.soberDate == null ? "" : "invalid",
       name: clean(attendee.name, 120),
       state: clean(attendee.state, 80),
       email: clean(attendee.email, 180).toLowerCase(),
@@ -96,6 +101,7 @@ export function normalizeOrder(value: unknown): RegistrationOrder {
       enabled: scholarship.enabled === true,
       kind,
       amountCents: kind === "specific" ? REGISTRATION_PRICE_CENTS : Math.min(500000, Math.max(REGISTRATION_PRICE_CENTS, requestedAmount)),
+      recipientSoberDate: typeof scholarship.recipientSoberDate === "string" ? scholarship.recipientSoberDate.trim() : scholarship.recipientSoberDate == null ? "" : "invalid",
       recipientName: clean(scholarship.recipientName, 120),
       recipientEmail: clean(scholarship.recipientEmail, 180).toLowerCase(),
       recipientState: clean(scholarship.recipientState, 80),
@@ -114,6 +120,9 @@ export function normalizeOrder(value: unknown): RegistrationOrder {
 }
 
 export function validateOrder(order: RegistrationOrder) {
+  if ((order.selfRegistration && !validSoberDate(order.attendee.soberDate)) ||
+      (order.scholarship.enabled && order.scholarship.kind === "specific" && !validSoberDate(order.scholarship.recipientSoberDate)))
+    return "Enter a valid sober date on or before today, or leave it blank.";
   if (!order.purchaserName || !/^\S+@\S+\.\S+$/.test(order.purchaserEmail)) return "Enter the purchaser's name and email.";
   if (order.selfRegistration) {
     const affiliationError = validateAffiliation(order.attendee);
@@ -177,6 +186,7 @@ export function buildMetadata(order: RegistrationOrder, totals: { dataOrigin: "l
   } : {};
 
   const metadata: Record<string, string> = {
+    ...(order.registrationSource ? { necy_registration_source: order.registrationSource } : {}),
     purchase_type: reportingCategory(order),
     self_registration_quantity: order.selfRegistration ? "1" : "0",
     scholarship_quantity: order.scholarship.enabled ? "1" : "0",

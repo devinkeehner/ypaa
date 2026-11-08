@@ -1,4 +1,5 @@
-import { parseAffiliationMetadata, type Affiliation } from "./registration-affiliation";
+import { findRegistrationSource } from "./registration-sources";
+import { normalizeSourceSlug, parseAffiliationMetadata, type Affiliation } from "./registration-affiliation";
 import type Stripe from "stripe";
 import type { Payload } from "payload";
 import type { Attendee, BreakfastTicket, CheckoutOrder } from "@/payload-types";
@@ -94,6 +95,7 @@ async function recordCheckoutOrder(payload: Payload, order: RegistrationOrder, c
   const totalCents = Math.max(subtotalCents + processingFeeCents, Math.floor(context.totalCents ?? 0));
   const data = {
     sourceKey: context.sourceKey,
+    registrationSource: order.registrationSource || undefined,
     purchaserName: order.purchaserName,
     purchaserEmail: order.purchaserEmail,
     purchaserContact: purchaserContact.id,
@@ -120,7 +122,21 @@ async function recordCheckoutOrder(payload: Payload, order: RegistrationOrder, c
   } as const;
   if (matched) {
     const preserved = await payload.findByID({ collection: "checkout-orders", id: matched.id, overrideAccess: true, depth: 0 });
-    const checkoutOrder = await payload.update({ collection: "checkout-orders", id: matched.id, overrideAccess: true, data: { ...data, sourceKey: preserved.sourceKey, purchaserName: preserved.purchaserName, purchaserEmail: preserved.purchaserEmail, purchaserContact: preserved.purchaserContact, paymentStatus: ["refunded", "disputed", "voided"].includes(preserved.paymentStatus) ? preserved.paymentStatus : context.paymentStatus } });
+    // Stripe-only callbacks cannot reconstruct private dates. A later callback
+    // must preserve the detailed report regardless of webhook arrival order.
+    const previousOrder = preserved.order as RegistrationOrder | null;
+    const updatedOrder = {
+      ...order,
+      registrationSource: preserved.registrationSource || order.registrationSource,
+      attendee: { ...order.attendee, soberDate: order.attendee.soberDate || previousOrder?.attendee?.soberDate },
+      scholarship: { ...order.scholarship, recipientSoberDate: order.scholarship.recipientSoberDate || previousOrder?.scholarship?.recipientSoberDate },
+    };
+    const checkoutOrder = await payload.update({ collection: "checkout-orders", id: matched.id, overrideAccess: true, data: {
+      ...data, registrationSource: preserved.registrationSource || data.registrationSource,
+      order: updatedOrder, sourceKey: preserved.sourceKey,
+      purchaserName: preserved.purchaserName, purchaserEmail: preserved.purchaserEmail, purchaserContact: preserved.purchaserContact,
+      paymentStatus: ["refunded", "disputed", "voided"].includes(preserved.paymentStatus) ? preserved.paymentStatus : context.paymentStatus,
+    } });
     return { write: "updated" as const, orderId: String(checkoutOrder.id), sourceKey: checkoutOrder.sourceKey, purchaserContactId: relationshipID(checkoutOrder.purchaserContact) || String(purchaserContact.id) };
   }
   const checkoutOrder = await payload.create({ collection: "checkout-orders", overrideAccess: true, data, context: { checkoutPurchaseDisplayOrder: context.purchaseDisplayOrder } });
@@ -149,6 +165,9 @@ async function upsertEntitlement(payload: Payload, data: {
 }
 
 export async function recordRegistrationOrder(payload: Payload, order: RegistrationOrder, context: RecordContext) {
+  if (order.registrationSource && !await findRegistrationSource(payload, order.registrationSource, false)) {
+    throw new Error("Unknown registration source for this event.");
+  }
   const result = { attendees: { created: 0, updated: 0 }, breakfastTickets: { created: 0, updated: 0 }, checkoutOrders: { created: 0, updated: 0 }, entitlements: { created: 0, updated: 0 } };
   const checkout = await recordCheckoutOrder(payload, order, context);
   result.checkoutOrders[checkout.write] += 1;
@@ -164,6 +183,8 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
       sourceKey,
       contact: attendeeContact.id,
       checkoutOrder: checkout.orderId,
+      registrationSource: order.registrationSource || undefined,
+      soberDate: order.attendee.soberDate || undefined,
       attendeeName: order.attendee.name,
       attendeeEmail: order.attendee.email,
       state: order.attendee.state,
@@ -196,7 +217,7 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
       rawMetadata: context.rawMetadata,
     } as const;
     const attendee = existing
-      ? await payload.update({ collection: "attendees", id: existing.id, overrideAccess: true, data: { rawMetadata: context.rawMetadata } }).then((value) => ({ ...value, _write: "updated" as const }))
+      ? await payload.update({ collection: "attendees", id: existing.id, overrideAccess: true, data: { rawMetadata: context.rawMetadata, ...(!existing.soberDate && data.soberDate ? { soberDate: data.soberDate } : {}), ...(!existing.registrationSource && data.registrationSource ? { registrationSource: data.registrationSource } : {}) } }).then((value) => ({ ...value, _write: "updated" as const }))
       : await payload.create({ collection: "attendees", overrideAccess: true, data }).then((value) => ({ ...value, _write: "created" as const }));
     result.attendees[attendee._write] += 1;
     attendeeId = attendee.id;
@@ -225,6 +246,8 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
       sourceKey,
       contact: scholarshipContact.id,
       checkoutOrder: checkout.orderId,
+      registrationSource: order.registrationSource || undefined,
+      soberDate: order.scholarship.recipientSoberDate || undefined,
       attendeeName: order.scholarship.recipientName,
       attendeeEmail: order.scholarship.recipientEmail,
       state: order.scholarship.recipientState || "Unknown",
@@ -252,7 +275,7 @@ export async function recordRegistrationOrder(payload: Payload, order: Registrat
       rawMetadata: context.rawMetadata,
     } as const;
     const attendee = existing
-      ? await payload.update({ collection: "attendees", id: existing.id, overrideAccess: true, data: { rawMetadata: context.rawMetadata } }).then((value) => ({ ...value, _write: "updated" as const }))
+      ? await payload.update({ collection: "attendees", id: existing.id, overrideAccess: true, data: { rawMetadata: context.rawMetadata, ...(!existing.soberDate && data.soberDate ? { soberDate: data.soberDate } : {}), ...(!existing.registrationSource && data.registrationSource ? { registrationSource: data.registrationSource } : {}) } }).then((value) => ({ ...value, _write: "updated" as const }))
       : await payload.create({ collection: "attendees", overrideAccess: true, data }).then((value) => ({ ...value, _write: "created" as const }));
     result.attendees[attendee._write] += 1;
     attendeeId ??= attendee.id;
@@ -348,6 +371,7 @@ export function orderFromStripeMetadata(metadata: Record<string, string>, purcha
   return {
     purchaserName: purchaser.name || attendeeName || "Stripe customer",
     purchaserEmail: purchaser.email || useful(metadata.attendee_email, "unknown@stripe-import.invalid"),
+    registrationSource: normalizeSourceSlug(metadata.necy_registration_source),
     selfRegistration,
     attendee: {
       name: attendeeName || purchaser.name || "Stripe attendee",

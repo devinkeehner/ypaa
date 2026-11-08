@@ -18,6 +18,7 @@ import { Tenants } from "./collections/Tenants";
 import { AccessCodes } from "./collections/AccessCodes";
 import { CashCodeRecipients } from "./collections/CashCodeRecipients";
 import { CashTransactions } from "./collections/CashTransactions";
+import { RegistrationSources } from "./collections/RegistrationSources";
 import { Attendees } from "./collections/Attendees";
 import { BreakfastTickets } from "./collections/BreakfastTickets";
 import { Contacts } from "./collections/Contacts";
@@ -117,7 +118,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, Contacts, CheckoutOrders, ScholarshipContributions, RegistrationEntitlements, Tenants, AccessCodes, CashCodeRecipients, CashTransactions, Attendees, BreakfastTickets, RegistrationCorrections, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests, RegistrationHelpRequests, HotelRequests, RegistrationImports].map(withViewerAccess),
+  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, Contacts, CheckoutOrders, ScholarshipContributions, RegistrationEntitlements, Tenants, AccessCodes, CashCodeRecipients, CashTransactions, Attendees, RegistrationSources, BreakfastTickets, RegistrationCorrections, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests, RegistrationHelpRequests, HotelRequests, RegistrationImports].map(withViewerAccess),
   globals: [Header, Footer].map(withViewerGlobalAccess),
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || "",

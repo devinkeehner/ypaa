@@ -1,3 +1,4 @@
+import { validSoberDate } from "@/lib/registration-affiliation";
 import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getPayload } from "payload";
@@ -47,6 +48,8 @@ export async function POST(request: Request) {
     }
 
     const order = normalizeOrder(body.order);
+    if (!validSoberDate(order.attendee.soberDate) || !validSoberDate(order.scholarship.recipientSoberDate))
+      return NextResponse.json({ error: "Invalid sober date." }, { status: 400 });
     const payload = await getPayload({ config });
     await recordRegistrationOrder(payload, order, {
       sourceKey,

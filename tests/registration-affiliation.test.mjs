@@ -10,7 +10,8 @@ function load(path, deps = {}) {
 }
 const affiliation = load("../lib/registration-affiliation.ts");
 const reg = load("../lib/registration.ts", { "./registration-affiliation": affiliation });
-const records = load("../lib/registration-records.ts", { "./registration-affiliation": affiliation, "@/lib/registration": reg,
+const sources = load("../lib/registration-sources.ts", { "./registration-affiliation": affiliation });
+const records = load("../lib/registration-records.ts", { "./registration-sources": sources, "./registration-affiliation": affiliation, "@/lib/registration": reg,
   "@/lib/stripe-server": { getStripe: () => { throw new Error("Unexpected Stripe request"); } }, "@/lib/scholarship-email": { sendStripeScholarshipPaidNotification: async () => {} } });
 function memoryPayload() {
   const rows = new Map(); let next = 0;

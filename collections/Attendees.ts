@@ -1,3 +1,4 @@
+import { validSoberDate } from "@/lib/registration-affiliation";
 import type { Access, CollectionConfig } from "payload";
 import { registrationAffiliationFields } from "./fields/registration-affiliation";
 
@@ -13,6 +14,7 @@ export const Attendees: CollectionConfig = {
     description: "The single-event roster. The actual attendee contact is separate from the original purchaser.",
   },
   fields: [
+    { name: "registrationSource", type: "text", index: true, admin: { description: "Tracking-link slug at checkout. Blank means direct or historical traffic." } },
     { name: "sourceKey", type: "text", required: true, unique: true, index: true, defaultValue: () => `manual:${crypto.randomUUID()}`, admin: { readOnly: true } },
     { name: "contact", label: "Actual attendee", type: "relationship", relationTo: "contacts", index: true, admin: { description: "Who is attending. This may differ from the purchaser." } },
     { name: "checkoutOrder", type: "relationship", relationTo: "checkout-orders", index: true, admin: { description: "The immutable payment that funded this registration." } },
@@ -21,6 +23,7 @@ export const Attendees: CollectionConfig = {
     { name: "attendeeEmail", type: "email", required: true, index: true },
     { name: "state", type: "text", required: true },
     ...registrationAffiliationFields,
+    { name: "soberDate", type: "text", validate: (value: unknown) => validSoberDate(value) || "Enter a valid calendar date (YYYY-MM-DD) on or before today.", admin: { description: "Optional private sober date, stored as a calendar date." } },
     { name: "attendanceStatus", type: "select", required: true, defaultValue: "expected", index: true, options: ["expected", "checked_in", "cancelled"] },
     { name: "attendanceBasis", type: "select", required: true, defaultValue: "manual_expected", options: ["self_registration", "scholarship_recipient", "manual_expected"] },
     {

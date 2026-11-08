@@ -13,6 +13,7 @@ export const CheckoutOrders: CollectionConfig = {
     description: "One paid checkout record, linked by source key to its attendee, breakfast, and merchandise records.",
   },
   fields: [
+    { name: "registrationSource", type: "text", index: true, admin: { description: "Tracking-link slug at checkout. Blank means direct or historical traffic." } },
     { name: "sourceKey", type: "text", required: true, unique: true, index: true, admin: { readOnly: true } },
     { name: "purchaserName", type: "text", required: true },
     { name: "purchaserEmail", type: "email", required: true, index: true },

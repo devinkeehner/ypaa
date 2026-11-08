@@ -84,6 +84,7 @@ export interface Config {
     'cash-code-recipients': CashCodeRecipient;
     'cash-transactions': CashTransaction;
     attendees: Attendee;
+    'registration-sources': RegistrationSource;
     'breakfast-tickets': BreakfastTicket;
     'registration-corrections': RegistrationCorrection;
     rooms: Room;
@@ -123,6 +124,7 @@ export interface Config {
     'cash-code-recipients': CashCodeRecipientsSelect<false> | CashCodeRecipientsSelect<true>;
     'cash-transactions': CashTransactionsSelect<false> | CashTransactionsSelect<true>;
     attendees: AttendeesSelect<false> | AttendeesSelect<true>;
+    'registration-sources': RegistrationSourcesSelect<false> | RegistrationSourcesSelect<true>;
     'breakfast-tickets': BreakfastTicketsSelect<false> | BreakfastTicketsSelect<true>;
     'registration-corrections': RegistrationCorrectionsSelect<false> | RegistrationCorrectionsSelect<true>;
     rooms: RoomsSelect<false> | RoomsSelect<true>;
@@ -40570,6 +40572,10 @@ export interface Contact {
  */
 export interface CheckoutOrder {
   id: string;
+  /**
+   * Tracking-link slug at checkout. Blank means direct or historical traffic.
+   */
+  registrationSource?: string | null;
   sourceKey: string;
   purchaserName: string;
   purchaserEmail: string;
@@ -40717,6 +40723,10 @@ export interface RegistrationEntitlement {
  */
 export interface Attendee {
   id: string;
+  /**
+   * Tracking-link slug at checkout. Blank means direct or historical traffic.
+   */
+  registrationSource?: string | null;
   sourceKey: string;
   /**
    * Who is attending. This may differ from the purchaser.
@@ -40744,6 +40754,10 @@ export interface Attendee {
    * Original combined value from older registrations. Kept without guessing how to split it.
    */
   homegroupCommittee?: string | null;
+  /**
+   * Optional private sober date, stored as a calendar date.
+   */
+  soberDate?: string | null;
   attendanceStatus: 'expected' | 'checked_in' | 'cancelled';
   attendanceBasis: 'self_registration' | 'scholarship_recipient' | 'manual_expected';
   accommodations?: string | null;
@@ -40955,6 +40969,22 @@ export interface CashCodeRecipient {
   id: string;
   email: string;
   active: boolean;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Tracking links at https://reg.necypaact.com/<slug>. Disable a link to stop new visits; historical attribution is retained.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registration-sources".
+ */
+export interface RegistrationSource {
+  id: string;
+  name: string;
+  slug: string;
+  active?: boolean | null;
+  event: string;
   notes?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -41460,6 +41490,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'attendees';
         value: string | Attendee;
+      } | null)
+    | ({
+        relationTo: 'registration-sources';
+        value: string | RegistrationSource;
       } | null)
     | ({
         relationTo: 'breakfast-tickets';
@@ -63098,6 +63132,7 @@ export interface ContactsSelect<T extends boolean = true> {
  * via the `definition` "checkout-orders_select".
  */
 export interface CheckoutOrdersSelect<T extends boolean = true> {
+  registrationSource?: T;
   sourceKey?: T;
   purchaserName?: T;
   purchaserEmail?: T;
@@ -63245,6 +63280,7 @@ export interface CashTransactionsSelect<T extends boolean = true> {
  * via the `definition` "attendees_select".
  */
 export interface AttendeesSelect<T extends boolean = true> {
+  registrationSource?: T;
   sourceKey?: T;
   contact?: T;
   checkoutOrder?: T;
@@ -63257,6 +63293,7 @@ export interface AttendeesSelect<T extends boolean = true> {
   fellowships?: T;
   fellowshipOther?: T;
   homegroupCommittee?: T;
+  soberDate?: T;
   attendanceStatus?: T;
   attendanceBasis?: T;
   accommodations?: T;
@@ -63292,6 +63329,19 @@ export interface AttendeesSelect<T extends boolean = true> {
   canonicalNameConfirmed?: T;
   notes?: T;
   rawMetadata?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registration-sources_select".
+ */
+export interface RegistrationSourcesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  active?: T;
+  event?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
