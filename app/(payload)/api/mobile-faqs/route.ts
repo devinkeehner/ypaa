@@ -1,7 +1,18 @@
 import config from "@payload-config";
+import { REST_DELETE, REST_PATCH, REST_POST } from "@payloadcms/next/routes";
 import { getPayload } from "payload";
 
 const headers = { "Access-Control-Allow-Origin": "*" };
+
+// The public feed shares the collection URL with Payload's admin write actions.
+const collectionRoute = { params: Promise.resolve({ slug: ["mobile-faqs"] }) };
+const createFAQ = REST_POST(config);
+const updateFAQs = REST_PATCH(config);
+const deleteFAQs = REST_DELETE(config);
+
+export const POST = (request: Request) => createFAQ(request, collectionRoute);
+export const PATCH = (request: Request) => updateFAQs(request, collectionRoute);
+export const DELETE = (request: Request) => deleteFAQs(request, collectionRoute);
 
 export async function GET() {
   try {
