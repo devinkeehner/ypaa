@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type PointerEvent, type ReactNode } from "react";
-import { Accessibility, CalendarDays, ChevronDown, ChevronLeft, ChevronRight, Clock3, Grid3X3, List, Map as MapIcon, MapPin, Search, SlidersHorizontal, X } from "lucide-react";
+import { Accessibility, ChevronDown, Clock3, Grid3X3, List, Map as MapIcon, MapPin, Search, SlidersHorizontal, X } from "lucide-react";
 
 import type { ProgramData, ProgramRoom, ProgramSession } from "./program-types";
 import { SESSION_TYPE_LABELS } from "./program-types";
@@ -121,6 +121,8 @@ function MobileProgram({
   type,
   onTypeChange,
   sessionTypes,
+  room,
+  onRoomChange,
   sessions,
 }: {
   data: ProgramData;
@@ -132,56 +134,41 @@ function MobileProgram({
   type: string;
   onTypeChange: (value: string) => void;
   sessionTypes: string[];
+  room: string;
+  onRoomChange: (value: string) => void;
   sessions: ProgramSession[];
 }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [roomIndex, setRoomIndex] = useState(0);
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
-  const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
-  const filtersActive = Boolean(search.trim() || type !== "all");
-  const rooms = useMemo(() => data.rooms.filter((candidate) => sessions.some((session) => String(session.room.id) === String(candidate.id))), [data.rooms, sessions]);
-  const sessionsByRoom = useMemo(() => {
-    const grouped = new Map<string, ProgramSession[]>();
-    for (const session of sessions) {
-      const key = String(session.room.id);
-      const values = grouped.get(key);
-      if (values) values.push(session);
-      else grouped.set(key, [session]);
-    }
-    return grouped;
-  }, [sessions]);
-  const activeRoom = rooms[roomIndex] || rooms[0];
-  const activeRoomSessions = activeRoom ? sessionsByRoom.get(String(activeRoom.id)) || [] : [];
+  const swipeStartRef = useRef<{ id: number; x: number; y: number } | null>(null);
+  const suppressClick = useRef(false);
+  const filtersActive = Boolean(search.trim() || type !== "all" || room !== "all");
 
-  useEffect(() => {
-    setRoomIndex(0);
-    setExpandedSessionId(null);
-  }, [selectedDay]);
-
-  useEffect(() => {
-    if (roomIndex < rooms.length) return;
-    setRoomIndex(Math.max(0, rooms.length - 1));
-  }, [roomIndex, rooms.length]);
-
-  function goToRoom(index: number) {
-    const next = Math.max(0, Math.min(index, rooms.length - 1));
-    setRoomIndex(next);
-    setExpandedSessionId(null);
+  function clearFilters() {
+    onSearchChange("");
+    onTypeChange("all");
+    onRoomChange("all");
   }
 
-  function beginRoomSwipe(event: PointerEvent<HTMLDivElement>) {
-    swipeStartRef.current = { x: event.clientX, y: event.clientY };
+  function beginDaySwipe(event: PointerEvent<HTMLDivElement>) {
+    if (!event.isPrimary || event.button !== 0) return;
+    suppressClick.current = false;
+    swipeStartRef.current = { id: event.pointerId, x: event.clientX, y: event.clientY };
   }
 
-  function finishRoomSwipe(event: PointerEvent<HTMLDivElement>) {
+  function finishDaySwipe(event: PointerEvent<HTMLDivElement>) {
     const start = swipeStartRef.current;
+    if (!start || start.id !== event.pointerId) return;
     swipeStartRef.current = null;
-    if (!start) return;
-    const distanceX = event.clientX - start.x;
-    const distanceY = event.clientY - start.y;
-    if (Math.abs(distanceX) < 44 || Math.abs(distanceX) < Math.abs(distanceY) * 1.2) return;
-    if (distanceX < 0) goToRoom(roomIndex + 1);
-    else goToRoom(roomIndex - 1);
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.25) return;
+    suppressClick.current = true;
+    const nextDay = days[days.indexOf(selectedDay) + (dx < 0 ? 1 : -1)];
+    if (nextDay) {
+      setExpandedSessionId(null);
+      onDayChange(nextDay);
+    }
   }
 
   return (
@@ -194,26 +181,36 @@ function MobileProgram({
         <div aria-label="Program day" className="program-mobile-days" role="tablist" style={{ "--program-day-count": Math.max(days.length, 1) } as React.CSSProperties}>
           {days.map((value) => {
             const label = shortDayLabel(value);
-            return <button aria-selected={selectedDay === value} key={value} onClick={() => onDayChange(value)} role="tab" type="button"><span>{label.weekday}</span><strong>{label.day}</strong></button>;
+            return <button aria-selected={selectedDay === value} key={value} onClick={() => { setExpandedSessionId(null); onDayChange(value); }} role="tab" type="button"><span>{label.weekday}</span><strong>{label.day}</strong></button>;
           })}
         </div>
-        {filtersOpen ? <div className="program-mobile-filters"><label><Search aria-hidden="true" /><span className="sr-only">Search sessions</span><input autoFocus onChange={(event) => onSearchChange(event.target.value)} placeholder="Search sessions or topics" value={search} /></label><label><span className="sr-only">Session type</span><select onChange={(event) => onTypeChange(event.target.value)} value={type}><option value="all">All session types</option>{sessionTypes.map((value) => <option key={value} value={value}>{typeLabel(value)}</option>)}</select></label>{filtersActive ? <button className="program-mobile-filter-clear" onClick={() => { onSearchChange(""); onTypeChange("all"); }} type="button">Clear filters</button> : null}</div> : null}
-        {activeRoom ? <div className="program-mobile-room-nav">
-          <button aria-label="Previous room" disabled={roomIndex === 0} onClick={() => goToRoom(roomIndex - 1)} type="button"><ChevronLeft aria-hidden="true" /></button>
-          <div aria-live="polite"><strong>{activeRoom.name}</strong><span>{roomIndex + 1} of {rooms.length}{activeRoom.floor ? ` · ${activeRoom.floor}` : ""}</span></div>
-          <button aria-label="Next room" disabled={roomIndex === rooms.length - 1} onClick={() => goToRoom(roomIndex + 1)} type="button"><ChevronRight aria-hidden="true" /></button>
-        </div> : null}
+        {filtersOpen ? (
+          <div className="program-mobile-filters">
+            <label><Search aria-hidden="true" /><span className="sr-only">Search sessions</span><input autoFocus onChange={(event) => onSearchChange(event.target.value)} placeholder="Search sessions or topics" value={search} /></label>
+            <label><span className="sr-only">Session type</span><select onChange={(event) => onTypeChange(event.target.value)} value={type}><option value="all">All session types</option>{sessionTypes.map((value) => <option key={value} value={value}>{typeLabel(value)}</option>)}</select></label>
+            <label><span className="sr-only">Room</span><select onChange={(event) => onRoomChange(event.target.value)} value={room}><option value="all">All rooms</option>{data.rooms.map((value) => <option key={value.id} value={String(value.id)}>{value.name}</option>)}</select></label>
+            {filtersActive ? <button className="program-mobile-filter-clear" onClick={clearFilters} type="button">Clear filters</button> : null}
+          </div>
+        ) : null}
       </div>
 
-      {activeRoom ? <div aria-label="Swipe between program rooms" className="program-mobile-room-stage" data-room-position={`${roomIndex + 1}-${rooms.length}`} onPointerCancel={() => { swipeStartRef.current = null; }} onPointerDown={beginRoomSwipe} onPointerUp={finishRoomSwipe} role="region">
-        <section aria-label={`${activeRoom.name} schedule`} className="program-mobile-room-panel" key={activeRoom.id}>
-          <div className="program-mobile-room-context"><span style={{ background: activeRoom.color || undefined }} /><p>{roomIndex < rooms.length - 1 ? "Swipe left for the next room" : roomIndex > 0 ? "Swipe right for the previous room" : "Only room for this day"}</p></div>
-          {activeRoomSessions.length ? <div className="program-mobile-agenda">{activeRoomSessions.map((session) => {
+      <div aria-label="Swipe between program days" className="program-mobile-day-stage"
+        onPointerCancel={() => { swipeStartRef.current = null; }}
+        onPointerDown={beginDaySwipe} onPointerUp={finishDaySwipe}
+        onClickCapture={(event) => {
+          if (!suppressClick.current || event.detail === 0) return;
+          suppressClick.current = false;
+          event.preventDefault();
+          event.stopPropagation();
+        }} role="region">
+        <span aria-live="polite" className="sr-only">{selectedDay ? dayLabel(selectedDay) : ""}</span>
+        <section aria-label={selectedDay ? dayLabel(selectedDay) : "Day schedule"} className="program-mobile-day-panel">
+          {sessions.length ? <div className="program-mobile-agenda">{sessions.map((session) => {
             const sessionId = String(session.id);
             const expanded = expandedSessionId === sessionId;
             const detailsId = `program-mobile-session-${sessionId}`;
-            return <article className="program-mobile-session-item" data-expanded={expanded} key={session.id} style={{ "--room-color": activeRoom.color || "var(--tenant-primary)" } as React.CSSProperties}>
-              <button aria-controls={detailsId} aria-expanded={expanded} className="program-mobile-session" onClick={() => setExpandedSessionId(expanded ? null : sessionId)} type="button"><time dateTime={session.startAt}><strong>{timeLabel(session.startAt)}</strong><span>{timeLabel(session.endAt)}</span></time><span className="program-mobile-session-marker" style={{ background: activeRoom.color || undefined }} /><span className="program-mobile-session-copy"><small>{typeLabel(session.sessionType)}</small><strong>{session.title}</strong></span><ChevronDown aria-hidden="true" /></button>
+            return <article className="program-mobile-session-item" data-expanded={expanded} key={session.id} style={{ "--room-color": session.room.color || "var(--tenant-primary)" } as React.CSSProperties}>
+              <button aria-controls={detailsId} aria-expanded={expanded} className="program-mobile-session" onClick={() => setExpandedSessionId(expanded ? null : sessionId)} type="button"><time dateTime={session.startAt}><strong>{timeLabel(session.startAt)}</strong><span>{timeLabel(session.endAt)}</span></time><span className="program-mobile-session-marker" style={{ background: session.room.color || undefined }} /><span className="program-mobile-session-copy"><small>{typeLabel(session.sessionType)} · {session.room.shortLabel}</small><strong>{session.title}</strong></span><ChevronDown aria-hidden="true" /></button>
               {expanded ? <div className="program-mobile-session-details" id={detailsId}>
                 {session.shortDescription ? <p>{session.shortDescription}</p> : null}
                 <dl>
@@ -224,9 +221,14 @@ function MobileProgram({
                 {session.tracks?.length ? <p className="program-mobile-session-tracks"><strong>Tracks</strong> {session.tracks.join(" · ")}</p> : null}
               </div> : null}
             </article>;
-          })}</div> : <div className="program-empty">No sessions in this room match your filters.</div>}
+          })}</div> : (
+            <div className="program-empty program-mobile-empty">
+              {filtersActive ? "No sessions match your filters." : "No sessions are scheduled for this day."}
+              {filtersActive ? <button onClick={clearFilters} type="button">Clear filters</button> : null}
+            </div>
+          )}
         </section>
-      </div> : <div className="program-empty program-mobile-empty">{filtersActive ? "No sessions match your filters." : "No rooms or sessions are scheduled for this day."}{filtersActive ? <button onClick={() => { onSearchChange(""); onTypeChange("all"); }} type="button">Clear filters</button> : null}</div>}
+      </div>
       <div className="program-mobile-map"><VenueMapView data={data} /></div>
     </div>
   );
@@ -255,7 +257,7 @@ export function ProgramExplorer({ initialData, heading = "Your weekend, mapped o
   const days = useMemo(() => Array.from(new Set(data.sessions.map((session) => dateKey(session.startAt)))).sort(), [data.sessions]);
   const selectedDay = day || days[0] || "";
   const sessionTypes = useMemo(() => Array.from(new Set(data.sessions.map((session) => session.sessionType))).sort(), [data.sessions]);
-  const mobileFiltered = useMemo(() => {
+  const daySessions = useMemo(() => {
     const needle = search.trim().toLowerCase();
     return data.sessions.filter((session) => {
       if (selectedDay && dateKey(session.startAt) !== selectedDay) return false;
@@ -264,7 +266,7 @@ export function ProgramExplorer({ initialData, heading = "Your weekend, mapped o
       return true;
     }).sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime());
   }, [data.sessions, search, selectedDay, type]);
-  const filtered = useMemo(() => mobileFiltered.filter((session) => room === "all" || String(session.room.id) === room), [mobileFiltered, room]);
+  const filtered = useMemo(() => daySessions.filter((session) => room === "all" || String(session.room.id) === room), [daySessions, room]);
 
   useEffect(() => {
     if (!selected) return;
@@ -275,11 +277,21 @@ export function ProgramExplorer({ initialData, heading = "Your weekend, mapped o
 
   return (
     <div className={embedded ? "program-embed" : "program-page"}>
-      {!embedded ? <section className="program-hero" id="program"><div className="program-shell"><div><CalendarDays aria-hidden="true" /><h1>Convention<br /><em>program</em></h1></div>{typeof introduction === "string" ? <p>{introduction}</p> : introduction}</div></section> : null}
-      {!embedded ? <MobileProgram data={data} days={days} onDayChange={setDay} onSearchChange={setSearch} onTypeChange={setType} search={search} selectedDay={selectedDay} sessionTypes={sessionTypes} sessions={mobileFiltered} type={type} /> : null}
+      {!embedded ? <MobileProgram data={data} days={days} onDayChange={setDay} onSearchChange={setSearch} onTypeChange={setType} search={search} selectedDay={selectedDay} sessionTypes={sessionTypes} sessions={filtered} room={room} onRoomChange={setRoom} type={type} /> : null}
       <section className={`program-explorer-section${embedded ? "" : " program-desktop-only"}`}>
         <div className="program-shell">
-          <div className="program-heading"><div><p>NECYPAA XXXVI</p>{typeof heading === "string" ? <h2>{heading}</h2> : heading}{embedded ? typeof introduction === "string" ? <p className="program-heading-description">{introduction}</p> : introduction : null}</div>{!embedded ? <a href="#hotel-map"><MapIcon aria-hidden="true" /> Hotel map</a> : null}</div>
+          {embedded ? (
+            <div className="program-heading">
+              <div><p>NECYPAA XXXVI</p>{typeof heading === "string" ? <h2>{heading}</h2> : heading}
+                {typeof introduction === "string" ? <p className="program-heading-description">{introduction}</p> : introduction}
+              </div>
+            </div>
+          ) : (
+            <header className="program-heading program-heading-compact" id="program">
+              <div><h1>Convention program</h1><p>All times Eastern</p></div>
+              <a href="#hotel-map"><MapIcon aria-hidden="true" /> Hotel map</a>
+            </header>
+          )}
           <div className="program-day-tabs" role="tablist" aria-label="Program day">
             {days.map((value) => <button aria-selected={selectedDay === value} key={value} onClick={() => setDay(value)} role="tab" type="button">{dayLabel(value)}</button>)}
           </div>

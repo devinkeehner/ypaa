@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Building2, CalendarDays, ChevronLeft, ChevronRight, Eye, GripVertical, Pencil, Plus, RotateCw, Save, Trash2, X } from "lucide-react";
+import { ArrowLeft, Building2, CalendarDays, CircleHelp, ChevronLeft, ChevronRight, Eye, GripVertical, Pencil, Plus, RotateCw, Save, Trash2, Undo2, X } from "lucide-react";
 import Link from "next/link";
+import { createPortal } from "react-dom";
 import { ProgramDialog } from "./ProgramDialog";
+import { useProgramBoardDrag, type DropTarget } from "./useProgramBoardDrag";
 import { clampResizeDelta, planResize } from "@/lib/program-board-planning";
 import { canAccessArea } from "@/lib/crm-access";
 
@@ -31,7 +33,6 @@ type FormState = {
   featured: boolean;
   internalNotes: string;
 };
-type DropTarget = { roomID: string; time: string };
 type ResizeEdge = "start" | "end";
 type ResizePreview = { sessionID: string; edge: ResizeEdge; pointerStartY: number; scrollStartY: number; deltaSlots: number };
 type ResizeRange = { startAt: string; endAt: string };
@@ -63,15 +64,25 @@ const CONVENTION_DAYS = ["2026-12-31", "2027-01-01", "2027-01-02", "2027-01-03"]
 const EMPTY_FORM: FormState = { title: "", sessionType: "panel", date: CONVENTION_DAYS[0], endDate: CONVENTION_DAYS[0], startTime: "09:00", endTime: "10:00", room: "", shortDescription: "", language: "English", audience: "", accessibility: "", status: "published", featured: false, internalNotes: "" };
 const EMPTY_ROOM_FORM: RoomFormState = { name: "", shortLabel: "", floor: "Convention level", capacity: "", accessible: true, directions: "", displayOrder: "0", mapX: "", mapY: "", color: "#E85E27", notes: "" };
 const TIME_ZONE = "America/New_York";
+const startMinute = 8 * 60;
+const slots = 32;
+const slotHeight = 58;
+const slotTimes = Array.from({ length: slots }, (_, index) => {
+  const minutes = startMinute + index * 30;
+  return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+});
+const dateFormatter = new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit" });
+const timeFormatter = new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+const headingDateFormatter = new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, weekday: "short", month: "short", day: "numeric" });
 
 function dateKey(value: string) {
-  const parts = new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(new Date(value));
+  const parts = dateFormatter.formatToParts(new Date(value));
   const find = (type: string) => parts.find((part) => part.type === type)?.value || "";
   return `${find("year")}-${find("month")}-${find("day")}`;
 }
 
 function timeValue(value: string) {
-  const parts = new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(value));
+  const parts = timeFormatter.formatToParts(new Date(value));
   return `${parts.find((part) => part.type === "hour")?.value || "00"}:${parts.find((part) => part.type === "minute")?.value || "00"}`;
 }
 
@@ -82,7 +93,7 @@ function displayTime(value: string) {
 }
 
 function dayLabel(key: string) {
-  return new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, weekday: "short", month: "short", day: "numeric" }).format(new Date(`${key}T12:00:00-05:00`));
+  return headingDateFormatter.format(new Date(`${key}T12:00:00-05:00`));
 }
 
 function iso(date: string, time: string) {
@@ -134,8 +145,7 @@ export function ProgramBoard() {
   const [form, setForm] = useState<FormState | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
-  const [draggedSessionID, setDraggedSessionID] = useState<string | null>(null);
-  const [dropTarget, setDropTarget] = useState<DropTarget | null>(null);
+  const [pendingMove, setPendingMove] = useState<(DropTarget & { sessionID: string }) | null>(null);
   const [resizePreview, setResizePreview] = useState<ResizePreview | null>(null);
   const [movingSessionIDs, setMovingSessionIDs] = useState<Set<string>>(() => new Set());
   const [roomForm, setRoomForm] = useState<RoomFormState | null>(null);
@@ -147,7 +157,7 @@ export function ProgramBoard() {
   const mutationRef = useRef(false);
   const [pendingResize, setPendingResize] = useState<ResizePlan | null>(null);
   const [undoChanges, setUndoChanges] = useState<Array<{ id: string; expectedUpdatedAt: string; expectedRevision: number; data: ResizeRange & { room: string } }> | null>(null);
-  const dragImageRef = useRef<HTMLDivElement | null>(null);
+  const drag = useProgramBoardDrag(scrollRef, slotTimes, slotHeight);
 
   const load = useCallback(async () => {
     try {
@@ -183,6 +193,17 @@ export function ProgramBoard() {
   }, [load]);
 
   const daySessions = useMemo(() => sessions.filter((session) => dateKey(session.startAt) === day), [day, sessions]);
+
+  const sessionsByRoom = useMemo(() => {
+    const grouped = new Map<string, EditableSession[]>();
+    for (const session of daySessions) {
+      const roomID = String(session.room.id);
+      const entries = grouped.get(roomID);
+      if (entries) entries.push(session);
+      else grouped.set(roomID, [session]);
+    }
+    return grouped;
+  }, [daySessions]);
 
   function startCreate(roomID?: string, startTime = "09:00") {
     if (!canManage || mutationRef.current || pendingResize || needsReload) return;
@@ -346,11 +367,17 @@ export function ProgramBoard() {
     if (!session) return;
     const startAt = iso(day, startTime);
     const endAt = new Date(Date.parse(startAt) + Date.parse(session.endAt) - Date.parse(session.startAt)).toISOString();
+    if (startAt === new Date(session.startAt).toISOString() && roomID === String(session.room.id)) return;
     const boardEnd = Date.parse(`${day}T00:00:00-05:00`) + 86_400_000;
     if (Date.parse(endAt) > boardEnd) { setMessage("Move blocked: the session would end after midnight. Use Edit to set an overnight session."); return; }
     const conflict = overlapping({ id: session.id, room: roomID, startAt, endAt });
     if (conflict) { setMessage(`Move blocked: “${conflict.title}” already uses that room and time.`); return; }
-    await commitRanges(new Map([[sessionID, { startAt, endAt, room: roomID }]]));
+    setPendingMove({ sessionID, roomID, time: startTime });
+    try {
+      await commitRanges(new Map([[sessionID, { startAt, endAt, room: roomID }]]));
+    } finally {
+      setPendingMove(null);
+    }
   }
 
   function buildResizePlan(session: ProgramSession, edge: ResizeEdge, delta: number) {
@@ -380,7 +407,7 @@ export function ProgramBoard() {
       onPointerMove: (event: React.PointerEvent<HTMLButtonElement>) => {
         if (resizePreview?.sessionID !== String(session.id) || resizePreview.edge !== edge) return;
         const deltaSlots = clampResizeDelta(session, edge, Math.round((event.clientY - resizePreview.pointerStartY + (scrollRef.current?.scrollTop || 0) - resizePreview.scrollStartY) / slotHeight));
-        setResizePreview({ ...resizePreview, deltaSlots });
+        if (deltaSlots !== resizePreview.deltaSlots) setResizePreview({ ...resizePreview, deltaSlots });
       },
       onPointerUp: (event: React.PointerEvent<HTMLButtonElement>) => {
         if (resizePreview?.sessionID !== String(session.id) || resizePreview.edge !== edge) return;
@@ -406,10 +433,9 @@ export function ProgramBoard() {
   if (state === "unauthorized") return <main className="program-board-gate"><CalendarDays aria-hidden="true" /><h1>Program Board</h1><p>Sign in to Payload before opening the committee planning board.</p><Link href="/admin">Sign in to Payload</Link></main>;
   if (state === "error") return <main className="program-board-gate"><h1>Program Board</h1><p>The schedule could not be loaded.</p><button onClick={() => { setState("loading"); void load(); }} type="button"><RotateCw aria-hidden="true" /> Try again</button></main>;
 
-  const startMinute = 8 * 60;
-  const slots = 32;
-  const slotHeight = 58;
-  const draggedSession = sessions.find((session) => String(session.id) === draggedSessionID);
+  const draggedSessionID = drag.sessionID;
+  const dropTarget = drag.target ?? pendingMove;
+  const draggedSession = sessions.find(session => String(session.id) === (draggedSessionID ?? pendingMove?.sessionID));
   const dropStartIndex = dropTarget
     ? (Number(dropTarget.time.slice(0, 2)) * 60 + Number(dropTarget.time.slice(3, 5)) - startMinute) / 30
     : -1;
@@ -419,50 +445,63 @@ export function ProgramBoard() {
   const dropStartAt = dropTarget ? iso(day, dropTarget.time) : null;
   const dropEndAt = dropStartAt && draggedSession ? new Date(Date.parse(dropStartAt) + Date.parse(draggedSession.endAt) - Date.parse(draggedSession.startAt)).toISOString() : null;
   const dropConflict = dropTarget && dropStartAt && dropEndAt && draggedSession ? overlapping({ id: draggedSession.id, room: dropTarget.roomID, startAt: dropStartAt, endAt: dropEndAt }) : null;
-  const dropError = dropConflict ? `Overlaps ${dropConflict.title}` : dropEndAt && Date.parse(dropEndAt) > Date.parse(`${day}T00:00:00-05:00`) + 86_400_000 ? "Ends after midnight" : null;
+  const dropError = pendingMove ? null : dropConflict ? `Overlaps ${dropConflict.title}` : dropEndAt && Date.parse(dropEndAt) > Date.parse(`${day}T00:00:00-05:00`) + 86_400_000 ? "Ends after midnight" : null;
+  const dropRoom = rooms.find(room => String(room.id) === dropTarget?.roomID);
+  const dropStatus = dropTarget && dropRoom
+    ? `${dropRoom.shortLabel} · ${displayTime(dropTarget.time)}${dropError ? ` · ${dropError}` : ""}`
+    : "Move over a room and time";
+  const busy = saving || movingSessionIDs.size > 0 || Boolean(pendingResize) || Boolean(draggedSessionID);
   const resizePreviewSession = resizePreview ? sessions.find((session) => String(session.id) === resizePreview.sessionID) : null;
   const resizePreviewPlan = resizePreviewSession && resizePreview
     ? buildResizePlan(resizePreviewSession, resizePreview.edge, resizePreview.deltaSlots)
     : null;
   return (
     <main className="program-board-page">
-      <header className="program-board-header"><div><Link href="/admin"><ArrowLeft aria-hidden="true" /> Payload admin</Link><h1>Program Board</h1><p>{canManage ? "All times Eastern. Drag to move; use the grips or arrow keys to resize. Click a session to edit its room and times." : "View-only program access. Browse the schedule or open the program preview."}</p></div><div><Link className="program-board-preview-action" href="/program-preview"><Eye aria-hidden="true" /> Preview public page</Link><button className="program-board-secondary-action" disabled={!canManage} onClick={startCreateRoom} type="button"><Building2 aria-hidden="true" /> Add room</button><button disabled={!canManage} onClick={() => startCreate()} type="button"><Plus aria-hidden="true" /> Add session</button></div></header>
-      <div className="program-board-toolbar"><div role="tablist" aria-label="Convention day">{CONVENTION_DAYS.map((value) => <button aria-selected={day === value} key={value} disabled={Boolean(pendingResize) || movingSessionIDs.size > 0} onClick={() => { setDay(value); setResizePreview(null); }} role="tab" type="button">{dayLabel(value)}</button>)}</div><p aria-live="polite">{resizePreviewPlan?.error || message || `${daySessions.length} sessions · ${rooms.length} rooms`}</p><button type="button" disabled={saving || movingSessionIDs.size > 0 || Boolean(pendingResize)} onClick={() => void load()}>Reload schedule</button><button type="button" disabled={!undoChanges || saving || movingSessionIDs.size > 0 || Boolean(pendingResize)} onClick={() => void undoSchedule()}>Undo last change</button></div>
+      <header className="program-board-header">
+        <div className="program-board-title">
+          <Link href="/admin" aria-label="Back to Payload admin" title="Payload admin"><ArrowLeft aria-hidden="true" /></Link>
+          <h1>Program Board</h1>
+          {canManage ? (
+            <details className="program-board-help">
+              <summary aria-label="Board controls" title="Board controls"><CircleHelp aria-hidden="true" /></summary>
+              <p>Drag a session to move it. On touch screens, drag the left grip. With a session focused, use Shift and the arrow keys to move it. Use the top or bottom grip to resize. Press Escape to cancel a drag.</p>
+            </details>
+          ) : <span className="program-board-readonly">View only</span>}
+        </div>
+        <div className="program-board-header-actions">
+          <Link className="program-board-preview-action" href="/program-preview"><Eye aria-hidden="true" /> Preview program</Link>
+          <button className="program-board-secondary-action" disabled={!canManage} onClick={startCreateRoom} type="button"><Building2 aria-hidden="true" /> Add room</button>
+          <button disabled={!canManage} onClick={() => startCreate()} type="button"><Plus aria-hidden="true" /> Add session</button>
+        </div>
+      </header>
+      <div className="program-board-toolbar">
+        <div className="program-board-days" role="tablist" aria-label="Convention day">
+          {CONVENTION_DAYS.map((value) => <button aria-selected={day === value} key={value} disabled={busy}
+            onClick={() => { setDay(value); setResizePreview(null); }} role="tab" type="button">{dayLabel(value)}</button>)}
+        </div>
+        <div className="program-board-tools">
+          <select aria-label="Jump to time" className="program-board-jump" disabled={busy} value=""
+            onChange={(event) => { scrollRef.current?.scrollTo({ top: Number(event.target.value) * slotHeight }); }}>
+            <option value="">Jump to time</option>{slotTimes.map((time, index) => <option key={time} value={index}>{displayTime(time)}</option>)}
+          </select>
+          <button type="button" aria-label="Reload schedule" title="Reload schedule" disabled={busy} onClick={() => void load()}><RotateCw aria-hidden="true" /></button>
+          <button type="button" aria-label="Undo last change" title="Undo last change" disabled={!undoChanges || busy} onClick={() => void undoSchedule()}><Undo2 aria-hidden="true" /></button>
+        </div>
+        <p aria-live="polite">{draggedSessionID ? dropStatus : resizePreviewPlan?.error || message || `${daySessions.length} sessions · All times Eastern`}</p>
+      </div>
       {pendingResize ? <section className="program-board-resize-review" aria-label="Review resize"><h2>Review affected sessions</h2><ul>{[...pendingResize.changes].map(([id, range]) => { const original = sessions.find(session => String(session.id) === id)!; return <li key={id}><strong>{original.title}</strong>: {displayTime(timeValue(original.startAt))}–{displayTime(timeValue(original.endAt))} → {displayTime(timeValue(range.startAt))}–{displayTime(timeValue(range.endAt))}</li>; })}</ul><button type="button" onClick={() => { const changes = pendingResize.changes; setPendingResize(null); void commitRanges(changes); }}>Apply resize</button><button type="button" onClick={() => { setPendingResize(null); setMessage("Resize cancelled."); }}>Cancel resize</button></section> : null}
       {state === "loading" ? <div className="program-board-loading">Loading program records…</div> : (
-        <div ref={scrollRef} className="program-board-scroll">
+        <div ref={scrollRef} className="program-board-scroll" data-dragging={Boolean(draggedSessionID) || undefined} onScroll={drag.queueFrame}>
           <div className="program-board-grid" style={{ "--room-count": rooms.length, "--slot-height": `${slotHeight}px` } as React.CSSProperties}>
             <div className="program-board-corner">Time</div>
-            {rooms.map((room, index) => <div className="program-board-room" key={room.id}><span style={{ background: room.color || undefined }} /><strong>{room.shortLabel}</strong><small>{room.floor}</small><div className="program-board-room-actions"><button aria-label={`Move ${room.name} left`} disabled={!canManage || index === 0 || roomOrdering} onClick={() => void moveRoom(String(room.id), -1)} title="Move room left" type="button"><ChevronLeft aria-hidden="true" /></button><button disabled={!canManage} aria-label={`Edit ${room.name}`} onClick={() => startEditRoom(room)} title={`Edit ${room.name}`} type="button"><Pencil aria-hidden="true" /></button><button aria-label={`Move ${room.name} right`} disabled={!canManage || index === rooms.length - 1 || roomOrdering} onClick={() => void moveRoom(String(room.id), 1)} title="Move room right" type="button"><ChevronRight aria-hidden="true" /></button></div></div>)}
-            <div className="program-board-axis" style={{ height: slots * slotHeight }}>{Array.from({ length: slots }, (_, index) => { const minutes = startMinute + index * 30; const hour = Math.floor(minutes / 60); const minute = minutes % 60; return <span key={index} style={{ top: index * slotHeight }}>{new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, hour: "numeric", minute: "2-digit" }).format(new Date(`${day}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00-05:00`))}</span>; })}</div>
+            {rooms.map((room, index) => <div className="program-board-room" data-drop-room={String(room.id) === dropTarget?.roomID || undefined} key={room.id}><span style={{ background: room.color || undefined }} /><strong>{room.shortLabel}</strong><small>{room.floor}</small><div className="program-board-room-actions"><button aria-label={`Move ${room.name} left`} disabled={!canManage || index === 0 || roomOrdering} onClick={() => void moveRoom(String(room.id), -1)} title="Move room left" type="button"><ChevronLeft aria-hidden="true" /></button><button disabled={!canManage} aria-label={`Edit ${room.name}`} onClick={() => startEditRoom(room)} title={`Edit ${room.name}`} type="button"><Pencil aria-hidden="true" /></button><button aria-label={`Move ${room.name} right`} disabled={!canManage || index === rooms.length - 1 || roomOrdering} onClick={() => void moveRoom(String(room.id), 1)} title="Move room right" type="button"><ChevronRight aria-hidden="true" /></button></div></div>)}
+            <div className="program-board-axis" style={{ height: slots * slotHeight }}>
+              {slotTimes.map((time, index) => <span key={time} data-drop-time={dropStartIndex === index || undefined} style={{ top: index * slotHeight }}>{displayTime(time)}</span>)}
+            </div>
             {rooms.map((room) => (
-              <div
-                className="program-board-track"
-                onDragOver={event => {
-                  if (!draggedSessionID || !canManage) return;
-                  event.preventDefault();
-                  const y = event.clientY - event.currentTarget.getBoundingClientRect().top;
-                  const index = Math.max(0, Math.min(slots - 1, Math.floor(y / slotHeight)));
-                  const minutes = startMinute + index * 30;
-                  setDropTarget({ roomID: String(room.id), time: `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}` });
-                  const scroller = scrollRef.current;
-                  if (scroller) { const rect = scroller.getBoundingClientRect(); scroller.scrollBy({ top: event.clientY > rect.bottom - 44 ? 18 : event.clientY < rect.top + 90 ? -18 : 0, left: event.clientX > rect.right - 44 ? 18 : event.clientX < rect.left + 90 ? -18 : 0 }); }
-                }}
-                onDrop={event => {
-                  event.preventDefault();
-                  if (!dropTarget) return;
-                  const id = event.dataTransfer.getData("text/program-session");
-                  const target = dropTarget;
-                  setDropTarget(null); setDraggedSessionID(null);
-                  void moveSession(id, target.roomID, target.time);
-                }}
-                key={room.id}
-                style={{ height: slots * slotHeight }}
-              >
-                {Array.from({ length: slots }, (_, index) => {
-                  const minutes = startMinute + index * 30;
-                  const time = `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
-                  const highlighted = dropTarget?.roomID === String(room.id) && index >= dropStartIndex && index < dropStartIndex + dropDurationSlots;
+              <div className="program-board-track" data-program-room-id={String(room.id)}
+                key={room.id} style={{ height: slots * slotHeight }}>
+                {slotTimes.map((time, index) => {
                   return (
                     <button
                       aria-label={`Add session in ${room.name} at ${time}`}
@@ -470,35 +509,16 @@ export function ProgramBoard() {
                       onKeyDown={event => { if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return; event.preventDefault(); const cells = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>(".program-board-cell"); cells?.[Math.max(0, Math.min(slots - 1, index + (event.key === "ArrowDown" ? 1 : -1)))]?.focus(); }}
                       disabled={!canManage}
                       className="program-board-cell"
-                      data-drop-active={highlighted || undefined}
-                      data-drop-end={highlighted && index === Math.ceil(dropStartIndex + dropDurationSlots) - 1 || undefined}
-                      data-drop-start={highlighted && index === dropStartIndex || undefined}
                       key={time}
                       onClick={() => startCreate(String(room.id), time)}
-                      onDragEnter={(event) => { event.preventDefault(); setDropTarget({ roomID: String(room.id), time }); }}
-                      onDragOver={(event) => {
-                        event.preventDefault();
-                        if (!canManage) return;
-                        event.dataTransfer.dropEffect = "move";
-                        setDropTarget({ roomID: String(room.id), time });
-                      }}
-                      onDrop={(event) => {
-                        event.preventDefault();
-                        if (!canManage) return;
-                        event.stopPropagation();
-                        const sessionID = event.dataTransfer.getData("text/program-session");
-                        setDropTarget(null);
-                        setDraggedSessionID(null);
-                        void moveSession(sessionID, String(room.id), time);
-                      }}
                       style={{ height: slotHeight, top: index * slotHeight }}
                       type="button"
                     />
                   );
                 })}
-                {daySessions.filter((session) => String(session.room.id) === String(room.id)).map((session) => {
+                {(sessionsByRoom.get(String(room.id)) ?? []).map((session) => {
                   const sessionID = String(session.id);
-      const visualPlan = pendingResize || resizePreviewPlan;
+                  const visualPlan = pendingResize || resizePreviewPlan;
                   const previewRange = visualPlan && !visualPlan.error ? visualPlan.changes.get(sessionID) : undefined;
                   const visualStartAt = previewRange?.startAt || session.startAt;
                   const visualEndAt = previewRange?.endAt || session.endAt;
@@ -510,43 +530,52 @@ export function ProgramBoard() {
                     <React.Fragment key={session.id}>
                     <button
                       aria-busy={moving}
+                      aria-keyshortcuts={canManage ? "Shift+ArrowUp Shift+ArrowDown Shift+ArrowLeft Shift+ArrowRight" : undefined}
+                      title={canManage ? "Drag to move. Use Shift and arrow keys to move the focused session." : undefined}
                       className="program-board-event"
-                      data-dragging={draggedSessionID === sessionID || undefined}
+                      data-dragging={draggedSessionID === sessionID || pendingMove?.sessionID === sessionID || undefined}
+                      data-session-id={sessionID}
                       data-moving={moving || undefined}
-                      draggable={canManage && !saving && movingSessionIDs.size === 0 && !pendingResize}
-                      key={session.id}
+                      data-manageable={canManage && !needsReload || undefined}
                       disabled={saving || movingSessionIDs.size > 0 || Boolean(pendingResize)}
-                      onClick={() => startEdit(session)}
-                      onDragEnd={() => {
-                        setDraggedSessionID(null);
-                        setDropTarget(null);
-                        dragImageRef.current?.remove();
-                        dragImageRef.current = null;
+                      onClick={(event) => {
+                        if (event.detail && drag.suppressClick.current) {
+                          drag.suppressClick.current = false;
+                          return;
+                        }
+                        startEdit(session);
                       }}
-                      onDragStart={(event) => {
-                        event.dataTransfer.effectAllowed = "move";
-                        event.dataTransfer.setData("text/program-session", sessionID);
-                        setDraggedSessionID(sessionID);
-
-                        // Use a deliberate, high-contrast drag image instead of
-                        // the browser's pale, semi-transparent button snapshot.
-                        const dragImage = document.createElement("div");
-                        dragImage.className = "program-board-drag-image";
-                        dragImage.style.backgroundColor = session.room.color || "#ffc928";
-                        const title = document.createElement("strong");
-                        title.textContent = session.title;
-                        const destination = document.createElement("span");
-                        destination.textContent = SESSION_TYPE_LABELS[session.sessionType] || session.sessionType;
-                        dragImage.append(title, destination);
-                        document.body.append(dragImage);
-                        dragImageRef.current?.remove();
-                        dragImageRef.current = dragImage;
-                        event.dataTransfer.setDragImage(dragImage, 18, 18);
+                      onPointerDown={(event) => drag.start(event, sessionID, canManage && !needsReload && !mutationRef.current && !resizePreview && !pendingResize)}
+                      onPointerMove={drag.move}
+                      onPointerUp={(event) => {
+                        const destination = drag.finish(event);
+                        if (destination) void moveSession(destination.sessionID, destination.roomID, destination.time);
+                      }}
+                      onPointerCancel={drag.cancel}
+                      onLostPointerCapture={drag.cancel}
+                      onKeyDown={(event) => {
+                        if (!canManage || !event.shiftKey || !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) return;
+                        event.preventDefault();
+                        const currentTime = timeValue(session.startAt);
+                        const column = rooms.findIndex(candidate => String(candidate.id) === String(room.id));
+                        const nextColumn = column + (event.key === "ArrowLeft" ? -1 : event.key === "ArrowRight" ? 1 : 0);
+                        const nextRoom = rooms[nextColumn];
+                        const timeIndex = slotTimes.indexOf(currentTime);
+                        const step = event.key === "ArrowUp" ? -1 : event.key === "ArrowDown" ? 1 : 0;
+                        const nextTime = step ? (timeIndex < 0 ? undefined : slotTimes[timeIndex + step]) : currentTime;
+                        if (!nextRoom || !nextTime) return;
+                        const source = event.currentTarget;
+                        void moveSession(sessionID, String(nextRoom.id), nextTime).then(() => {
+                          requestAnimationFrame(() => {
+                            if (document.activeElement !== document.body && document.activeElement !== source) return;
+                            scrollRef.current?.querySelector<HTMLButtonElement>(`[data-session-id="${CSS.escape(sessionID)}"]`)?.focus();
+                          });
+                        });
                       }}
                       style={{ background: room.color || undefined, height, top }}
                       type="button"
                     >
-                      <GripVertical aria-hidden="true" />
+                      <span className="program-board-move-grip" data-move-grip aria-hidden="true"><GripVertical /></span>
                       <span>{displayTime(timeValue(visualStartAt))}</span>
                       <strong>{session.title}</strong>
                       <small>{moving ? "Saving…" : SESSION_TYPE_LABELS[session.sessionType] || session.sessionType}</small>
@@ -561,12 +590,13 @@ export function ProgramBoard() {
                     aria-hidden="true"
                     className="program-board-drop-preview"
                     data-invalid={Boolean(dropError)}
+                    data-pending={Boolean(pendingMove)}
                     style={{
                       height: Math.max(slotHeight - 6, dropDurationSlots * slotHeight - 6),
                       top: dropStartIndex * slotHeight + 3,
                     }}
                   >
-                    <span>{room.shortLabel} · {dropError || "drop here"}</span>
+                    <span>{pendingMove ? "Saving move…" : dropError || room.shortLabel}</span>
                     <span>{displayTime(dropTarget.time)}–{dropEndAt ? displayTime(timeValue(dropEndAt)) : ""} · {dropDurationSlots * 30} min</span>
                   </div>
                 ) : null}
@@ -575,6 +605,13 @@ export function ProgramBoard() {
           </div>
         </div>
       )}
+      {draggedSessionID && draggedSession ? createPortal(
+        <div className="program-board-drag-image" data-invalid={Boolean(dropError)} aria-hidden="true" ref={drag.ghostRef}>
+          <strong>{draggedSession.title}</strong>
+          <span>{dropStatus}</span>
+        </div>,
+        document.body
+      ) : null}
       {form ? <ProgramDialog labelledBy="program-form-title" onClose={() => setForm(null)} busy={saving}><header><div><p>{form.id ? "Edit program record" : "New program record"}</p><h2 id="program-form-title">{form.id ? form.title : "Add a session"}</h2></div><button aria-label="Close form" disabled={saving} onClick={() => setForm(null)} type="button"><X aria-hidden="true" /></button></header><form onSubmit={save}><label className="program-board-wide"><span>Title</span><input autoFocus onChange={(event) => setForm({ ...form, title: event.target.value })} required value={form.title} /></label><label><span>Type</span><select onChange={(event) => setForm({ ...form, sessionType: event.target.value })} value={form.sessionType}>{Object.entries(SESSION_TYPE_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label><label><span>Room</span><select onChange={(event) => setForm({ ...form, room: event.target.value })} required value={form.room}>{rooms.map((value) => <option key={value.id} value={String(value.id)}>{value.name}</option>)}</select></label><label><span>Date</span><input onChange={(event) => setForm({ ...form, date: event.target.value, endDate: form.date === form.endDate ? event.target.value : form.endDate })} required type="date" value={form.date} /></label><label><span>Starts</span><input onChange={(event) => setForm({ ...form, startTime: event.target.value })} required step="1800" type="time" value={form.startTime} /></label><label><span>End date</span><input type="date" required value={form.endDate} onChange={event => setForm({ ...form, endDate: event.target.value })} /></label><label><span>Ends</span><input onChange={(event) => setForm({ ...form, endTime: event.target.value })} required step="1800" type="time" value={form.endTime} /></label><label><span>Status</span><select onChange={(event) => setForm({ ...form, status: event.target.value })} value={form.status}><option value="published">Published</option><option value="draft">Draft</option><option value="cancelled">Cancelled</option></select></label><label className="program-board-wide"><span>Public description</span><textarea onChange={(event) => setForm({ ...form, shortDescription: event.target.value })} rows={3} value={form.shortDescription} /></label><label><span>Language</span><input onChange={(event) => setForm({ ...form, language: event.target.value })} value={form.language} /></label><label><span>Audience / affinity</span><input onChange={(event) => setForm({ ...form, audience: event.target.value })} value={form.audience} /></label><label className="program-board-wide"><span>Accessibility information</span><textarea onChange={(event) => setForm({ ...form, accessibility: event.target.value })} rows={2} value={form.accessibility} /></label><label className="program-board-wide"><span>Internal committee notes</span><textarea onChange={(event) => setForm({ ...form, internalNotes: event.target.value })} rows={2} value={form.internalNotes} /></label><label className="program-board-check"><input checked={form.featured} onChange={(event) => setForm({ ...form, featured: event.target.checked })} type="checkbox" /><span>Mark as featured <small>Saved for future homepage or program spotlight sections; it does not currently change the schedule display.</small></span></label>{message ? <div role="alert" className="program-board-form-error">{message}{needsReload ? <button type="button" onClick={() => void load()}>Reload schedule</button> : null}</div> : null}<footer>{form.id ? <button className="program-board-delete" disabled={saving || needsReload} onClick={() => void remove()} type="button"><Trash2 aria-hidden="true" /> Delete</button> : <span /> }<div><button disabled={saving} onClick={() => setForm(null)} type="button">Cancel</button><button disabled={saving || needsReload} type="submit"><Save aria-hidden="true" /> {saving ? "Saving…" : "Save session"}</button></div></footer></form></ProgramDialog> : null}
       {roomForm ? <ProgramDialog labelledBy="room-form-title" onClose={() => setRoomForm(null)} busy={roomSaving}><header><div><p>{roomForm.id ? "Edit room record" : "New room record"}</p><h2 id="room-form-title">{roomForm.id ? roomForm.name : "Add a room"}</h2></div><button aria-label="Close room form" disabled={roomSaving} onClick={() => setRoomForm(null)} type="button"><X aria-hidden="true" /></button></header><form onSubmit={saveRoom}><label className="program-board-wide"><span>Full room name</span><input autoFocus onChange={(event) => setRoomForm({ ...roomForm, name: event.target.value })} required value={roomForm.name} /></label><label><span>Short grid label</span><input maxLength={30} onChange={(event) => setRoomForm({ ...roomForm, shortLabel: event.target.value })} required value={roomForm.shortLabel} /></label><label><span>Floor / area</span><input onChange={(event) => setRoomForm({ ...roomForm, floor: event.target.value })} value={roomForm.floor} /></label><label><span>Capacity</span><input min="0" onChange={(event) => setRoomForm({ ...roomForm, capacity: event.target.value })} type="number" value={roomForm.capacity} /></label><label><span>Grid order</span><input onChange={(event) => setRoomForm({ ...roomForm, displayOrder: event.target.value })} required type="number" value={roomForm.displayOrder} /></label><label><span>Room color</span><input className="program-board-color-input" onChange={(event) => setRoomForm({ ...roomForm, color: event.target.value })} type="color" value={roomForm.color} /></label><label><span>Map position X (%)</span><input max="100" min="0" onChange={(event) => setRoomForm({ ...roomForm, mapX: event.target.value })} type="number" value={roomForm.mapX} /></label><label><span>Map position Y (%)</span><input max="100" min="0" onChange={(event) => setRoomForm({ ...roomForm, mapY: event.target.value })} type="number" value={roomForm.mapY} /></label><label className="program-board-wide"><span>Public directions</span><textarea onChange={(event) => setRoomForm({ ...roomForm, directions: event.target.value })} rows={2} value={roomForm.directions} /></label><label className="program-board-wide"><span>Internal room notes</span><textarea onChange={(event) => setRoomForm({ ...roomForm, notes: event.target.value })} rows={2} value={roomForm.notes} /></label><label className="program-board-check"><input checked={roomForm.accessible} onChange={(event) => setRoomForm({ ...roomForm, accessible: event.target.checked })} type="checkbox" /><span>Accessible room</span></label>{roomMessage ? <p role="alert" className="program-board-form-error">{roomMessage}</p> : null}<footer><span /><div><button disabled={roomSaving} onClick={() => setRoomForm(null)} type="button">Cancel</button><button disabled={roomSaving} type="submit"><Save aria-hidden="true" /> {roomSaving ? "Saving…" : "Save room"}</button></div></footer></form></ProgramDialog> : null}
     </main>
