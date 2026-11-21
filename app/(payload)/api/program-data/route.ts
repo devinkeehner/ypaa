@@ -1,3 +1,25 @@
+import { getPublishedProgramData } from "@/lib/program-data";
+
 export async function GET() {
-  return Response.json({ error: "The public program is temporarily unavailable." }, { status: 404 });
+  try {
+    const { sessions } = await getPublishedProgramData();
+    return Response.json(
+      {
+        sessions: sessions.map(({ id, title, sessionType, startAt, room, status }) => ({
+          id,
+          title,
+          sessionType,
+          startAt,
+          room: { name: room.name },
+          status,
+        })),
+      },
+      { headers: { "Cache-Control": "public, max-age=30, s-maxage=60" } },
+    );
+  } catch {
+    return Response.json(
+      { error: "The public program is temporarily unavailable." },
+      { status: 503, headers: { "Cache-Control": "no-store" } },
+    );
+  }
 }
