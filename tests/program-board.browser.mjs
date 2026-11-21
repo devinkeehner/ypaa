@@ -196,8 +196,8 @@ try {
   assert.equal(await zoomOut.isDisabled(), true);
   await scroller.evaluate(element => element.scrollTo(0, 0));
   const panelColor = await card('Synthetic A').evaluate(element => getComputedStyle(element).backgroundColor);
-  assert.equal(panelColor, 'rgb(217, 233, 252)');
-  assert.equal(await card('Synthetic B').evaluate(element => getComputedStyle(element).backgroundColor), 'rgb(208, 239, 224)');
+  assert.equal(panelColor, 'rgb(122, 167, 232)');
+  assert.equal(await card('Synthetic B').evaluate(element => getComputedStyle(element).backgroundColor), 'rgb(114, 189, 163)');
   await card('Synthetic A').dragTo(page.getByRole('button', { name: 'Add session in Room 1 at 09:30', exact: true }));
   await page.getByText('Schedule saved. You can undo this change.', { exact: true }).waitFor();
   assert.equal(data[0].startAt, time('09:30'));
@@ -239,18 +239,18 @@ try {
   assert.ok(schedule.y < 190, 'the desktop program schedule is visible near the top');
   const roomHeading = await page.locator('.program-grid-room').first().boundingBox();
   assert.ok(roomHeading.y - schedule.y < 4, 'the room headings sit at the top of their scroll container');
-  assert.deepEqual(await page.locator('.program-grid-event').evaluateAll(events => events.map(event => getComputedStyle(event).backgroundColor)), ['rgb(217, 233, 252)', 'rgb(208, 239, 224)']);
+  assert.deepEqual(await page.locator('.program-grid-event').evaluateAll(events => events.map(event => getComputedStyle(event).backgroundColor)), ['rgb(122, 167, 232)', 'rgb(114, 189, 163)']);
   assert.deepEqual(await page.locator('.program-grid-event .program-session-type').allTextContents(), ['Panel', 'Workshop']);
   await page.screenshot({ path: path.join(output, 'compact-desktop-program.png') });
   await page.getByRole('button', { name: 'Agenda', exact: true }).click();
-  assert.deepEqual(await page.locator('.program-agenda .program-session-card').evaluateAll(events => events.map(event => getComputedStyle(event).borderInlineStartColor)), ['rgb(128, 164, 204)', 'rgb(124, 177, 151)']);
+  assert.deepEqual(await page.locator('.program-agenda .program-session-card').evaluateAll(events => events.map(event => getComputedStyle(event).borderInlineStartColor)), ['rgb(122, 167, 232)', 'rgb(114, 189, 163)']);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('region', { name: 'Swipe between program days' }).waitFor();
   assert.equal(await programTitle.isVisible(), false);
-  assert.deepEqual(await page.locator('.program-mobile-session-marker').evaluateAll(markers => markers.map(marker => getComputedStyle(marker).backgroundColor)), ['rgb(128, 164, 204)', 'rgb(124, 177, 151)']);
+  assert.deepEqual(await page.locator('.program-mobile-session-marker').evaluateAll(markers => markers.map(marker => getComputedStyle(marker).backgroundColor)), ['rgb(122, 167, 232)', 'rgb(114, 189, 163)']);
   const mobilePanel = page.locator('.program-mobile-session-item').filter({ hasText: 'Preview Session' });
   await mobilePanel.getByRole('button', { name: /Preview Session/ }).click();
-  assert.equal(await mobilePanel.locator('.program-mobile-session-details').evaluate(element => getComputedStyle(element).borderLeftColor), 'rgb(128, 164, 204)');
+  assert.equal(await mobilePanel.locator('.program-mobile-session-details').evaluate(element => getComputedStyle(element).borderLeftColor), 'rgb(122, 167, 232)');
   await page.screenshot({ path: path.join(output, 'mobile-meeting-colors.png') });
 
   if (testWebMCP) {

@@ -32,7 +32,7 @@ export const Rooms: CollectionConfig = {
         { name: "mapY", label: "Map position Y (%)", type: "number", min: 0, max: 100 },
       ],
     },
-    { name: "color", type: "text", defaultValue: "#E85E27", admin: { description: "Six-digit hex color used on the planning board." } },
+    { name: "color", type: "text", defaultValue: "#E85E27", admin: { description: "Six-digit hex color used for this room on the venue map." } },
     { name: "notes", type: "textarea", access: { read: fieldAuthenticated, create: fieldAuthenticated, update: fieldAuthenticated }, admin: { description: "Internal notes; never displayed publicly." } },
   ],
 };
