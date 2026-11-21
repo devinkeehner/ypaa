@@ -8,7 +8,39 @@ const { build } = require('esbuild');
 const { chromium } = require('playwright');
 const repo = path.resolve(new URL('..', import.meta.url).pathname);
 const output = await fs.mkdtemp(path.join(os.tmpdir(), 'program-board-qa-'));
-await build({ stdin: { contents: `import React from 'react'; import {createRoot} from 'react-dom/client'; import {ProgramBoard} from './components/admin/ProgramBoard'; import {ProgramExplorer} from './components/site/ProgramExplorer'; const root=createRoot(document.getElementById('root')); if(location.pathname==='/program-preview'){ const room={id:'test-room',name:'Test Room',shortLabel:'Test Room',displayOrder:0}; root.render(<ProgramExplorer initialData={{rooms:[room],maps:[],sessions:[{id:'test-session',title:'Preview Session',slug:'preview-session',sessionType:'panel',startAt:'2026-12-31T14:00:00.000Z',endAt:'2026-12-31T15:00:00.000Z',room}]}}/>); } else root.render(<ProgramBoard/>);`, resolveDir: repo, loader: 'tsx' }, bundle: true, outfile: path.join(output, 'bundle.js'), define: { 'process.env.NODE_ENV': '"development"' }, plugins: [{ name: 'link', setup(builder) { builder.onResolve({ filter: /^next\/link$/ }, () => ({ path: 'link', namespace: 'stub' })); builder.onLoad({ filter: /.*/, namespace: 'stub' }, () => ({ contents: `import React from 'react'; export default p=>React.createElement('a',p,p.children);`, resolveDir: repo })); } }] });
+const entry = `
+  import React from 'react';
+  import { createRoot } from 'react-dom/client';
+  import ProgramBoardAdminView from './components/admin/ProgramBoardAdminView';
+  import { ProgramBoard } from './components/admin/ProgramBoard';
+  import { ProgramExplorer } from './components/site/ProgramExplorer';
+  const root = createRoot(document.getElementById('root'));
+  if (location.pathname === '/program-preview') {
+    const room = { id: 'test-room', name: 'Test Room', shortLabel: 'Test Room', displayOrder: 0, color: '#e85e27' };
+    const sessions = [
+      { id: 'panel', title: 'Preview Session', slug: 'preview-session', sessionType: 'panel', startAt: '2026-12-31T14:00:00.000Z', endAt: '2026-12-31T15:00:00.000Z', room },
+      { id: 'workshop', title: 'Preview Workshop', slug: 'preview-workshop', sessionType: 'workshop', startAt: '2026-12-31T15:00:00.000Z', endAt: '2026-12-31T15:30:00.000Z', room },
+    ];
+    root.render(<ProgramExplorer initialData={{ rooms: [room], maps: [], sessions }} />);
+  } else if (location.pathname === '/admin/program-board') {
+    root.render(<ProgramBoardAdminView initPageResult={{ req: { user: { id: 'user', role: 'admin' } } }} />);
+  } else root.render(<ProgramBoard />);
+`;
+await build({
+  stdin: { contents: entry, resolveDir: repo, loader: 'tsx' },
+  bundle: true,
+  outfile: path.join(output, 'bundle.js'),
+  define: { 'process.env.NODE_ENV': '"development"' },
+  plugins: [{ name: 'next', setup(builder) {
+    builder.onResolve({ filter: /^next\/(link|navigation)$/ }, args => ({ path: args.path, namespace: 'stub' }));
+    builder.onLoad({ filter: /.*/, namespace: 'stub' }, args => ({
+      contents: args.path === 'next/link'
+        ? `import React from 'react'; export default p => React.createElement('a', p, p.children);`
+        : `export function notFound() { throw new Error('Not found'); }`,
+      resolveDir: repo,
+    }));
+  } }],
+});
 const css = ':root {--font-geist-sans:Arial;--font-geist-mono:monospace;}\n' + (await fs.readFile(path.join(repo, 'app/globals.css'), 'utf8')).replace('@import "tailwindcss";', await fs.readFile(require.resolve('tailwindcss/preflight.css'), 'utf8'));
 const testWebMCP = process.env.PROGRAM_BROWSER_WEBMCP === '1';
 const browser = await chromium.launch({
@@ -18,9 +50,9 @@ const browser = await chromium.launch({
 });
 const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, timezoneId: 'UTC' });
 const origin = 'https://program-board-fixture.test';
-const rooms = Array.from({ length: 8 }, (_, index) => ({ id: `r${index}`, name: `Room ${index}`, shortLabel: `Room ${index}`, displayOrder: index, color: '#E85E27' }));
+const rooms = Array.from({ length: 8 }, (_, index) => ({ id: `r${index}`, name: `Room ${index}`, shortLabel: `Room ${index}`, displayOrder: index, color: index % 2 ? '#921234' : '#e85e27' }));
 const time = value => new Date(`2026-12-31T${value}:00-05:00`).toISOString();
-const fixture = () => [{ id: 'A', title: 'Synthetic A', slug: 'a', startAt: time('09:00'), endAt: time('10:00'), room: 'r0', internalNotes: 'Preserve notes', updatedAt: '2026-10-06T00:00:00.000Z', scheduleRevision: 0 }, { id: 'B', title: 'Synthetic B', slug: 'b', startAt: time('10:00'), endAt: time('11:30'), room: 'r0', updatedAt: '2026-10-06T00:00:00.000Z', scheduleRevision: 0 }];
+const fixture = () => [{ id: 'A', title: 'Synthetic A', slug: 'a', sessionType: 'panel', startAt: time('09:00'), endAt: time('10:00'), room: 'r0', internalNotes: 'Preserve notes', updatedAt: '2026-10-06T00:00:00.000Z', scheduleRevision: 0 }, { id: 'B', title: 'Synthetic B', slug: 'b', sessionType: 'workshop', startAt: time('10:00'), endAt: time('11:30'), room: 'r0', updatedAt: '2026-10-06T00:00:00.000Z', scheduleRevision: 0 }];
 let data = fixture(), fail = false, writes = [], errors = [];
 let user = { id: 'user', role: 'admin' };
 await context.route('**/*', async route => {
@@ -29,7 +61,7 @@ await context.route('**/*', async route => {
   if (url.pathname === '/bundle.js') return route.fulfill({ contentType: 'text/javascript', body: await fs.readFile(path.join(output, 'bundle.js')) });
   if (url.pathname === '/style.css') return route.fulfill({ contentType: 'text/css', body: css });
   if (url.pathname === '/admin/program-board') {
-    return route.fulfill({ contentType: 'text/html', body: '<!doctype html><title>Synthetic Payload Admin</title><iframe title="NECYPAA Program Board" src="/program-editor" style="width:100%; height:900px; border:0"></iframe>' });
+    return route.fulfill({ contentType: 'text/html', body: '<!doctype html><title>Synthetic Payload Admin</title><body style="--app-header-height:48px; margin:0"><header style="height:var(--app-header-height)"></header><div id="root"></div><script src="/bundle.js"></script></body>' });
   }
   if (!url.pathname.startsWith('/api/')) return route.fulfill({ contentType: 'text/html', body: '<!doctype html><title>Synthetic Program Board QA</title><link rel="stylesheet" href="/style.css"><div id="root"></div><script src="/bundle.js"></script>' });
   if (request.method() === 'GET') return route.fulfill({ json: url.pathname === '/api/users/me' ? { user } : { docs: url.pathname === '/api/rooms' ? rooms : data, hasNextPage: false } });
@@ -140,6 +172,65 @@ try {
   await help.click();
   await page.screenshot({ path: path.join(output, 'compact-board.png') });
 
+  const scrollbar = page.getByRole('slider', { name: 'Scroll rooms horizontally' });
+  await scrollbar.waitFor();
+  const barBounds = await scrollbar.boundingBox();
+  await page.mouse.move(barBounds.x + 30, barBounds.y + barBounds.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(barBounds.x + 130, barBounds.y + barBounds.height / 2, { steps: 8 });
+  await page.mouse.up();
+  assert.ok(await scroller.evaluate(element => element.scrollLeft) > 0);
+  await scrollbar.press('End');
+  assert.equal(await scroller.evaluate(element => element.scrollLeft), Number(await scrollbar.getAttribute('max')));
+  await scroller.evaluate(element => element.scrollTo(64, 8 * 58));
+  await page.waitForFunction(() => document.querySelector('.program-board-room-scrollbar input').value === '64');
+  assert.equal((await scrollbar.boundingBox()).y, barBounds.y, 'the scrollbar stays in place when scrolling down');
+  const zoomOut = page.getByRole('button', { name: 'Zoom out', exact: true });
+  const zoomIn = page.getByRole('button', { name: 'Zoom in', exact: true });
+  await zoomOut.click();
+  await page.getByRole('button', { name: 'Reset zoom (currently 85%)', exact: true }).waitFor();
+  assert.equal(await scroller.evaluate(element => element.scrollTop), 8 * 49);
+  assert.ok(Math.abs(await scroller.evaluate(element => element.scrollLeft) - 64 * 179 / 210) <= 1);
+  await zoomOut.click();
+  await scrollbar.waitFor({ state: 'hidden' });
+  assert.equal(await zoomOut.isDisabled(), true);
+  await scroller.evaluate(element => element.scrollTo(0, 0));
+  const panelColor = await card('Synthetic A').evaluate(element => getComputedStyle(element).backgroundColor);
+  assert.equal(panelColor, 'rgb(217, 233, 252)');
+  assert.equal(await card('Synthetic B').evaluate(element => getComputedStyle(element).backgroundColor), 'rgb(208, 239, 224)');
+  await card('Synthetic A').dragTo(page.getByRole('button', { name: 'Add session in Room 1 at 09:30', exact: true }));
+  await page.getByText('Schedule saved. You can undo this change.', { exact: true }).waitFor();
+  assert.equal(data[0].startAt, time('09:30'));
+  assert.equal(data[0].room, 'r1');
+  assert.equal(await card('Synthetic A').evaluate(element => getComputedStyle(element).backgroundColor), panelColor);
+  await page.getByRole('button', { name: 'Undo last change', exact: true }).click();
+  await page.getByText('Schedule change undone.', { exact: true }).waitFor();
+  const compactHandle = page.getByRole('button', { name: 'Resize end of Synthetic A', exact: true });
+  const compactHandleBounds = await compactHandle.boundingBox();
+  await page.mouse.move(compactHandleBounds.x + 12, compactHandleBounds.y + 8);
+  await page.mouse.down();
+  await page.mouse.move(compactHandleBounds.x + 12, compactHandleBounds.y + 52, { steps: 8 });
+  await page.mouse.up();
+  const resizeReview = page.getByRole('region', { name: 'Review resize' });
+  assert.match(await resizeReview.textContent(), /9:00 AM–10:30 AM/);
+  await resizeReview.getByRole('button', { name: 'Cancel resize' }).click();
+  await page.getByRole('button', { name: 'Reset zoom (currently 75%)', exact: true }).click();
+  await zoomIn.click();
+  await page.getByRole('button', { name: 'Reset zoom (currently 125%)', exact: true }).waitFor();
+  await scrollbar.waitFor();
+  await page.screenshot({ path: path.join(output, 'zoomed-board.png') });
+
+  await page.setViewportSize({ width: 390, height: 630 });
+  await page.goto(origin + '/admin/program-board');
+  const embeddedBoard = page.frameLocator('iframe[title="NECYPAA Program Board"]');
+  const embeddedScrollbar = embeddedBoard.getByRole('slider', { name: 'Scroll rooms horizontally' });
+  await embeddedScrollbar.waitFor();
+  await embeddedBoard.getByRole('button', { name: 'Zoom out', exact: true }).click();
+  const embeddedBounds = await embeddedScrollbar.boundingBox();
+  assert.ok(embeddedBounds.y + embeddedBounds.height <= 630, 'the bottom scrollbar fits in a short Payload window');
+  await page.screenshot({ path: path.join(output, 'short-payload-board.png') });
+
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(origin + '/program-preview');
   const programTitle = page.getByRole('heading', { name: 'Convention program', exact: true });
   await programTitle.waitFor();
@@ -148,10 +239,19 @@ try {
   assert.ok(schedule.y < 190, 'the desktop program schedule is visible near the top');
   const roomHeading = await page.locator('.program-grid-room').first().boundingBox();
   assert.ok(roomHeading.y - schedule.y < 4, 'the room headings sit at the top of their scroll container');
+  assert.deepEqual(await page.locator('.program-grid-event').evaluateAll(events => events.map(event => getComputedStyle(event).backgroundColor)), ['rgb(217, 233, 252)', 'rgb(208, 239, 224)']);
+  assert.deepEqual(await page.locator('.program-grid-event .program-session-type').allTextContents(), ['Panel', 'Workshop']);
   await page.screenshot({ path: path.join(output, 'compact-desktop-program.png') });
+  await page.getByRole('button', { name: 'Agenda', exact: true }).click();
+  assert.deepEqual(await page.locator('.program-agenda .program-session-card').evaluateAll(events => events.map(event => getComputedStyle(event).borderInlineStartColor)), ['rgb(128, 164, 204)', 'rgb(124, 177, 151)']);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('region', { name: 'Swipe between program days' }).waitFor();
   assert.equal(await programTitle.isVisible(), false);
+  assert.deepEqual(await page.locator('.program-mobile-session-marker').evaluateAll(markers => markers.map(marker => getComputedStyle(marker).backgroundColor)), ['rgb(128, 164, 204)', 'rgb(124, 177, 151)']);
+  const mobilePanel = page.locator('.program-mobile-session-item').filter({ hasText: 'Preview Session' });
+  await mobilePanel.getByRole('button', { name: /Preview Session/ }).click();
+  assert.equal(await mobilePanel.locator('.program-mobile-session-details').evaluate(element => getComputedStyle(element).borderLeftColor), 'rgb(128, 164, 204)');
+  await page.screenshot({ path: path.join(output, 'mobile-meeting-colors.png') });
 
   if (testWebMCP) {
     data = fixture();

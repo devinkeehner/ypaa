@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Building2, CalendarDays, CircleHelp, ChevronLeft, ChevronRight, Eye, GripVertical, Pencil, Plus, RotateCw, Save, Trash2, Undo2, X } from "lucide-react";
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, Building2, CalendarDays, CircleHelp, ChevronLeft, ChevronRight, Eye, GripVertical, Minus, Pencil, Plus, RotateCw, Save, Trash2, Undo2, X } from "lucide-react";
 import Link from "next/link";
 import { createPortal, flushSync } from "react-dom";
 import { ProgramDialog } from "./ProgramDialog";
+import { ProgramBoardRoomScrollbar } from "./ProgramBoardRoomScrollbar";
 import { useProgramBoardDrag, type DropTarget } from "./useProgramBoardDrag";
 import { useProgramBoardWebMCP } from "./useProgramBoardWebMCP";
 import { clampResizeDelta, planResize } from "@/lib/program-board-planning";
@@ -72,7 +73,8 @@ const EMPTY_ROOM_FORM: RoomFormState = { name: "", shortLabel: "", floor: "Conve
 const TIME_ZONE = "America/New_York";
 const startMinute = 8 * 60;
 const slots = 32;
-const slotHeight = 58;
+const zoomLevels = [75, 85, 100, 125, 150];
+const defaultZoom = zoomLevels.indexOf(100);
 const slotTimes = Array.from({ length: slots }, (_, index) => {
   const minutes = startMinute + index * 30;
   return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
@@ -158,12 +160,35 @@ export function ProgramBoard() {
   const [roomSaving, setRoomSaving] = useState(false);
   const [roomMessage, setRoomMessage] = useState("");
   const [roomOrdering, setRoomOrdering] = useState(false);
+  const [zoomIndex, setZoomIndex] = useState(defaultZoom);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const zoomAnchor = useRef<{ roomOffset: number; timeOffset: number } | null>(null);
   const [needsReload, setNeedsReload] = useState(false);
   const mutationRef = useRef(false);
   const [scheduleReview, setScheduleReview] = useState<ScheduleReview | null>(null);
   const [undoChanges, setUndoChanges] = useState<Array<{ id: string; expectedUpdatedAt: string; expectedRevision: number; data: ResizeRange & { room: string } }> | null>(null);
+  const zoom = zoomLevels[zoomIndex];
+  const slotHeight = Math.round(58 * zoom / 100);
+  const roomWidth = Math.round(210 * zoom / 100);
+  const resizeHandleHeight = Math.min(24, Math.floor((slotHeight - 6) / 2));
   const drag = useProgramBoardDrag(scrollRef, slotTimes, slotHeight);
+
+  useLayoutEffect(() => {
+    const scroller = scrollRef.current;
+    const anchor = zoomAnchor.current;
+    if (!scroller || !anchor) return;
+    zoomAnchor.current = null;
+    scroller.scrollLeft = anchor.roomOffset * roomWidth;
+    scroller.scrollTop = anchor.timeOffset * slotHeight;
+  }, [roomWidth, slotHeight]);
+
+  function updateZoom(index: number) {
+    const scroller = scrollRef.current;
+    if (!scroller || index === zoomIndex) return;
+    zoomAnchor.current = { roomOffset: scroller.scrollLeft / roomWidth, timeOffset: scroller.scrollTop / slotHeight };
+    setZoomIndex(index);
+  }
 
   const load = useCallback(async () => {
     try {
@@ -518,7 +543,7 @@ export function ProgramBoard() {
         void resizeSession(session, edge, clampResizeDelta(session, edge, event.key === "ArrowUp" ? -1 : 1));
       },
       // Keep the whole hit target inside the card so the grip reads as part of it.
-      style: { top: edge === "start" ? top : top + height - 24 },
+      style: { height: resizeHandleHeight, top: edge === "start" ? top : top + height - resizeHandleHeight },
       type: "button" as const,
     };
   }
@@ -547,12 +572,13 @@ export function ProgramBoard() {
     ? `${dropRoom.shortLabel} · ${displayTime(dropTarget.time)}${dropError ? ` · ${dropError}` : ""}`
     : "Move over a room and time";
   const busy = saving || movingSessionIDs.size > 0 || Boolean(scheduleReview) || Boolean(draggedSessionID);
+  const zoomDisabled = state !== "ready" || busy || Boolean(resizePreview);
   const resizePreviewSession = resizePreview ? sessions.find((session) => String(session.id) === resizePreview.sessionID) : null;
   const resizePreviewPlan = resizePreviewSession && resizePreview
     ? buildResizePlan(resizePreviewSession, resizePreview.edge, resizePreview.deltaSlots)
     : null;
   return (
-    <main className="program-board-page">
+    <main className="program-board-page" data-compact={zoom < 100 || undefined}>
       <header className="program-board-header">
         <div className="program-board-title">
           <Link href="/admin" aria-label="Back to Payload admin" title="Payload admin"><ArrowLeft aria-hidden="true" /></Link>
@@ -582,6 +608,11 @@ export function ProgramBoard() {
           </select>
           <button type="button" aria-label="Reload schedule" title="Reload schedule" disabled={busy} onClick={() => void load()}><RotateCw aria-hidden="true" /></button>
           <button type="button" aria-label="Undo last change" title="Undo last change" disabled={!undoChanges || busy} onClick={() => void undoSchedule()}><Undo2 aria-hidden="true" /></button>
+          <div className="program-board-zoom" role="group" aria-label="Schedule zoom">
+            <button type="button" aria-label="Zoom out" title="Zoom out" disabled={zoomDisabled || zoomIndex === 0} onClick={() => updateZoom(zoomIndex - 1)}><Minus aria-hidden="true" /></button>
+            <button type="button" aria-label={`Reset zoom (currently ${zoom}%)`} title="Reset zoom to 100%" disabled={zoomDisabled || zoomIndex === defaultZoom} onClick={() => updateZoom(defaultZoom)}>{zoom}%</button>
+            <button type="button" aria-label="Zoom in" title="Zoom in" disabled={zoomDisabled || zoomIndex === zoomLevels.length - 1} onClick={() => updateZoom(zoomIndex + 1)}><Plus aria-hidden="true" /></button>
+          </div>
         </div>
         <p aria-live="polite">{draggedSessionID ? dropStatus : resizePreviewPlan?.error || message || `${daySessions.length} sessions · All times Eastern`}</p>
       </div>
@@ -612,11 +643,11 @@ export function ProgramBoard() {
           }}>Cancel {scheduleReview.kind}</button>
         </section>
       ) : null}
-      {state === "loading" ? <div className="program-board-loading">Loading program records…</div> : (
+      {state === "loading" ? <div className="program-board-loading">Loading program records…</div> : <>
         <div ref={scrollRef} className="program-board-scroll" data-dragging={Boolean(draggedSessionID) || undefined} onScroll={drag.queueFrame}>
-          <div className="program-board-grid" style={{ "--room-count": rooms.length, "--slot-height": `${slotHeight}px` } as React.CSSProperties}>
+          <div ref={gridRef} className="program-board-grid" data-no-rooms={rooms.length === 0 || undefined} style={{ "--room-count": rooms.length, "--room-width": `${roomWidth}px` } as React.CSSProperties}>
             <div className="program-board-corner">Time</div>
-            {rooms.map((room, index) => <div className="program-board-room" data-drop-room={String(room.id) === dropTarget?.roomID || undefined} key={room.id}><span style={{ background: room.color || undefined }} /><strong>{room.shortLabel}</strong><small>{room.floor}</small><div className="program-board-room-actions"><button aria-label={`Move ${room.name} left`} disabled={!canManage || index === 0 || roomOrdering || Boolean(scheduleReview)} onClick={() => void moveRoom(String(room.id), -1)} title="Move room left" type="button"><ChevronLeft aria-hidden="true" /></button><button disabled={!canManage || Boolean(scheduleReview)} aria-label={`Edit ${room.name}`} onClick={() => startEditRoom(room)} title={`Edit ${room.name}`} type="button"><Pencil aria-hidden="true" /></button><button aria-label={`Move ${room.name} right`} disabled={!canManage || index === rooms.length - 1 || roomOrdering || Boolean(scheduleReview)} onClick={() => void moveRoom(String(room.id), 1)} title="Move room right" type="button"><ChevronRight aria-hidden="true" /></button></div></div>)}
+            {rooms.map((room, index) => <div className="program-board-room" data-drop-room={String(room.id) === dropTarget?.roomID || undefined} key={room.id}><strong title={room.name}>{room.shortLabel}</strong><small>{room.floor}</small><div className="program-board-room-actions"><button aria-label={`Move ${room.name} left`} disabled={!canManage || index === 0 || roomOrdering || Boolean(scheduleReview)} onClick={() => void moveRoom(String(room.id), -1)} title="Move room left" type="button"><ChevronLeft aria-hidden="true" /></button><button disabled={!canManage || Boolean(scheduleReview)} aria-label={`Edit ${room.name}`} onClick={() => startEditRoom(room)} title={`Edit ${room.name}`} type="button"><Pencil aria-hidden="true" /></button><button aria-label={`Move ${room.name} right`} disabled={!canManage || index === rooms.length - 1 || roomOrdering || Boolean(scheduleReview)} onClick={() => void moveRoom(String(room.id), 1)} title="Move room right" type="button"><ChevronRight aria-hidden="true" /></button></div></div>)}
             <div className="program-board-axis" style={{ height: slots * slotHeight }}>
               {slotTimes.map((time, index) => <span key={time} data-drop-time={dropStartIndex === index || undefined} style={{ top: index * slotHeight }}>{displayTime(time)}</span>)}
             </div>
@@ -655,6 +686,7 @@ export function ProgramBoard() {
                       aria-keyshortcuts={canManage ? "Shift+ArrowUp Shift+ArrowDown Shift+ArrowLeft Shift+ArrowRight" : undefined}
                       title={canManage ? "Drag to move. Use Shift and arrow keys to move the focused session." : undefined}
                       className="program-board-event"
+                      data-program-session-type={session.sessionType}
                       data-dragging={draggedSessionID === sessionID || pendingMove?.sessionID === sessionID || undefined}
                       data-session-id={sessionID}
                       data-moving={moving || undefined}
@@ -694,7 +726,7 @@ export function ProgramBoard() {
                           });
                         });
                       }}
-                      style={{ background: room.color || undefined, height, top }}
+                      style={{ height, top }}
                       type="button"
                     >
                       <span className="program-board-move-grip" data-move-grip aria-hidden="true"><GripVertical /></span>
@@ -711,6 +743,7 @@ export function ProgramBoard() {
                   <div
                     aria-hidden="true"
                     className="program-board-drop-preview"
+                    data-program-session-type={draggedSession.sessionType}
                     data-invalid={Boolean(dropError)}
                     data-pending={Boolean(pendingMove)}
                     style={{
@@ -726,9 +759,10 @@ export function ProgramBoard() {
             ))}
           </div>
         </div>
-      )}
+        <ProgramBoardRoomScrollbar gridRef={gridRef} scrollRef={scrollRef} />
+      </>}
       {draggedSessionID && draggedSession ? createPortal(
-        <div className="program-board-drag-image" data-invalid={Boolean(dropError)} aria-hidden="true" ref={drag.ghostRef}>
+        <div className="program-board-drag-image" data-program-session-type={draggedSession.sessionType} data-invalid={Boolean(dropError)} aria-hidden="true" ref={drag.ghostRef}>
           <strong>{draggedSession.title}</strong>
           <span>{dropStatus}</span>
         </div>,

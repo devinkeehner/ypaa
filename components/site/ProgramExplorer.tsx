@@ -44,10 +44,16 @@ function shortDayLabel(key: string) {
 
 function SessionCard({ session, onOpen, compact = false }: { session: ProgramSession; onOpen: (session: ProgramSession) => void; compact?: boolean }) {
   return (
-    <button className="program-session-card" data-compact={compact} data-type={session.sessionType} onClick={() => onOpen(session)} type="button">
+    <button className="program-session-card" data-compact={compact} data-program-session-type={compact ? undefined : session.sessionType} onClick={() => onOpen(session)} type="button">
       <span className="program-session-time">{timeLabel(session.startAt)}{compact ? "" : `–${timeLabel(session.endAt)}`}</span>
+      {compact ? <span className="program-session-type">{typeLabel(session.sessionType)}</span> : null}
       <strong>{session.title}</strong>
-      {!compact ? <span className="program-session-room"><MapPin aria-hidden="true" />{session.room.shortLabel}</span> : null}
+      {!compact ? (
+        <span className="program-session-meta">
+          <span className="program-session-type">{typeLabel(session.sessionType)}</span>
+          <span className="program-session-room"><MapPin aria-hidden="true" />{session.room.shortLabel}</span>
+        </span>
+      ) : null}
     </button>
   );
 }
@@ -83,7 +89,7 @@ function ScheduleGrid({ rooms, sessions, onOpen }: { rooms: ProgramRoom[]; sessi
               const top = Math.max(0, (minutesInDay(session.startAt) - startMinute) / 30 * slotHeight);
               const duration = Math.max(30, (new Date(session.endAt).getTime() - new Date(session.startAt).getTime()) / 60000);
               const height = Math.max(slotHeight - 8, Math.min(duration / 30 * slotHeight - 8, slots * slotHeight - top - 4));
-              return <div className="program-grid-event" key={session.id} style={{ background: room.color || undefined, height, top }}><SessionCard compact onOpen={onOpen} session={session} /></div>;
+              return <div className="program-grid-event" data-program-session-type={session.sessionType} key={session.id} style={{ height, top }}><SessionCard compact onOpen={onOpen} session={session} /></div>;
             })}
           </div>
         ))}
@@ -209,8 +215,13 @@ function MobileProgram({
             const sessionId = String(session.id);
             const expanded = expandedSessionId === sessionId;
             const detailsId = `program-mobile-session-${sessionId}`;
-            return <article className="program-mobile-session-item" data-expanded={expanded} key={session.id} style={{ "--room-color": session.room.color || "var(--tenant-primary)" } as React.CSSProperties}>
-              <button aria-controls={detailsId} aria-expanded={expanded} className="program-mobile-session" onClick={() => setExpandedSessionId(expanded ? null : sessionId)} type="button"><time dateTime={session.startAt}><strong>{timeLabel(session.startAt)}</strong><span>{timeLabel(session.endAt)}</span></time><span className="program-mobile-session-marker" style={{ background: session.room.color || undefined }} /><span className="program-mobile-session-copy"><small>{typeLabel(session.sessionType)} · {session.room.shortLabel}</small><strong>{session.title}</strong></span><ChevronDown aria-hidden="true" /></button>
+            return <article className="program-mobile-session-item" data-expanded={expanded} data-program-session-type={session.sessionType} key={session.id}>
+              <button aria-controls={detailsId} aria-expanded={expanded} className="program-mobile-session" onClick={() => setExpandedSessionId(expanded ? null : sessionId)} type="button">
+                <time dateTime={session.startAt}><strong>{timeLabel(session.startAt)}</strong><span>{timeLabel(session.endAt)}</span></time>
+                <span className="program-mobile-session-marker" aria-hidden="true" />
+                <span className="program-mobile-session-copy"><small><span>{typeLabel(session.sessionType)}</span> · {session.room.shortLabel}</small><strong>{session.title}</strong></span>
+                <ChevronDown aria-hidden="true" />
+              </button>
               {expanded ? <div className="program-mobile-session-details" id={detailsId}>
                 {session.shortDescription ? <p>{session.shortDescription}</p> : null}
                 <dl>
