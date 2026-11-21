@@ -137,6 +137,8 @@ try {
   await page.getByRole('button', { name: /Preview Session/ }).waitFor();
   const schedule = await page.locator('.program-grid-scroll').boundingBox();
   assert.ok(schedule.y < 190, 'the desktop program schedule is visible near the top');
+  const roomHeading = await page.locator('.program-grid-room').first().boundingBox();
+  assert.ok(roomHeading.y - schedule.y < 4, 'the room headings sit at the top of their scroll container');
   await page.screenshot({ path: path.join(output, 'compact-desktop-program.png') });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('region', { name: 'Swipe between program days' }).waitFor();

@@ -746,7 +746,7 @@ footer p { color: #aeb4c5; }
 .theme-light .program-empty { border-color: #1716144f; color: #625c53; }
 .program-grid-scroll { overflow-x: auto; }
 .program-grid { display: grid; grid-template-columns: 88px repeat(var(--room-count), minmax(210px, 1fr)); min-width: calc(88px + var(--room-count) * 210px); }
-.program-grid-corner, .program-grid-room { background: #111416; border: 1px solid #f4e8d328; border-right: 0; min-height: 70px; padding: 14px; position: sticky; top: 78px; z-index: 4; }
+.program-grid-corner, .program-grid-room { background: #111416; border: 1px solid #f4e8d328; border-right: 0; min-height: 48px; padding: 10px 14px; position: sticky; top: 0; z-index: 4; }
 .theme-light :is(.program-grid-corner, .program-grid-room) { background: #f7f0e4; border-color: #1716142f; }
 .program-grid-room { display: grid; gap: 5px; }
 .program-grid-room strong { font-size: .78rem; }
@@ -758,7 +758,7 @@ footer p { color: #aeb4c5; }
 .theme-light .program-time-axis span { border-color: #17161420; }
 .program-room-track { background: repeating-linear-gradient(to bottom, transparent 0 calc(var(--slot-height) - 1px), #f4e8d320 calc(var(--slot-height) - 1px) var(--slot-height)); border-right: 1px solid #f4e8d32b; position: relative; }
 .theme-light .program-room-track { background: repeating-linear-gradient(to bottom, transparent 0 calc(var(--slot-height) - 1px), #17161420 calc(var(--slot-height) - 1px) var(--slot-height)); border-color: #17161430; }
-.program-grid-event { border-left: 3px solid #ffffffb8; left: 4px; overflow: hidden; position: absolute; right: 4px; }
+.program-grid-event { background: var(--tenant-primary, #e85e27); border-left: 3px solid #ffffffb8; left: 4px; overflow: hidden; position: absolute; right: 4px; }
 .program-grid-event .program-session-card { align-content: start; border: 0; color: #101214; display: grid; gap: 4px; grid-template-columns: 1fr; height: 100%; min-height: 0; padding: 9px 10px; }
 .program-grid-event .program-session-card > strong { font: 750 .79rem/1.15 var(--font-geist-sans), sans-serif; }
 .program-grid-event .program-session-time { color: #101214b8; font-size: .58rem; }
