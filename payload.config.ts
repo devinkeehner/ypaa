@@ -25,6 +25,8 @@ import { Contacts } from "./collections/Contacts";
 import { RegistrationCorrections } from "./collections/RegistrationCorrections";
 import { RegistrationEntitlements } from "./collections/RegistrationEntitlements";
 import { ScholarshipContributions } from "./collections/ScholarshipContributions";
+import { MobileAnnouncements } from "./collections/MobileAnnouncements";
+import { MobileFAQs } from "./collections/MobileFAQs";
 import { Rooms } from "./collections/Rooms";
 import { ProgramSessions } from "./collections/ProgramSessions";
 import { VenueMaps } from "./collections/VenueMaps";
@@ -117,7 +119,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, Contacts, CheckoutOrders, ScholarshipContributions, RegistrationEntitlements, Tenants, AccessCodes, CashCodeRecipients, CashTransactions, Attendees, RegistrationSources, BreakfastTickets, RegistrationCorrections, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests, RegistrationHelpRequests, HotelRequests, RegistrationImports].map(withViewerAccess),
+  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, Contacts, CheckoutOrders, ScholarshipContributions, RegistrationEntitlements, Tenants, AccessCodes, CashCodeRecipients, CashTransactions, Attendees, RegistrationSources, BreakfastTickets, RegistrationCorrections, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests, RegistrationHelpRequests, HotelRequests, RegistrationImports, MobileAnnouncements, MobileFAQs].map(withViewerAccess),
   globals: [Header, Footer].map(withViewerGlobalAccess),
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || "",

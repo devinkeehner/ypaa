@@ -25,7 +25,7 @@ export function canAccessArea(user: unknown, area: ContentArea, write = false): 
 
 const COLLECTION_AREAS: Record<string, ContentArea> = {
   merchandise: "merch", "merchandise-orders": "merch",
-  "program-sessions": "program", rooms: "program", "venue-maps": "program",
+  "program-sessions": "program", "mobile-announcements": "program", "mobile-faqs": "program", rooms: "program", "venue-maps": "program",
   contacts: "registration", attendees: "registration", "registration-entitlements": "registration",
   "breakfast-tickets": "registration", "access-codes": "registration", "cash-code-recipients": "registration", "cash-transactions": "registration",
   "checkout-orders": "registration", "scholarship-contributions": "registration", "registration-corrections": "registration", "registration-help-requests": "registration", "hotel-requests": "registration",

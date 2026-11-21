@@ -95,6 +95,8 @@ export interface Config {
     'registration-help-requests': RegistrationHelpRequest;
     'hotel-requests': HotelRequest;
     'registration-imports': RegistrationImport;
+    'mobile-announcements': MobileAnnouncement;
+    'mobile-faqs': MobileFaq;
     'payload-mcp-api-keys': PayloadMcpApiKey;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -135,6 +137,8 @@ export interface Config {
     'registration-help-requests': RegistrationHelpRequestsSelect<false> | RegistrationHelpRequestsSelect<true>;
     'hotel-requests': HotelRequestsSelect<false> | HotelRequestsSelect<true>;
     'registration-imports': RegistrationImportsSelect<false> | RegistrationImportsSelect<true>;
+    'mobile-announcements': MobileAnnouncementsSelect<false> | MobileAnnouncementsSelect<true>;
+    'mobile-faqs': MobileFaqsSelect<false> | MobileFaqsSelect<true>;
     'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -41091,7 +41095,7 @@ export interface Room {
   mapX?: number | null;
   mapY?: number | null;
   /**
-   * Six-digit hex color used on the planning board.
+   * Six-digit hex color used for this room on the venue map.
    */
   color?: string | null;
   /**
@@ -41323,6 +41327,42 @@ export interface RegistrationImport {
   createdAt: string;
 }
 /**
+ * Published announcements appear in the convention app.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mobile-announcements".
+ */
+export interface MobileAnnouncement {
+  id: string;
+  title: string;
+  message: string;
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Publish a new answer or replace one of the answers included in the app.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mobile-faqs".
+ */
+export interface MobileFaq {
+  id: string;
+  question: string;
+  answer: string;
+  /**
+   * Leave blank to add a new question. Unpublishing a replacement restores the built-in answer.
+   */
+  replaces?: ('venue' | 'attendance' | 'registration' | 'sessions' | 'updates' | 'anonymity') | null;
+  /**
+   * Lower numbers appear first among added questions. Replacements keep the built-in question’s position.
+   */
+  displayOrder: number;
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * API keys control which collections, resources, tools, and prompts MCP clients can access
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -41534,6 +41574,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'registration-imports';
         value: string | RegistrationImport;
+      } | null)
+    | ({
+        relationTo: 'mobile-announcements';
+        value: string | MobileAnnouncement;
+      } | null)
+    | ({
+        relationTo: 'mobile-faqs';
+        value: string | MobileFaq;
       } | null)
     | ({
         relationTo: 'payload-mcp-api-keys';
@@ -63544,6 +63592,30 @@ export interface RegistrationImportsSelect<T extends boolean = true> {
   rollbackReason?: T;
   preview?: T;
   result?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mobile-announcements_select".
+ */
+export interface MobileAnnouncementsSelect<T extends boolean = true> {
+  title?: T;
+  message?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mobile-faqs_select".
+ */
+export interface MobileFaqsSelect<T extends boolean = true> {
+  question?: T;
+  answer?: T;
+  replaces?: T;
+  displayOrder?: T;
+  published?: T;
   updatedAt?: T;
   createdAt?: T;
 }

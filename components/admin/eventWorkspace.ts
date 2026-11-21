@@ -68,7 +68,7 @@ export const EVENT_WORKSPACE_NAV_AREAS = [
       href: "/program-board",
       label: "Open program board",
     },
-    slugs: ["program-sessions", "rooms", "venue-maps"],
+    slugs: ["program-sessions", "mobile-faqs", "mobile-announcements", "rooms", "venue-maps"],
   },
   {
     description: "Manage merchandise listings, stock, orders and fulfillment.",
