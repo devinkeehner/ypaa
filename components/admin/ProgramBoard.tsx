@@ -3,9 +3,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Building2, CalendarDays, CircleHelp, ChevronLeft, ChevronRight, Eye, GripVertical, Pencil, Plus, RotateCw, Save, Trash2, Undo2, X } from "lucide-react";
 import Link from "next/link";
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 import { ProgramDialog } from "./ProgramDialog";
 import { useProgramBoardDrag, type DropTarget } from "./useProgramBoardDrag";
+import { useProgramBoardWebMCP } from "./useProgramBoardWebMCP";
 import { clampResizeDelta, planResize } from "@/lib/program-board-planning";
 import { canAccessArea } from "@/lib/crm-access";
 
@@ -36,7 +37,12 @@ type FormState = {
 type ResizeEdge = "start" | "end";
 type ResizePreview = { sessionID: string; edge: ResizeEdge; pointerStartY: number; scrollStartY: number; deltaSlots: number };
 type ResizeRange = { startAt: string; endAt: string };
-type ResizePlan = { changes: Map<string, ResizeRange>; error?: string };
+type ScheduleRange = ResizeRange & { room?: string };
+type ScheduleReview = {
+  kind: "move" | "resize";
+  changes: Map<string, ScheduleRange>;
+  originals: EditableSession[];
+};
 type EditableRoom = ProgramRoom & {
   capacity: number | null;
   accessible: boolean;
@@ -155,7 +161,7 @@ export function ProgramBoard() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [needsReload, setNeedsReload] = useState(false);
   const mutationRef = useRef(false);
-  const [pendingResize, setPendingResize] = useState<ResizePlan | null>(null);
+  const [scheduleReview, setScheduleReview] = useState<ScheduleReview | null>(null);
   const [undoChanges, setUndoChanges] = useState<Array<{ id: string; expectedUpdatedAt: string; expectedRevision: number; data: ResizeRange & { room: string } }> | null>(null);
   const drag = useProgramBoardDrag(scrollRef, slotTimes, slotHeight);
 
@@ -206,7 +212,7 @@ export function ProgramBoard() {
   }, [daySessions]);
 
   function startCreate(roomID?: string, startTime = "09:00") {
-    if (!canManage || mutationRef.current || pendingResize || needsReload) return;
+    if (!canManage || mutationRef.current || scheduleReview || needsReload) return;
     const [hour, minute] = startTime.split(":").map(Number);
     const endMinutes = hour * 60 + minute + 60;
     setMessage("");
@@ -214,20 +220,20 @@ export function ProgramBoard() {
   }
 
   function startEdit(session: EditableSession) {
-    if (!canManage || mutationRef.current || needsReload || pendingResize) return;
+    if (!canManage || mutationRef.current || needsReload || scheduleReview) return;
     setMessage("");
     setForm({ id: session.id, expectedUpdatedAt: session.updatedAt, expectedRevision: session.scheduleRevision, endDate: dateKey(session.endAt), title: session.title, sessionType: session.sessionType, date: dateKey(session.startAt), startTime: timeValue(session.startAt), endTime: timeValue(session.endAt), room: String(session.room.id), shortDescription: session.shortDescription || "", language: session.language || "English", audience: session.audience || "", accessibility: session.accessibility || "", status: session.status || "published", featured: Boolean(session.featured), internalNotes: session.internalNotes });
   }
 
   function startCreateRoom() {
-    if (!canManage) return;
+    if (!canManage || scheduleReview) return;
     const nextOrder = rooms.length ? Math.max(...rooms.map((room) => room.displayOrder)) + 10 : 0;
     setRoomMessage("");
     setRoomForm({ ...EMPTY_ROOM_FORM, displayOrder: String(nextOrder) });
   }
 
   function startEditRoom(room: EditableRoom) {
-    if (!canManage) return;
+    if (!canManage || scheduleReview) return;
     setRoomMessage("");
     setRoomForm({ id: room.id, name: room.name, shortLabel: room.shortLabel, floor: room.floor || "", capacity: room.capacity == null ? "" : String(room.capacity), accessible: room.accessible, directions: room.directions, displayOrder: String(room.displayOrder), mapX: room.mapX == null ? "" : String(room.mapX), mapY: room.mapY == null ? "" : String(room.mapY), color: room.color || "#E85E27", notes: room.notes });
   }
@@ -254,7 +260,7 @@ export function ProgramBoard() {
   }
 
   async function moveRoom(roomID: string, direction: -1 | 1) {
-    if (!canManage) return;
+    if (!canManage || scheduleReview) return;
     const currentIndex = rooms.findIndex((room) => String(room.id) === roomID);
     const nextIndex = currentIndex + direction;
     if (currentIndex < 0 || nextIndex < 0 || nextIndex >= rooms.length || roomOrdering) return;
@@ -331,9 +337,8 @@ export function ProgramBoard() {
     finally { setSaving(false); mutationRef.current = false; }
   }
 
-  async function commitRanges(changes: Map<string, ResizeRange & { room?: string }>, undo = false) {
+  async function commitRanges(changes: ScheduleReview["changes"], originals = sessions.filter(session => changes.has(String(session.id)))) {
     if (!canManage || mutationRef.current || needsReload) return;
-    const originals = sessions.filter(session => changes.has(String(session.id)));
     if (originals.length !== changes.size) { setMessage("The schedule changed. Reload before applying this operation."); return; }
     mutationRef.current = true;
     setMovingSessionIDs(new Set(changes.keys()));
@@ -342,11 +347,11 @@ export function ProgramBoard() {
       const docs = await sendSchedule({ action: "update", changes: originals.map(session => ({ id: String(session.id), expectedUpdatedAt: session.updatedAt, expectedRevision: session.scheduleRevision, data: changes.get(String(session.id)) })) });
       if (docs.length !== originals.length) throw new Error("The server response was incomplete. Reload to check the saved schedule.");
       setSessions(current => current.map(session => docs.find(doc => String(doc.id) === String(session.id)) || session));
-      setUndoChanges(undo ? null : originals.map(session => {
+      setUndoChanges(originals.map(session => {
         const saved = docs.find(doc => String(doc.id) === String(session.id))!;
         return { id: String(session.id), expectedUpdatedAt: saved.updatedAt, expectedRevision: saved.scheduleRevision, data: { startAt: session.startAt, endAt: session.endAt, room: String(session.room.id) } };
       }));
-      setMessage(undo ? "Schedule change undone." : "Schedule saved. You can undo this change.");
+      setMessage("Schedule saved. You can undo this change.");
     } catch (error) { const message = failureMessage(error); await load(); setMessage(message); }
     finally { setMovingSessionIDs(new Set()); mutationRef.current = false; }
   }
@@ -361,20 +366,27 @@ export function ProgramBoard() {
     finally { mutationRef.current = false; setSaving(false); }
   }
 
+  function planMove(session: EditableSession, roomID: string, date: string, startTime: string) {
+    const startAt = iso(date, startTime);
+    const endAt = new Date(Date.parse(startAt) + Date.parse(session.endAt) - Date.parse(session.startAt)).toISOString();
+    if (startAt === new Date(session.startAt).toISOString() && roomID === String(session.room.id)) return {};
+    const boardEnd = Date.parse(`${date}T00:00:00-05:00`) + 86_400_000;
+    if (Date.parse(endAt) > boardEnd) return { error: "Move blocked: the session would end after midnight. Use Edit to set an overnight session." };
+    const conflict = overlapping({ id: session.id, room: roomID, startAt, endAt });
+    if (conflict) return { error: `Move blocked: “${conflict.title}” already uses that room and time.` };
+    return { range: { startAt, endAt, room: roomID } };
+  }
+
   async function moveSession(sessionID: string, roomID: string, startTime: string) {
-    if (!canManage || mutationRef.current || needsReload || pendingResize) return;
+    if (!canManage || mutationRef.current || needsReload || scheduleReview) return;
     const session = sessions.find(candidate => String(candidate.id) === sessionID);
     if (!session) return;
-    const startAt = iso(day, startTime);
-    const endAt = new Date(Date.parse(startAt) + Date.parse(session.endAt) - Date.parse(session.startAt)).toISOString();
-    if (startAt === new Date(session.startAt).toISOString() && roomID === String(session.room.id)) return;
-    const boardEnd = Date.parse(`${day}T00:00:00-05:00`) + 86_400_000;
-    if (Date.parse(endAt) > boardEnd) { setMessage("Move blocked: the session would end after midnight. Use Edit to set an overnight session."); return; }
-    const conflict = overlapping({ id: session.id, room: roomID, startAt, endAt });
-    if (conflict) { setMessage(`Move blocked: “${conflict.title}” already uses that room and time.`); return; }
+    const { error, range } = planMove(session, roomID, day, startTime);
+    if (error) setMessage(error);
+    if (!range) return;
     setPendingMove({ sessionID, roomID, time: startTime });
     try {
-      await commitRanges(new Map([[sessionID, { startAt, endAt, room: roomID }]]));
+      await commitRanges(new Map([[sessionID, range]]));
     } finally {
       setPendingMove(null);
     }
@@ -384,19 +396,100 @@ export function ProgramBoard() {
     return planResize(sessions, session, edge, delta);
   }
 
+  function prepareReview(kind: ScheduleReview["kind"], changes: ScheduleReview["changes"]) {
+    setScheduleReview({ kind, changes, originals: sessions.filter(session => changes.has(String(session.id))) });
+    setMessage(kind === "move" ? "Review the proposed move before applying it." : "Review the affected sessions before applying this resize.");
+  }
+
   async function resizeSession(session: ProgramSession, edge: ResizeEdge, deltaSlots: number) {
-    if (!canManage || !deltaSlots || mutationRef.current || needsReload || pendingResize) return;
+    if (!canManage || !deltaSlots || mutationRef.current || needsReload || scheduleReview) return;
     const plan = buildResizePlan(session, edge, deltaSlots);
     if (plan.error) { setMessage(plan.error); return; }
-    if (plan.changes.size > 1) { setPendingResize(plan); setMessage("Review the affected sessions before applying this resize."); return; }
+    if (plan.changes.size > 1) { prepareReview("resize", plan.changes); return; }
     await commitRanges(plan.changes);
   }
+
+  function webMCPReviewBlocker() {
+    if (state !== "ready" || !canManage) return "Program management access is required.";
+    if (needsReload) return "Reload the schedule before staging a change.";
+    if (scheduleReview) return "Apply or cancel the current review before staging another change.";
+    if (mutationRef.current || roomSaving || roomOrdering || form || roomForm || drag.sessionID || resizePreview) {
+      return "Finish the current board action before staging a change.";
+    }
+  }
+
+  useProgramBoardWebMCP({
+    ready: state === "ready" && !needsReload,
+    canManage,
+    dates: CONVENTION_DAYS,
+    times: slotTimes,
+    list({ date = day, roomId }) {
+      if (state !== "ready" || needsReload) return { error: "The schedule needs to be loaded." };
+      if (typeof date !== "string" || !CONVENTION_DAYS.includes(date)) return { error: "Choose a convention date." };
+      if (roomId !== undefined && !rooms.some(room => String(room.id) === roomId)) return { error: "Room ID was not found on the board." };
+      return {
+        selectedDate: day,
+        date,
+        dates: CONVENTION_DAYS,
+        timeZone: TIME_ZONE,
+        canManage,
+        rooms: rooms.map(room => ({ id: String(room.id), name: room.name })),
+        sessions: sessions
+          .filter(session => dateKey(session.startAt) === date && (roomId === undefined || String(session.room.id) === roomId))
+          .sort((a, b) => Date.parse(a.startAt) - Date.parse(b.startAt))
+          .map(session => ({
+            id: String(session.id), title: session.title, roomId: String(session.room.id),
+            sessionType: session.sessionType, status: session.status, startAt: session.startAt, endAt: session.endAt,
+          })),
+      };
+    },
+    stageMove({ sessionId, roomId, date, startTime }) {
+      const blocked = webMCPReviewBlocker();
+      if (blocked) return { error: blocked };
+      const session = sessions.find(candidate => String(candidate.id) === sessionId);
+      if (!session) return { error: "Session ID was not found on the board." };
+      if (typeof roomId !== "string" || !rooms.some(room => String(room.id) === roomId)) return { error: "Room ID was not found on the board." };
+      if (typeof date !== "string" || !CONVENTION_DAYS.includes(date)) return { error: "Choose a convention date." };
+      if (typeof startTime !== "string" || !slotTimes.includes(startTime)) return { error: "Choose a half-hour start time from 08:00 through 23:30 Eastern." };
+
+      const { error, range } = planMove(session, roomId, date, startTime);
+      if (!range) return { error: error ?? "The session already starts at that time in that room." };
+      // Commit the review before another browser tool call can try to replace it.
+      flushSync(() => {
+        setDay(date);
+        prepareReview("move", new Map([[String(session.id), range]]));
+      });
+      return { status: "awaiting_review", sessionId, roomId, ...range };
+    },
+    stageResize({ sessionId, edge, deltaSlots }) {
+      const blocked = webMCPReviewBlocker();
+      if (blocked) return { error: blocked };
+      const session = sessions.find(candidate => String(candidate.id) === sessionId);
+      if (!session) return { error: "Session ID was not found on the board." };
+      if (edge !== "start" && edge !== "end") return { error: "Choose the start or end edge." };
+      if (typeof deltaSlots !== "number" || !Number.isInteger(deltaSlots) || !deltaSlots || Math.abs(deltaSlots) > slots) {
+        return { error: "Choose a nonzero number of half-hour steps within the size of the board." };
+      }
+      if (clampResizeDelta(session, edge, deltaSlots) !== deltaSlots) return { error: "That resize is outside board hours or leaves less than 30 minutes." };
+
+      const plan = buildResizePlan(session, edge, deltaSlots);
+      if (plan.error) return { error: plan.error };
+      flushSync(() => {
+        setDay(dateKey(session.startAt));
+        prepareReview("resize", plan.changes);
+      });
+      return {
+        status: "awaiting_review",
+        changes: [...plan.changes].map(([id, range]) => ({ sessionId: id, ...range })),
+      };
+    },
+  });
 
   function resizeHandleProps(session: ProgramSession, edge: ResizeEdge, top: number, height: number) {
     return {
       "aria-label": `Resize ${edge === "start" ? "start" : "end"} of ${session.title}`,
       className: `program-board-resize-handle program-board-resize-${edge}`,
-      disabled: !canManage || needsReload || saving || movingSessionIDs.size > 0 || Boolean(pendingResize),
+      disabled: !canManage || needsReload || saving || movingSessionIDs.size > 0 || Boolean(scheduleReview),
       onPointerDown: (event: React.PointerEvent<HTMLButtonElement>) => {
         event.preventDefault();
         if (!canManage) return;
@@ -434,8 +527,11 @@ export function ProgramBoard() {
   if (state === "error") return <main className="program-board-gate"><h1>Program Board</h1><p>The schedule could not be loaded.</p><button onClick={() => { setState("loading"); void load(); }} type="button"><RotateCw aria-hidden="true" /> Try again</button></main>;
 
   const draggedSessionID = drag.sessionID;
-  const dropTarget = drag.target ?? pendingMove;
-  const draggedSession = sessions.find(session => String(session.id) === (draggedSessionID ?? pendingMove?.sessionID));
+  const reviewedMove = scheduleReview?.kind === "move" ? scheduleReview.originals[0] : null;
+  const reviewedRange = reviewedMove ? scheduleReview?.changes.get(String(reviewedMove.id)) : null;
+  const reviewedTarget = reviewedRange?.room ? { roomID: reviewedRange.room, time: timeValue(reviewedRange.startAt) } : null;
+  const dropTarget = drag.target ?? pendingMove ?? reviewedTarget;
+  const draggedSession = reviewedMove ?? sessions.find(session => String(session.id) === (draggedSessionID ?? pendingMove?.sessionID));
   const dropStartIndex = dropTarget
     ? (Number(dropTarget.time.slice(0, 2)) * 60 + Number(dropTarget.time.slice(3, 5)) - startMinute) / 30
     : -1;
@@ -450,7 +546,7 @@ export function ProgramBoard() {
   const dropStatus = dropTarget && dropRoom
     ? `${dropRoom.shortLabel} · ${displayTime(dropTarget.time)}${dropError ? ` · ${dropError}` : ""}`
     : "Move over a room and time";
-  const busy = saving || movingSessionIDs.size > 0 || Boolean(pendingResize) || Boolean(draggedSessionID);
+  const busy = saving || movingSessionIDs.size > 0 || Boolean(scheduleReview) || Boolean(draggedSessionID);
   const resizePreviewSession = resizePreview ? sessions.find((session) => String(session.id) === resizePreview.sessionID) : null;
   const resizePreviewPlan = resizePreviewSession && resizePreview
     ? buildResizePlan(resizePreviewSession, resizePreview.edge, resizePreview.deltaSlots)
@@ -470,8 +566,8 @@ export function ProgramBoard() {
         </div>
         <div className="program-board-header-actions">
           <Link className="program-board-preview-action" href="/program-preview"><Eye aria-hidden="true" /> Preview program</Link>
-          <button className="program-board-secondary-action" disabled={!canManage} onClick={startCreateRoom} type="button"><Building2 aria-hidden="true" /> Add room</button>
-          <button disabled={!canManage} onClick={() => startCreate()} type="button"><Plus aria-hidden="true" /> Add session</button>
+          <button className="program-board-secondary-action" disabled={!canManage || Boolean(scheduleReview)} onClick={startCreateRoom} type="button"><Building2 aria-hidden="true" /> Add room</button>
+          <button disabled={!canManage || Boolean(scheduleReview)} onClick={() => startCreate()} type="button"><Plus aria-hidden="true" /> Add session</button>
         </div>
       </header>
       <div className="program-board-toolbar">
@@ -489,12 +585,38 @@ export function ProgramBoard() {
         </div>
         <p aria-live="polite">{draggedSessionID ? dropStatus : resizePreviewPlan?.error || message || `${daySessions.length} sessions · All times Eastern`}</p>
       </div>
-      {pendingResize ? <section className="program-board-resize-review" aria-label="Review resize"><h2>Review affected sessions</h2><ul>{[...pendingResize.changes].map(([id, range]) => { const original = sessions.find(session => String(session.id) === id)!; return <li key={id}><strong>{original.title}</strong>: {displayTime(timeValue(original.startAt))}–{displayTime(timeValue(original.endAt))} → {displayTime(timeValue(range.startAt))}–{displayTime(timeValue(range.endAt))}</li>; })}</ul><button type="button" onClick={() => { const changes = pendingResize.changes; setPendingResize(null); void commitRanges(changes); }}>Apply resize</button><button type="button" onClick={() => { setPendingResize(null); setMessage("Resize cancelled."); }}>Cancel resize</button></section> : null}
+      {scheduleReview ? (
+        <section className="program-board-schedule-review" aria-label={`Review ${scheduleReview.kind}`}>
+          <h2>{scheduleReview.kind === "move" ? "Review proposed move" : "Review affected sessions"}</h2>
+          <ul>{scheduleReview.originals.map(original => {
+            const range = scheduleReview.changes.get(String(original.id))!;
+            const destination = rooms.find(room => String(room.id) === range.room);
+            return (
+              <li key={original.id}>
+                <strong>{original.title}</strong>{" · "}
+                {destination ? `${dayLabel(dateKey(original.startAt))}, ${original.room.name} · ` : ""}
+                {displayTime(timeValue(original.startAt))}–{displayTime(timeValue(original.endAt))}
+                {" → "}
+                {destination ? `${dayLabel(dateKey(range.startAt))}, ${destination.name} · ` : ""}
+                {displayTime(timeValue(range.startAt))}–{displayTime(timeValue(range.endAt))}
+              </li>
+            );
+          })}</ul>
+          <button type="button" disabled={!canManage || needsReload} onClick={() => {
+            setScheduleReview(null);
+            void commitRanges(scheduleReview.changes, scheduleReview.originals);
+          }}>Apply {scheduleReview.kind}</button>
+          <button type="button" onClick={() => {
+            setScheduleReview(null);
+            setMessage(scheduleReview.kind === "move" ? "Move cancelled." : "Resize cancelled.");
+          }}>Cancel {scheduleReview.kind}</button>
+        </section>
+      ) : null}
       {state === "loading" ? <div className="program-board-loading">Loading program records…</div> : (
         <div ref={scrollRef} className="program-board-scroll" data-dragging={Boolean(draggedSessionID) || undefined} onScroll={drag.queueFrame}>
           <div className="program-board-grid" style={{ "--room-count": rooms.length, "--slot-height": `${slotHeight}px` } as React.CSSProperties}>
             <div className="program-board-corner">Time</div>
-            {rooms.map((room, index) => <div className="program-board-room" data-drop-room={String(room.id) === dropTarget?.roomID || undefined} key={room.id}><span style={{ background: room.color || undefined }} /><strong>{room.shortLabel}</strong><small>{room.floor}</small><div className="program-board-room-actions"><button aria-label={`Move ${room.name} left`} disabled={!canManage || index === 0 || roomOrdering} onClick={() => void moveRoom(String(room.id), -1)} title="Move room left" type="button"><ChevronLeft aria-hidden="true" /></button><button disabled={!canManage} aria-label={`Edit ${room.name}`} onClick={() => startEditRoom(room)} title={`Edit ${room.name}`} type="button"><Pencil aria-hidden="true" /></button><button aria-label={`Move ${room.name} right`} disabled={!canManage || index === rooms.length - 1 || roomOrdering} onClick={() => void moveRoom(String(room.id), 1)} title="Move room right" type="button"><ChevronRight aria-hidden="true" /></button></div></div>)}
+            {rooms.map((room, index) => <div className="program-board-room" data-drop-room={String(room.id) === dropTarget?.roomID || undefined} key={room.id}><span style={{ background: room.color || undefined }} /><strong>{room.shortLabel}</strong><small>{room.floor}</small><div className="program-board-room-actions"><button aria-label={`Move ${room.name} left`} disabled={!canManage || index === 0 || roomOrdering || Boolean(scheduleReview)} onClick={() => void moveRoom(String(room.id), -1)} title="Move room left" type="button"><ChevronLeft aria-hidden="true" /></button><button disabled={!canManage || Boolean(scheduleReview)} aria-label={`Edit ${room.name}`} onClick={() => startEditRoom(room)} title={`Edit ${room.name}`} type="button"><Pencil aria-hidden="true" /></button><button aria-label={`Move ${room.name} right`} disabled={!canManage || index === rooms.length - 1 || roomOrdering || Boolean(scheduleReview)} onClick={() => void moveRoom(String(room.id), 1)} title="Move room right" type="button"><ChevronRight aria-hidden="true" /></button></div></div>)}
             <div className="program-board-axis" style={{ height: slots * slotHeight }}>
               {slotTimes.map((time, index) => <span key={time} data-drop-time={dropStartIndex === index || undefined} style={{ top: index * slotHeight }}>{displayTime(time)}</span>)}
             </div>
@@ -507,7 +629,7 @@ export function ProgramBoard() {
                       aria-label={`Add session in ${room.name} at ${time}`}
                       tabIndex={index === 0 ? 0 : -1}
                       onKeyDown={event => { if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return; event.preventDefault(); const cells = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>(".program-board-cell"); cells?.[Math.max(0, Math.min(slots - 1, index + (event.key === "ArrowDown" ? 1 : -1)))]?.focus(); }}
-                      disabled={!canManage}
+                      disabled={!canManage || Boolean(scheduleReview)}
                       className="program-board-cell"
                       key={time}
                       onClick={() => startCreate(String(room.id), time)}
@@ -518,8 +640,8 @@ export function ProgramBoard() {
                 })}
                 {(sessionsByRoom.get(String(room.id)) ?? []).map((session) => {
                   const sessionID = String(session.id);
-                  const visualPlan = pendingResize || resizePreviewPlan;
-                  const previewRange = visualPlan && !visualPlan.error ? visualPlan.changes.get(sessionID) : undefined;
+                  const visualPlan = scheduleReview?.kind === "resize" ? scheduleReview : resizePreviewPlan?.error ? null : resizePreviewPlan;
+                  const previewRange = visualPlan?.changes.get(sessionID);
                   const visualStartAt = previewRange?.startAt || session.startAt;
                   const visualEndAt = previewRange?.endAt || session.endAt;
                   const [hour, minute] = timeValue(visualStartAt).split(":").map(Number);
@@ -537,7 +659,7 @@ export function ProgramBoard() {
                       data-session-id={sessionID}
                       data-moving={moving || undefined}
                       data-manageable={canManage && !needsReload || undefined}
-                      disabled={saving || movingSessionIDs.size > 0 || Boolean(pendingResize)}
+                      disabled={saving || movingSessionIDs.size > 0 || Boolean(scheduleReview)}
                       onClick={(event) => {
                         if (event.detail && drag.suppressClick.current) {
                           drag.suppressClick.current = false;
@@ -545,7 +667,7 @@ export function ProgramBoard() {
                         }
                         startEdit(session);
                       }}
-                      onPointerDown={(event) => drag.start(event, sessionID, canManage && !needsReload && !mutationRef.current && !resizePreview && !pendingResize)}
+                      onPointerDown={(event) => drag.start(event, sessionID, canManage && !needsReload && !mutationRef.current && !resizePreview && !scheduleReview)}
                       onPointerMove={drag.move}
                       onPointerUp={(event) => {
                         const destination = drag.finish(event);
@@ -596,7 +718,7 @@ export function ProgramBoard() {
                       top: dropStartIndex * slotHeight + 3,
                     }}
                   >
-                    <span>{pendingMove ? "Saving move…" : dropError || room.shortLabel}</span>
+                    <span>{pendingMove ? "Saving move…" : reviewedMove ? `Proposed: ${reviewedMove.title}` : dropError || room.shortLabel}</span>
                     <span>{displayTime(dropTarget.time)}–{dropEndAt ? displayTime(timeValue(dropEndAt)) : ""} · {dropDurationSlots * 30} min</span>
                   </div>
                 ) : null}

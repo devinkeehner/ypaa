@@ -1057,8 +1057,8 @@ footer p { color: #aeb4c5; }
 .program-board-modal button:disabled { cursor: wait; opacity: .65; }
 .program-board-drop-preview[data-pending="true"] { background: #f2dfcf; border-style: dashed; }
 .program-board-drop-preview[data-invalid="true"] { background: #f4d6d3; border-color: #9d241a; }
-.program-board-resize-review { flex: none; max-height: 35vh; overflow: auto; background: #fff; padding: 16px 24px; color: #1b1d1f; border-bottom: 2px solid #b94013; }
-.program-board-resize-review h2 { font: 700 1rem/1.4 Arial, sans-serif; }
-.program-board-resize-review button, .program-board-form-error button { background: #fff; color: #1b1d1f; border: 1px solid #777; padding: 10px 16px; margin-right: 12px; }
+.program-board-schedule-review { flex: none; max-height: 35vh; overflow: auto; background: #fff; padding: 16px 24px; color: #1b1d1f; border-bottom: 2px solid #b94013; }
+.program-board-schedule-review h2 { font: 700 1rem/1.4 Arial, sans-serif; }
+.program-board-schedule-review button, .program-board-form-error button { background: #fff; color: #1b1d1f; border: 1px solid #777; padding: 10px 16px; margin-right: 12px; }
 .program-board-event:disabled { cursor: progress; }
 @media (prefers-reduced-motion: reduce) { .program-board-page * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
