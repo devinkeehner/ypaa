@@ -1,5 +1,7 @@
 import { getPublishedProgramData } from "@/lib/program-data";
 
+const publicFeedHeaders = { "Access-Control-Allow-Origin": "*" };
+
 export async function GET() {
   try {
     const { sessions } = await getPublishedProgramData();
@@ -14,12 +16,12 @@ export async function GET() {
           status,
         })),
       },
-      { headers: { "Cache-Control": "public, max-age=30, s-maxage=60" } },
+      { headers: { ...publicFeedHeaders, "Cache-Control": "public, max-age=30, s-maxage=60" } },
     );
   } catch {
     return Response.json(
       { error: "The public program is temporarily unavailable." },
-      { status: 503, headers: { "Cache-Control": "no-store" } },
+      { status: 503, headers: { ...publicFeedHeaders, "Cache-Control": "no-store" } },
     );
   }
 }
