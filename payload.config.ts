@@ -33,7 +33,6 @@ import { RegistrationHelpRequests } from "./collections/RegistrationHelpRequests
 import { HotelRequests } from "./collections/HotelRequests";
 import { RegistrationImports } from "./collections/RegistrationImports";
 import { EmailTests } from "./collections/EmailTests";
-import { ensureProgramSeed } from "./lib/program-seed";
 import { pageBuilderCatalogResource } from "./mcp/block-catalog";
 import { Header } from "./globals/Header";
 import { Footer } from "./globals/Footer";
@@ -186,11 +185,4 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || "local-preview-secret-change-me",
   telemetry: false,
   typescript: { outputFile: "payload-types.ts" },
-  onInit: async (payload) => {
-    try {
-      await ensureProgramSeed(payload);
-    } catch (error) {
-      payload.logger.error({ err: error, msg: "Unable to seed the sample program records" });
-    }
-  },
 });
