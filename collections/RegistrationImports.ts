@@ -13,6 +13,7 @@ export const RegistrationImports: CollectionConfig = {
       { label: "Registration workbook", value: "tracker_xlsx" },
       { label: "Historical checkout JSON", value: "historical_json" },
       { label: "Breakfast ticket repair", value: "breakfast_repair" },
+      { label: "Scholarship contribution repair", value: "scholarship_repair" },
     ] },
     { name: "status", type: "select", required: true, options: ["preview", "in_progress", "imported", "rolled_back"] },
     { name: "createdBy", type: "relationship", relationTo: "users", required: true },

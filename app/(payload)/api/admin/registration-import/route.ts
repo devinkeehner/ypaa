@@ -4,6 +4,7 @@ import { isAdministrator } from "@/lib/crm-access";
 import { ImportError, confirmRegistrationImport, previewRegistrationImport, rollbackRegistrationImport } from "@/lib/registration-import";
 import { confirmHistoricalImport, previewHistoricalImport } from "@/lib/historical-import-batches";
 import { confirmBreakfastRepair, previewBreakfastRepair } from "@/lib/breakfast-repair-batches";
+import { confirmScholarshipRepair, previewScholarshipRepair } from "@/lib/scholarship-repair-batches";
 import { HistoricalInputError } from "@/lib/historical-import-input";
 
 export const runtime = "nodejs";
@@ -64,6 +65,8 @@ export async function POST(request: Request) {
     if (input.action === "rollback") return response(await rollbackRegistrationImport(payload, user, input));
     if (input.action === "previewBreakfastRepair") return response(await previewBreakfastRepair(payload, user, input));
     if (input.action === "confirmBreakfastRepair") return response(await confirmBreakfastRepair(payload, user, input));
+    if (input.action === "previewScholarshipRepair") return response(await previewScholarshipRepair(payload, user, input));
+    if (input.action === "confirmScholarshipRepair") return response(await confirmScholarshipRepair(payload, user, input));
     throw new ImportError("Choose preview, confirm, or rollback.");
   } catch (error) {
     if (error instanceof ImportError || error instanceof HistoricalInputError) return response({ error: error.message }, error.status);
@@ -83,6 +86,9 @@ export async function GET(request: Request) {
       } else if (d.format === "breakfast_repair" && result?.counts && typeof result.counts === "object" &&
         "breakfasts" in result.counts && typeof result.counts.breakfasts === "number") {
         progress = `${result.counts.breakfasts} breakfast tickets added`;
+      } else if (d.format === "scholarship_repair" && result?.counts && typeof result.counts === "object" &&
+        "contributions" in result.counts && typeof result.counts.contributions === "number") {
+        progress = `${result.counts.contributions} scholarship contributions added`;
       }
       return { id: d.id, filename: d.filename, format: d.format || "tracker_xlsx", status: d.status, progress, confirmedAt: d.confirmedAt, rolledBackAt: d.rolledBackAt };
     }) });

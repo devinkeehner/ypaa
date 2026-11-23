@@ -16,6 +16,7 @@ import {
 import styles from "./NECYPAAOperationsDashboard.module.css";
 
 const numberFormatter = new Intl.NumberFormat("en-US");
+const equivalentFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
   style: "currency",
@@ -214,11 +215,12 @@ export async function EventCRMOverviewWidget({ req }: WidgetServerProps) {
 
 export async function ScholarshipFundWidget({ req }: WidgetServerProps) {
   if (!canAccessArea(req.user, "registration")) return null;
-  const unassignedSeats = await safely(
+  const [unassignedSeats, contributions] = await Promise.all([safely(
     req.payload.find({
       collection: "registration-entitlements",
       depth: 0,
       pagination: false,
+      select: { sourceMetadata: true, fundingContributions: true },
       overrideAccess: false,
       req,
       where: {
@@ -228,23 +230,53 @@ export async function ScholarshipFundWidget({ req }: WidgetServerProps) {
         ],
       },
     }),
-  );
+  ), safely(
+    req.payload.find({
+      collection: "scholarship-contributions",
+      depth: 0,
+      pagination: false,
+      select: { amountCents: true, availableCents: true, seatPriceCents: true },
+      overrideAccess: false,
+      req,
+      where: { status: { equals: "active" } },
+    }),
+  )]);
+  const ledgerByID = new Map(contributions?.docs.map((row) => [row.id, row]));
+  const prices = new Map<number, number>();
+  for (const { amountCents, seatPriceCents } of contributions?.docs ?? []) {
+    if (seatPriceCents > 0) prices.set(seatPriceCents, (prices.get(seatPriceCents) ?? 0) + amountCents / seatPriceCents);
+  }
   const unassignedSeatValueCents =
     unassignedSeats?.docs.reduce(
-      (sum, entitlement) =>
-        sum +
-        (numberFromRecord(entitlement.sourceMetadata, "seatPriceCents") ||
-          LEGACY_SCHOLARSHIP_SEAT_PRICE_CENTS),
+      (sum, entitlement) => {
+        const reference = entitlement.fundingContributions?.length === 1 ? entitlement.fundingContributions[0] : null;
+        const linked = reference ? ledgerByID.get(typeof reference === "string" ? reference : reference.id) : undefined;
+        return sum + (numberFromRecord(entitlement.sourceMetadata, "seatPriceCents") ||
+          linked?.seatPriceCents || LEGACY_SCHOLARSHIP_SEAT_PRICE_CENTS);
+      },
       0,
     ) ?? null;
   const unassignedSeatCount = unassignedSeats?.docs.length ?? null;
+  const contributionTotal = contributions?.docs.reduce((total, row) => total + row.amountCents, 0) ?? null;
+  const availableBalance = contributions?.docs.reduce((total, row) => total + row.availableCents, 0) ?? null;
+  const ticketEquivalents = contributions ? [...prices.values()].reduce((total, units) => total + units, 0) : null;
+  const metrics = [
+    { label: "Fund amount", value: formatCurrency(contributionTotal), Icon: BadgeDollarSign },
+    { label: "Ticket equivalents", value: ticketEquivalents === null ? "—" : equivalentFormatter.format(ticketEquivalents), Icon: TicketCheck },
+    ...[...prices.entries()].sort(([a], [b]) => a - b).map(([price, units]) => ({
+      label: `At ${formatCurrency(price)}`, value: equivalentFormatter.format(units), Icon: TicketCheck,
+    })),
+    { label: "Unallocated balance", value: formatCurrency(availableBalance), Icon: BadgeDollarSign },
+    { label: "Unassigned seats", value: formatCount(unassignedSeatCount), Icon: TicketCheck },
+    { label: "Unassigned seat face value", value: formatCurrency(unassignedSeatValueCents), Icon: TicketCheck },
+  ];
 
   return (
     <section className={styles.widget}>
       <div className={styles.panelHeader}>
         <div>
           <h2>Scholarship fund</h2>
-          <p>Available pooled support before it is assigned to a person and roster record.</p>
+          <p>Scholarship contributions, available funds, and seats already issued.</p>
         </div>
         <a
           className={styles.inlineLink}
@@ -254,31 +286,17 @@ export async function ScholarshipFundWidget({ req }: WidgetServerProps) {
         </a>
       </div>
       <div className={styles.fundGrid}>
-        <div className={styles.fundMetric}>
-          <span className={styles.metricIcon}>
-            <TicketCheck aria-hidden size={22} strokeWidth={1.85} />
-          </span>
-          <span>
-            <strong>{formatCount(unassignedSeatCount)}</strong>
-            <small>Unassigned seats</small>
-          </span>
-        </div>
-        <div className={styles.fundMetric}>
-          <span className={styles.metricIcon}>
-            <BadgeDollarSign aria-hidden size={22} strokeWidth={1.85} />
-          </span>
-          <span>
-            <strong>{formatCurrency(unassignedSeatValueCents)}</strong>
-            <small>Funded seat value</small>
-          </span>
-        </div>
+        {metrics.map(({ label, value, Icon }) => (
+          <div className={styles.fundMetric} key={label}>
+            <span className={styles.metricIcon}><Icon aria-hidden size={22} strokeWidth={1.85} /></span>
+            <span><strong>{value}</strong><small>{label}</small></span>
+          </div>
+        ))}
       </div>
       <p className={styles.widgetNote}>
-        {unassignedSeatCount === null
-          ? "Availability could not be loaded. Open the fund to review contributions and allocations."
-          : unassignedSeatCount > 0
-            ? `These ${unassignedSeatCount === 1 ? "seat is" : "seats are"} funded by pooled donations or scholarship purchases. Assign ${unassignedSeatCount === 1 ? "it" : "one"} in Event CRM; the original payment and contributor history remain unchanged.`
-            : "No pooled scholarship seats are currently waiting to be assigned. Open the fund to review contributions and allocations."}
+        {unassignedSeatCount === null || contributionTotal === null
+          ? "Some fund totals could not be loaded. Open the fund to review contributions and allocations."
+          : "Ticket equivalents use each contribution’s original seat price. The unassigned count shows seats already issued and available to assign."}
       </p>
     </section>
   );

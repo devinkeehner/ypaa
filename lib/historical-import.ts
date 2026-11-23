@@ -98,7 +98,7 @@ function getCounts(payment: HistoricalPayment): ProductCounts {
     registrations: registrations.length,
     namedAttendees: registrations.filter(hasIdentity).length,
     breakfasts: payment.breakfasts.reduce((count, ticket) => count + ticket.quantity, 0),
-    scholarships: payment.scholarships.length,
+    scholarships: payment.scholarships.filter(({ priceCents }) => Boolean(priceCents)).length,
     merchandise: payment.merchandise.reduce((count, item) => count + item.quantity, 0),
   };
 }
@@ -235,6 +235,9 @@ async function buildPlan(payload: Payload, manifest: HistoricalImport, req?: Pay
     if (payment.registrations.some(({ kind }) => kind === "specific-scholarship") &&
       payment.scholarships.some(({ kind }) => kind === "specific")) return conflict("A specific scholarship cannot be represented as both a registration charge and a scholarship contribution.");
     if (!payment.purchasedAt && (row.namedAttendees || row.breakfasts)) return conflict("Named attendees or breakfast tickets require a verified purchase date.");
+    if (!payment.purchasedAt && payment.scholarships.some(({ kind }) => kind === "specific")) {
+      return conflict("Specific scholarships require a verified purchase date.");
+    }
     if (!payment.purchasedAt) return { ...row, registrations: 0 };
     return payment.unallocatedCents
       ? { ...row, message: "New payment. The gross amount includes an unexplained allocation difference recorded separately." }
@@ -369,7 +372,19 @@ export async function applyHistoricalImport(
     const productCounts = getCounts(payment);
     journal.counts.merchandise += productCounts.merchandise;
     journal.counts.scholarships += productCounts.scholarships;
-    if (!purchasedAt) continue;
+    if (!purchasedAt) {
+      for (const [index, item] of payment.scholarships.entries()) {
+        if (!item.priceCents) continue;
+        const contributionKey = `${sourceKey}:contribution:${index + 1}`;
+        const contribution = await payload.create({ ...options, collection: "scholarship-contributions", data: {
+          sourceKey: contributionKey, historicalReceipt: receipt.id, contributionType: "general_donation",
+          amountCents: item.amountCents, allocatedCents: 0, availableCents: item.amountCents, seatPriceCents: item.priceCents,
+          status: "active", dataOrigin, historicalSource: item.provenance || payment.provenance,
+        } });
+        track("scholarship-contributions", contribution.id, contributionKey);
+      }
+      continue;
+    }
 
     const purchaserName = payment.purchaser?.name || unknownName;
     const purchaserEmail = payment.purchaser?.email || unknownEmail;
@@ -468,7 +483,7 @@ export async function applyHistoricalImport(
       if (!item.priceCents) continue;
       const contributionKey = `${sourceKey}:contribution:${index + 1}`;
       const contribution = await payload.create({ ...options, collection: "scholarship-contributions", data: {
-        sourceKey: contributionKey, checkoutOrder: checkout.id, contributorContact: purchaserContact,
+        sourceKey: contributionKey, checkoutOrder: checkout.id, historicalReceipt: receipt.id, contributorContact: purchaserContact,
         contributionType: specific ? "specific_person_scholarship" : "general_donation",
         amountCents: item.amountCents, allocatedCents: assignment?.seat ? item.amountCents : 0,
         availableCents: assignment?.seat ? 0 : item.amountCents, seatPriceCents: item.priceCents,

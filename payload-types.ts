@@ -40910,7 +40910,7 @@ export interface RegistrationEntitlement {
   createdAt: string;
 }
 /**
- * Auditable money contributed toward scholarships. Original payments stay in Checkout Orders; this ledger shows how their principal funds seats.
+ * Auditable scholarship principal, allocations, and available balances linked to the original payment or historical receipt.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "scholarship-contributions".
@@ -40919,9 +40919,13 @@ export interface ScholarshipContribution {
   id: string;
   sourceKey: string;
   /**
-   * The immutable payment that supplied this contribution.
+   * The original payment that supplied this contribution.
    */
-  checkoutOrder: string | CheckoutOrder;
+  checkoutOrder?: (string | null) | CheckoutOrder;
+  /**
+   * Source receipt for a historical contribution, including undated offline entries.
+   */
+  historicalReceipt?: (string | null) | HistoricalReceipt;
   contributorContact?: (string | null) | Contact;
   dataOrigin?: 'historical_import' | null;
   contributionType: 'general_donation' | 'general_scholarship' | 'specific_person_scholarship';
@@ -40934,7 +40938,7 @@ export interface ScholarshipContribution {
    * Seats funded in whole or in part by this contribution. A pooled seat may have multiple contributing payments.
    */
   fundedEntitlements?: (string | RegistrationEntitlement)[] | null;
-  purchasedAt: string;
+  purchasedAt?: string | null;
   status: 'active' | 'refunded' | 'voided';
   notes?: string | null;
   historicalSource?: {
@@ -40951,6 +40955,60 @@ export interface ScholarshipContribution {
     | string
     | number
     | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Imported payment provenance and offline receipts. Linked records refer to the same payment.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "historical-receipts".
+ */
+export interface HistoricalReceipt {
+  id: string;
+  sourceKey: string;
+  paymentAliases: string[];
+  receiptReference: string;
+  paymentSource: 'stripe' | 'cash' | 'manual';
+  paymentMethod?: ('cash' | 'venmo' | 'unspecified' | 'offline') | null;
+  paymentStatus: 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
+  purchasedAt?: string | null;
+  currency: 'USD';
+  grossCents: number;
+  stripeFeeCents?: number | null;
+  netDepositedCents?: number | null;
+  shippingCents?: number | null;
+  registrationDiscountCents?: number | null;
+  unallocatedCents?: number | null;
+  checkoutFeeCents?: number | null;
+  purchaserName?: string | null;
+  purchaserEmail?: string | null;
+  checkoutOrder?: (string | null) | CheckoutOrder;
+  cashTransaction?: (string | null) | CashTransaction;
+  historicalSource?: {
+    sheet?: string | null;
+    row?: number | null;
+    paymentRow?: number | null;
+    stripeRow?: number | null;
+  };
+  purchaseLines?:
+    | {
+        sourceLineId: string;
+        kind: 'registration' | 'breakfast' | 'scholarship' | 'merchandise' | 'shipping' | 'fee' | 'other';
+        label?: string | null;
+        quantity: number;
+        unitPriceCents?: number | null;
+        amountCents: number;
+        breakfastDay?: ('friday' | 'saturday' | 'sunday') | null;
+        fulfillment?: string | null;
+        ticketEquivalents?: number | null;
+        historicalSource?: {
+          sheet?: string | null;
+          row?: number | null;
+        };
+        id?: string | null;
+      }[]
     | null;
   updatedAt: string;
   createdAt: string;
@@ -41370,7 +41428,7 @@ export interface RegistrationImport {
   id: string;
   filename: string;
   fileDigest: string;
-  format?: ('tracker_xlsx' | 'historical_json' | 'breakfast_repair') | null;
+  format?: ('tracker_xlsx' | 'historical_json' | 'breakfast_repair' | 'scholarship_repair') | null;
   status: 'preview' | 'in_progress' | 'imported' | 'rolled_back';
   createdBy: string | User;
   expiresAt: string;
@@ -41395,60 +41453,6 @@ export interface RegistrationImport {
     | string
     | number
     | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Imported payment provenance and offline receipts. Linked records refer to the same payment.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "historical-receipts".
- */
-export interface HistoricalReceipt {
-  id: string;
-  sourceKey: string;
-  paymentAliases: string[];
-  receiptReference: string;
-  paymentSource: 'stripe' | 'cash' | 'manual';
-  paymentMethod?: ('cash' | 'venmo' | 'unspecified' | 'offline') | null;
-  paymentStatus: 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
-  purchasedAt?: string | null;
-  currency: 'USD';
-  grossCents: number;
-  stripeFeeCents?: number | null;
-  netDepositedCents?: number | null;
-  shippingCents?: number | null;
-  registrationDiscountCents?: number | null;
-  unallocatedCents?: number | null;
-  checkoutFeeCents?: number | null;
-  purchaserName?: string | null;
-  purchaserEmail?: string | null;
-  checkoutOrder?: (string | null) | CheckoutOrder;
-  cashTransaction?: (string | null) | CashTransaction;
-  historicalSource?: {
-    sheet?: string | null;
-    row?: number | null;
-    paymentRow?: number | null;
-    stripeRow?: number | null;
-  };
-  purchaseLines?:
-    | {
-        sourceLineId: string;
-        kind: 'registration' | 'breakfast' | 'scholarship' | 'merchandise' | 'shipping' | 'fee' | 'other';
-        label?: string | null;
-        quantity: number;
-        unitPriceCents?: number | null;
-        amountCents: number;
-        breakfastDay?: ('friday' | 'saturday' | 'sunday') | null;
-        fulfillment?: string | null;
-        ticketEquivalents?: number | null;
-        historicalSource?: {
-          sheet?: string | null;
-          row?: number | null;
-        };
-        id?: string | null;
-      }[]
     | null;
   updatedAt: string;
   createdAt: string;
@@ -41559,7 +41563,7 @@ export interface PayloadMcpApiKey {
   };
   'payload-mcp-tool'?: {
     /**
-     * Read the ten latest NECYPAA historical import and breakfast repair batches, with batch IDs, status, dates and aggregate counts.
+     * Read the ten latest NECYPAA historical import and repair batches, with batch IDs, status, dates and aggregate counts.
      */
     historicalImportStatus?: boolean | null;
     /**
@@ -63427,6 +63431,7 @@ export interface CheckoutOrdersSelect<T extends boolean = true> {
 export interface ScholarshipContributionsSelect<T extends boolean = true> {
   sourceKey?: T;
   checkoutOrder?: T;
+  historicalReceipt?: T;
   contributorContact?: T;
   dataOrigin?: T;
   contributionType?: T;

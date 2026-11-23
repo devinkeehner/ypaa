@@ -71,6 +71,8 @@ if (action === 'mongo') {
     'tests/historical-import-collections.test.ts',
     'tests/breakfast-repair.test.ts',
     'tests/breakfast-repair-batches.test.ts',
+    'tests/scholarship-repair.test.ts',
+    'tests/scholarship-repair-batches.test.ts',
   ];
   await run(['--import', 'tsx', '--test', '--test-concurrency=1', '--test-force-exit', ...files], { DATABASE_URI: `mongodb://127.0.0.1:27029/ypaa_registration_test_${randomUUID().replaceAll('-', '')}?replicaSet=ypaaTest` });
 } else if (action === 'hotel-browser') {

@@ -103,7 +103,7 @@ const definitions: Record<Collection, ReadDefinition> = {
       "contact-id": ["contributorContact", "specificRecipientContact"],
     },
     summary: ["sourceKey", "checkoutOrder", "contributionType", "amountCents", "availableCents", "status", "purchasedAt"],
-    details: ["allocatedCents", "seatPriceCents", "specificRecipientContact", "fundedEntitlements", "historicalSource"],
+    details: ["allocatedCents", "seatPriceCents", "specificRecipientContact", "fundedEntitlements", "historicalReceipt", "historicalSource"],
   },
   "merchandise-orders": {
     search: { name: ["purchaserName"], "source-key": ["sourceKey"], "stripe-reference": ["sourceKey"] },

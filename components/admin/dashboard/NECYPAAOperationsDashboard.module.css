@@ -235,9 +235,13 @@
   padding-inline: 0.15rem 1rem;
 }
 
-.fundMetric + .fundMetric {
+.fundMetric:nth-child(even) {
   border-inline-start: 1px solid var(--theme-elevation-150);
   padding-inline: 1rem 0.15rem;
+}
+
+.fundMetric:nth-child(n + 3) {
+  border-top: 1px solid var(--theme-elevation-150);
 }
 
 .widgetNote {
@@ -376,7 +380,7 @@
   .metric,
   .metric + .metric,
   .fundMetric,
-  .fundMetric + .fundMetric {
+  .fundMetric:nth-child(even) {
     border-inline-start: 0;
     padding-inline: 0.15rem;
   }

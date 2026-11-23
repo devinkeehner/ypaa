@@ -1,4 +1,5 @@
 import type { Access, CollectionConfig } from "payload";
+import { APIError } from "payload";
 import { relationship } from "payload/shared";
 import { historicalSourceField } from "./fields/historical-import";
 
@@ -19,11 +20,24 @@ export const ScholarshipContributions: CollectionConfig = {
   admin: {
     useAsTitle: "sourceKey",
     defaultColumns: ["contributionType", "amountCents", "allocatedCents", "availableCents", "contributorContact", "purchasedAt"],
-    description: "Auditable money contributed toward scholarships. Original payments stay in Checkout Orders; this ledger shows how their principal funds seats.",
+    description: "Auditable scholarship principal, allocations, and available balances linked to the original payment or historical receipt.",
   },
+  hooks: { beforeValidate: [({ data, originalDoc }) => {
+    const record = { ...originalDoc, ...data };
+    const receiptOnly = record.dataOrigin === "historical_import" && record.historicalReceipt;
+    if (!receiptOnly && (!record.checkoutOrder || !record.purchasedAt)) {
+      throw new APIError("A checkout order and purchase date are required for a scholarship contribution.", 400);
+    }
+    return data;
+  }] },
   fields: [
     { name: "sourceKey", type: "text", required: true, unique: true, index: true, admin: { readOnly: true } },
-    { name: "checkoutOrder", type: "relationship", relationTo: "checkout-orders", required: true, index: true, admin: { description: "The immutable payment that supplied this contribution." } },
+    { name: "checkoutOrder", type: "relationship", relationTo: "checkout-orders", index: true, admin: { description: "The original payment that supplied this contribution." } },
+    {
+      name: "historicalReceipt", type: "relationship", relationTo: "historical-receipts", index: true,
+      access: { create: () => false, update: () => false },
+      admin: { readOnly: true, description: "Source receipt for a historical contribution, including undated offline entries." },
+    },
     {
       name: "contributorContact",
       type: "relationship",
@@ -43,7 +57,7 @@ export const ScholarshipContributions: CollectionConfig = {
     { name: "seatPriceCents", label: "Seat price when contributed (cents)", type: "number", required: true, min: 1, defaultValue: 4000 },
     { name: "specificRecipientContact", type: "relationship", relationTo: "contacts", index: true },
     { name: "fundedEntitlements", type: "relationship", relationTo: "registration-entitlements", hasMany: true, admin: { description: "Seats funded in whole or in part by this contribution. A pooled seat may have multiple contributing payments." } },
-    { name: "purchasedAt", type: "date", required: true, index: true },
+    { name: "purchasedAt", type: "date", index: true },
     { name: "status", type: "select", required: true, defaultValue: "active", index: true, options: ["active", "refunded", "voided"] },
     { name: "notes", type: "textarea" },
     historicalSourceField(true),
