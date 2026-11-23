@@ -3,10 +3,11 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import type { ImportPlan } from "@/lib/registration-import";
 import type { HistoricalImportPlan } from "@/lib/historical-import";
+import { BreakfastRepair } from "./BreakfastRepair";
 import styles from "./RegistrationImport.module.css";
 
 type Preview = { id: string; format: "tracker_xlsx"; plan: ImportPlan } | { id: string; format: "historical_json"; plan: HistoricalImportPlan };
-type History = { id: string; filename: string; format: Preview["format"]; status: string; progress?: string };
+type History = { id: string; filename: string; format: Preview["format"] | "breakfast_repair"; status: string; progress?: string };
 const endpoint = "/api/admin/registration-import";
 const usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 export function RegistrationImport() {
@@ -132,6 +133,7 @@ export function RegistrationImport() {
       <fieldset disabled={busy}><legend>Confirm selected records</legend><label><input name="payment" type="checkbox" required /> I verified that the selected Stripe receipts remain paid/captured and are not refunded or disputed, and cash receipts are recorded.</label><label><input name="attendees" type="checkbox" required /> I verified the named attendees and email addresses. A cardholder/purchaser may be a different person. Repeated group details create only one named attendee and leave extra seats unassigned.</label><label><input name="scope" type="checkbox" required /> I reviewed the new/matched/conflict results and approve importing only the selected new registration sources.</label></fieldset>
       <button type="submit" disabled={busy || !sources.length}>Import selected registrations ({sources.length})</button>
     </form>}
+    <BreakfastRepair onCompleted={loadHistory} />
     <section className={styles.panel} aria-labelledby="import-history"><h2 id="import-history">Recent imports</h2><p><Link href="/admin/collections/registration-imports">Open full audit history</Link> · <Link href="/admin/registration-corrections">Open Event CRM</Link></p>{history.length ? <ul>{history.map((h) => <li key={h.id}>{h.filename} · {h.status === "in_progress" ? "In progress" : h.status}{h.progress && ` · ${h.progress}`}{h.status === "imported" && h.format === "tracker_xlsx" && <button type="button" disabled={busy} onClick={() => setRollback(h.id)}>Review rollback</button>}</li>)}</ul> : <p>No imports have started.</p>}
       {rollback && <form onSubmit={reverse}><h3>Roll back import</h3><p>Cancel this batch’s imported registrations and void its seats. Payment references and contacts remain for audit. A later correction, assignment or check-in blocks rollback.</p><label htmlFor="rollback-reason">Reason</label><textarea id="rollback-reason" name="reason" required maxLength={2000} disabled={busy} /><label><input type="checkbox" name="rollback" required disabled={busy} /> I confirm cancelling this import’s registrations and voiding its paid seats.</label><button type="submit" disabled={busy}>Confirm rollback</button><button type="button" disabled={busy} onClick={() => setRollback("")}>Keep import</button></form>}
     </section>

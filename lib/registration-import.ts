@@ -67,7 +67,7 @@ export async function confirmRegistrationImport(payload: Payload, user: TypedUse
   const options = { req, overrideAccess: true, depth: 0 } as const;
   try {
     const batch = await payload.findByID({ ...options, collection: "registration-imports", id: input.id });
-    if (batch.format === "historical_json") throw new ImportError("Confirm this historical batch with its original JSON file.", 409);
+    if (batch.format && batch.format !== "tracker_xlsx") throw new ImportError("Use the matching JSON form to confirm this batch.", 409);
     if (idOf(batch.createdBy) !== user!.id) throw new ImportError("Only the administrator who reviewed this preview can confirm it.", 403);
     if (batch.status === "imported") { await payload.db.rollbackTransaction(transactionID); return { id: batch.id, result: json<Journal>(batch.result), alreadyImported: true }; }
     if (batch.status !== "preview" || Date.parse(batch.expiresAt) <= Date.now()) throw new ImportError("This preview expired or was rolled back. Upload a fresh preview.", 409);
@@ -117,7 +117,7 @@ export async function rollbackRegistrationImport(payload: Payload, user: TypedUs
   const options = { req, overrideAccess: true, depth: 0 } as const;
   try {
     const batch = await payload.findByID({ ...options, collection: "registration-imports", id: input.id });
-    if (batch.format === "historical_json") throw new ImportError("Use Event CRM to review corrections for this historical batch.", 409);
+    if (batch.format && batch.format !== "tracker_xlsx") throw new ImportError("Use Event CRM to review corrections for this JSON batch.", 409);
     if (batch.status === "rolled_back") { await payload.db.rollbackTransaction(transactionID); return { id: batch.id, alreadyRolledBack: true }; }
     if (batch.status !== "imported") throw new ImportError("Only a completed import can be rolled back.", 409);
     const journal = json<Journal>(batch.result);

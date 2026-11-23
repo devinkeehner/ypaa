@@ -12,6 +12,7 @@ export const RegistrationImports: CollectionConfig = {
     { name: "format", type: "select", index: true, options: [
       { label: "Registration workbook", value: "tracker_xlsx" },
       { label: "Historical checkout JSON", value: "historical_json" },
+      { label: "Breakfast ticket repair", value: "breakfast_repair" },
     ] },
     { name: "status", type: "select", required: true, options: ["preview", "in_progress", "imported", "rolled_back"] },
     { name: "createdBy", type: "relationship", relationTo: "users", required: true },

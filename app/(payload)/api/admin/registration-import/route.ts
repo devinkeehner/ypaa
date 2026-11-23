@@ -3,6 +3,8 @@ import { getPayload } from "payload";
 import { isAdministrator } from "@/lib/crm-access";
 import { ImportError, confirmRegistrationImport, previewRegistrationImport, rollbackRegistrationImport } from "@/lib/registration-import";
 import { confirmHistoricalImport, previewHistoricalImport } from "@/lib/historical-import-batches";
+import { confirmBreakfastRepair, previewBreakfastRepair } from "@/lib/breakfast-repair-batches";
+import { HistoricalInputError } from "@/lib/historical-import-input";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -60,9 +62,11 @@ export async function POST(request: Request) {
     const input = parseAction(new TextDecoder().decode(await boundedBody(request, 1024 * 1024)));
     if (input.action === "confirm") return response(await confirmRegistrationImport(payload, user, input));
     if (input.action === "rollback") return response(await rollbackRegistrationImport(payload, user, input));
+    if (input.action === "previewBreakfastRepair") return response(await previewBreakfastRepair(payload, user, input));
+    if (input.action === "confirmBreakfastRepair") return response(await confirmBreakfastRepair(payload, user, input));
     throw new ImportError("Choose preview, confirm, or rollback.");
   } catch (error) {
-    if (error instanceof ImportError) return response({ error: error.message }, error.status);
+    if (error instanceof ImportError || error instanceof HistoricalInputError) return response({ error: error.message }, error.status);
     // Do not log tracker rows, attendee addresses, database documents or uploaded bytes.
     return response({ error: "The current import transaction failed. Check Recent imports for progress and retry the same selection." }, 503);
   }
@@ -72,8 +76,14 @@ export async function GET(request: Request) {
     const { payload } = await context(request);
     const history = await payload.find({ collection: "registration-imports", overrideAccess: true, depth: 0, sort: "-createdAt", limit: 20, where: { status: { not_equals: "preview" } } });
     return response({ history: history.docs.map((d) => {
-      const result = d.format === "historical_json" && d.result && typeof d.result === "object" ? d.result as Record<string, unknown> : null;
-      const progress = result && Array.isArray(result.sources) && typeof result.selected === "number" ? `${result.sources.length} of ${result.selected} payments` : undefined;
+      const result = d.result && typeof d.result === "object" ? d.result as Record<string, unknown> : null;
+      let progress;
+      if (d.format === "historical_json" && result && Array.isArray(result.sources) && typeof result.selected === "number") {
+        progress = `${result.sources.length} of ${result.selected} payments`;
+      } else if (d.format === "breakfast_repair" && result?.counts && typeof result.counts === "object" &&
+        "breakfasts" in result.counts && typeof result.counts.breakfasts === "number") {
+        progress = `${result.counts.breakfasts} breakfast tickets added`;
+      }
       return { id: d.id, filename: d.filename, format: d.format || "tracker_xlsx", status: d.status, progress, confirmedAt: d.confirmedAt, rolledBackAt: d.rolledBackAt };
     }) });
   } catch (error) { return response({ error: error instanceof ImportError ? error.message : "Import history is unavailable." }, error instanceof ImportError ? error.status : 503); }

@@ -41370,7 +41370,7 @@ export interface RegistrationImport {
   id: string;
   filename: string;
   fileDigest: string;
-  format?: ('tracker_xlsx' | 'historical_json') | null;
+  format?: ('tracker_xlsx' | 'historical_json' | 'breakfast_repair') | null;
   status: 'preview' | 'in_progress' | 'imported' | 'rolled_back';
   createdBy: string | User;
   expiresAt: string;
@@ -41559,7 +41559,7 @@ export interface PayloadMcpApiKey {
   };
   'payload-mcp-tool'?: {
     /**
-     * Read the ten latest NECYPAA historical checkout import batches, with batch IDs, status, dates and aggregate counts.
+     * Read the ten latest NECYPAA historical import and breakfast repair batches, with batch IDs, status, dates and aggregate counts.
      */
     historicalImportStatus?: boolean | null;
     /**
