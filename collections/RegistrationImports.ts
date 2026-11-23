@@ -9,7 +9,11 @@ export const RegistrationImports: CollectionConfig = {
   fields: [
     { name: "filename", type: "text", required: true },
     { name: "fileDigest", type: "text", required: true, index: true },
-    { name: "status", type: "select", required: true, options: ["preview", "imported", "rolled_back"] },
+    { name: "format", type: "select", index: true, options: [
+      { label: "Registration workbook", value: "tracker_xlsx" },
+      { label: "Historical checkout JSON", value: "historical_json" },
+    ] },
+    { name: "status", type: "select", required: true, options: ["preview", "in_progress", "imported", "rolled_back"] },
     { name: "createdBy", type: "relationship", relationTo: "users", required: true },
     { name: "expiresAt", type: "date", required: true },
     { name: "confirmedAt", type: "date" },

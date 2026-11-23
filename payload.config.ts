@@ -2,7 +2,7 @@ import { mongooseAdapter } from "@payloadcms/db-mongodb";
 import { mcpPlugin, type MCPPluginConfig } from "@payloadcms/plugin-mcp";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { s3Storage } from "@payloadcms/storage-s3";
-import { buildConfig } from "payload";
+import { buildConfig, type Field } from "payload";
 
 import { isAdministrator, withViewerAccess, withViewerGlobalAccess } from "./lib/crm-access";
 
@@ -34,8 +34,14 @@ import { NotificationRecipients } from "./collections/NotificationRecipients";
 import { RegistrationHelpRequests } from "./collections/RegistrationHelpRequests";
 import { HotelRequests } from "./collections/HotelRequests";
 import { RegistrationImports } from "./collections/RegistrationImports";
+import { HistoricalReceipts } from "./collections/HistoricalReceipts";
 import { EmailTests } from "./collections/EmailTests";
 import { pageBuilderCatalogResource } from "./mcp/block-catalog";
+import { historicalImportStatusTool } from "./mcp/historical-import-status";
+import { crmReadTools } from "./mcp/crm-read";
+import { crmContactTools } from "./mcp/crm-contacts";
+import { crmRegistrationTools } from "./mcp/crm-registrations";
+import { crmBreakfastTools } from "./mcp/crm-breakfast";
 import { Header } from "./globals/Header";
 import { Footer } from "./globals/Footer";
 
@@ -45,6 +51,16 @@ function getMediaFileUrl(filename: string) {
   return r2PublicBaseUrl
     ? `${r2PublicBaseUrl}/${encodeURIComponent(filename)}`
     : `/api/media/file/${encodeURIComponent(filename)}`;
+}
+
+function optInMcpTools(fields: Field[]): Field[] {
+  return fields.map((field) => {
+    if (field.type === "group" && "name" in field && field.name === "payload-mcp-tool") {
+      return { ...field, fields: field.fields.map((tool) => tool.type === "checkbox" ? { ...tool, defaultValue: false } : tool) };
+    }
+    if (field.type === "collapsible") return { ...field, fields: optInMcpTools(field.fields) };
+    return field;
+  });
 }
 
 export default buildConfig({
@@ -119,7 +135,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, Contacts, CheckoutOrders, ScholarshipContributions, RegistrationEntitlements, Tenants, AccessCodes, CashCodeRecipients, CashTransactions, Attendees, RegistrationSources, BreakfastTickets, RegistrationCorrections, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests, RegistrationHelpRequests, HotelRequests, RegistrationImports, MobileAnnouncements, MobileFAQs].map(withViewerAccess),
+  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, Contacts, CheckoutOrders, ScholarshipContributions, RegistrationEntitlements, Tenants, AccessCodes, CashCodeRecipients, CashTransactions, Attendees, RegistrationSources, BreakfastTickets, RegistrationCorrections, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests, RegistrationHelpRequests, HotelRequests, RegistrationImports, HistoricalReceipts, MobileAnnouncements, MobileFAQs].map(withViewerAccess),
   globals: [Header, Footer].map(withViewerGlobalAccess),
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || "",
@@ -131,6 +147,7 @@ export default buildConfig({
       userCollection: "users",
       overrideApiKeyCollection: (collection) => ({
         ...collection,
+        fields: optInMcpTools(collection.fields),
         admin: { ...collection.admin, hidden: ({ user }) => !isAdministrator(user) },
         access: Object.fromEntries(["admin", "create", "read", "update", "delete", "unlock", "readVersions"].map((operation) =>
           [operation, ({ req }: { req: { user?: unknown } }) => isAdministrator(req.user)],
@@ -154,8 +171,14 @@ export default buildConfig({
           enabled: { find: true, create: false, update: true, delete: false },
         },
       } as MCPPluginConfig["collections"],
+      overrideAuth: async (req, authenticate) => {
+        const settings = await authenticate();
+        req.user = settings.user;
+        return settings;
+      },
       mcp: {
         resources: [pageBuilderCatalogResource],
+        tools: [historicalImportStatusTool, ...crmReadTools, ...crmContactTools, ...crmRegistrationTools, ...crmBreakfastTools],
         serverOptions: {
           instructions: "Use Posts for quick editorial publishing. For Pages, read the YPAA page-builder block catalog first, retain builderData.zones, and keep layout and builderData synchronized through Payload updates.",
           serverInfo: { name: "NECYPAA CMS", version: "1.0.0" },

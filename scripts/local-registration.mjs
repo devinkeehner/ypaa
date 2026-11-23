@@ -62,12 +62,13 @@ if (action === 'mongo') {
 } else if (action === 'hotel-test') {
   await prepareMongo();
   await run(['--import', 'tsx', '--test', '--test-concurrency=1', '--test-force-exit', 'tests/hotel-requests.test.ts'], { DATABASE_URI: `mongodb://127.0.0.1:27029/ypaa_registration_test_${randomUUID().replaceAll('-', '')}?replicaSet=ypaaTest` });
-} else if (action === 'test') {
+} else if (action === 'test' || action === 'mcp-test') {
   await prepareMongo();
-  await run(['--import', 'tsx', '--test', '--test-concurrency=1', '--test-force-exit', 'tests/registration-check.test.ts', 'tests/registration-import.test.ts'], { DATABASE_URI: `mongodb://127.0.0.1:27029/ypaa_registration_test_${randomUUID().replaceAll('-', '')}?replicaSet=ypaaTest` });
+  const files = action === 'mcp-test' ? ['tests/crm-mcp.test.ts'] : ['tests/registration-check.test.ts', 'tests/registration-import.test.ts', 'tests/historical-import.test.ts', 'tests/historical-import-collections.test.ts'];
+  await run(['--import', 'tsx', '--test', '--test-concurrency=1', '--test-force-exit', ...files], { DATABASE_URI: `mongodb://127.0.0.1:27029/ypaa_registration_test_${randomUUID().replaceAll('-', '')}?replicaSet=ypaaTest` });
 } else if (action === 'hotel-browser') {
   await run(['tests/hotel-requests.browser.mjs']);
 } else if (action === 'browser') {
   await run(['tests/registration-check.browser.mjs']);
   await run(['tests/registration-import.browser.mjs']);
-} else throw new Error('Usage: node scripts/local-registration.mjs mongo|seed|reset|dev|build|test|browser|dry-run [tracker.xlsx]|hotel-seed|hotel-test|hotel-dev|hotel-browser');
+} else throw new Error('Usage: node scripts/local-registration.mjs mongo|seed|reset|dev|build|test|mcp-test|browser|dry-run [tracker.xlsx]|hotel-seed|hotel-test|hotel-dev|hotel-browser');

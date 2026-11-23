@@ -95,6 +95,7 @@ export interface Config {
     'registration-help-requests': RegistrationHelpRequest;
     'hotel-requests': HotelRequest;
     'registration-imports': RegistrationImport;
+    'historical-receipts': HistoricalReceipt;
     'mobile-announcements': MobileAnnouncement;
     'mobile-faqs': MobileFaq;
     'payload-mcp-api-keys': PayloadMcpApiKey;
@@ -105,6 +106,7 @@ export interface Config {
   };
   collectionsJoins: {
     'checkout-orders': {
+      breakfastTickets: 'breakfast-tickets';
       entitlements: 'registration-entitlements';
       scholarshipContributions: 'scholarship-contributions';
     };
@@ -137,6 +139,7 @@ export interface Config {
     'registration-help-requests': RegistrationHelpRequestsSelect<false> | RegistrationHelpRequestsSelect<true>;
     'hotel-requests': HotelRequestsSelect<false> | HotelRequestsSelect<true>;
     'registration-imports': RegistrationImportsSelect<false> | RegistrationImportsSelect<true>;
+    'historical-receipts': HistoricalReceiptsSelect<false> | HistoricalReceiptsSelect<true>;
     'mobile-announcements': MobileAnnouncementsSelect<false> | MobileAnnouncementsSelect<true>;
     'mobile-faqs': MobileFaqsSelect<false> | MobileFaqsSelect<true>;
     'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
@@ -40615,13 +40618,21 @@ export interface CheckoutOrder {
   subtotalCents: number;
   processingFeeCents: number;
   totalCents: number;
-  paymentSource: 'stripe' | 'cash';
+  currency?: 'USD' | null;
+  stripeFeeCents?: number | null;
+  netDepositedCents?: number | null;
+  shippingCents?: number | null;
+  registrationDiscountCents?: number | null;
+  unallocatedCents?: number | null;
+  reportingCategory?: string | null;
+  paymentSource: 'stripe' | 'cash' | 'manual';
   paymentStatus: 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
-  dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout';
+  dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout' | 'historical_import';
   purchasedAt: string;
   stripeCheckoutSessionId?: string | null;
   stripePaymentIntentId?: string | null;
   stripeChargeId?: string | null;
+  stripePaymentId?: string | null;
   stripeCustomerId?: string | null;
   stripeCardId?: string | null;
   /**
@@ -40636,6 +40647,11 @@ export interface CheckoutOrder {
   cardFingerprint?: string | null;
   paymentSourceType?: string | null;
   checkoutLineItemSummary?: string | null;
+  breakfastTickets?: {
+    docs?: (string | BreakfastTicket)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   entitlements?: {
     docs?: (string | RegistrationEntitlement)[];
     hasNextPage?: boolean;
@@ -40654,6 +40670,30 @@ export interface CheckoutOrder {
     | string
     | number
     | boolean
+    | null;
+  historicalSource?: {
+    sheet?: string | null;
+    row?: number | null;
+    paymentRow?: number | null;
+    stripeRow?: number | null;
+  };
+  purchaseLines?:
+    | {
+        sourceLineId: string;
+        kind: 'registration' | 'breakfast' | 'scholarship' | 'merchandise' | 'shipping' | 'fee' | 'other';
+        label?: string | null;
+        quantity: number;
+        unitPriceCents?: number | null;
+        amountCents: number;
+        breakfastDay?: ('friday' | 'saturday' | 'sunday') | null;
+        fulfillment?: string | null;
+        ticketEquivalents?: number | null;
+        historicalSource?: {
+          sheet?: string | null;
+          row?: number | null;
+        };
+        id?: string | null;
+      }[]
     | null;
   rawMetadata?:
     | {
@@ -40680,34 +40720,42 @@ export interface CheckoutOrder {
   createdAt: string;
 }
 /**
- * One paid registration or scholarship unit. Connects the immutable checkout and payer to the assigned attendee and roster registration.
+ * One record per breakfast admission, including Stripe purchases, cash purchases, and Stripe backfills.
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "registration-entitlements".
+ * via the `definition` "breakfast-tickets".
  */
-export interface RegistrationEntitlement {
+export interface BreakfastTicket {
   id: string;
   sourceKey: string;
-  /**
-   * The direct checkout for a purchased seat. Pooled donation-funded seats use Funding contributions instead.
-   */
+  ticketCode: string;
+  breakfastDay: 'friday' | 'saturday' | 'sunday';
+  status: 'valid' | 'used' | 'refunded' | 'voided';
+  unitPriceCents: number;
+  purchaserName: string;
+  purchaserEmail: string;
+  attendee?: (string | null) | Attendee;
   checkoutOrder?: (string | null) | CheckoutOrder;
   /**
-   * The original payer for a directly purchased seat. Pooled seats can have multiple contributors.
+   * Who will use this ticket. The purchaser remains unchanged.
    */
-  purchaserContact?: (string | null) | Contact;
-  entitlementType: 'registration' | 'specific_scholarship' | 'general_scholarship';
-  status: 'unassigned' | 'assigned' | 'redeemed' | 'refunded' | 'voided';
-  attendeeContact?: (string | null) | Contact;
-  registration?: (string | null) | Attendee;
-  assignedAt?: string | null;
-  assignmentNote?: string | null;
-  fundingSource: 'direct_checkout' | 'pooled_contributions';
-  /**
-   * Donation or scholarship contributions that funded this seat.
-   */
-  fundingContributions?: (string | ScholarshipContribution)[] | null;
-  sourceMetadata?:
+  holderContact?: (string | null) | Contact;
+  paymentSource: 'stripe' | 'cash' | 'manual';
+  paymentStatus: 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
+  dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout' | 'historical_import';
+  purchasedAt: string;
+  stripeCheckoutSessionId?: string | null;
+  stripePaymentIntentId?: string | null;
+  stripeChargeId?: string | null;
+  stripeCustomerId?: string | null;
+  cashTransaction?: (string | null) | CashTransaction;
+  historicalSource?: {
+    sheet?: string | null;
+    row?: number | null;
+    paymentRow?: number | null;
+    stripeRow?: number | null;
+  };
+  rawMetadata?:
     | {
         [k: string]: unknown;
       }
@@ -40768,18 +40816,27 @@ export interface Attendee {
   interpretationNeeded?: boolean | null;
   mobilityAccessibility?: boolean | null;
   willingToServe?: boolean | null;
+  interpretationNeededAnswer?: ('yes' | 'no' | 'unanswered') | null;
+  mobilityAccessibilityAnswer?: ('yes' | 'no' | 'unanswered') | null;
+  willingToServeAnswer?: ('yes' | 'no' | 'unanswered') | null;
   purchaserName: string;
   purchaserEmail: string;
   registrationPriceCents: number;
   paymentSource: 'stripe' | 'cash' | 'manual';
   paymentStatus: 'pending' | 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
-  dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout' | 'manual';
+  dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout' | 'manual' | 'historical_import';
   purchasedAt: string;
   stripeCheckoutSessionId?: string | null;
   stripePaymentIntentId?: string | null;
   stripeChargeId?: string | null;
   stripeCustomerId?: string | null;
   cashTransaction?: (string | null) | CashTransaction;
+  historicalSource?: {
+    sheet?: string | null;
+    row?: number | null;
+    paymentRow?: number | null;
+    stripeRow?: number | null;
+  };
   policyAcknowledgments: {
     status: 'pending' | 'signed' | 'waived';
     signatureName?: string | null;
@@ -40813,7 +40870,93 @@ export interface Attendee {
   createdAt: string;
 }
 /**
- * In-person cash orders recorded through the protected /cash form.
+ * One paid registration or scholarship unit. Connects the immutable checkout and payer to the assigned attendee and roster registration.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registration-entitlements".
+ */
+export interface RegistrationEntitlement {
+  id: string;
+  sourceKey: string;
+  /**
+   * The direct checkout for a purchased seat. Pooled donation-funded seats use Funding contributions instead.
+   */
+  checkoutOrder?: (string | null) | CheckoutOrder;
+  /**
+   * The original payer for a directly purchased seat. Pooled seats can have multiple contributors.
+   */
+  purchaserContact?: (string | null) | Contact;
+  entitlementType: 'registration' | 'specific_scholarship' | 'general_scholarship';
+  status: 'unassigned' | 'assigned' | 'redeemed' | 'refunded' | 'voided';
+  attendeeContact?: (string | null) | Contact;
+  registration?: (string | null) | Attendee;
+  assignedAt?: string | null;
+  assignmentNote?: string | null;
+  fundingSource: 'direct_checkout' | 'pooled_contributions';
+  /**
+   * Donation or scholarship contributions that funded this seat.
+   */
+  fundingContributions?: (string | ScholarshipContribution)[] | null;
+  sourceMetadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Auditable money contributed toward scholarships. Original payments stay in Checkout Orders; this ledger shows how their principal funds seats.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "scholarship-contributions".
+ */
+export interface ScholarshipContribution {
+  id: string;
+  sourceKey: string;
+  /**
+   * The immutable payment that supplied this contribution.
+   */
+  checkoutOrder: string | CheckoutOrder;
+  contributorContact?: (string | null) | Contact;
+  dataOrigin?: 'historical_import' | null;
+  contributionType: 'general_donation' | 'general_scholarship' | 'specific_person_scholarship';
+  amountCents: number;
+  allocatedCents: number;
+  availableCents: number;
+  seatPriceCents: number;
+  specificRecipientContact?: (string | null) | Contact;
+  /**
+   * Seats funded in whole or in part by this contribution. A pooled seat may have multiple contributing payments.
+   */
+  fundedEntitlements?: (string | RegistrationEntitlement)[] | null;
+  purchasedAt: string;
+  status: 'active' | 'refunded' | 'voided';
+  notes?: string | null;
+  historicalSource?: {
+    sheet?: string | null;
+    row?: number | null;
+    paymentRow?: number | null;
+    stripeRow?: number | null;
+  };
+  sourceMetadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * In-person cash orders recorded by the registration site or brought in from the historical tracker.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "cash-transactions".
@@ -40825,6 +40968,9 @@ export interface CashTransaction {
   recordedValueCents: number;
   status: 'recorded' | 'voided';
   stripeCustomerId?: string | null;
+  checkoutOrder?: (string | null) | CheckoutOrder;
+  cashReference?: string | null;
+  purchasedAt?: string | null;
   accessCode?: (string | null) | AccessCode;
   sourceKey?: string | null;
   order:
@@ -40845,6 +40991,12 @@ export interface CashTransaction {
     | number
     | boolean
     | null;
+  historicalSource?: {
+    sheet?: string | null;
+    row?: number | null;
+    paymentRow?: number | null;
+    stripeRow?: number | null;
+  };
   /**
    * Delivery status for the internal cash-scholarship alert.
    */
@@ -40867,45 +41019,6 @@ export interface AccessCode {
   grantType: 'cash_order' | 'complimentary_registration' | 'door_scholarship';
   issuerSource?: string | null;
   notes?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Auditable money contributed toward scholarships. Original payments stay in Checkout Orders; this ledger shows how their principal funds seats.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "scholarship-contributions".
- */
-export interface ScholarshipContribution {
-  id: string;
-  sourceKey: string;
-  /**
-   * The immutable payment that supplied this contribution.
-   */
-  checkoutOrder: string | CheckoutOrder;
-  contributorContact: string | Contact;
-  contributionType: 'general_donation' | 'general_scholarship' | 'specific_person_scholarship';
-  amountCents: number;
-  allocatedCents: number;
-  availableCents: number;
-  seatPriceCents: number;
-  specificRecipientContact?: (string | null) | Contact;
-  /**
-   * Seats funded in whole or in part by this contribution. A pooled seat may have multiple contributing payments.
-   */
-  fundedEntitlements?: (string | RegistrationEntitlement)[] | null;
-  purchasedAt: string;
-  status: 'active' | 'refunded' | 'voided';
-  notes?: string | null;
-  sourceMetadata?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -40990,47 +41103,6 @@ export interface RegistrationSource {
   active?: boolean | null;
   event: string;
   notes?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * One record per breakfast admission, including Stripe purchases, cash purchases, and Stripe backfills.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "breakfast-tickets".
- */
-export interface BreakfastTicket {
-  id: string;
-  sourceKey: string;
-  ticketCode: string;
-  breakfastDay: 'friday' | 'saturday' | 'sunday';
-  status: 'valid' | 'used' | 'refunded' | 'voided';
-  unitPriceCents: number;
-  purchaserName: string;
-  purchaserEmail: string;
-  attendee?: (string | null) | Attendee;
-  /**
-   * Who will use this ticket. The purchaser remains unchanged.
-   */
-  holderContact?: (string | null) | Contact;
-  paymentSource: 'stripe' | 'cash';
-  paymentStatus: 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
-  dataOrigin: 'live_checkout' | 'stripe_webhook' | 'stripe_backfill' | 'cash_checkout';
-  purchasedAt: string;
-  stripeCheckoutSessionId?: string | null;
-  stripePaymentIntentId?: string | null;
-  stripeChargeId?: string | null;
-  stripeCustomerId?: string | null;
-  cashTransaction?: (string | null) | CashTransaction;
-  rawMetadata?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -41298,7 +41370,8 @@ export interface RegistrationImport {
   id: string;
   filename: string;
   fileDigest: string;
-  status: 'preview' | 'imported' | 'rolled_back';
+  format?: ('tracker_xlsx' | 'historical_json') | null;
+  status: 'preview' | 'in_progress' | 'imported' | 'rolled_back';
   createdBy: string | User;
   expiresAt: string;
   confirmedAt?: string | null;
@@ -41322,6 +41395,60 @@ export interface RegistrationImport {
     | string
     | number
     | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Imported payment provenance and offline receipts. Linked records refer to the same payment.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "historical-receipts".
+ */
+export interface HistoricalReceipt {
+  id: string;
+  sourceKey: string;
+  paymentAliases: string[];
+  receiptReference: string;
+  paymentSource: 'stripe' | 'cash' | 'manual';
+  paymentMethod?: ('cash' | 'venmo' | 'unspecified' | 'offline') | null;
+  paymentStatus: 'paid' | 'recorded' | 'refunded' | 'disputed' | 'voided';
+  purchasedAt?: string | null;
+  currency: 'USD';
+  grossCents: number;
+  stripeFeeCents?: number | null;
+  netDepositedCents?: number | null;
+  shippingCents?: number | null;
+  registrationDiscountCents?: number | null;
+  unallocatedCents?: number | null;
+  checkoutFeeCents?: number | null;
+  purchaserName?: string | null;
+  purchaserEmail?: string | null;
+  checkoutOrder?: (string | null) | CheckoutOrder;
+  cashTransaction?: (string | null) | CashTransaction;
+  historicalSource?: {
+    sheet?: string | null;
+    row?: number | null;
+    paymentRow?: number | null;
+    stripeRow?: number | null;
+  };
+  purchaseLines?:
+    | {
+        sourceLineId: string;
+        kind: 'registration' | 'breakfast' | 'scholarship' | 'merchandise' | 'shipping' | 'fee' | 'other';
+        label?: string | null;
+        quantity: number;
+        unitPriceCents?: number | null;
+        amountCents: number;
+        breakfastDay?: ('friday' | 'saturday' | 'sunday') | null;
+        fulfillment?: string | null;
+        ticketEquivalents?: number | null;
+        historicalSource?: {
+          sheet?: string | null;
+          row?: number | null;
+        };
+        id?: string | null;
+      }[]
     | null;
   updatedAt: string;
   createdAt: string;
@@ -41429,6 +41556,44 @@ export interface PayloadMcpApiKey {
      * Allow clients to update tenants.
      */
     update?: boolean | null;
+  };
+  'payload-mcp-tool'?: {
+    /**
+     * Read the ten latest NECYPAA historical checkout import batches, with batch IDs, status, dates and aggregate counts.
+     */
+    historicalImportStatus?: boolean | null;
+    /**
+     * Find up to ten NECYPAA CRM records by one exact value. Return record IDs and summary fields. Use a record ID, source key, Stripe or receipt reference, ticket code, email, name, or a related checkout, attendee or contact ID when supported by the selected collection.
+     */
+    findCrmEntries?: boolean | null;
+    /**
+     * Examine one NECYPAA CRM entry by exact Payload record ID. For authorized registration staff and administrators, an attendee record includes the recorded accessibility and fellowship fields.
+     */
+    examineCrmEntry?: boolean | null;
+    /**
+     * Create a contact directory entry with profile and fellowship fields. An exact normalized name and email match returns the existing contact ID.
+     */
+    createRegistrationContact?: boolean | null;
+    /**
+     * Update a contact profile by record ID and its current updatedAt value. Linked attendee name and email changes go through the registration correction workflow.
+     */
+    updateRegistrationContact?: boolean | null;
+    /**
+     * Add a pending manual registration for an existing contact. This roster entry has no paid seat. If an active registration already exists for the contact, return its ID.
+     */
+    createPendingRegistration?: boolean | null;
+    /**
+     * Update an attendee's fellowship, accommodations, service answers, or state using the current record timestamp and a correction reason. An unlinked pending manual registration can also be moved to another contact.
+     */
+    updateRegistrationProfile?: boolean | null;
+    /**
+     * Use the audited CRM workflow to correct a registered person's name or email, or reassign an existing paid seat to another contact. Requires the registration and paid seat timestamps.
+     */
+    correctPaidRegistration?: boolean | null;
+    /**
+     * Assign a valid, funded breakfast ticket to an existing attendee registration with a canonical contact. Use the ticket's current updatedAt and provide the reason for the correction.
+     */
+    assignBreakfastTicketHolder?: boolean | null;
   };
   'payload-mcp-resource'?: {
     /**
@@ -41574,6 +41739,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'registration-imports';
         value: string | RegistrationImport;
+      } | null)
+    | ({
+        relationTo: 'historical-receipts';
+        value: string | HistoricalReceipt;
       } | null)
     | ({
         relationTo: 'mobile-announcements';
@@ -63191,6 +63360,13 @@ export interface CheckoutOrdersSelect<T extends boolean = true> {
   subtotalCents?: T;
   processingFeeCents?: T;
   totalCents?: T;
+  currency?: T;
+  stripeFeeCents?: T;
+  netDepositedCents?: T;
+  shippingCents?: T;
+  registrationDiscountCents?: T;
+  unallocatedCents?: T;
+  reportingCategory?: T;
   paymentSource?: T;
   paymentStatus?: T;
   dataOrigin?: T;
@@ -63198,6 +63374,7 @@ export interface CheckoutOrdersSelect<T extends boolean = true> {
   stripeCheckoutSessionId?: T;
   stripePaymentIntentId?: T;
   stripeChargeId?: T;
+  stripePaymentId?: T;
   stripeCustomerId?: T;
   stripeCardId?: T;
   cardholderName?: T;
@@ -63206,9 +63383,38 @@ export interface CheckoutOrdersSelect<T extends boolean = true> {
   cardFingerprint?: T;
   paymentSourceType?: T;
   checkoutLineItemSummary?: T;
+  breakfastTickets?: T;
   entitlements?: T;
   scholarshipContributions?: T;
   order?: T;
+  historicalSource?:
+    | T
+    | {
+        sheet?: T;
+        row?: T;
+        paymentRow?: T;
+        stripeRow?: T;
+      };
+  purchaseLines?:
+    | T
+    | {
+        sourceLineId?: T;
+        kind?: T;
+        label?: T;
+        quantity?: T;
+        unitPriceCents?: T;
+        amountCents?: T;
+        breakfastDay?: T;
+        fulfillment?: T;
+        ticketEquivalents?: T;
+        historicalSource?:
+          | T
+          | {
+              sheet?: T;
+              row?: T;
+            };
+        id?: T;
+      };
   rawMetadata?: T;
   stripeScholarshipNotifiedEmails?: T;
   updatedAt?: T;
@@ -63222,6 +63428,7 @@ export interface ScholarshipContributionsSelect<T extends boolean = true> {
   sourceKey?: T;
   checkoutOrder?: T;
   contributorContact?: T;
+  dataOrigin?: T;
   contributionType?: T;
   amountCents?: T;
   allocatedCents?: T;
@@ -63232,6 +63439,14 @@ export interface ScholarshipContributionsSelect<T extends boolean = true> {
   purchasedAt?: T;
   status?: T;
   notes?: T;
+  historicalSource?:
+    | T
+    | {
+        sheet?: T;
+        row?: T;
+        paymentRow?: T;
+        stripeRow?: T;
+      };
   sourceMetadata?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -63315,10 +63530,21 @@ export interface CashTransactionsSelect<T extends boolean = true> {
   recordedValueCents?: T;
   status?: T;
   stripeCustomerId?: T;
+  checkoutOrder?: T;
+  cashReference?: T;
+  purchasedAt?: T;
   accessCode?: T;
   sourceKey?: T;
   order?: T;
   metadata?: T;
+  historicalSource?:
+    | T
+    | {
+        sheet?: T;
+        row?: T;
+        paymentRow?: T;
+        stripeRow?: T;
+      };
   notificationStatus?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -63348,6 +63574,9 @@ export interface AttendeesSelect<T extends boolean = true> {
   interpretationNeeded?: T;
   mobilityAccessibility?: T;
   willingToServe?: T;
+  interpretationNeededAnswer?: T;
+  mobilityAccessibilityAnswer?: T;
+  willingToServeAnswer?: T;
   purchaserName?: T;
   purchaserEmail?: T;
   registrationPriceCents?: T;
@@ -63360,6 +63589,14 @@ export interface AttendeesSelect<T extends boolean = true> {
   stripeChargeId?: T;
   stripeCustomerId?: T;
   cashTransaction?: T;
+  historicalSource?:
+    | T
+    | {
+        sheet?: T;
+        row?: T;
+        paymentRow?: T;
+        stripeRow?: T;
+      };
   policyAcknowledgments?:
     | T
     | {
@@ -63406,6 +63643,7 @@ export interface BreakfastTicketsSelect<T extends boolean = true> {
   purchaserName?: T;
   purchaserEmail?: T;
   attendee?: T;
+  checkoutOrder?: T;
   holderContact?: T;
   paymentSource?: T;
   paymentStatus?: T;
@@ -63416,6 +63654,14 @@ export interface BreakfastTicketsSelect<T extends boolean = true> {
   stripeChargeId?: T;
   stripeCustomerId?: T;
   cashTransaction?: T;
+  historicalSource?:
+    | T
+    | {
+        sheet?: T;
+        row?: T;
+        paymentRow?: T;
+        stripeRow?: T;
+      };
   rawMetadata?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -63583,6 +63829,7 @@ export interface HotelRequestsSelect<T extends boolean = true> {
 export interface RegistrationImportsSelect<T extends boolean = true> {
   filename?: T;
   fileDigest?: T;
+  format?: T;
   status?: T;
   createdBy?: T;
   expiresAt?: T;
@@ -63592,6 +63839,61 @@ export interface RegistrationImportsSelect<T extends boolean = true> {
   rollbackReason?: T;
   preview?: T;
   result?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "historical-receipts_select".
+ */
+export interface HistoricalReceiptsSelect<T extends boolean = true> {
+  sourceKey?: T;
+  paymentAliases?: T;
+  receiptReference?: T;
+  paymentSource?: T;
+  paymentMethod?: T;
+  paymentStatus?: T;
+  purchasedAt?: T;
+  currency?: T;
+  grossCents?: T;
+  stripeFeeCents?: T;
+  netDepositedCents?: T;
+  shippingCents?: T;
+  registrationDiscountCents?: T;
+  unallocatedCents?: T;
+  checkoutFeeCents?: T;
+  purchaserName?: T;
+  purchaserEmail?: T;
+  checkoutOrder?: T;
+  cashTransaction?: T;
+  historicalSource?:
+    | T
+    | {
+        sheet?: T;
+        row?: T;
+        paymentRow?: T;
+        stripeRow?: T;
+      };
+  purchaseLines?:
+    | T
+    | {
+        sourceLineId?: T;
+        kind?: T;
+        label?: T;
+        quantity?: T;
+        unitPriceCents?: T;
+        amountCents?: T;
+        breakfastDay?: T;
+        fulfillment?: T;
+        ticketEquivalents?: T;
+        historicalSource?:
+          | T
+          | {
+              sheet?: T;
+              row?: T;
+            };
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -63652,6 +63954,19 @@ export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
     | {
         find?: T;
         update?: T;
+      };
+  'payload-mcp-tool'?:
+    | T
+    | {
+        historicalImportStatus?: T;
+        findCrmEntries?: T;
+        examineCrmEntry?: T;
+        createRegistrationContact?: T;
+        updateRegistrationContact?: T;
+        createPendingRegistration?: T;
+        updateRegistrationProfile?: T;
+        correctPaidRegistration?: T;
+        assignBreakfastTicketHolder?: T;
       };
   'payload-mcp-resource'?:
     | T

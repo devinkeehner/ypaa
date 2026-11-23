@@ -34,7 +34,7 @@ const COLLECTION_AREAS: Record<string, ContentArea> = {
 export function canReadCollection(user: unknown, slug: string): boolean {
   if (isAdministrator(user)) return true;
   if (slug === "users") return false; // Accounts and permission management are admin-only.
-  if (slug === "registration-imports") return false;
+  if (slug === "registration-imports" || slug === "historical-receipts") return false;
   if (isViewer(user)) return true;
   if (isMerchChair(user)) return slug === "merchandise-orders";
   if (slug === "media") return CONTENT_AREAS.some((area) => canAccessArea(user, area));

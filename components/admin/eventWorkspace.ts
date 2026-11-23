@@ -94,6 +94,7 @@ export const EVENT_WORKSPACE_NAV_AREAS = [
       "checkout-orders",
       "scholarship-contributions",
       "cash-transactions",
+      "historical-receipts",
     ],
   },
   {

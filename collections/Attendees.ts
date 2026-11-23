@@ -1,13 +1,25 @@
 import { validSoberDate } from "@/lib/registration-affiliation";
-import type { Access, CollectionConfig } from "payload";
+import type { Access, CollectionBeforeValidateHook, CollectionConfig } from "payload";
+import { historicalSourceField } from "./fields/historical-import";
 import { registrationAffiliationFields } from "./fields/registration-affiliation";
 
 const authenticated: Access = ({ req }) => Boolean(req.user);
+
+const syncExplicitAnswers: CollectionBeforeValidateHook = ({ data, originalDoc }) => {
+  if (!data) return data;
+  for (const field of ["interpretationNeeded", "mobilityAccessibility", "willingToServe"] as const) {
+    const key = `${field}Answer` as const;
+    const answer = data[key] ?? (Object.hasOwn(data, field) ? originalDoc?.[key] : undefined);
+    if (answer != null) data[field] = answer === "yes";
+  }
+  return data;
+};
 
 export const Attendees: CollectionConfig = {
   slug: "attendees",
   labels: { singular: "Registration", plural: "Registrations" },
   access: { create: authenticated, read: authenticated, update: authenticated, delete: authenticated },
+  hooks: { beforeValidate: [syncExplicitAnswers] },
   admin: {
     useAsTitle: "attendeeName",
     defaultColumns: ["attendeeName", "attendeeEmail", "attendanceStatus", "paymentSource", "paymentStatus"],
@@ -32,9 +44,12 @@ export const Attendees: CollectionConfig = {
       admin: { initCollapsed: false },
       fields: [
         { name: "accommodations", type: "textarea" },
-        { name: "interpretationNeeded", type: "checkbox", defaultValue: false },
-        { name: "mobilityAccessibility", type: "checkbox", defaultValue: false },
-        { name: "willingToServe", type: "checkbox", defaultValue: false },
+        { name: "interpretationNeeded", type: "checkbox", defaultValue: false, admin: { condition: (_data, siblingData) => siblingData.dataOrigin !== "historical_import" && siblingData.interpretationNeededAnswer == null } },
+        { name: "mobilityAccessibility", type: "checkbox", defaultValue: false, admin: { condition: (_data, siblingData) => siblingData.dataOrigin !== "historical_import" && siblingData.mobilityAccessibilityAnswer == null } },
+        { name: "willingToServe", type: "checkbox", defaultValue: false, admin: { condition: (_data, siblingData) => siblingData.dataOrigin !== "historical_import" && siblingData.willingToServeAnswer == null } },
+        { name: "interpretationNeededAnswer", label: "Interpretation needed", type: "select", options: ["yes", "no", "unanswered"], admin: { isClearable: false, condition: (_data, siblingData) => siblingData.dataOrigin === "historical_import" || siblingData.interpretationNeededAnswer != null } },
+        { name: "mobilityAccessibilityAnswer", label: "Mobility accessibility needed", type: "select", options: ["yes", "no", "unanswered"], admin: { isClearable: false, condition: (_data, siblingData) => siblingData.dataOrigin === "historical_import" || siblingData.mobilityAccessibilityAnswer != null } },
+        { name: "willingToServeAnswer", label: "Willing to serve", type: "select", options: ["yes", "no", "unanswered"], admin: { isClearable: false, condition: (_data, siblingData) => siblingData.dataOrigin === "historical_import" || siblingData.willingToServeAnswer != null } },
       ],
     },
     { name: "purchaserName", type: "text", required: true },
@@ -42,13 +57,14 @@ export const Attendees: CollectionConfig = {
     { name: "registrationPriceCents", type: "number", required: true, min: 0, defaultValue: 0 },
     { name: "paymentSource", type: "select", required: true, defaultValue: "manual", options: ["stripe", "cash", "manual"] },
     { name: "paymentStatus", type: "select", required: true, defaultValue: "pending", options: ["pending", "paid", "recorded", "refunded", "disputed", "voided"] },
-    { name: "dataOrigin", type: "select", required: true, defaultValue: "manual", options: ["live_checkout", "stripe_webhook", "stripe_backfill", "cash_checkout", "manual"] },
+    { name: "dataOrigin", type: "select", required: true, defaultValue: "manual", options: ["live_checkout", "stripe_webhook", "stripe_backfill", "cash_checkout", "manual", "historical_import"] },
     { name: "purchasedAt", label: "Registration / roster date", type: "date", required: true, index: true },
     { name: "stripeCheckoutSessionId", type: "text", index: true },
     { name: "stripePaymentIntentId", type: "text", index: true },
     { name: "stripeChargeId", type: "text", index: true },
     { name: "stripeCustomerId", type: "text", index: true },
     { name: "cashTransaction", type: "relationship", relationTo: "cash-transactions" },
+    historicalSourceField(true),
     {
       name: "policyAcknowledgments",
       type: "group",

@@ -14,6 +14,7 @@
     "generate:types": "payload generate:types",
     "stripe:import": "tsx scripts/import-stripe-csv.ts",
     "stripe:report": "tsx scripts/report-stripe-anomalies.ts",
+    "historical:build": "node --import tsx scripts/build-historical-import.ts",
     "contacts:migrate-local": "tsx scripts/migrate-contacts.ts",
     "scholarships:backfill": "tsx scripts/backfill-scholarship-fund.ts",
     "scholarships:verify": "tsx scripts/verify-scholarship-fund.ts",
@@ -44,7 +45,8 @@
     "payload": "3.87.0",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "stripe": "^22.4.0"
+    "stripe": "^22.4.0",
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.2.1",

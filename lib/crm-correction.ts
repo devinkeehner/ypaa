@@ -26,10 +26,16 @@ export async function saveCRMCorrection(payload: Payload, user: TypedUser | null
     if (idOf(entitlement.registration) !== registration.id) throw new CorrectionError("The selected seat is no longer attached to this registration.", 409);
     if (["refunded", "voided", "redeemed"].includes(entitlement.status)) throw new CorrectionError("This seat is refunded, voided, or already redeemed. Review its status before reassigning it.", 409);
     const order = await payload.findByID({ ...options, collection: "checkout-orders", id: idOf(entitlement.checkoutOrder) });
+    if (order.paymentStatus !== "paid" && order.paymentStatus !== "recorded") throw new CorrectionError("The checkout has an inactive payment. Review it in Event CRM before changing the registration.", 409);
     const siblings = await payload.find({ ...options, collection: "registration-entitlements", pagination: false, where: { registration: { equals: registration.id } } });
     const split = input.resolution === "attendee_reassigned" && siblings.docs.length > 1;
     const details = input.contact && typeof input.contact === "object" ? input.contact as Record<string, unknown> : {};
-    const contactData = { displayName: clean(details.displayName), email: clean(details.email).toLowerCase(), state: clean(details.state), homegroupCommittee: clean(details.homegroupCommittee) };
+    const contactData = {
+      displayName: clean(details.displayName),
+      email: clean(details.email).toLowerCase(),
+      ...(Object.hasOwn(details, "state") ? { state: clean(details.state) } : {}),
+      ...(Object.hasOwn(details, "homegroupCommittee") ? { homegroupCommittee: clean(details.homegroupCommittee) } : {}),
+    };
     const renaming = input.resolution === "same_person_name_variation";
     if (renaming || input.mode === "new") {
       if (!contactData.displayName || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactData.email)) throw new CorrectionError("Enter an attendee name and valid email.");

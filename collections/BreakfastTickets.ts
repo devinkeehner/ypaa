@@ -1,4 +1,5 @@
 import type { Access, CollectionConfig } from "payload";
+import { historicalSourceField } from "./fields/historical-import";
 
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
@@ -19,16 +20,18 @@ export const BreakfastTickets: CollectionConfig = {
     { name: "purchaserName", type: "text", required: true },
     { name: "purchaserEmail", type: "email", required: true, index: true },
     { name: "attendee", type: "relationship", relationTo: "attendees" },
+    { name: "checkoutOrder", type: "relationship", relationTo: "checkout-orders", index: true },
     { name: "holderContact", label: "Ticket holder", type: "relationship", relationTo: "contacts", index: true, admin: { description: "Who will use this ticket. The purchaser remains unchanged." } },
-    { name: "paymentSource", type: "select", required: true, options: ["stripe", "cash"] },
+    { name: "paymentSource", type: "select", required: true, options: ["stripe", "cash", "manual"] },
     { name: "paymentStatus", type: "select", required: true, options: ["paid", "recorded", "refunded", "disputed", "voided"] },
-    { name: "dataOrigin", type: "select", required: true, options: ["live_checkout", "stripe_webhook", "stripe_backfill", "cash_checkout"] },
+    { name: "dataOrigin", type: "select", required: true, options: ["live_checkout", "stripe_webhook", "stripe_backfill", "cash_checkout", "historical_import"] },
     { name: "purchasedAt", type: "date", required: true, index: true },
     { name: "stripeCheckoutSessionId", type: "text", index: true },
     { name: "stripePaymentIntentId", type: "text", index: true },
     { name: "stripeChargeId", type: "text", index: true },
     { name: "stripeCustomerId", type: "text", index: true },
     { name: "cashTransaction", type: "relationship", relationTo: "cash-transactions" },
+    historicalSourceField(true),
     { name: "rawMetadata", type: "json" },
   ],
 };

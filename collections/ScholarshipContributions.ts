@@ -1,6 +1,16 @@
 import type { Access, CollectionConfig } from "payload";
+import { relationship } from "payload/shared";
+import { historicalSourceField } from "./fields/historical-import";
 
 const authenticated: Access = ({ req }) => Boolean(req.user);
+
+const requireKnownContributor: typeof relationship = (value, args) => {
+  const { dataOrigin } = args.siblingData as { dataOrigin?: string };
+  if (!(value === undefined ? args.previousValue : value) && dataOrigin !== "historical_import") {
+    return "Select a contributor contact.";
+  }
+  return relationship(value, args);
+};
 
 export const ScholarshipContributions: CollectionConfig = {
   slug: "scholarship-contributions",
@@ -14,7 +24,14 @@ export const ScholarshipContributions: CollectionConfig = {
   fields: [
     { name: "sourceKey", type: "text", required: true, unique: true, index: true, admin: { readOnly: true } },
     { name: "checkoutOrder", type: "relationship", relationTo: "checkout-orders", required: true, index: true, admin: { description: "The immutable payment that supplied this contribution." } },
-    { name: "contributorContact", type: "relationship", relationTo: "contacts", required: true, index: true },
+    {
+      name: "contributorContact",
+      type: "relationship",
+      relationTo: "contacts",
+      index: true,
+      validate: requireKnownContributor,
+    },
+    { name: "dataOrigin", type: "select", options: ["historical_import"], access: { create: () => false, update: () => false }, admin: { readOnly: true } },
     { name: "contributionType", type: "select", required: true, index: true, options: [
       { label: "General donation to scholarship pool", value: "general_donation" },
       { label: "General scholarship purchase", value: "general_scholarship" },
@@ -29,6 +46,7 @@ export const ScholarshipContributions: CollectionConfig = {
     { name: "purchasedAt", type: "date", required: true, index: true },
     { name: "status", type: "select", required: true, defaultValue: "active", index: true, options: ["active", "refunded", "voided"] },
     { name: "notes", type: "textarea" },
+    historicalSourceField(true),
     { name: "sourceMetadata", type: "json" },
   ],
 };

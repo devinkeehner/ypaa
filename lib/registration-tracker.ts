@@ -26,7 +26,7 @@ const headers = {
 };
 
 // Only OOXML values are read. Formulas, macros, hyperlinks and external links are never executed.
-export function trackerSheets(bytes: Uint8Array): Record<string, string[][]> {
+export function trackerSheets(bytes: Uint8Array, markDetailFormulas = false): Record<string, string[][]> {
   if (!bytes.length || bytes.length > 2 * 1024 * 1024) throw new ImportError("Upload an .xlsx tracker of at most 2 MB.", 413);
   let expanded = 0, entries = 0;
   const wanted = /^(xl\/workbook\.xml|xl\/_rels\/workbook\.xml\.rels|xl\/sharedStrings\.xml|xl\/worksheets\/sheet\d+\.xml)$/;
@@ -74,7 +74,7 @@ export function trackerSheets(bytes: Uint8Array): Record<string, string[][]> {
         if (cell["@t"] === "inlineStr") value = richText(cell.is);
         if (cell["@t"] === "e") value = "#ERROR";
         // Required source records must contain explicit values, not stale formula caches.
-        if (cell.f !== undefined && name in headers) value = "#FORMULA";
+        if (cell.f !== undefined && (name in headers || markDetailFormulas)) value = "#FORMULA";
         if (value.length > 4000) throw new ImportError("A workbook cell is too long.");
         cells[column - 1] = value;
       }

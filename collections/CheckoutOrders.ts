@@ -1,5 +1,6 @@
 import type { Access, CollectionConfig } from "payload";
 import { prepareCheckoutPurchaseRead, readCheckoutPurchase, snapshotCheckoutPurchase } from "@/lib/checkout-order-hooks";
+import { historicalSourceField, purchaseLinesField } from "./fields/historical-import";
 
 const authenticated: Access = ({ req }) => Boolean(req.user);
 
@@ -24,13 +25,21 @@ export const CheckoutOrders: CollectionConfig = {
     { name: "subtotalCents", type: "number", required: true, min: 0 },
     { name: "processingFeeCents", type: "number", required: true, min: 0, defaultValue: 0 },
     { name: "totalCents", type: "number", required: true, min: 0 },
-    { name: "paymentSource", type: "select", required: true, options: ["stripe", "cash"] },
+    { name: "currency", type: "select", options: ["USD"] },
+    { name: "stripeFeeCents", label: "Stripe fee (cents)", type: "number", min: 0 },
+    { name: "netDepositedCents", type: "number" },
+    { name: "shippingCents", type: "number", min: 0 },
+    { name: "registrationDiscountCents", type: "number", min: 0 },
+    { name: "unallocatedCents", label: "Unallocated payment amount (cents)", type: "number" },
+    { name: "reportingCategory", type: "text", index: true },
+    { name: "paymentSource", type: "select", required: true, options: ["stripe", "cash", "manual"] },
     { name: "paymentStatus", type: "select", required: true, options: ["paid", "recorded", "refunded", "disputed", "voided"] },
-    { name: "dataOrigin", type: "select", required: true, options: ["live_checkout", "stripe_webhook", "stripe_backfill", "cash_checkout"] },
+    { name: "dataOrigin", type: "select", required: true, options: ["live_checkout", "stripe_webhook", "stripe_backfill", "cash_checkout", "historical_import"] },
     { name: "purchasedAt", type: "date", required: true, index: true },
     { name: "stripeCheckoutSessionId", type: "text", index: true },
     { name: "stripePaymentIntentId", type: "text", index: true },
     { name: "stripeChargeId", type: "text", index: true },
+    { name: "stripePaymentId", label: "Stripe export payment ID", type: "text", index: true },
     { name: "stripeCustomerId", type: "text", index: true },
     { name: "stripeCardId", label: "Stripe card / payment method ID", type: "text", index: true },
     { name: "cardholderName", type: "text", index: true, admin: { description: "Billing name supplied by Stripe. This can differ from the attendee." } },
@@ -39,9 +48,12 @@ export const CheckoutOrders: CollectionConfig = {
     { name: "cardFingerprint", type: "text", index: true, admin: { description: "Stripe fingerprint used to identify repeated use of the same card." } },
     { name: "paymentSourceType", type: "text" },
     { name: "checkoutLineItemSummary", type: "textarea" },
+    { name: "breakfastTickets", type: "join", collection: "breakfast-tickets", on: "checkoutOrder", admin: { defaultColumns: ["breakfastDay", "ticketCode", "status"] } },
     { name: "entitlements", type: "join", collection: "registration-entitlements", on: "checkoutOrder", admin: { defaultColumns: ["entitlementType", "status", "attendeeContact"] } },
     { name: "scholarshipContributions", type: "join", collection: "scholarship-contributions", on: "checkoutOrder", admin: { defaultColumns: ["contributionType", "amountCents", "allocatedCents", "availableCents"] } },
     { name: "order", type: "json", required: true },
+    historicalSourceField(true),
+    purchaseLinesField(),
     { name: "rawMetadata", type: "json" },
     { name: "stripeScholarshipNotifiedEmails", type: "json", admin: { readOnly: true, description: "Recipients already notified of this Stripe general scholarship donation." } },
   ],

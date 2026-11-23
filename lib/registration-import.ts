@@ -51,7 +51,7 @@ export async function previewRegistrationImport(payload: Payload, user: TypedUse
   const active = await payload.count({ collection: "registration-imports", overrideAccess: true, where: { and: [{ createdBy: { equals: user!.id } }, { status: { equals: "preview" } }, { expiresAt: { greater_than: new Date().toISOString() } }] } });
   if (active.totalDocs >= 100) throw new ImportError("Too many recent previews. Retry after an earlier preview expires.", 429);
   const plan = await planRegistrationImport(payload, parseTracker(bytes));
-  const batch = await payload.create({ collection: "registration-imports", overrideAccess: true, data: { filename: filename.replace(/[\r\n]/g, "").slice(0, 200), fileDigest: importDigest(Array.from(bytes)), status: "preview", createdBy: user!.id, expiresAt: new Date(Date.now() + 30 * 60 * 1000).toISOString(), preview: plan } });
+  const batch = await payload.create({ collection: "registration-imports", overrideAccess: true, data: { filename: filename.replace(/[\r\n]/g, "").slice(0, 200), fileDigest: importDigest(Array.from(bytes)), format: "tracker_xlsx", status: "preview", createdBy: user!.id, expiresAt: new Date(Date.now() + 30 * 60 * 1000).toISOString(), preview: plan } });
   return { id: batch.id, plan };
 }
 
@@ -67,6 +67,7 @@ export async function confirmRegistrationImport(payload: Payload, user: TypedUse
   const options = { req, overrideAccess: true, depth: 0 } as const;
   try {
     const batch = await payload.findByID({ ...options, collection: "registration-imports", id: input.id });
+    if (batch.format === "historical_json") throw new ImportError("Confirm this historical batch with its original JSON file.", 409);
     if (idOf(batch.createdBy) !== user!.id) throw new ImportError("Only the administrator who reviewed this preview can confirm it.", 403);
     if (batch.status === "imported") { await payload.db.rollbackTransaction(transactionID); return { id: batch.id, result: json<Journal>(batch.result), alreadyImported: true }; }
     if (batch.status !== "preview" || Date.parse(batch.expiresAt) <= Date.now()) throw new ImportError("This preview expired or was rolled back. Upload a fresh preview.", 409);
@@ -116,6 +117,7 @@ export async function rollbackRegistrationImport(payload: Payload, user: TypedUs
   const options = { req, overrideAccess: true, depth: 0 } as const;
   try {
     const batch = await payload.findByID({ ...options, collection: "registration-imports", id: input.id });
+    if (batch.format === "historical_json") throw new ImportError("Use Event CRM to review corrections for this historical batch.", 409);
     if (batch.status === "rolled_back") { await payload.db.rollbackTransaction(transactionID); return { id: batch.id, alreadyRolledBack: true }; }
     if (batch.status !== "imported") throw new ImportError("Only a completed import can be rolled back.", 409);
     const journal = json<Journal>(batch.result);

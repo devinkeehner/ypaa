@@ -13,7 +13,7 @@ const sum = (field: "amountCents" | "allocatedCents" | "availableCents") => cont
 const halves = contributions
   .filter((contribution) => contribution.contributionType === "general_donation" && contribution.amountCents === 2000)
   .map((contribution) => ({
-    contributor: typeof contribution.contributorContact === "object" ? contribution.contributorContact.displayName : String(contribution.contributorContact),
+    contributor: contribution.contributorContact == null ? null : typeof contribution.contributorContact === "object" ? contribution.contributorContact.displayName : String(contribution.contributorContact),
     amountCents: contribution.amountCents,
     allocatedCents: contribution.allocatedCents,
     availableCents: contribution.availableCents,
