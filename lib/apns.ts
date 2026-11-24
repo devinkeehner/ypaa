@@ -15,25 +15,42 @@ type DeliveryResult =
   | { status: "accepted" | "unconfirmed" | "authorizationFailed" }
   | { status: "rejected"; inactiveAt?: number };
 
+type ConfigurationIssue = "push_disabled" | "invalid_key_id" | "invalid_team_id" | "invalid_bundle_id" |
+  "invalid_environment" | "missing_private_key" | "invalid_private_key_pem" | "unsupported_private_key_type";
+
+let lastConfigurationIssue: ConfigurationIssue | undefined;
+
+export function reportApnsConfigurationIssue(issue: ConfigurationIssue) {
+  if (process.env.NODE_ENV === "production" && lastConfigurationIssue !== issue) {
+    console.warn(`[mobile-push] ${issue}`);
+    lastConfigurationIssue = issue;
+  }
+  return null;
+}
+
 export function getApnsConfiguration(): ApnsConfiguration | null {
   const keyId = process.env.APNS_KEY_ID?.trim();
   const teamId = process.env.APNS_TEAM_ID?.trim();
   const bundleId = process.env.APNS_BUNDLE_ID?.trim();
-  const pem = process.env.APNS_PRIVATE_KEY?.trim().replace(/\\r\\n|\\n/g, "\n");
+  const pem = process.env.APNS_PRIVATE_KEY?.trim().replace(/\\r\\n|\\n|[\u2028\u2029]/g, "\n");
   const environment = process.env.APNS_ENVIRONMENT?.trim() || "production";
-  if (!keyId || !/^[A-Z\d]{10}$/.test(keyId) || !teamId || !/^[A-Z\d]{10}$/.test(teamId) ||
-      !bundleId || !/^[\w-]+(?:\.[\w-]+)+$/.test(bundleId) || !pem ||
-      (environment !== "production" && environment !== "sandbox")) return null;
+  if (!keyId || !/^[A-Z\d]{10}$/.test(keyId)) return reportApnsConfigurationIssue("invalid_key_id");
+  if (!teamId || !/^[A-Z\d]{10}$/.test(teamId)) return reportApnsConfigurationIssue("invalid_team_id");
+  if (!bundleId || !/^[\w-]+(?:\.[\w-]+)+$/.test(bundleId)) return reportApnsConfigurationIssue("invalid_bundle_id");
+  if (environment !== "production" && environment !== "sandbox") return reportApnsConfigurationIssue("invalid_environment");
+  if (!pem) return reportApnsConfigurationIssue("missing_private_key");
 
   try {
     const privateKey = createPrivateKey(pem);
-    if (privateKey.asymmetricKeyType !== "ec" || privateKey.asymmetricKeyDetails?.namedCurve !== "prime256v1") return null;
+    if (privateKey.asymmetricKeyType !== "ec" || privateKey.asymmetricKeyDetails?.namedCurve !== "prime256v1") {
+      return reportApnsConfigurationIssue("unsupported_private_key_type");
+    }
     return {
       origin: environment === "production" ? "https://api.push.apple.com" : "https://api.sandbox.push.apple.com",
       bundleId, keyId, teamId, privateKey,
     };
   } catch {
-    return null;
+    return reportApnsConfigurationIssue("invalid_private_key_pem");
   }
 }
 

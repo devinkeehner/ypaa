@@ -5,7 +5,7 @@ import { s3Storage } from "@payloadcms/storage-s3";
 import { buildConfig, type Field } from "payload";
 
 import { isAdministrator, withViewerAccess, withViewerGlobalAccess } from "./lib/crm-access";
-import { ensureMobilePushRetention } from "./lib/mobile-push-retention";
+import { ensureMobilePushRetention, mobilePushEnabled } from "./lib/mobile-push-retention";
 
 import { Users } from "./collections/Users";
 import { WordlePuzzles } from "./collections/WordlePuzzles";
@@ -144,7 +144,7 @@ export default buildConfig({
     url: process.env.DATABASE_URI || "",
   }),
   onInit: async (payload) => {
-    if (process.env.MOBILE_PUSH_ENABLED !== "1" || !payload.db.connection.db) return;
+    if (!mobilePushEnabled() || !payload.db.connection.db) return;
     try {
       await ensureMobilePushRetention(payload);
     } catch {

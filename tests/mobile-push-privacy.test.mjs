@@ -34,8 +34,9 @@ const environment = {
 test("the mobile endpoint probes without a database and lets opt-out through when closed", async t => {
   const now = t.mock.method(Date, "now", () => retention.MOBILE_PUSH_CUTOFF - 1000);
   const previous = process.env;
-  process.env = { ...previous, ...environment, MOBILE_PUSH_ENABLED: "0", APNS_PRIVATE_KEY: "" };
+  process.env = { ...previous, ...environment, NODE_ENV: "production", MOBILE_PUSH_ENABLED: "0", APNS_PRIVATE_KEY: "" };
   t.after(() => { process.env = previous; });
+  const warn = t.mock.method(console, "warn", () => undefined);
   const deleteWhere = t.mock.fn(async () => ({ errors: [] }));
   const create = t.mock.fn(async () => undefined);
   const update = t.mock.fn(async () => ({ docs: [{}], errors: [] }));
@@ -57,11 +58,14 @@ test("the mobile endpoint probes without a database and lets opt-out through whe
 
   assertReadiness(503, "disabled");
   assert.equal((await route.POST(request("POST"))).status, 503);
-  process.env.MOBILE_PUSH_ENABLED = "1";
+  process.env.MOBILE_PUSH_ENABLED = " 1\n";
   assertReadiness(503, "missing APNs key");
   process.env.APNS_PRIVATE_KEY = "invalid";
   assertReadiness(503, "invalid APNs key");
-  process.env.APNS_PRIVATE_KEY = environment.APNS_PRIVATE_KEY;
+  assert.deepEqual(warn.mock.calls.map(call => call.arguments), [
+    ["[mobile-push] push_disabled"], ["[mobile-push] missing_private_key"], ["[mobile-push] invalid_private_key_pem"],
+  ]);
+  process.env.APNS_PRIVATE_KEY = environment.APNS_PRIVATE_KEY.replace(/\\n/g, "\u2028");
   assertReadiness(204, "ready");
   assert.equal(getPayload.mock.callCount(), 0);
   assert.equal((await route.POST(request("POST", { token: legacyToken }))).status, 400);

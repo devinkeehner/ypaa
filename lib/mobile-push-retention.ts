@@ -1,13 +1,17 @@
 import type { Payload } from "payload";
-import { getApnsConfiguration } from "./apns";
+import { getApnsConfiguration, reportApnsConfigurationIssue } from "./apns";
 
 // Midnight in Hartford after the final conference day, January 3, 2027.
 export const MOBILE_PUSH_EXPIRES_AT = "2027-01-04T05:00:00.000Z";
 export const MOBILE_PUSH_CUTOFF = Date.parse(MOBILE_PUSH_EXPIRES_AT);
 
+export function mobilePushEnabled() {
+  return process.env.MOBILE_PUSH_ENABLED?.trim() === "1";
+}
+
 export function mobilePushAvailability() {
   if (Date.now() >= MOBILE_PUSH_CUTOFF) return { status: 410 } as const;
-  const configuration = process.env.MOBILE_PUSH_ENABLED === "1" ? getApnsConfiguration() : null;
+  const configuration = mobilePushEnabled() ? getApnsConfiguration() : reportApnsConfigurationIssue("push_disabled");
   return configuration ? { status: 204, configuration } as const : { status: 503 } as const;
 }
 
