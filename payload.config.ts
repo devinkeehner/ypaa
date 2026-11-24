@@ -42,6 +42,7 @@ import { crmReadTools } from "./mcp/crm-read";
 import { crmContactTools } from "./mcp/crm-contacts";
 import { crmRegistrationTools } from "./mcp/crm-registrations";
 import { crmBreakfastTools } from "./mcp/crm-breakfast";
+import { recordCashScholarshipContributionsTool } from "./mcp/crm-cash-scholarships";
 import { Header } from "./globals/Header";
 import { Footer } from "./globals/Footer";
 
@@ -178,7 +179,7 @@ export default buildConfig({
       },
       mcp: {
         resources: [pageBuilderCatalogResource],
-        tools: [historicalImportStatusTool, ...crmReadTools, ...crmContactTools, ...crmRegistrationTools, ...crmBreakfastTools],
+        tools: [historicalImportStatusTool, ...crmReadTools, ...crmContactTools, ...crmRegistrationTools, ...crmBreakfastTools, recordCashScholarshipContributionsTool],
         serverOptions: {
           instructions: "Use Posts for quick editorial publishing. For Pages, read the YPAA page-builder block catalog first, retain builderData.zones, and keep layout and builderData synchronized through Payload updates.",
           serverInfo: { name: "NECYPAA CMS", version: "1.0.0" },

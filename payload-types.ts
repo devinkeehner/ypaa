@@ -41598,6 +41598,10 @@ export interface PayloadMcpApiKey {
      * Assign a valid, funded breakfast ticket to an existing attendee registration with a canonical contact. Use the ticket's current updatedAt and provide the reason for the correction.
      */
     assignBreakfastTicketHolder?: boolean | null;
+    /**
+     * Preview or add missing fund entries for up to ten existing recorded cash scholarship checkouts. Confirm with the previewed allocation amount for each checkout. Requires an administrator and this key’s dedicated scope.
+     */
+    recordCashScholarshipContributions?: boolean | null;
   };
   'payload-mcp-resource'?: {
     /**
@@ -63972,6 +63976,7 @@ export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
         updateRegistrationProfile?: T;
         correctPaidRegistration?: T;
         assignBreakfastTicketHolder?: T;
+        recordCashScholarshipContributions?: T;
       };
   'payload-mcp-resource'?:
     | T

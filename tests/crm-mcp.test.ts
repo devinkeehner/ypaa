@@ -26,6 +26,7 @@ test("CRM MCP uses key permissions, role checks, typed edits and the existing co
     const writeScopes = {
       ...readScopes, createRegistrationContact: true, updateRegistrationContact: true, createPendingRegistration: true,
       updateRegistrationProfile: true, correctPaidRegistration: true, assignBreakfastTicketHolder: true,
+      recordCashScholarshipContributions: true,
     };
     const [editorial, reader, readonlyAccount, writer] = await Promise.all([
       key(admin.id, undefined, true), key(admin.id, readScopes), key(viewer.id, writeScopes), key(admin.id, writeScopes),
@@ -64,6 +65,8 @@ test("CRM MCP uses key permissions, role checks, typed edits and the existing co
     assert.ok((await tools(reader)).includes("examine-crm-entry"));
     assert.ok(!(await tools(reader)).includes("create-pending-registration"));
     assert.ok((await tools(writer)).includes("create-pending-registration"));
+    assert.ok(!(await tools(reader)).includes("record-cash-scholarship-contributions"));
+    assert.ok((await tools(writer)).includes("record-cash-scholarship-contributions"));
 
     const person = { displayName: "Synthetic MCP Attendee", email: "mcp-attendee@example.invalid" };
     const forbidden = await call(readonlyAccount, "create-registration-contact", person);
@@ -121,6 +124,68 @@ test("CRM MCP uses key permissions, role checks, typed edits and the existing co
     assert.equal(ticket.holderContact, contact.id);
     assert.equal(ticket.purchaserEmail, "mcp-payer@example.invalid");
     assert.equal((await payload.count({ collection: "registration-corrections" })).totalDocs, 3);
+
+    const receipt = randomUUID();
+    const cash = await payload.create({ collection: "checkout-orders", depth: 0, data: {
+      sourceKey: `cash:${receipt}`, purchaserName: person.displayName, purchaserEmail: person.email, purchaserContact: contact.id,
+      paymentSource: "cash", paymentStatus: "recorded", dataOrigin: "cash_checkout", purchasedAt: "2026-10-31T18:00:00Z",
+      subtotalCents: 4500, totalCents: 4500, processingFeeCents: 0, currency: "USD",
+      order: { selfRegistration: false, scholarship: { enabled: true, kind: "general", amountCents: 4500 } },
+      rawMetadata: {
+        access_redemption_id: receipt, cash_recorded_value_cents: "4500", necy_registration_price_cents: "4500",
+        necy_scholarship_qty: "1", necy_event_slug: "necypaa_xxxvi", transaction_method: "cash",
+      },
+    } });
+    const cashSeat = await payload.create({ collection: "registration-entitlements", depth: 0, data: {
+      sourceKey: `${cash.sourceKey}:entitlement:general-scholarship:1`, checkoutOrder: cash.id, purchaserContact: contact.id,
+      entitlementType: "general_scholarship", status: "unassigned", fundingSource: "direct_checkout",
+    } });
+    const repairName = "record-cash-scholarship-contributions";
+    const cashInput = { checkoutOrderId: cash.id, expectedUpdatedAt: cash.updatedAt, expectedPrincipalCents: 4500, expectedSeatPriceCents: 4500, expectedAllocatedCents: 4500 };
+    assert.match(JSON.stringify(await call(readonlyAccount, repairName, { checkouts: [cashInput] })), /administrator/i);
+    const preview = await successful(writer, repairName, { checkouts: [cashInput] });
+    assert.equal(preview.entries[0].status, "ready");
+    assert.equal((await payload.count({ collection: "scholarship-contributions" })).totalDocs, 0);
+    const changed = await call(writer, repairName, { checkouts: [{ ...cashInput, expectedPrincipalCents: 4600 }], confirm: true });
+    assert.equal(changed.result?.isError ?? Boolean(changed.error), true);
+    const repair = await successful(writer, repairName, { checkouts: [cashInput], confirm: true });
+    assert.equal(repair.contributionsAdded, 1);
+    assert.equal(repair.principalCentsAdded, 4500);
+    assert.equal(repair.entries[0].allocatedCents, 4500);
+    const rerun = await successful(writer, repairName, { checkouts: [cashInput], confirm: true });
+    assert.equal(rerun.entries[0].status, "matched");
+    assert.equal(rerun.contributionsAdded, 0);
+    const contribution = await payload.findByID({ collection: "scholarship-contributions", id: repair.entries[0].contributionId, depth: 0 });
+    assert.equal(contribution.checkoutOrder, cash.id);
+    assert.deepEqual(contribution.fundedEntitlements, [cashSeat.id]);
+    const linkedSeat = await payload.findByID({ collection: "registration-entitlements", id: cashSeat.id, depth: 0 });
+    assert.deepEqual(linkedSeat.fundingContributions, [contribution.id]);
+    assert.equal(linkedSeat.status, cashSeat.status);
+    assert.equal((await payload.findByID({ collection: "checkout-orders", id: cash.id })).updatedAt, cash.updatedAt);
+
+    const legacyReference = randomUUID();
+    const legacy = await payload.create({ collection: "checkout-orders", depth: 0, data: {
+      sourceKey: `cash:${legacyReference}`, purchaserName: "Synthetic Legacy Payer", purchaserEmail: "mcp-legacy@example.invalid",
+      paymentSource: "cash", paymentStatus: "recorded", dataOrigin: "cash_checkout", purchasedAt: "2026-09-13T18:00:00Z",
+      subtotalCents: 4500, totalCents: 4500, processingFeeCents: 0, currency: "USD", order: {},
+      rawMetadata: {
+        necy_reporting_category: "scholarship", scholarship_recipient_name: "General scholarship", necy_scholarship_qty: "1",
+        self_registration_quantity: "0", necy_breakfast_count: "0", necy_merch_count: "0",
+      },
+    } });
+    const legacyInput = { ...cashInput, checkoutOrderId: legacy.id, expectedUpdatedAt: legacy.updatedAt, expectedAllocatedCents: 0 };
+    const unconfirmedLegacy = await call(writer, repairName, { checkouts: [legacyInput], confirm: true });
+    assert.equal(unconfirmedLegacy.result?.isError ?? Boolean(unconfirmedLegacy.error), true);
+    const reviewedLegacy = { ...legacyInput, verifiedLegacyReceipt: { receiptReference: legacyReference } };
+    const badAllocation = await call(writer, repairName, { checkouts: [{ ...reviewedLegacy, expectedAllocatedCents: 4500 }], confirm: true });
+    assert.equal(badAllocation.result?.isError ?? Boolean(badAllocation.error), true);
+    const repairedLegacy = await successful(writer, repairName, { checkouts: [reviewedLegacy], confirm: true });
+    assert.equal(repairedLegacy.principalCentsAdded, 4500);
+    const legacyContribution = await payload.findByID({ collection: "scholarship-contributions", id: repairedLegacy.entries[0].contributionId, depth: 0 });
+    assert.equal(legacyContribution.availableCents, 4500);
+    assert.equal(legacyContribution.contributorContact ?? null, null);
+    assert.equal(legacyContribution.dataOrigin, "historical_import");
+    assert.equal((await payload.count({ collection: "registration-entitlements", where: { checkoutOrder: { equals: legacy.id } } })).totalDocs, 0);
   } finally {
     await payload.db.connection.dropDatabase();
     await payload.destroy();
