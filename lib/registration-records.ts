@@ -122,6 +122,13 @@ async function recordCheckoutOrder(payload: Payload, order: RegistrationOrder, c
   } as const;
   if (matched) {
     const preserved = await payload.findByID({ collection: "checkout-orders", id: matched.id, overrideAccess: true, depth: 0 });
+    const { stripeFeeCents, netDepositedCents } = preserved;
+    // A reconciled Stripe gross balances against the settlement fields. A
+    // later callback may reconstruct items using present-day prices.
+    const hasReconciledStripeAmounts = data.paymentSource === "stripe" && preserved.paymentSource === "stripe" &&
+      typeof stripeFeeCents === "number" && stripeFeeCents >= 0 &&
+      typeof netDepositedCents === "number" && netDepositedCents >= 0 &&
+      preserved.totalCents > 0 && preserved.totalCents === stripeFeeCents + netDepositedCents;
     // Stripe-only callbacks cannot reconstruct private dates. A later callback
     // must preserve the detailed report regardless of webhook arrival order.
     const previousOrder = preserved.order as RegistrationOrder | null;
@@ -133,6 +140,11 @@ async function recordCheckoutOrder(payload: Payload, order: RegistrationOrder, c
     };
     const checkoutOrder = await payload.update({ collection: "checkout-orders", id: matched.id, overrideAccess: true, data: {
       ...data, registrationSource: preserved.registrationSource || data.registrationSource,
+      ...(hasReconciledStripeAmounts && {
+        subtotalCents: preserved.subtotalCents,
+        processingFeeCents: preserved.processingFeeCents,
+        totalCents: preserved.totalCents,
+      }),
       order: updatedOrder, sourceKey: preserved.sourceKey,
       purchaserName: preserved.purchaserName, purchaserEmail: preserved.purchaserEmail, purchaserContact: preserved.purchaserContact,
       paymentStatus: ["refunded", "disputed", "voided"].includes(preserved.paymentStatus) ? preserved.paymentStatus : context.paymentStatus,

@@ -135,3 +135,46 @@ test("checkout → D1 draft → paid webhook → authenticated Payload reporting
 
   } finally { globalThis.fetch = oldFetch; process.env = oldEnv; sqlite.close(); }
 });
+
+test("Stripe replays preserve reconciled checkout amounts and refresh unverified amounts", async () => {
+  const payload = memoryPayload();
+  const order = mainReg.normalizeOrder(input);
+  const webhook = {
+    sourceKey: "stripe:cs_synthetic_reconciled",
+    stripeCheckoutSessionId: "cs_synthetic_reconciled",
+    paymentSource: "stripe",
+    paymentStatus: "paid",
+    dataOrigin: "stripe_webhook",
+    purchasedAt: "2026-11-06T12:00:00Z",
+  };
+  const unverified = {
+    ...webhook,
+    sourceKey: "stripe:cs_synthetic_unverified",
+    stripeCheckoutSessionId: "cs_synthetic_unverified",
+  };
+
+  await mainRecords.recordRegistrationOrder(payload, order, webhook);
+  await mainRecords.recordRegistrationOrder(payload, order, unverified);
+  const [reconciledCheckout, unverifiedCheckout] = payload.rows.get("checkout-orders");
+  const reconciled = {
+    subtotalCents: 8000,
+    processingFeeCents: 150,
+    totalCents: 8420,
+    stripeFeeCents: 270,
+    netDepositedCents: 8150,
+    unallocatedCents: 270,
+  };
+  await payload.update({ collection: "checkout-orders", id: reconciledCheckout.id, data: reconciled });
+
+  await mainRecords.recordRegistrationOrder(payload, order, webhook);
+  for (const [field, cents] of Object.entries(reconciled)) {
+    assert.equal(reconciledCheckout[field], cents, field);
+  }
+
+  const reported = { subtotalCents: 9000, processingFeeCents: 250, totalCents: 9250 };
+  await mainRecords.recordRegistrationOrder(payload, order, { ...unverified, dataOrigin: "live_checkout", ...reported });
+  for (const [field, cents] of Object.entries(reported)) {
+    assert.equal(unverifiedCheckout[field], cents, field);
+  }
+  assert.equal(payload.rows.get("checkout-orders").length, 2);
+});
