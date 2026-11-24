@@ -5,6 +5,7 @@ import { s3Storage } from "@payloadcms/storage-s3";
 import { buildConfig, type Field } from "payload";
 
 import { isAdministrator, withViewerAccess, withViewerGlobalAccess } from "./lib/crm-access";
+import { ensureMobilePushRetention } from "./lib/mobile-push-retention";
 
 import { Users } from "./collections/Users";
 import { WordlePuzzles } from "./collections/WordlePuzzles";
@@ -25,9 +26,10 @@ import { Contacts } from "./collections/Contacts";
 import { RegistrationCorrections } from "./collections/RegistrationCorrections";
 import { RegistrationEntitlements } from "./collections/RegistrationEntitlements";
 import { ScholarshipContributions } from "./collections/ScholarshipContributions";
-import { MobileAnnouncements } from "./collections/MobileAnnouncements";
-import { MobileFAQs } from "./collections/MobileFAQs";
 import { Rooms } from "./collections/Rooms";
+import { MobileFAQs } from "./collections/MobileFAQs";
+import { MobileAnnouncements } from "./collections/MobileAnnouncements";
+import { MobilePushBroadcasts, MobilePushSubscriptions } from "./collections/MobilePushSubscriptions";
 import { ProgramSessions } from "./collections/ProgramSessions";
 import { VenueMaps } from "./collections/VenueMaps";
 import { NotificationRecipients } from "./collections/NotificationRecipients";
@@ -136,11 +138,20 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, Contacts, CheckoutOrders, ScholarshipContributions, RegistrationEntitlements, Tenants, AccessCodes, CashCodeRecipients, CashTransactions, Attendees, RegistrationSources, BreakfastTickets, RegistrationCorrections, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests, RegistrationHelpRequests, HotelRequests, RegistrationImports, HistoricalReceipts, MobileAnnouncements, MobileFAQs].map(withViewerAccess),
+  collections: [Users, Media, Pages, Posts, WordlePuzzles, Merchandise, MerchandiseOrders, Contacts, CheckoutOrders, ScholarshipContributions, RegistrationEntitlements, Tenants, AccessCodes, CashCodeRecipients, CashTransactions, Attendees, RegistrationSources, BreakfastTickets, RegistrationCorrections, Rooms, ProgramSessions, VenueMaps, NotificationRecipients, EmailTests, RegistrationHelpRequests, HotelRequests, RegistrationImports, HistoricalReceipts, MobilePushSubscriptions, MobilePushBroadcasts, MobileAnnouncements, MobileFAQs].map(withViewerAccess),
   globals: [Header, Footer].map(withViewerGlobalAccess),
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || "",
   }),
+  onInit: async (payload) => {
+    if (process.env.MOBILE_PUSH_ENABLED !== "1" || !payload.db.connection.db) return;
+    try {
+      await ensureMobilePushRetention(payload);
+    } catch {
+      // The push routes retry and reject new registrations until cleanup is ready.
+      payload.logger.warn("Mobile push subscription cleanup could not be initialized.");
+    }
+  },
   editor: lexicalEditor(),
   plugins: [
     mcpPlugin({

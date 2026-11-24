@@ -20,6 +20,7 @@ import { default as default_14477b3b486e867c9b743aef60ceeffe } from '@/component
 import { CheckoutOrderDetails as CheckoutOrderDetails_6179f05f3f598af35ef419b08efd80a5 } from '@/components/admin/CheckoutOrderDetails'
 import { default as default_58e097ffd737c28c33127f4662812319 } from '@/components/admin/HexColorField'
 import { HotelNotificationRetry as HotelNotificationRetry_e042df286cbf21f4d002ebd49dc7057a } from '@/components/admin/HotelNotificationRetry'
+import { SendMobileAnnouncement as SendMobileAnnouncement_2a6a5d7c4b186a0b58b935f8b9bebb7c } from '@/components/admin/SendMobileAnnouncement'
 import { NECYPAAAdminNav as NECYPAAAdminNav_e65de6325dcaf4caeadda34237cac052 } from '@/components/admin/nav/NECYPAAAdminNav'
 import { default as default_aeec5a1cb188c92d9f77827ec2b0f137 } from '@/components/admin/brand/NECYPAAAdminIcon'
 import { default as default_1af26a48a33b1f90881506ce1faf6e97 } from '@/components/admin/brand/NECYPAAAdminLogo'
@@ -59,6 +60,7 @@ export const importMap = {
   "@/components/admin/CheckoutOrderDetails#CheckoutOrderDetails": CheckoutOrderDetails_6179f05f3f598af35ef419b08efd80a5,
   "@/components/admin/HexColorField#default": default_58e097ffd737c28c33127f4662812319,
   "@/components/admin/HotelNotificationRetry#HotelNotificationRetry": HotelNotificationRetry_e042df286cbf21f4d002ebd49dc7057a,
+  "@/components/admin/SendMobileAnnouncement#SendMobileAnnouncement": SendMobileAnnouncement_2a6a5d7c4b186a0b58b935f8b9bebb7c,
   "@/components/admin/nav/NECYPAAAdminNav#NECYPAAAdminNav": NECYPAAAdminNav_e65de6325dcaf4caeadda34237cac052,
   "@/components/admin/brand/NECYPAAAdminIcon#default": default_aeec5a1cb188c92d9f77827ec2b0f137,
   "@/components/admin/brand/NECYPAAAdminLogo#default": default_1af26a48a33b1f90881506ce1faf6e97,

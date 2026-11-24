@@ -96,6 +96,8 @@ export interface Config {
     'hotel-requests': HotelRequest;
     'registration-imports': RegistrationImport;
     'historical-receipts': HistoricalReceipt;
+    'mobile-push-subscriptions': MobilePushSubscription;
+    'mobile-push-broadcasts': MobilePushBroadcast;
     'mobile-announcements': MobileAnnouncement;
     'mobile-faqs': MobileFaq;
     'payload-mcp-api-keys': PayloadMcpApiKey;
@@ -140,6 +142,8 @@ export interface Config {
     'hotel-requests': HotelRequestsSelect<false> | HotelRequestsSelect<true>;
     'registration-imports': RegistrationImportsSelect<false> | RegistrationImportsSelect<true>;
     'historical-receipts': HistoricalReceiptsSelect<false> | HistoricalReceiptsSelect<true>;
+    'mobile-push-subscriptions': MobilePushSubscriptionsSelect<false> | MobilePushSubscriptionsSelect<true>;
+    'mobile-push-broadcasts': MobilePushBroadcastsSelect<false> | MobilePushBroadcastsSelect<true>;
     'mobile-announcements': MobileAnnouncementsSelect<false> | MobileAnnouncementsSelect<true>;
     'mobile-faqs': MobileFaqsSelect<false> | MobileFaqsSelect<true>;
     'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
@@ -41458,7 +41462,28 @@ export interface RegistrationImport {
   createdAt: string;
 }
 /**
- * Published announcements appear in the convention app.
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mobile-push-subscriptions".
+ */
+export interface MobilePushSubscription {
+  id: string;
+  token: string;
+  expiresAt: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mobile-push-broadcasts".
+ */
+export interface MobilePushBroadcast {
+  id: string;
+  announcementId: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Published announcements appear in the convention app. Push alerts are sent separately.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mobile-announcements".
@@ -41751,6 +41776,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'historical-receipts';
         value: string | HistoricalReceipt;
+      } | null)
+    | ({
+        relationTo: 'mobile-push-subscriptions';
+        value: string | MobilePushSubscription;
+      } | null)
+    | ({
+        relationTo: 'mobile-push-broadcasts';
+        value: string | MobilePushBroadcast;
       } | null)
     | ({
         relationTo: 'mobile-announcements';
@@ -63903,6 +63936,25 @@ export interface HistoricalReceiptsSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mobile-push-subscriptions_select".
+ */
+export interface MobilePushSubscriptionsSelect<T extends boolean = true> {
+  token?: T;
+  expiresAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mobile-push-broadcasts_select".
+ */
+export interface MobilePushBroadcastsSelect<T extends boolean = true> {
+  announcementId?: T;
   updatedAt?: T;
   createdAt?: T;
 }
